@@ -20,12 +20,14 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('./client/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      - uses: actions/setup-node@v4
-        name: Install npm
+      - name: Install Node
+        uses: actions/setup-node@v4
         with:
+          cache-dependency-path: ./client/package-lock.json
           node-version: 22.6
           cache: "npm"
       - name: Install client dependencies
         run: npm install
         working-directory: ./client
-      - run: echo "All good"
+      - name: Run tests
+        run: echo "All good"
