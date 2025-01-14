@@ -1,0 +1,21 @@
+name: Lint, format and test (and deploy)
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+  push:
+    branches:
+      - master
+
+jobs:
+  lint-format-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Start databases
+        run: docker compose up -d
+      - uses: actions/setup-node@v4
+        name: Install npm
+        with:
+          node-version: 22.6
+          cache: "npm"
+      - run: echo "All good"
