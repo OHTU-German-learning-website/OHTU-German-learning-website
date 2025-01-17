@@ -16,18 +16,18 @@ jobs:
       - name: Cache Node.js modules
         uses: actions/cache@v3
         with:
-          path: ./client/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('./client/package-lock.json') }}
+          path: ./gradesa/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('./gradesa/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
       - name: Install Node
         uses: actions/setup-node@v4
         with:
-          cache-dependency-path: ./client/package-lock.json
+          cache-dependency-path: ./gradesa/package-lock.json
           node-version: 22.6
           cache: "npm"
       - name: Install client dependencies
         run: npm install
-        working-directory: ./client
+        working-directory: ./gradesa
       - name: Run tests
         run: echo "All good"
