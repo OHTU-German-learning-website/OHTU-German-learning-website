@@ -21,6 +21,12 @@ This should be all that's needed:
 ## Running locally
 
 - Run PostgreSQL:
+  - Init .env files `./init-env.sh` — This will create the required .env files for environment variables. The local db credentials are
+    - DB_HOST=localhost
+    - DB_PORT=6543
+    - DB_USER=ohtu
+    - DB_PASSWORD=password
+    - DB_NAME=gradesa
   - `docker-compose up -d` — This command starts the services defined in the docker-compose.yml file in detached mode, meaning the services run in the background and the terminal is freed up for other tasks. For more information, checkout [Docker Compose docs](https://docs.docker.com/compose/)
   - `npm run dev` — Starts the dev server.
   - You can now find the NextJS app on localhost:3000
