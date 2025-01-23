@@ -1,17 +1,44 @@
 import { Pool } from 'pg';
 import { getConfig } from './config';
 
-const config = getConfig();
+class DB {
+  #pool;
+  constructor() { }
 
-const pool = new Pool(config.db);
+  async get() {
+    if (!this.#pool) {
+      const config = getConfig();
+      await this.#createPool(config.db);
+      await this.#connect(this.#pool);
+    }
+    return this.#pool;
+  }
 
-pool.connect().then((client) => {
-  client.query('SELECT current_database() as database_name, now()').then((res) => {
-    console.log('\x1b[34m%s\x1b[0m', `Connected to database ${res.rows[0].database_name} at ${res.rows[0].now.toISOString()}`);
-  });
-}).catch((err) => {
-  console.error('Failed to connect to database', err);
-});
+  async #createPool(config) {
+    this.#pool = new Pool(config);
+  }
+
+  async #connect(pool) {
+    try {
+      if (!pool) {
+        throw new Error('Pool not initialized');
+      }
+      await pool.connect();
+      const row = await pool.query('SELECT current_database() as database_name, now()');
+      console.log('\x1b[34m%s\x1b[0m', `Connected to database ${row.rows[0].database_name} at ${row.rows[0].now.toISOString()}`);
+    } catch (err) {
+      console.error('Failed to connect to database', err);
+    }
+  }
+
+  async #set(config) {
+    const newPool = new Pool(config);
+    await this.#connect(newPool);
+    this.#pool = newPool;
+  }
+}
+
+export const db = new DB();
 
 /**
  * Executes a database query using the connection pool.
@@ -20,7 +47,7 @@ pool.connect().then((client) => {
  * @param {Array} [params] - An optional array of parameters to be used in the query.
  * @returns {Promise<Object>} - A promise that resolves to the result of the query.
  */
-export const query = (text, params) => pool.query(text, params);
+export const query = async (text, params) => (await db.get()).query(text, params);
 
 
 /**
@@ -30,7 +57,7 @@ export const query = (text, params) => pool.query(text, params);
  * @returns {Promise<Object>} - A promise that resolves to the result of the transaction.
  */
 export const transaction = async (fn) => {
-  const client = await pool.connect();
+  const client = await (await db.get()).connect();
   try {
     await client.query('BEGIN');
     const result = await fn(client);
