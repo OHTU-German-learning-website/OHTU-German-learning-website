@@ -1,0 +1,12 @@
+{
+  "name": "ohtu-german-learning-website",
+  "version": "1.0.0",
+  "description": "GRADESA is a freely accessible website where language learners at language centres as well as university students of German studies can autonomously work on their German grammar skills and knowledge.",
+  "scripts": {
+    "db:migrate": "./data/migrate.sh",
+    "db:reset": "./data/reset-db.sh",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -1,12 +1,13 @@
 'use client';
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import styles from "./page.module.css";
-import { useEffect } from "react";
 export default function Home() {
+  const [data, setData] = useState(null);
   useEffect(() => {
     fetch('/api/hello')
       .then(res => res.json())
-      .then(data => console.log(data));
+      .then(data => setData(data));
   }, []);
   return (
     <div className={styles.page}>
@@ -25,7 +26,8 @@ export default function Home() {
           </li>
           <li>Save and see your changes instantly.</li>
         </ol>
-
+        {data && <p>{data.message}</p>}
+        DB TIME: {data && <p>{data.now}</p>}
         <div className={styles.ctas}>
           <a
             className={styles.primary}

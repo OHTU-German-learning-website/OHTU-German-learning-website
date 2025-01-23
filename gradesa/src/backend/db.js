@@ -6,8 +6,8 @@ const config = getConfig();
 const pool = new Pool(config.db);
 
 pool.connect().then((client) => {
-  client.query('SELECT now(), database_name FROM pg_database').then((res) => {
-    console.log(`Connected to database ${res.rows[0].database_name} at ${res.rows[0].now}`);
+  client.query('SELECT current_database() as database_name, now()').then((res) => {
+    console.log('\x1b[34m%s\x1b[0m', `Connected to database ${res.rows[0].database_name} at ${res.rows[0].now.toISOString()}`);
   });
 }).catch((err) => {
   console.error('Failed to connect to database', err);

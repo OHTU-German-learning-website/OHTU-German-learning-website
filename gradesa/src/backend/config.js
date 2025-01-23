@@ -1,14 +1,15 @@
+import { config } from 'dotenv';
 export const initConfig = async () => {
   const env = process.env.NODE_ENV;
   switch (env) {
     case 'test':
-    case 'local':
+    case 'development':
     case 'production':
       config({ path: `${__dirname}/dotenv/.env`, override: true });
       config({ path: `${__dirname}/dotenv/.env.${env}`, override: true });
       break;
     default:
-      throw new Error('Unsupported environment');
+      throw new Error('Unsupported environment: ' + env);
   }
 };
 initConfig();
