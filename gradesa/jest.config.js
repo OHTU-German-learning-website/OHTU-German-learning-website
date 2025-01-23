@@ -172,6 +172,12 @@ const config = {
 
   // This option allows use of a custom test runner
   // testRunner: "jest-circus/runner",
+  // To resolve the "SyntaxError: Cannot use import statement outside a module" issue,
+  // we need to configure Jest to handle ES modules. We can do this by setting the
+  // "transform" option to use "babel-jest" for JavaScript files.
+  transform: {
+    '^.+\\.(ts|tsx|js)$': 'babel-jest',
+  },
 
   // A map from regular expressions to paths to transformers
   // transform: undefined,

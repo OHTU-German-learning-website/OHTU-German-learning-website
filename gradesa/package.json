@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest"
+    "test": "vitest --disable-console-intercept "
   },
   "dependencies": {
     "dotenv": "^16.4.7",
@@ -19,12 +19,12 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@testing-library/dom": "^10.4.0",
-    "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
+    "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^9",
     "eslint-config-next": "15.1.5",
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
-    "ts-node": "^10.9.2"
+    "jsdom": "^26.0.0",
+    "ts-node": "^10.9.2",
+    "vitest": "^3.0.4"
   }
 }

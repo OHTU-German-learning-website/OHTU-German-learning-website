@@ -3,7 +3,7 @@ import * as path from "path";
 import { createHash } from "crypto";
 import { exec as execCB } from "child_process";
 import util from "util";
-
+import { dbURL } from "../db";
 // Tuns execCB into a promise
 const exec = util.promisify(execCB);
 
@@ -67,7 +67,6 @@ export class Migrator {
         msg = e.stderr.slice(e.stderr.indexOf("failed to"));
       }
       console.error(msg);
-      captureSentryException(new Error(msg));
     }
   }
 
@@ -77,6 +76,6 @@ export class Migrator {
   }
 
   get migrationsDir() {
-    return path.join(__dirname, "../../..", "migrations").replace("dist/", "");
+    return path.join(__dirname, "../../../../data", "migrations").replace("dist/", "");
   }
 }
