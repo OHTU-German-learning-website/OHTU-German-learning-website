@@ -30,6 +30,8 @@ This should be all that's needed:
 - [Project Backlog](https://github.com/orgs/OHTU-German-learning-website/projects/1)
 - [Sprint 0 Task Board](https://github.com/orgs/OHTU-German-learning-website/projects/2)
 
+- Migrations: check [the migration README](data/README.md)
+
 ## Definition of Done
 
 "_The requirement has been analyzed, designed, programmed, tested, automated testing implemented, documented, integrated into other software, and deployed to the production environment._"
