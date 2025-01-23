@@ -8,13 +8,13 @@ class DB {
   async get() {
     if (!this.#pool) {
       const config = getConfig();
-      await this.#createPool(config.db);
+      this.#createPool(config.db);
       await this.#connect(this.#pool);
     }
     return this.#pool;
   }
 
-  async #createPool(config) {
+  #createPool(config) {
     this.#pool = new Pool(config);
   }
 
