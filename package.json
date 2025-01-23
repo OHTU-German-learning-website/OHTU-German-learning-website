@@ -5,6 +5,7 @@
   "scripts": {
     "db:migrate": "./data/migrate.sh",
     "db:reset": "./data/reset-db.sh",
+    "dev": "npm run --prefix gradesa dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

@@ -1,4 +1,9 @@
 import { config } from 'dotenv';
+
+// Loads .env and .env.NODE_ENV (e.g. .env.development)
+// Shared environment variables are in .env
+// Environment specific variables are in .env.NODE_ENV
+// NextJS defaults to 'development' when running npm run dev
 export const initConfig = async () => {
   const env = process.env.NODE_ENV;
   switch (env) {
@@ -14,6 +19,11 @@ export const initConfig = async () => {
 };
 initConfig();
 
+
+// The following is an environment variable helper.
+// It's used to read environment variables from .env and .env.NODE_ENV
+// So instead of using process.env.DB_HOST, you can use getConfig().db.host
+// This is useful for keeping the code clean and gives you clear errors if you miss a variable.
 let cachedConfig;
 
 export const getConfig = () => {

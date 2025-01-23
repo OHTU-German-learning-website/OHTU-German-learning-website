@@ -13,10 +13,17 @@ This should be all that's needed:
   - Linux: # Install pgmigrate
     - `wget https://github.com/peterldowns/pgmigrate/releases/download/v0.0.6%2Bcommit.4f90829/pgmigrate-linux-amd64 -O /usr/local/bin/pgmigrate`
     - `chmod +x /usr/local/bin/pgmigrate`
-- Docker, either of these installation options work:
+- Docker, either of these installation options work (if you're new to docker, I recommend Docker Desktop):
   - `brew install docker` + `brew install colima` (https://github.com/abiosoft/colima)
   - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-- psql: `brew install postgresql@15` + `echo '\nexport PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"' >> ~/.zshrc`
+- psql: `brew install postgresql@15`
+
+## Running locally
+
+- Run PostgreSQL:
+  - `docker-compose up -d` — This command starts the services defined in the docker-compose.yml file in detached mode, meaning the services run in the background and the terminal is freed up for other tasks. For more information, checkout [Docker Compose docs](https://docs.docker.com/compose/)
+  - `npm run dev` — Starts the dev server.
+  - You can now find the NextJS app on localhost:3000
 
 ## Documentation
 
