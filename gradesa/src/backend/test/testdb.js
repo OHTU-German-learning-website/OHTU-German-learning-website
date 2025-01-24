@@ -1,6 +1,6 @@
 import { getConfig } from "../config";
 import { Migrator } from "./migrator";
-import { beforeEach, afterEach } from "vitest";
+import { beforeEach, afterEach, afterAll } from "vitest";
 import { DB } from "../db";
 import { createHash, randomBytes } from "crypto";
 const TestUser = "pgtdbuser";
@@ -9,8 +9,6 @@ const TestPassword = "pgtdbpass";
 export function useTestDatabase({
   conf = getConfig().db,
   migrator = new Migrator(),
-  verbose = false,
-  dropWhenDone = true,
 } = {}) {
   let testDB;
   let baseDB;
@@ -18,6 +16,7 @@ export function useTestDatabase({
 
   beforeEach(async () => {
     try {
+      // Init new DB
       baseDB = new DB();
     } catch (e) {
       throw new Error(
@@ -25,28 +24,37 @@ export function useTestDatabase({
       );
     }
 
+    // Setup test database
+    // 1. Create user
     await ensureUser(baseDB);
 
+    // 2. Create template
     const template = await getOrCreateTemplate(baseDB, conf, migrator);
-    console.log(template);
+
+    // 3. Create instance
     testDBConfig = await createInstance(baseDB, template);
 
+    // 4. Create testDB
     testDB = new DB();
-    await testDB.set({ max: 1, ...testDBConfig });
+    await testDB.set({ max: 1, ...testDBConfig }).catch(err => console.error('Error setting testDB', err));
   });
 
   afterEach(async () => {
+    // After each test, destroy the testDB, releasing the pool
     if (testDB !== undefined) {
       await testDB.destroy();
     }
+
     // Remove the testdb from the server
     if (baseDB !== undefined) {
-      await baseDB.query(`DROP DATABASE IF EXISTS ${testDBConfig.database}`, []);
+      await baseDB.pool(`DROP DATABASE IF EXISTS ${testDBConfig.database}`);
       await baseDB.destroy();
     }
 
     await baseDB.reset();
-
+  });
+  afterAll(async () => {
+    await baseDB.destroy();
   });
 }
 
@@ -80,8 +88,8 @@ async function getOrCreateTemplate(
   };
   template = newTemplate;
 
-  await withLock(db, dbName, async (db) => {
-    await ensureTemplate(db, migrator, newTemplate);
+  await withLock(db, dbName, async (client) => {
+    await ensureTemplate(client, migrator, newTemplate);
   });
 
   return newTemplate;
@@ -95,18 +103,19 @@ async function ensureUser(db) {
   if (ensureUserCalled) {
     return;
   }
+
   ensureUserCalled = true;
-  await withLock(db, 'testdb-user', async (db) => {
+  await withLock(db, 'testdb-user', async (client) => {
     const roleExists = (
-      await db.query(`SELECT EXISTS (SELECT from pg_catalog.pg_roles WHERE rolname = $1)`, [TestUser])
+      await client.query(`SELECT EXISTS (SELECT from pg_catalog.pg_roles WHERE rolname = '${TestUser}')`)
     ).rows[0];
 
     if (roleExists.exists) {
       return;
     }
 
-    await db.query(`CREATE ROLE ${TestUser}`, []);
-    await db.query(`ALTER ROLE ${TestUser} WITH LOGIN PASSWORD '${TestPassword}' NOSUPERUSER NOCREATEDB NOCREATEROLE`, []);
+    await client.query(`CREATE ROLE ${TestUser}`);
+    await client.query(`ALTER ROLE ${TestUser} WITH LOGIN PASSWORD '${TestPassword}' NOSUPERUSER NOCREATEDB NOCREATEROLE`);
   });
 }
 
@@ -116,36 +125,46 @@ async function createInstance(
 ) {
   const testConf = { ...template.conf };
   testConf.database = `testdb_tpl_${template.hash}_inst_${randomID()}`;
-  await db.query(`CREATE DATABASE ${testConf.database} WITH TEMPLATE ${template.conf.database} OWNER ${testConf.user}`);
+  await db.pool(`CREATE DATABASE ${testConf.database} WITH TEMPLATE ${template.conf.database} OWNER ${testConf.user}`);
 
   return testConf;
 }
 
 
 async function ensureTemplate(
-  db,
+  client,
   migrator,
   state
 ) {
   // If the template database already exists, and is marked as a template,
   // there is no more work to be done.
-  const templateExists = await db.query(`SELECT EXISTS (SELECT FROM pg_database WHERE datname = $1 AND datistemplate = true)`, [state.conf.database]);
+  const templateExists = await client.query(`SELECT EXISTS (SELECT FROM pg_database WHERE datname = $1 AND datistemplate = true)`, [state.conf.database]);
   if (templateExists.rows[0].exists) {
     return;
   }
-
+  console.log('template does not exist', { state });
   // If the template database already exists, but it is not marked as a
   // template, there was a failure at some point during the creation process
   // so it needs to be deleted.
-  await db.query(`DROP DATABASE IF EXISTS ${state.conf.database}`, []);
+  try {
+    await client.query(`DROP DATABASE IF EXISTS ${state.conf.database}`);
+  } catch (e) {
+    console.log('failed to drop', e);
+  }
+  console.log('dropped');
+  await client.query(`CREATE DATABASE ${state.conf.database} OWNER ${state.conf.user}`).catch(e => {
+    console.log('failed to create', e);
+  });
+  console.log('migrating');
 
-  await db.query(`CREATE DATABASE ${state.conf.database} OWNER ${state.conf.user}`, []);
-
-  await migrator.migrate(state.conf);
+  await migrator.migrate(state.conf).catch(e => {
+    console.log('failed to migrate', e);
+  });
+  console.log('migrated');
 
   // Finalize the creation of the template by marking it as a
   // template.
-  await db.query(`UPDATE pg_database SET datistemplate = true WHERE datname=$1`, [state.conf.database]);
+  await client.query(`UPDATE pg_database SET datistemplate = true WHERE datname=$1`, [state.conf.database]);
 }
 
 const idPrefix = "sessionlock-";
@@ -167,15 +186,18 @@ async function withLock(
 ) {
   const lockID = id(lockName);
 
-  await db.transaction(async (db) => {
-    try {
-      await db.query(`SELECT pg_advisory_lock(${lockID})`, []);
-      await cb(db);
-    } finally {
-      await db.query(`SELECT pg_advisory_unlock(${lockID})`, []);
-    }
-  });
+  const client = await db.getClient();
+  try {
+    await client.query(`SELECT pg_advisory_lock(${lockID})`, []);
+    await cb(client);
+  } catch (e) {
+    console.log('failed to lock', e);
+  } finally {
+    await client.query(`SELECT pg_advisory_unlock(${lockID})`, []);
+    await client.release();
+  }
 }
+
 
 
 function randomID() {

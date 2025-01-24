@@ -22,15 +22,22 @@ export class DB {
   }
 
   async #connect(pool) {
+    let client
     try {
       if (!pool) {
         throw new Error('Pool not initialized');
       }
-      await pool.connect();
-      const row = await pool.query('SELECT current_database() as database_name, now()');
-      console.log('\x1b[34m%s\x1b[0m', `Connected to database ${row.rows[0].database_name} at ${row.rows[0].now.toISOString()}`);
+      client = await pool.connect()
+      if (environment !== 'test') {
+        const row = await client.query('SELECT current_database() as database_name, now()');
+        console.log('\x1b[34m%s\x1b[0m', `Connected to database ${row.rows[0].database_name} at ${row.rows[0].now.toISOString()}`);
+      }
     } catch (err) {
       console.error('Failed to connect to database', err);
+    } finally {
+      if (client) {
+        await client.release();
+      }
     }
   }
 
@@ -41,7 +48,7 @@ export class DB {
  * @param {Array} [params] - An optional array of parameters to be used in the query.
  * @returns {Promise<Object>} - A promise that resolves to the result of the query.
  */
-  async query(text, params) {
+  async pool(text, params) {
     return (await this.get()).query(text, params);
   }
 
@@ -61,6 +68,8 @@ export class DB {
     } catch (err) {
       await client.query('ROLLBACK');
       throw err;
+    } finally {
+      await client.release();
     }
   }
 
@@ -74,9 +83,12 @@ export class DB {
     if (this.#pool !== undefined) {
       // Terminate the pool and close all connections
       await this.#pool.end();
-
     }
     this.#pool = undefined;
+  }
+
+  async getClient() {
+    return (await this.get()).connect();
   }
 
   async reset() {
