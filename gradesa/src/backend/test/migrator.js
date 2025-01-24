@@ -16,6 +16,7 @@ export async function runMigrations() {
   await migrator.verify(conf, true);
 }
 
+// This is a JS wrapper for the pgmigrate CLI
 export class Migrator {
   async hash() {
     const hash = createHash("md5");

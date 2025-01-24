@@ -126,6 +126,7 @@ async function ensureUser(db) {
   });
 }
 
+// createInstance creates a new database instance using the template database
 async function createInstance(
   db,
   template
