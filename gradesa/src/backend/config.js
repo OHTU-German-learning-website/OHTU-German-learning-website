@@ -1,6 +1,11 @@
 import { config } from 'dotenv';
 
 export const environment = process.env.NODE_ENV;
+
+export const isTest = environment === 'test';
+export const isDevelopment = environment === 'development';
+export const isProduction = environment === 'production';
+
 // Loads .env and .env.NODE_ENV (e.g. .env.development)
 // Shared environment variables are in .env
 // Environment specific variables are in .env.NODE_ENV

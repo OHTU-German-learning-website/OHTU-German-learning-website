@@ -14,6 +14,8 @@ export function useTestDatabase({
   let baseDB;
   let testDBConfig;
 
+  // It's important we run each test in a new database
+  // This ensures that each test is isolated from the others
   beforeEach(async () => {
     try {
       // Init new DB
@@ -29,23 +31,26 @@ export function useTestDatabase({
     await ensureUser(baseDB);
 
     // 2. Create template
+    // This will run the migrations and create a template database
     const template = await getOrCreateTemplate(baseDB, conf, migrator);
 
     // 3. Create instance
+    // We use the created template to create a new database
     testDBConfig = await createInstance(baseDB, template);
 
     // 4. Create testDB
+    // We set the testDB to use the new database
     testDB = new DB();
-    await testDB.set({ max: 1, ...testDBConfig }).catch(err => console.error('Error setting testDB', err));
+    await testDB.set({ max: 1, ...testDBConfig })
   });
 
+  // After each test, destroy the testDB, releasing the pool
   afterEach(async () => {
-    // After each test, destroy the testDB, releasing the pool
     if (testDB !== undefined) {
       await testDB.destroy();
     }
 
-    // Remove the testdb from the server
+    // Remove the testdb
     if (baseDB !== undefined) {
       await baseDB.pool(`DROP DATABASE IF EXISTS ${testDBConfig.database}`);
       await baseDB.destroy();
@@ -53,6 +58,8 @@ export function useTestDatabase({
 
     await baseDB.reset();
   });
+
+  // After all tests, destroy the baseDB (if not already destroyed)
   afterAll(async () => {
     await baseDB.destroy();
   });
@@ -142,25 +149,14 @@ async function ensureTemplate(
   if (templateExists.rows[0].exists) {
     return;
   }
-  console.log('template does not exist', { state });
+
   // If the template database already exists, but it is not marked as a
   // template, there was a failure at some point during the creation process
   // so it needs to be deleted.
-  try {
-    await client.query(`DROP DATABASE IF EXISTS ${state.conf.database}`);
-  } catch (e) {
-    console.log('failed to drop', e);
-  }
-  console.log('dropped');
-  await client.query(`CREATE DATABASE ${state.conf.database} OWNER ${state.conf.user}`).catch(e => {
-    console.log('failed to create', e);
-  });
-  console.log('migrating');
+  await client.query(`DROP DATABASE IF EXISTS ${state.conf.database}`);
+  await client.query(`CREATE DATABASE ${state.conf.database} OWNER ${state.conf.user}`)
 
-  await migrator.migrate(state.conf).catch(e => {
-    console.log('failed to migrate', e);
-  });
-  console.log('migrated');
+  await migrator.migrate(state.conf)
 
   // Finalize the creation of the template by marking it as a
   // template.
@@ -179,21 +175,23 @@ function id(name) {
 }
 
 
+// The withLock function ensures that a block of code runs with a database lock.
+// This prevents other code from running the same block at the same time.
 async function withLock(
   db,
   lockName,
   cb
 ) {
-  const lockID = id(lockName);
+  const lockID = id(lockName); // Create a lock ID 
 
   const client = await db.getClient();
   try {
-    await client.query(`SELECT pg_advisory_lock(${lockID})`, []);
-    await cb(client);
+    await client.query(`SELECT pg_advisory_lock(${lockID})`); // Acquire the lock.
+    await cb(client); // Run the function with the lock.
   } catch (e) {
-    console.log('failed to lock', e);
+    console.error('failed to lock', e);
   } finally {
-    await client.query(`SELECT pg_advisory_unlock(${lockID})`, []);
+    await client.query(`SELECT pg_advisory_unlock(${lockID})`); // Release the lock.
     await client.release();
   }
 }

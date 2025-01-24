@@ -1,6 +1,6 @@
 import { Pool } from 'pg';
 import { getConfig } from './config';
-import { environment } from './config';
+import { isTest } from './config';
 export function dbURL(config) {
   return `postgres://${config.user}:${config.password}@${config.host}:${config.port}/${config.database}`;
 }
@@ -28,7 +28,7 @@ export class DB {
         throw new Error('Pool not initialized');
       }
       client = await pool.connect()
-      if (environment !== 'test') {
+      if (!isTest) {
         const row = await client.query('SELECT current_database() as database_name, now()');
         console.log('\x1b[34m%s\x1b[0m', `Connected to database ${row.rows[0].database_name} at ${row.rows[0].now.toISOString()}`);
       }
@@ -73,12 +73,17 @@ export class DB {
     }
   }
 
+  // Set the database to use a new config
   async set(config) {
+    if (!isTest) {
+      throw new Error('Cannot set database in non-test environment, was ' + environment);
+    }
     const newPool = new Pool(config);
     await this.#connect(newPool);
     this.#pool = newPool;
   }
 
+  // Destroy all connections and release the pool
   async destroy() {
     if (this.#pool !== undefined) {
       // Terminate the pool and close all connections
@@ -87,12 +92,17 @@ export class DB {
     this.#pool = undefined;
   }
 
+  // Get a client connection from the database pool
+  // It's important to run some queries on the same client
+  // Ex. locks and transactions
   async getClient() {
     return (await this.get()).connect();
   }
 
+  // Reset the database
+  // This is only used in the test environment
   async reset() {
-    if (environment !== 'test') throw new Error('Cannot reset database in non-test environment, was ' + environment);
+    if (!isTest) throw new Error('Cannot reset database in non-test environment, was ' + environment);
     await this.destroy();
     this.#pool = undefined;
   }
