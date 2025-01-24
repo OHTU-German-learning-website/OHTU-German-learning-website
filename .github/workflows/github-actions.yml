@@ -37,8 +37,15 @@ jobs:
           mv pgmigrate "$HOME/bin/"
           echo "$HOME/bin/" >> $GITHUB_PATH
       - name: Run migrations
+        working-directory: ./
         run: |
           npm run db:migrate
+      - name: Check for no uncommitted changes
+        run: |
+          echo "checking for uncommitted changes"
+          git --no-pager diff
+          git status
+          [[ -z $(git status -s) ]] || (exit 1)
       - name: Run tests
         run: |
           npm run test
