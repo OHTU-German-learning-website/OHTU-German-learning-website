@@ -37,7 +37,6 @@ jobs:
           mv pgmigrate "$HOME/bin/"
           echo "$HOME/bin/" >> $GITHUB_PATH
       - name: Run migrations
-        working-directory: ./
         run: |
           npm run db:migrate
       - name: Check for no uncommitted changes

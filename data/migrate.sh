@@ -4,6 +4,10 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
+echo "Migrating"
+echo "$(dirname "$0")"
+echo "$(pwd "$0")"
+
 pgmigrate migrate -d postgres://ohtu:password@localhost:6543/gradesa -m migrations
 echo "Migrating done"
 
