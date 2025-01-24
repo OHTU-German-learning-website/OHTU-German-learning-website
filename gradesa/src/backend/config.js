@@ -24,7 +24,6 @@ export const initConfig = async () => {
 };
 
 
-
 // The following is an environment variable helper.
 // It's used to read environment variables from .env and .env.NODE_ENV
 // So instead of using process.env.DB_HOST, you can use getConfig().db.host

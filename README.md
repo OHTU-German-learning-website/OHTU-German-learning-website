@@ -33,8 +33,9 @@ This should be all that's needed:
 
 ## Documentation
 
-- [Project Backlog](https://github.com/orgs/OHTU-German-learning-website/projects/1)
-- [Sprint 0 Task Board](https://github.com/orgs/OHTU-German-learning-website/projects/2)
+- [Product and Sprint Backlogs](https://github.com/orgs/OHTU-German-learning-website/projects/3)
+
+- Migrations: check [the migration README](data/README.md)
 
 - Migrations: check [the migration README](data/README.md)
 
