@@ -29,5 +29,16 @@ jobs:
       - name: Install client dependencies
         run: npm install
         working-directory: ./gradesa
+      - name: Download pgmigrate
+        run: |
+          wget --quiet https://github.com/peterldowns/pgmigrate/releases/download/v0.1.0%2Bcommit.2f6a72b/pgmigrate-linux-amd64 -O pgmigrate
+          chmod +x pgmigrate
+          mkdir -p "$HOME/bin"
+          mv pgmigrate "$HOME/bin/"
+          echo "$HOME/bin/" >> $GITHUB_PATH
+      - name: Run migrations
+        run: |
+          npm run db:migrate
       - name: Run tests
-        run: echo "All good"
+        run: |
+          npm run test
