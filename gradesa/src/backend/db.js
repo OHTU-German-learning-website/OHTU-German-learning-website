@@ -48,6 +48,12 @@ async function pool(text, params) {
   return (await get()).query(text, params);
 }
 
+/**
+ * Executes a database transaction using the connection pool.
+ * 
+ * @param {Function} fn - A function that takes a client as an argument and returns a promise.
+ * @returns {Promise<Object>} - A promise that resolves to the result of the transaction.
+ */
 async function transaction(fn) {
   const db = await get();
   const client = await db.connect();
