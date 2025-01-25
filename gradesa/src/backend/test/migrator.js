@@ -4,6 +4,7 @@ import { createHash } from "crypto";
 import { exec as execCB } from "child_process";
 import util from "util";
 import { dbURL } from "../db";
+import { logger } from "../logging";
 // Tuns execCB into a promise
 const exec = util.promisify(execCB);
 
@@ -67,7 +68,7 @@ export class Migrator {
       } else if (e.stderr?.indexOf("failed to") > -1) {
         msg = e.stderr.slice(e.stderr.indexOf("failed to"));
       }
-      console.error(msg);
+      logger.error(msg);
     }
   }
 

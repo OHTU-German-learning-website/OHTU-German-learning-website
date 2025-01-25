@@ -2,7 +2,9 @@ import { getConfig } from "../config";
 import { Migrator } from "./migrator";
 import { beforeEach, afterEach, afterAll } from "vitest";
 import { DB } from "../db";
+import { Pool } from "pg";
 import { createHash, randomBytes } from "crypto";
+import { logger } from "../logging";
 const TestUser = "pgtdbuser";
 const TestPassword = "pgtdbpass";
 
@@ -19,7 +21,10 @@ export function useTestDatabase({
   beforeEach(async () => {
     try {
       // Init new DB
-      baseDB = new DB();
+      baseDB = new Pool({
+        max: 1,
+        ...conf
+      })
     } catch (e) {
       throw new Error(
         `Failed to connect to test database, is docker-compose running? : ${e}`
@@ -30,45 +35,45 @@ export function useTestDatabase({
     // 1. Create user
     await ensureUser(baseDB);
 
-    // 2. Create template
+    // 2. Create template.
     // This will run the migrations and create a template database
     const template = await getOrCreateTemplate(baseDB, conf, migrator);
 
-    // 3. Create instance
+    // 3. Create instance.
     // We use the created template to create a new database
     testDBConfig = await createInstance(baseDB, template);
 
     // 4. Create testDB
     // We set the testDB to use the new database
-    testDB = new DB();
-    await testDB.set({ max: 1, ...testDBConfig })
+    await DB.set({ max: 1, ...testDBConfig })
+    testDB = await DB.get();
   });
 
   // After each test, destroy the testDB, releasing the pool
   afterEach(async () => {
     if (testDB !== undefined) {
-      await testDB.destroy();
+      await testDB.end();
     }
 
     // Remove the testdb
     if (baseDB !== undefined) {
-      await baseDB.pool(`DROP DATABASE IF EXISTS ${testDBConfig.database}`);
-      await baseDB.destroy();
+      await baseDB.query(`DROP DATABASE IF EXISTS ${testDBConfig.database}`);
+      await baseDB.end();
     }
 
-    await baseDB.reset();
+    await DB.reset();
   });
 
   // After all tests, destroy the baseDB (if not already destroyed)
   afterAll(async () => {
-    await baseDB.destroy();
+    await DB.destroy();
   });
 }
 
 let template;
 
 async function getOrCreateTemplate(
-  db,
+  pool,
   conf,
   migrator
 ) {
@@ -95,7 +100,7 @@ async function getOrCreateTemplate(
   };
   template = newTemplate;
 
-  await withLock(db, dbName, async (client) => {
+  await withLock(pool, dbName, async (client) => {
     await ensureTemplate(client, migrator, newTemplate);
   });
 
@@ -128,12 +133,12 @@ async function ensureUser(db) {
 
 // createInstance creates a new database instance using the template database
 async function createInstance(
-  db,
+  pool,
   template
 ) {
   const testConf = { ...template.conf };
   testConf.database = `testdb_tpl_${template.hash}_inst_${randomID()}`;
-  await db.pool(`CREATE DATABASE ${testConf.database} WITH TEMPLATE ${template.conf.database} OWNER ${testConf.user}`);
+  await pool.query(`CREATE DATABASE ${testConf.database} WITH TEMPLATE ${template.conf.database} OWNER ${testConf.user}`);
 
   return testConf;
 }
@@ -179,18 +184,18 @@ function id(name) {
 // The withLock function ensures that a block of code runs with a database lock.
 // This prevents other code from running the same block at the same time.
 async function withLock(
-  db,
+  pool,
   lockName,
   cb
 ) {
   const lockID = id(lockName); // Create a lock ID 
 
-  const client = await db.getClient();
+  const client = await pool.connect();
   try {
     await client.query(`SELECT pg_advisory_lock(${lockID})`); // Acquire the lock.
     await cb(client); // Run the function with the lock.
   } catch (e) {
-    console.error('failed to lock', e);
+    logger.error('failed to lock', e);
   } finally {
     await client.query(`SELECT pg_advisory_unlock(${lockID})`); // Release the lock.
     await client.release();
