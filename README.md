@@ -28,6 +28,8 @@ This should be all that's needed:
     - DB_PASSWORD=password
     - DB_NAME=gradesa
   - `docker-compose up -d` — This command starts the services defined in the docker-compose.yml file in detached mode, meaning the services run in the background and the terminal is freed up for other tasks. For more information, checkout [Docker Compose docs](https://docs.docker.com/compose/)
+  - `npm install` in project root
+  - `cd ./gradesa && npm install`
   - `npm run dev` — Starts the dev server.
   - You can now find the NextJS app on localhost:3000
 
