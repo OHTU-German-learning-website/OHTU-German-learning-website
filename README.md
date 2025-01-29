@@ -39,8 +39,6 @@ This should be all that's needed:
 
 - Migrations: check [the migration README](data/README.md)
 
-- Migrations: check [the migration README](data/README.md)
-
 ## Definition of Done
 
 "_The requirement has been analyzed, designed, programmed, tested, automated testing implemented, documented, integrated into other software, and deployed to the production environment._"
