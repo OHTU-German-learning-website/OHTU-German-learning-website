@@ -2,11 +2,13 @@
   "name": "gradesa",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "npm@10.2.4",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "vitest --disable-console-intercept "
   },
   "dependencies": {
     "dotenv": "^16.4.7",
@@ -17,7 +19,13 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.2.0",
+    "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^9",
-    "eslint-config-next": "15.1.5"
+    "eslint-config-next": "15.1.5",
+    "jsdom": "^26.0.0",
+    "ts-node": "^10.9.2",
+    "vitest": "^3.0.4"
   }
 }

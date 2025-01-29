@@ -1,23 +1,27 @@
 import { config } from 'dotenv';
 
+export const environment = process.env.NODE_ENV;
+
+export const isTest = environment === 'test';
+export const isDevelopment = environment === 'development';
+export const isProduction = environment === 'production';
+
 // Loads .env and .env.NODE_ENV (e.g. .env.development)
 // Shared environment variables are in .env
 // Environment specific variables are in .env.NODE_ENV
 // NextJS defaults to 'development' when running npm run dev
 export const initConfig = async () => {
-  const env = process.env.NODE_ENV;
-  switch (env) {
+  switch (environment) {
     case 'test':
     case 'development':
     case 'production':
-      config({ path: `${__dirname}/dotenv/.env`, override: true });
-      config({ path: `${__dirname}/dotenv/.env.${env}`, override: true });
+      config({ path: `${process.cwd()}/.env`, override: true });
+      config({ path: `${process.cwd()}/.env.${environment}`, override: true });
       break;
     default:
       throw new Error('Unsupported environment: ' + env);
   }
 };
-initConfig();
 
 
 // The following is an environment variable helper.
@@ -30,6 +34,7 @@ export const getConfig = () => {
   if (cachedConfig) {
     return cachedConfig;
   }
+  initConfig();
   cachedConfig = create();
   return cachedConfig;
 };

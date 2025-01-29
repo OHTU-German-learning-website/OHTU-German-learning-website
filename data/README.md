@@ -23,3 +23,7 @@ To run the migrations, execute the following command (in root): `npm run db:migr
 
 To reset the database, you can use the following command: `npm run db:reset`
 This will clear all tables, and rerun migrations.
+
+### Adding migrations
+
+To add a migration, creat a new SQL file with the migration you want to run and give it a name with the next number. (ex. `00042_create_user.sql`)

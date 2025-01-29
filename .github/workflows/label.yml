@@ -1,0 +1,26 @@
+name: "Pull Request"
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled]
+
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  bypass-approver:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Check for label and approve PR
+        run: |
+          labels=$(gh pr view ${{ github.event.pull_request.number }} --json labels -q '.labels[].name')
+          if echo "$labels" | grep -q "bypass"; then
+            pr_author="${{ github.event.pull_request.user.login }}"
+            gh pr review ${{ github.event.pull_request.number }} --approve
+          else
+            echo "Label not found, skipping approval"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
