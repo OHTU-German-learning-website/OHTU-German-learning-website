@@ -23,7 +23,7 @@ This should be all that's needed:
 - Run PostgreSQL:
   - Init .env files `./init-env.sh` — This will create the required .env files for environment variables. The local db credentials are
     - DB_HOST=localhost
-    - DB_PORT=6543
+    - DB_PORT=7742
     - DB_USER=ohtu
     - DB_PASSWORD=password
     - DB_NAME=gradesa
