@@ -10,7 +10,7 @@ services:
       - ./provision_db.sql:/docker-entrypoint-initdb.d/1_provision_db.sql
     restart: unless-stopped
     ports:
-      - "6543:5432"
+      - "7742:5432"
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "postgres"]
       interval: 10s
@@ -31,7 +31,7 @@ services:
              echo 'trusted = true' >> /usr/share/postgresql/15/extension/rum.control &&
              /usr/local/bin/docker-entrypoint.sh -c fsync=off -c log_statement=all"
     ports:
-      - "6542:5432"
+      - "7741:5432"
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "postgres"]
       interval: 10s
