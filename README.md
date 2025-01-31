@@ -16,6 +16,11 @@ This should be all that's needed:
 - Docker, either of these installation options work (if you're new to docker, I recommend Docker Desktop):
   - `brew install docker` + `brew install colima` (https://github.com/abiosoft/colima)
   - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+    - WSL 2: Enabling `systemd` is recommended
+      - Install Docker Desktop on Windows
+      - Turn on the WSL 2 feature during installation
+      - Ensure **Use the WSL 2 based engine** is enabled in General Settings
+
 - psql: `brew install postgresql@15`
 
 ## Running locally
