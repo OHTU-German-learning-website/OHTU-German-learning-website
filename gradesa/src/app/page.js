@@ -1,11 +1,13 @@
 'use client';
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import styles from "./page.module.css";
 import useQuery from "@/shared/hooks/useQuery";
-
+import { useState } from "react";
 export default function Home() {
-  const { data, isLoading } = useQuery({ url: '/hello' });
+  const [mode, setMode] = useState('normal');
+
+  const { data, isLoading } = useQuery('/hello', { mode });
+
   return (
     <div className={styles.page}>
       <main className={styles.main}>
@@ -24,7 +26,9 @@ export default function Home() {
           <li>Save and see your changes instantly.</li>
         </ol>
         {data && <p>{data.message}</p>}
-        DB TIME: {isLoading ? <p>Loading...</p> : <p>{data.now}</p>}
+        DB TIME: {isLoading ? <p>Loading...</p> : data && <p>{data.now}</p>}
+        <button onClick={() => setMode('error')}>Error</button>
+        <button onClick={() => setMode('normal')}>Normal</button>
         <div className={styles.ctas}>
           <a
             className={styles.primary}
