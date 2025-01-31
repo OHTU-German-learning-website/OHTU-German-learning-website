@@ -2,13 +2,10 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import styles from "./page.module.css";
+import useQuery from "@/shared/hooks/useQuery";
+
 export default function Home() {
-  const [data, setData] = useState(null);
-  useEffect(() => {
-    fetch('/api/hello')
-      .then(res => res.json())
-      .then(data => setData(data));
-  }, []);
+  const { data, isLoading } = useQuery({ url: '/hello' });
   return (
     <div className={styles.page}>
       <main className={styles.main}>
@@ -27,7 +24,7 @@ export default function Home() {
           <li>Save and see your changes instantly.</li>
         </ol>
         {data && <p>{data.message}</p>}
-        DB TIME: {data && <p>{data.now}</p>}
+        DB TIME: {isLoading ? <p>Loading...</p> : <p>{data.now}</p>}
         <div className={styles.ctas}>
           <a
             className={styles.primary}
