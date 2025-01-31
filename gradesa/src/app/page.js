@@ -6,7 +6,7 @@ import { useState } from "react";
 export default function Home() {
   const [mode, setMode] = useState('normal');
 
-  const { data, isLoading } = useQuery('/hello', { mode });
+  const { data, error, isLoading } = useQuery('/hello', { mode });
 
   return (
     <div className={styles.page}>
@@ -27,6 +27,7 @@ export default function Home() {
         </ol>
         {data && <p>{data.message}</p>}
         DB TIME: {isLoading ? <p>Loading...</p> : data && <p>{data.now}</p>}
+        ERROR: {error ? <p>{error}</p> : <p>No error</p>}
         <button onClick={() => setMode('error')}>Error</button>
         <button onClick={() => setMode('normal')}>Normal</button>
         <div className={styles.ctas}>
