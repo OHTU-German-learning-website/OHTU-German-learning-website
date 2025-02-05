@@ -15,9 +15,6 @@ export default function Register() {
         } else {
             setSubmitted(true);
             setError(false);
-            const response = await fetch('/api/hello?mode=normal');
-            const data = await response.json();
-            console.log(data);
         }
     };
     const successMessage = () => {
