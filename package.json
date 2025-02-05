@@ -1,6 +1,7 @@
 {
   "name": "ohtu-german-learning-website",
   "version": "1.0.0",
+  "packageManager": "npm@10.2.4",
   "description": "GRADESA is a freely accessible website where language learners at language centres as well as university students of German studies can autonomously work on their German grammar skills and knowledge.",
   "scripts": {
     "db:migrate": "./data/migrate.sh",
@@ -10,21 +11,7 @@
     "format:fix": "prettier --write \"**/*.{js,jsx,md,yml}\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.{js,ts,jsx,tsx,md,yml}": [
-      "prettier --write"
-    ]
-  },
-  "devDependencies": {
-    "prettier": "^3.2.4",
-    "husky": "^8.0.3",
-    "lint-staged": "^13.3.0"
-  },
+  "devDependencies": {},
   "author": "",
   "license": "ISC"
 }
