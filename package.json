@@ -6,7 +6,28 @@
     "db:migrate": "./data/migrate.sh",
     "db:reset": "./data/reset-db.sh",
     "dev": "npm run --prefix gradesa dev",
+    "format:check": "prettier --check \"**/*.{js,jsx,md,yml}\"",
+    "format:fix": "prettier --write \"**/*.{js,jsx,md,yml}\"",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx,md,yml}": [
+      "prettier --write"
+    ],
+    "*.{js,ts,jsx,tsx}": [
+      "eslint --fix"
+    ]
+  },
+  "devDependencies": {
+    "prettier": "^3.2.4",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.3.0",
+    "eslint": "^8.57.0"
   },
   "author": "",
   "license": "ISC"

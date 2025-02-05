@@ -1,9 +1,9 @@
-import { axiosInstance } from './useQuery';
+import { axiosInstance } from "./useQuery";
 
 const defaultConfig = {
-  method: 'POST',
+  method: "POST",
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 };
 
@@ -16,10 +16,11 @@ export const useRequest = () => {
    * @param {Object} config - The config of the request.
    * @returns {Object} - The response from the server.
    */
-  return (url, body, config) => axiosInstance.request({
-    url,
-    data: body,
-    ...defaultConfig,
-    ...config,
-  });
-}
+  return (url, body, config) =>
+    axiosInstance.request({
+      url,
+      data: body,
+      ...defaultConfig,
+      ...config,
+    });
+};

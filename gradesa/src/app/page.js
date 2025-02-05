@@ -1,12 +1,12 @@
-'use client';
+"use client";
 import Image from "next/image";
 import styles from "./page.module.css";
 import useQuery from "@/shared/hooks/useQuery";
 import { useState } from "react";
 export default function Home() {
-  const [mode, setMode] = useState('normal');
+  const [mode, setMode] = useState("normal");
 
-  const { data, error, isLoading } = useQuery('/hello', { mode });
+  const { data, error, isLoading } = useQuery("/hello", { mode });
 
   return (
     <div className={styles.page}>
@@ -28,8 +28,8 @@ export default function Home() {
         {data && <p>{data.message}</p>}
         DB TIME: {isLoading ? <p>Loading...</p> : data && <p>{data.now}</p>}
         ERROR: {error ? <p>{error}</p> : <p>No error</p>}
-        <button onClick={() => setMode('error')}>Error</button>
-        <button onClick={() => setMode('normal')}>Normal</button>
+        <button onClick={() => setMode("error")}>Error</button>
+        <button onClick={() => setMode("normal")}>Normal</button>
         <div className={styles.ctas}>
           <a
             className={styles.primary}

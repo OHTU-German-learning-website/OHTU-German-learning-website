@@ -1,10 +1,10 @@
-import { config } from 'dotenv';
+import { config } from "dotenv";
 
 export const environment = process.env.NODE_ENV;
 
-export const isTest = environment === 'test';
-export const isDevelopment = environment === 'development';
-export const isProduction = environment === 'production';
+export const isTest = environment === "test";
+export const isDevelopment = environment === "development";
+export const isProduction = environment === "production";
 
 // Loads .env and .env.NODE_ENV (e.g. .env.development)
 // Shared environment variables are in .env
@@ -12,17 +12,16 @@ export const isProduction = environment === 'production';
 // NextJS defaults to 'development' when running npm run dev
 export const initConfig = async () => {
   switch (environment) {
-    case 'test':
-    case 'development':
-    case 'production':
+    case "test":
+    case "development":
+    case "production":
       config({ path: `${process.cwd()}/.env`, override: true });
       config({ path: `${process.cwd()}/.env.${environment}`, override: true });
       break;
     default:
-      throw new Error('Unsupported environment: ' + env);
+      throw new Error("Unsupported environment: " + env);
   }
 };
-
 
 // The following is an environment variable helper.
 // It's used to read environment variables from .env and .env.NODE_ENV
@@ -39,7 +38,6 @@ export const getConfig = () => {
   return cachedConfig;
 };
 
-
 function getFromEnv(key) {
   const val = process.env[key];
   if (val === undefined) {
@@ -53,14 +51,14 @@ function create() {
 
   function readString(key) {
     const val = getFromEnv(key);
-    if (val === undefined || val.trim() === '') {
+    if (val === undefined || val.trim() === "") {
       errors.push(key);
     }
-    return val ?? '';
+    return val ?? "";
   }
 
   function readStringOptional(key, defaultValue) {
-    return (getFromEnv(key)) ?? defaultValue;
+    return getFromEnv(key) ?? defaultValue;
   }
 
   function readInt(key) {
@@ -79,16 +77,18 @@ function create() {
 
   const config = {
     db: {
-      host: readString('DB_HOST'),
-      port: readInt('DB_PORT'),
-      user: readString('DB_USER'),
-      password: readString('DB_PASSWORD'),
-      database: readString('DB_NAME'),
+      host: readString("DB_HOST"),
+      port: readInt("DB_PORT"),
+      user: readString("DB_USER"),
+      password: readString("DB_PASSWORD"),
+      database: readString("DB_NAME"),
     },
   };
 
   if (errors.length > 0) {
-    throw new Error(`Missing or invalid environment variables: ${errors.join(', ')}`);
+    throw new Error(
+      `Missing or invalid environment variables: ${errors.join(", ")}`
+    );
   }
 
   return config;

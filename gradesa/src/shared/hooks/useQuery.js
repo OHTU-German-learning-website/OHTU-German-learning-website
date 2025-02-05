@@ -1,13 +1,15 @@
-import axios from 'axios';
-import { stringify } from 'qs';
-import { useState, useEffect, useRef, useMemo } from 'react';
-import { useIsMounted } from './useIsMounted';
+import axios from "axios";
+import { stringify } from "qs";
+import { useState, useEffect, useRef, useMemo } from "react";
+import { useIsMounted } from "./useIsMounted";
 
-const baseUrl = process.env.NEXT_ENV === 'production' ? 'https://tbd.com' : 'http://localhost:3000';
+const baseUrl =
+  process.env.NEXT_ENV === "production"
+    ? "https://tbd.com"
+    : "http://localhost:3000";
 export const axiosInstance = axios.create({
   baseURL: `${baseUrl}/api`,
 });
-
 
 /**
  * @description This function converts an object to a query string.
@@ -15,9 +17,8 @@ export const axiosInstance = axios.create({
  * @returns {string} - The query string.
  */
 const objectToQueryString = (obj) => {
-  return stringify(obj, { encodeValuesOnly: true, });
+  return stringify(obj, { encodeValuesOnly: true });
 };
-
 
 const defaultConfig = {
   enabled: true,
@@ -59,11 +60,13 @@ const useQuery = (url, params, config) => {
     }
     setIsLoading(true);
     const fullUrl = queryString ? `${url}?${queryString}` : url;
-    const response = await axiosInstance.get(fullUrl, { signal: abortCtrl.signal });
+    const response = await axiosInstance.get(fullUrl, {
+      signal: abortCtrl.signal,
+    });
     if (isMounted && !!response.data) {
       setData(response.data);
     } else {
-      throw new Error('Failed to fetch data');
+      throw new Error("Failed to fetch data");
     }
   };
 
@@ -78,7 +81,11 @@ const useQuery = (url, params, config) => {
     const maxBackoff = config.refetchBackoffMax;
     try {
       setIsLoading(true);
-      while (currentAttemptRef.current < maxAttempts && isMounted && !abortCtrl.signal.aborted) {
+      while (
+        currentAttemptRef.current < maxAttempts &&
+        isMounted &&
+        !abortCtrl.signal.aborted
+      ) {
         try {
           await makeGetRequest(url, queryString, abortCtrl);
           // If succeeded, exit the loop
@@ -96,11 +103,13 @@ const useQuery = (url, params, config) => {
             maxBackoff
           );
           // Set the exponent for the next attempt
-          // Set to 1 for the first attempt to make the initial 
+          // Set to 1 for the first attempt to make the initial
           // backoff equal to the base backoff
           exponent = memoizedConfig.refetchBackoffExponent;
           // Wait for the backoff duration
-          await new Promise(resolve => setTimeout(resolve, currentBackoffRef.current));
+          await new Promise((resolve) =>
+            setTimeout(resolve, currentBackoffRef.current)
+          );
         }
       }
     } catch (error) {
@@ -125,7 +134,12 @@ const useQuery = (url, params, config) => {
     }
     let abortCtrl = new AbortController();
     (async () => {
-      await retryWithBackoff(url, memoizedQueryString, memoizedConfig, abortCtrl);
+      await retryWithBackoff(
+        url,
+        memoizedQueryString,
+        memoizedConfig,
+        abortCtrl
+      );
     })();
     return () => {
       abortCtrl.abort();
