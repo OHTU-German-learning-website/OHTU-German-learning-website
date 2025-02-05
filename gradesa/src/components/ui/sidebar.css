@@ -1,7 +1,7 @@
 @import "/globals.css";
 
 .sidebar {
-    position: fixed;
+    position: absolute;
     height: 100%;
     width: 25%;
     padding-top: 20px;
@@ -13,21 +13,39 @@
     flex-direction: column;
     align-items: left;
     justify-content: left;
-    background-color: #333;
-    color: #fff;
+    background-color: var(--bg3);
 }
   
 .sidebar-left {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #fff;
+    color: var(--secondary9);
     text-decoration: none;
 }
   
 .sidebar-left.nav-links {
     display: block;
-    background-color:rgb(14, 82, 82);    
+    background-color: var(--secondary8);    
     margin: 10px;
     padding: 10px;
     gap: 20px;
+}
+
+.dropdown {
+    width: 20%;
+}
+
+.dropdown-button {
+    cursor: pointer;
+    background-color: var(--fg2);
+    color: var(--secondary1);
+    border: none;
+    padding: 10px;
+    text-align: left;
+
+}
+
+.menu {
+    display: none;
+    position: flex;
 }
