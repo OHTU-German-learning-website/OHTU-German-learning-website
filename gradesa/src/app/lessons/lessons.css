@@ -1,0 +1,10 @@
+@import "/globals.css";
+
+.lesson {
+    align-items: bottom;
+    background-color: red;
+}
+
+.h1 {
+    font-size: var(--u-3xl);
+}
