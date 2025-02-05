@@ -12,9 +12,13 @@ export default function Register() {
     event.preventDefault();
     if (email === "" || password === "") {
       setError(true);
+      return;
     } else {
       setSubmitted(true);
       setError(false);
+      const response = await fetch('/api/register?mode=normal');
+      const data = await response.json();
+      console.log(data);
     }
   };
   const successMessage = () => {
