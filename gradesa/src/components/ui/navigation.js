@@ -1,24 +1,24 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import "./navbar.css";
 
 const Navbar = () => {
     return (
         <nav className="navbar">
             {/* Layout UI */}
-            <div>
+            <div className='navbar-left'>
                 <Image 
                 src="/logo_placeholder.png"
-                width={240}
-                height={190}
+                width={190}
+                height={140}
                 alt="Logo placeholder"
                 />
-                <h1>Here is the navigation!</h1>
-            </div> 
-            <ul className="nav-links">
-                <li><Link href="#">Home</Link></li>
-                <li><Link href="#">About</Link></li>
-                <li><Link href="#">Contact</Link></li>
-            </ul>
+            </div>
+
+            <div className="navbar-center nav-links">
+                <Link href="#">Benutzer</Link> <br />
+                <Link href="#">Sich abmelden</Link>
+            </div>
         </nav>
     );
 };
