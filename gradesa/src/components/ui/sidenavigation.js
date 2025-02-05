@@ -8,7 +8,7 @@ const Sidebar = () => {
     const [isDropdownOpen, setDropdownOpen] = useState(false);
 
     const toggleDropdown = () => {
-        setDropdownOpen(!isDropdownOpen);
+        setDropdownOpen(previousState => !previousState)
     };
 
     return (
