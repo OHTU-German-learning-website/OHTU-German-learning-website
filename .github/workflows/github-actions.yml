@@ -41,7 +41,6 @@ jobs:
       - name: Run migrations
         run: |
           npm run db:migrate
-
       - name: Check for no uncommitted changes
         run: |
           echo "checking for uncommitted changes"

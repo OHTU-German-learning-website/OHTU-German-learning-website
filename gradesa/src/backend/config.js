@@ -56,10 +56,10 @@ function create() {
     }
     return val ?? "";
   }
-
-  function readStringOptional(key, defaultValue) {
-    return getFromEnv(key) ?? defaultValue;
-  }
+  // Unused-vars
+  // function readStringOptional(key, defaultValue) {
+  //   return getFromEnv(key) ?? defaultValue;
+  // }
 
   function readInt(key) {
     const val = getFromEnv(key);
@@ -69,7 +69,7 @@ function create() {
     }
     return parseInt(val);
   }
-
+  // Unused-vars
   function readIntOptional(key, defaultValue) {
     const value = getFromEnv(key);
     return value === undefined ? defaultValue : parseInt(value);
