@@ -6,12 +6,27 @@
   "scripts": {
     "db:migrate": "./data/migrate.sh",
     "db:reset": "./data/reset-db.sh",
+    "prepare": "husky install",
     "dev": "npm run --prefix gradesa dev",
     "format:check": "prettier --check \"**/*.{js,jsx,md,yml}\"",
     "format:fix": "prettier --write \"**/*.{js,jsx,md,yml}\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "devDependencies": {},
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx,md,yml}": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "lint-staged": "^13.3.0",
+    "prettier": "^3.2.4",
+    "husky": "^8.0.3"
+  },
   "author": "",
   "license": "ISC"
 }

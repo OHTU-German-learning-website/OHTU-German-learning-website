@@ -10,16 +10,6 @@
     "lint": "next lint",
     "test": "vitest --disable-console-intercept "
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.{js,ts,jsx,tsx,md,yml}": [
-      "prettier --write"
-    ]
-  },
   "dependencies": {
     "axios": "^1.7.9",
     "dotenv": "^16.4.7",
@@ -42,9 +32,6 @@
     "eslint-plugin-react-refresh": "^0.4.18",
     "jsdom": "^26.0.0",
     "ts-node": "^10.9.2",
-    "vitest": "^3.0.4",
-    "prettier": "^3.2.4",
-    "husky": "^8.0.3",
-    "lint-staged": "^13.3.0"
+    "vitest": "^3.0.4"
   }
 }

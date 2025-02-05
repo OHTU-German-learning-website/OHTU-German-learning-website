@@ -26,6 +26,8 @@ jobs:
           cache-dependency-path: ./gradesa/package-lock.json
           node-version: 22.6
           cache: "npm"
+      - name: Install dependencies
+        run: npm install
       - name: Install client dependencies
         run: npm install
         working-directory: ./gradesa
