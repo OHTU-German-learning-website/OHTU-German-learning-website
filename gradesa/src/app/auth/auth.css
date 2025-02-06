@@ -1,3 +1,5 @@
+@import '../globals.css';
+
 .auth-container {
     min-height: 100vh;
     display: flex;
@@ -8,41 +10,59 @@
 .auth-box {
     width: 100%;
     max-width: 400px;
-    padding: 2rem;
+    padding: var(--u-3xl);
   }
   
 .auth-title {
     text-align: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--u-xl);
   }
 
 .form-group {
-    margin-bottom: 1rem;
+    margin-bottom: var(--u-lg);
   }
 
 .form-label {
     display: block;
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--u-md);
   }
 
 .form-input {
     width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    padding: var(--u-md);
+    border: 1px solid var(--fg2);
+    border-radius: var(--radius-sm);
   }
 
 .form-button {
     width: 100%;
-    padding: 0.5rem;
-    background-color: #007bff;
-    color: white;
+    padding: var(--u-md);
+    background-color: var(--primary2);
+    color: var(--fg1);
     border: none;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
-    margin-top: 1rem;
+    margin-top: var(--u-lg);
   }
 
 .form-button:hover {
-    background-color: #0056b3;
+    background-color: var(--primary1);
   }
+
+.error-message {
+    padding: var(--u-md);
+    background-color: var(--tertiary5);
+    color: var(--fg1);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--u-lg);
+}
+
+.success {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.error {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
