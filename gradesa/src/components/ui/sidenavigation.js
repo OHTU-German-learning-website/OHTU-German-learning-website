@@ -26,7 +26,7 @@ const Sidebar = () => {
           {/* Dropdown list items */}
           {isDropdownOpen && (
             <div className="dropdown-menu">
-              <Link href="#">Grammatik 1</Link> <br />
+              <Link href="#">Grammatik 1</Link>
               <Link href="#">Grammatik 2</Link>
             </div>
           )}
