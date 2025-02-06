@@ -78,6 +78,8 @@ export class Migrator {
   }
 
   get migrationsDir() {
-    return path.join(__dirname, "../../../../data", "migrations").replace("dist/", "");
+    return path
+      .join(__dirname, "../../../../data", "migrations")
+      .replace("dist/", "");
   }
 }

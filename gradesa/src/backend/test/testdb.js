@@ -23,8 +23,8 @@ export function useTestDatabase({
       // Init new DB
       baseDB = new Pool({
         max: 1,
-        ...conf
-      })
+        ...conf,
+      });
     } catch (e) {
       throw new Error(
         `Failed to connect to test database, is docker-compose running? : ${e}`
@@ -45,7 +45,7 @@ export function useTestDatabase({
 
     // 4. Create testDB
     // We set the testDB to use the new database
-    await DB.set({ max: 1, ...testDBConfig })
+    await DB.set({ max: 1, ...testDBConfig });
     testDB = await DB.get();
   });
 
@@ -72,11 +72,7 @@ export function useTestDatabase({
 
 let template;
 
-async function getOrCreateTemplate(
-  pool,
-  conf,
-  migrator
-) {
+async function getOrCreateTemplate(pool, conf, migrator) {
   const hash = await migrator.hash();
 
   if (template !== undefined) {
@@ -117,9 +113,11 @@ async function ensureUser(db) {
   }
 
   ensureUserCalled = true;
-  await withLock(db, 'testdb-user', async (client) => {
+  await withLock(db, "testdb-user", async (client) => {
     const roleExists = (
-      await client.query(`SELECT EXISTS (SELECT from pg_catalog.pg_roles WHERE rolname = '${TestUser}')`)
+      await client.query(
+        `SELECT EXISTS (SELECT from pg_catalog.pg_roles WHERE rolname = '${TestUser}')`
+      )
     ).rows[0];
 
     if (roleExists.exists) {
@@ -127,31 +125,30 @@ async function ensureUser(db) {
     }
 
     await client.query(`CREATE ROLE ${TestUser}`);
-    await client.query(`ALTER ROLE ${TestUser} WITH LOGIN PASSWORD '${TestPassword}' NOSUPERUSER NOCREATEDB NOCREATEROLE`);
+    await client.query(
+      `ALTER ROLE ${TestUser} WITH LOGIN PASSWORD '${TestPassword}' NOSUPERUSER NOCREATEDB NOCREATEROLE`
+    );
   });
 }
 
 // createInstance creates a new database instance using the template database
-async function createInstance(
-  pool,
-  template
-) {
+async function createInstance(pool, template) {
   const testConf = { ...template.conf };
   testConf.database = `testdb_tpl_${template.hash}_inst_${randomID()}`;
-  await pool.query(`CREATE DATABASE ${testConf.database} WITH TEMPLATE ${template.conf.database} OWNER ${testConf.user}`);
+  await pool.query(
+    `CREATE DATABASE ${testConf.database} WITH TEMPLATE ${template.conf.database} OWNER ${testConf.user}`
+  );
 
   return testConf;
 }
 
-
-async function ensureTemplate(
-  client,
-  migrator,
-  state
-) {
+async function ensureTemplate(client, migrator, state) {
   // If the template database already exists, and is marked as a template,
   // there is no more work to be done.
-  const templateExists = await client.query(`SELECT EXISTS (SELECT FROM pg_database WHERE datname = $1 AND datistemplate = true)`, [state.conf.database]);
+  const templateExists = await client.query(
+    `SELECT EXISTS (SELECT FROM pg_database WHERE datname = $1 AND datistemplate = true)`,
+    [state.conf.database]
+  );
   if (templateExists.rows[0].exists) {
     return;
   }
@@ -160,13 +157,18 @@ async function ensureTemplate(
   // template, there was a failure at some point during the creation process
   // so it needs to be deleted.
   await client.query(`DROP DATABASE IF EXISTS ${state.conf.database}`);
-  await client.query(`CREATE DATABASE ${state.conf.database} OWNER ${state.conf.user}`)
+  await client.query(
+    `CREATE DATABASE ${state.conf.database} OWNER ${state.conf.user}`
+  );
 
-  await migrator.migrate(state.conf)
+  await migrator.migrate(state.conf);
 
   // Finalize the creation of the template by marking it as a
   // template.
-  await client.query(`UPDATE pg_database SET datistemplate = true WHERE datname=$1`, [state.conf.database]);
+  await client.query(
+    `UPDATE pg_database SET datistemplate = true WHERE datname=$1`,
+    [state.conf.database]
+  );
 }
 
 const idPrefix = "sessionlock-";
@@ -180,29 +182,22 @@ function id(name) {
   return hexInt | 0; // Convert to 32-bit integer
 }
 
-
 // The withLock function ensures that a block of code runs with a database lock.
 // This prevents other code from running the same block at the same time.
-async function withLock(
-  pool,
-  lockName,
-  cb
-) {
-  const lockID = id(lockName); // Create a lock ID 
+async function withLock(pool, lockName, cb) {
+  const lockID = id(lockName); // Create a lock ID
 
   const client = await pool.connect();
   try {
     await client.query(`SELECT pg_advisory_lock(${lockID})`); // Acquire the lock.
     await cb(client); // Run the function with the lock.
   } catch (e) {
-    logger.error('failed to lock', e);
+    logger.error("failed to lock", e);
   } finally {
     await client.query(`SELECT pg_advisory_unlock(${lockID})`); // Release the lock.
     await client.release();
   }
 }
-
-
 
 function randomID() {
   const hash = createHash("md5");

@@ -14,6 +14,7 @@ This should be all that's needed:
     - `wget https://github.com/peterldowns/pgmigrate/releases/download/v0.0.6%2Bcommit.4f90829/pgmigrate-linux-amd64 -O /usr/local/bin/pgmigrate`
     - `chmod +x /usr/local/bin/pgmigrate`
 - Docker, either of these installation options work (if you're new to docker, I recommend Docker Desktop):
+
   - `brew install docker` + `brew install colima` (https://github.com/abiosoft/colima)
   - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
     - WSL 2: Enabling `systemd` is recommended

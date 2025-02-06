@@ -56,3 +56,13 @@
     border-radius: var(--radius-sm);
     margin-bottom: var(--u-lg);
 }
+
+.success {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.error {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
