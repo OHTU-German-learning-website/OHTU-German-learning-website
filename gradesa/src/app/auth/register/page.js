@@ -10,13 +10,20 @@ export default function Register() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('password', password);
+
     if (email === "" || password === "") {
       setError(true);
       return;
     } else {
       setSubmitted(true);
       setError(false);
-      const response = await fetch('/api/register?mode=normal');
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        body: formData
+      });
       const data = await response.json();
       console.log(data);
     }
