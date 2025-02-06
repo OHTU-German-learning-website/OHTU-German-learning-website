@@ -1,0 +1,58 @@
+@import "/globals.css";
+
+.sidebar {
+    position: absolute;
+    height: 100%;
+    width: 25%;
+    padding-top: 20px;
+    padding-left: 50px;
+    z-index: 1;
+    overflow-x: hidden;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: left;
+    background-color: var(--bg3);
+    white-space: nowrap;
+}
+  
+.sidebar-left {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--secondary9);
+    text-decoration: none;
+}
+  
+.sidebar-left.nav-links {
+    display: block;
+    background-color: var(--secondary8);    
+    margin: 10px;
+    padding: 10px;
+    gap: 20px;
+}
+
+.dropdown {
+    width: 20%;
+    font-size: var(--font-lg);
+    color: var(--secondary1);
+    flex-direction: column;
+    display: block;
+}
+
+.dropdown-button {
+    cursor: pointer;
+    background-color: var(--fg2);
+    color: var(--secondary1);
+    border: none;
+    padding: 10px;
+    text-align: left;
+
+}
+
+/* Note: this refers to the dropdown-menu 
+in sidenavigation.js */
+.menu {
+    display: none;
+    position: flex;
+}
