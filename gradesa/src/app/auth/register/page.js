@@ -1,33 +1,31 @@
 "use client";
 import { useState } from "react";
+import { useRequest } from "@/shared/hooks/useRequest";
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
+
+  const makeRequest = useRequest();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
     const formData = new FormData();
     formData.append("email", email);
     formData.append("password", password);
 
-    if (email === "" || password === "") {
-      setError(true);
-      return;
-    } else {
-      setSubmitted(true);
-      setError(false);
-      const response = await fetch("/api/register", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await response.json();
-      console.log(data);
-    }
+    const { data } = await makeRequest("/register", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    console.log(data);
   };
+
   const successMessage = () => {
     return (
       <div className="success">

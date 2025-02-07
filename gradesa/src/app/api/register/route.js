@@ -9,6 +9,8 @@ export async function POST(request) {
       message: "Email and password combination allowed.",
     });
   } else {
-    return Response.json("Email and password combination not allowed.");
+    return Response.json("Email and password combination not allowed.", {
+      status: 400,
+    });
   }
 }
