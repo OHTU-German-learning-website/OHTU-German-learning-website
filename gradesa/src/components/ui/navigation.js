@@ -12,6 +12,7 @@ const Navbar = () => {
           width={190}
           height={140}
           alt="Logo placeholder"
+          priority={true}
         />
       </div>
 
