@@ -7,7 +7,7 @@ import { DB } from "../db";
  * @description Factory function to create a model for a given table.
  * @param {string} tableName - The name of the table for which the model is being created.
  * @param {Object|Function} base - The base values or a function returning base values for the model.
- * @returns {Object} - The created model with base values.
+ * @returns {function} - A function that creates a model for the given table.
  */
 function modelFactory(tableName, base) {
   return async function (mod) {
@@ -32,6 +32,7 @@ function modelFactory(tableName, base) {
 }
 
 faker.seed(123);
+
 const user = modelFactory("users", () => ({
   email: faker.internet.email(),
   password_hash: createHash("sha256")
