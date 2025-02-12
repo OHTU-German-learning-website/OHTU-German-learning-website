@@ -1,26 +1,34 @@
+"use client";
 import { useState } from "react";
 import { formConfig } from "./learning-form-config";
 
-const LearningForm = () => {
+function LearningForm() {
   const [language, setLanguage] = useState("en");
   const [part, setPart] = useState(0);
 
   const renderPartSteps = (partConfig) => {
     return partConfig.steps.map((step) => {
-      return <div>{step.title}</div>;
+      return <FormPartStep step={step} key={step.id} />;
     });
   };
 
-  const renderParts = () => {
-    return formConfig[language].parts[part].map((partConfig) => {
-      return (
-        <div>
-          {partConfig.title}
-          {renderPartSteps(partConfig)}
-        </div>
-      );
-    });
+  const currentPart = formConfig[language].parts[part];
+  console.log(currentPart);
+
+  const renderPart = () => {
+    return (
+      <div>
+        {currentPart.title}
+        {renderPartSteps(currentPart)}
+      </div>
+    );
   };
 
-  return <div>{renderParts()}</div>;
-};
+  return <div>{renderPart()}</div>;
+}
+
+function FormPartStep({ step }) {
+  return <div key={step.id}>{step.text}</div>;
+}
+
+export default LearningForm;
