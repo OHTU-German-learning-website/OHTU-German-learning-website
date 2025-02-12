@@ -19,7 +19,7 @@ export default function User_settings() {
       <section style={{ marginBottom: "40px" }}>
         <h2>Change Password</h2>
         <p>You can change your password by clicking the button below.</p>
-        <Link href="/change-password">
+        <Link href="/A123/change_password">
           <button
             style={{
               padding: "10px 20px",
