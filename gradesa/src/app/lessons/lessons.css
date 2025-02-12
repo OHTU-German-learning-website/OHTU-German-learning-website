@@ -1,10 +1,43 @@
-@import "/globals.css";
+.lessons-container {
+    display:flex;
+}
 
-.lesson {
-    align-items: bottom;
-    background-color: red;
+.lessons-content {
+    flex: 1;
+    padding: 20px;
 }
 
 .h1 {
     font-size: var(--u-3xl);
 }
+
+.flex-parent-element {
+    display: flex;
+    width: 70%;
+    padding-left: 30%;
+    padding-top: 20px;
+  }
+  
+  .flex-child-element {
+    flex: 1 0 200px;
+    width: 0;
+    border: 2px solid var( --fg7);
+    margin: 5px;
+    padding: 10%;
+    box-sizing: border-box;
+    overflow: hidden;
+    background-color: var(--fg3);
+    color: var(--secondary1);
+  }
+  
+  .flex-child-element:first-child {
+    margin-right: 20px;
+  }
+
+  h2 {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: var(--tertiary1);
+    margin-bottom: 15px;
+  }
+  
