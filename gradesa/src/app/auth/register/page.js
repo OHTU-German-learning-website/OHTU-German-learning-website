@@ -13,17 +13,15 @@ export default function Register() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    const formData = new FormData();
-    formData.append("email", email);
-    formData.append("password", password);
-
-    const { data } = await makeRequest("/register", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const data = await makeRequest("/register", { email, password });
     console.log(data);
+    if (data.status === 200) {
+      setSubmitted(true);
+      setError(false);
+    } else {
+      setError(true);
+      setSubmitted(false);
+    }
   };
 
   const successMessage = () => {
