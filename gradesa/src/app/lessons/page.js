@@ -36,18 +36,42 @@ export default function LessonsPage() {
           <div className="flex-child-element">
             <h2>Grammatik 1</h2>
             <ul>
-              <li>Übung 1</li>
-              <li>Übung 2</li>
-              <li>Übung 3</li>
+              <li>
+                <a href="#" className="exercise-link">
+                  Übung 1
+                </a>
+              </li>
+              <li>
+                <a href="#" className="exercise-link">
+                  Übung 2
+                </a>
+              </li>
+              <li>
+                <a href="#" className="exercise-link">
+                  Übung 3
+                </a>
+              </li>
               {showMoreGrammatik1 && (
                 <>
-                  <li className="more">Übung 4</li>
-                  <li className="more">Übung 5</li>
+                  <li className="more">
+                    <a href="#" className="exercise-link">
+                      Übung 4
+                    </a>
+                  </li>
+                  <li className="more">
+                    <a href="#" className="exercise-link">
+                      Übung 5
+                    </a>
+                  </li>
                 </>
               )}
             </ul>
             <div className="show-list">
-              <a href="#" id="more" onClick={handleShowMoreGrammatik1}>
+              <a
+                href="#"
+                className="show-more-link"
+                onClick={handleShowMoreGrammatik1}
+              >
                 {showMoreGrammatik1 ? "weniger anzeigen" : "mehr anzeigen"}
               </a>
             </div>
@@ -55,18 +79,42 @@ export default function LessonsPage() {
           <div className="flex-child-element">
             <h2>Grammatik 2</h2>
             <ul>
-              <li>Übung 1</li>
-              <li>Übung 2</li>
-              <li>Übung 3</li>
+              <li>
+                <a href="#" className="exercise-link">
+                  Übung 1
+                </a>
+              </li>
+              <li>
+                <a href="#" className="exercise-link">
+                  Übung 2
+                </a>
+              </li>
+              <li>
+                <a href="#" className="exercise-link">
+                  Übung 3
+                </a>
+              </li>
               {showMoreGrammatik2 && (
                 <>
-                  <li className="more">Übung 4</li>
-                  <li className="more">Übung 5</li>
+                  <li className="more">
+                    <a href="#" className="exercise-link">
+                      Übung 4
+                    </a>
+                  </li>
+                  <li className="more">
+                    <a href="#" className="exercise-link">
+                      Übung 5
+                    </a>
+                  </li>
                 </>
               )}
             </ul>
             <div className="show-list">
-              <a href="#" id="more" onClick={handleShowMoreGrammatik2}>
+              <a
+                href="#"
+                className="show-more-link"
+                onClick={handleShowMoreGrammatik2}
+              >
                 {showMoreGrammatik2 ? "weniger anzeigen" : "mehr anzeigen"}
               </a>
             </div>
@@ -76,18 +124,42 @@ export default function LessonsPage() {
           <div className="flex-child-element">
             <h2>Grammatik 3</h2>
             <ul>
-              <li>Übung 1</li>
-              <li>Übung 2</li>
-              <li>Übung 3</li>
+              <li>
+                <a href="#" className="exercise-link">
+                  Übung 1
+                </a>
+              </li>
+              <li>
+                <a href="#" className="exercise-link">
+                  Übung 2
+                </a>
+              </li>
+              <li>
+                <a href="#" className="exercise-link">
+                  Übung 3
+                </a>
+              </li>
               {showMoreGrammatik3 && (
                 <>
-                  <li className="more">Übung 4</li>
-                  <li className="more">Übung 5</li>
+                  <li className="more">
+                    <a href="#" className="exercise-link">
+                      Übung 4
+                    </a>
+                  </li>
+                  <li className="more">
+                    <a href="#" className="exercise-link">
+                      Übung 5
+                    </a>
+                  </li>
                 </>
               )}
             </ul>
             <div className="show-list">
-              <a href="#" id="more" onClick={handleShowMoreGrammatik3}>
+              <a
+                href="#"
+                className="show-more-link"
+                onClick={handleShowMoreGrammatik3}
+              >
                 {showMoreGrammatik3 ? "weniger anzeigen" : "mehr anzeigen"}
               </a>
             </div>
@@ -95,18 +167,42 @@ export default function LessonsPage() {
           <div className="flex-child-element">
             <h2>Grammatik 4</h2>
             <ul>
-              <li>Übung 1</li>
-              <li>Übung 2</li>
-              <li>Übung 3</li>
+              <li>
+                <a href="#" className="exercise-link">
+                  Übung 1
+                </a>
+              </li>
+              <li>
+                <a href="#" className="exercise-link">
+                  Übung 2
+                </a>
+              </li>
+              <li>
+                <a href="#" className="exercise-link">
+                  Übung 3
+                </a>
+              </li>
               {showMoreGrammatik4 && (
                 <>
-                  <li className="more">Übung 4</li>
-                  <li className="more">Übung 5</li>
+                  <li className="more">
+                    <a href="#" className="exercise-link">
+                      Übung 4
+                    </a>
+                  </li>
+                  <li className="more">
+                    <a href="#" className="exercise-link">
+                      Übung 5
+                    </a>
+                  </li>
                 </>
               )}
             </ul>
             <div className="show-list">
-              <a href="#" id="more" onClick={handleShowMoreGrammatik4}>
+              <a
+                href="#"
+                className="show-more-link"
+                onClick={handleShowMoreGrammatik4}
+              >
                 {showMoreGrammatik4 ? "weniger anzeigen" : "mehr anzeigen"}
               </a>
             </div>

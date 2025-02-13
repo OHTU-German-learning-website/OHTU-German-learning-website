@@ -18,7 +18,11 @@ h2 {
   margin-bottom: 15px;
 }
 
-a {
+.flex-child-element .exercise-link {
+  color: var(--secondary1);
+}
+
+.flex-child-element .show-more-link {
   font-style: italic;
   color: var(--secondary3);
   font-size: var(--font-sm);
