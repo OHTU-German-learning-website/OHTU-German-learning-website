@@ -28,15 +28,25 @@ h2 {
   font-size: var(--font-sm);
 }
 
+.show-more-link, .exercise-link {
+  background: none;
+  border: none;
+  color: var(--secondary3);
+  text-decoration: none;
+  cursor: pointer;
+  padding: 0;
+}
+
 .flex-parent-element {
     display: flex;
+    flex-wrap: wrap;
     width: 70%;
     padding-left: 30%;
     padding-top: 20px;
   }
   
   .flex-child-element {
-    flex: 1 0 200px;
+    flex: 1 0 50%;
     width: 0;
     border: 2px solid var( --fg7);
     margin: 5px;
