@@ -33,7 +33,7 @@ export default function LessonsPage() {
 
   return (
     <LessonsLayout>
-      <div>
+      <div className="lessons-container">
         <h1>Übungen</h1>
         {initialGrammatikTopics.map((topic, index) => (
           <div className="flex-parent-element" key={`${topic.title}-${index}`}>

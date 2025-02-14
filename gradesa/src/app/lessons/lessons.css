@@ -1,10 +1,14 @@
 .lessons-container {
-    display:flex;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    background-color: blueviolet;
 }
 
 .lessons-content {
     flex: 1;
-    padding: 20px;
+    padding: 10px;
+    background-color: blue;
 }
 
 h1 {
@@ -17,6 +21,11 @@ h2 {
   color: var(--tertiary1);
   margin-bottom: 15px;
 }
+
+ul {
+  list-style-type: circle;
+}
+
 
 .flex-child-element .exercise-link {
   color: var(--secondary1);
