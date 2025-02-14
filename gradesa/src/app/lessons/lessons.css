@@ -23,6 +23,13 @@ h2 {
   margin-bottom: 15px;
 }
 
+button {
+  padding-left: 30%;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
 ul {
   list-style-type: circle;
 }

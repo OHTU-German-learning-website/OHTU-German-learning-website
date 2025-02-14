@@ -8,18 +8,6 @@ const initialGrammatikTopics = [
     title: "Grammatik 1",
     exercises: ["Übung 1", "Übung 2", "Übung 3", "Übung 4", "Übung 5"],
   },
-  {
-    title: "Grammatik 2",
-    exercises: ["Übung 1", "Übung 2", "Übung 3", "Übung 4", "Übung 5"],
-  },
-  {
-    title: "Grammatik 3",
-    exercises: ["Übung 1", "Übung 2", "Übung 3", "Übung 4", "Übung 5"],
-  },
-  {
-    title: "Grammatik 4",
-    exercises: ["Übung 1", "Übung 2", "Übung 3", "Übung 4", "Übung 5"],
-  },
 ];
 
 export default function LessonsPage() {
@@ -35,7 +23,7 @@ export default function LessonsPage() {
   return (
     <LessonsLayout>
       <div className="lessons-container">
-        <h1>Übungen</h1>
+        <h1>Grammatik 1</h1>
         {initialGrammatikTopics.map((topic, index) => (
           <div className="flex-parent-element" key={`${topic.title}-${index}`}>
             <div className="flex-child-element">
@@ -43,18 +31,13 @@ export default function LessonsPage() {
               <ul>
                 {topic.exercises.slice(0, 3).map((exercise, exIndex) => (
                   <li key={`${index}-exercise-${exIndex}`}>
-                    <Link href={`/lessons/exercises`}> 
-                    {/* At the moment, all the Übung-links goes to the same page. */}
-                      <button className="exercise-link">{exercise}</button>
-                    </Link>
+                    <button className="exercise-link">{exercise}</button>
                   </li>
                 ))}
                 {grammatik[index] &&
                   topic.exercises.slice(3).map((exercise, exIndex) => (
                     <li key={`${index}-more-${exIndex}`} className="more">
-                      <Link href={`/lessons/exercises`}>
-                        <button className="exercise-link">{exercise}</button>
-                      </Link>{" "}
+                      <button className="exercise-link">{exercise}</button>
                     </li>
                   ))}
               </ul>
@@ -70,6 +53,9 @@ export default function LessonsPage() {
           </div>
         ))}
       </div>
+      <Link href="/lessons">
+        <button className="back-button">Back to lessons</button>
+      </Link>
     </LessonsLayout>
   );
 }
