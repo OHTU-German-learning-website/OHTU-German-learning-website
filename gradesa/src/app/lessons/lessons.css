@@ -1,7 +1,9 @@
 .lessons-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     flex-wrap: wrap;
+    align-items: flex-start;
+    width: 100%;
 }
 
 .lessons-content {
@@ -11,6 +13,7 @@
 
 h1 {
     font-size: var(--u-3xl);
+    padding-left: 30%;
 }
 
 h2 {
@@ -23,7 +26,6 @@ h2 {
 ul {
   list-style-type: circle;
 }
-
 
 .flex-child-element .exercise-link {
   color: var(--secondary1);
@@ -47,25 +49,23 @@ ul {
 .flex-parent-element {
     display: flex;
     flex-wrap: wrap;
-    width: 70%;
-    padding-left: 30%;
+    width: 100%;
+    padding-left: 0;
     padding-top: 20px;
   }
   
   .flex-child-element {
-    flex: 1 0 50%;
-    width: 0;
-    border: 2px solid var( --fg7);
+    flex: 1 0 48%;
     margin: 5px;
-    padding: 10%;
+    padding: 20px;
     box-sizing: border-box;
-    overflow: hidden;
+    border: 2px solid var( --fg7);
     background-color: var(--fg3);
     color: var(--secondary1);
   }
   
   .flex-child-element:first-child {
-    margin-right: 20px;
+    margin-right: 40%;
+    margin-left: 30%;
+    padding: 30px;
   }
-
- 
