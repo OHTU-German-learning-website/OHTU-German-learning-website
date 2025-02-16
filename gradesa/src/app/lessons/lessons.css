@@ -34,8 +34,13 @@ ul {
   list-style-type: circle;
 }
 
+ul.exercise-list {
+  list-style-type: circle;
+  padding-left: 30%;
+}
+
 .flex-child-element .exercise-link {
-  color: var(--secondary1);
+  color: var(--secondar1);
 }
 
 .flex-child-element .show-more-link {
