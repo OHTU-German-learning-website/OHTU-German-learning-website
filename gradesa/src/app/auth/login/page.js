@@ -1,5 +1,5 @@
 "use client";
-import { useState, Suspense } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Login() {
@@ -17,16 +17,19 @@ export default function Login() {
     console.log("Email:", email);
     console.log("Password:", password);
 
-    // Mock backend validation
     try {
-      const mockEmail = "user@example.com";
-      const mockPassword = "Demonstration1";
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-      // API call simulation
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const data = await response.json();
 
-      if (email !== mockEmail || password !== mockPassword) {
-        throw new Error("Ungültige E-Mail-Adresse oder Passwort");
+      if (!response.ok) {
+        throw new Error(data.error);
       }
 
       console.log("Login successful!");
@@ -40,7 +43,7 @@ export default function Login() {
   };
 
   return (
-    <Suspense fallback={<div>Laden...</div>}>
+    <div>
       <h1 className="auth-title">Anmeldung</h1>
 
       {error && <div className="error-message">{error}</div>}
@@ -82,6 +85,6 @@ export default function Login() {
           {isLoading ? "Wird bearbeitet..." : "Einloggen"}
         </button>
       </form>
-    </Suspense>
+    </div>
   );
 }

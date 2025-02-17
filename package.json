@@ -23,10 +23,13 @@
     ]
   },
   "devDependencies": {
+    "husky": "^8.0.3",
     "lint-staged": "^13.3.0",
-    "prettier": "^3.2.4",
-    "husky": "^8.0.3"
+    "prettier": "^3.2.4"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "jose": "^5.9.6"
+  }
 }
