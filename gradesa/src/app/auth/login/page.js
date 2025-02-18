@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useRequest } from "../../../shared/hooks/useRequest";
 
 export default function Login() {
   const router = useRouter();
@@ -8,6 +9,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const request = useRequest();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -18,18 +20,10 @@ export default function Login() {
     console.log("Password:", password);
 
     try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      const response = await request("/auth/login", { email, password });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error);
+      if (response.status !== 200) {
+        throw new Error(response.data.error);
       }
 
       console.log("Login successful!");

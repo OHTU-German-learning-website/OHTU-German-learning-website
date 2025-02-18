@@ -1,13 +1,17 @@
-import { describe, it, expect, vi } from "vitest";
-import { NextResponse } from "next/server";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { POST } from "./route";
 import { createSession } from "../../../lib/session";
 
-vi.mock("../../../app/lib/session", () => ({
-  createSession: vi.fn(),
+vi.mock("../../../lib/session", () => ({
+  createSession: vi.fn().mockResolvedValue(undefined),
 }));
 
 describe("POST /api/auth/login", () => {
+  beforeEach(() => {
+    // Clear mock calls between tests
+    vi.clearAllMocks();
+  });
+
   it("should return success message for valid credentials", async () => {
     const request = {
       json: async () => ({
@@ -17,10 +21,10 @@ describe("POST /api/auth/login", () => {
     };
 
     const response = await POST(request);
+    const responseData = await response.json();
 
-    expect(response).toMatchObject(
-      NextResponse.json({ message: "Login successful" })
-    );
+    expect(responseData).toEqual({ message: "Login successful" });
+    expect(response.status).toBe(200);
     expect(createSession).toHaveBeenCalledWith(1);
   });
 
@@ -33,13 +37,12 @@ describe("POST /api/auth/login", () => {
     };
 
     const response = await POST(request);
+    const responseData = await response.json();
 
-    expect(response).toMatchObject(
-      NextResponse.json(
-        { error: "Ungültige E-Mail-Adresse oder Passwort" },
-        { status: 401 }
-      )
-    );
+    expect(responseData).toEqual({
+      error: "Ungültige E-Mail-Adresse oder Passwort",
+    });
+    expect(response.status).toBe(401);
     expect(createSession).not.toHaveBeenCalled();
   });
 
@@ -52,13 +55,12 @@ describe("POST /api/auth/login", () => {
     };
 
     const response = await POST(request);
+    const responseData = await response.json();
 
-    expect(response).toMatchObject(
-      NextResponse.json(
-        { error: "Ungültige E-Mail-Adresse oder Passwort" },
-        { status: 401 }
-      )
-    );
+    expect(responseData).toEqual({
+      error: "Ungültige E-Mail-Adresse oder Passwort",
+    });
+    expect(response.status).toBe(401);
     expect(createSession).not.toHaveBeenCalled();
   });
 });

@@ -16,11 +16,22 @@ export const useRequest = () => {
    * @param {Object} config - The config of the request.
    * @returns {Object} - The response from the server.
    */
-  return (url, body, config) =>
-    axiosInstance.request({
-      url,
-      data: body,
-      ...defaultConfig,
-      ...config,
-    });
+  return async (url, body, config) => {
+    try {
+      const response = await axiosInstance.request({
+        url,
+        data: body,
+        ...defaultConfig,
+        ...config,
+      });
+
+      return response;
+    } catch (error) {
+      if (error.response && error.response.data && error.response.data.error) {
+        throw new Error(error.response.data.error);
+      } else {
+        throw new Error("An unexpected error occurred.");
+      }
+    }
+  };
 };
