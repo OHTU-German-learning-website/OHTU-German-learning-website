@@ -69,7 +69,7 @@ function create() {
     }
     return parseInt(val);
   }
-  // Unused-vars
+
   function readIntOptional(key, defaultValue) {
     const value = getFromEnv(key);
     return value === undefined ? defaultValue : parseInt(value);

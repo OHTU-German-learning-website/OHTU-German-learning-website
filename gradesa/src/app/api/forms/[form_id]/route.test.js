@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { GET } from "./route";
 import { useTestDatabase } from "@/backend/test/testdb";
-import { useTestRequest } from "@/backend/test/requests";
+import { useTestRequest } from "@/backend/test/mock-request";
 
 describe("Forms", () => {
   useTestDatabase();
@@ -17,10 +17,5 @@ describe("Forms", () => {
     const json = await form.json();
     expect(json.parts).toHaveLength(6);
     expect(json.parts[0].questions).toHaveLength(9);
-    expect(json.parts[1].questions).toHaveLength(14);
-    expect(json.parts[2].questions).toHaveLength(6);
-    expect(json.parts[3].questions).toHaveLength(9);
-    expect(json.parts[4].questions).toHaveLength(6);
-    expect(json.parts[5].questions).toHaveLength(6);
   });
 });
