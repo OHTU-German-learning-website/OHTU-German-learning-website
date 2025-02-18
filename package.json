@@ -28,8 +28,5 @@
     "prettier": "^3.2.4"
   },
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "jose": "^5.9.6"
-  }
+  "license": "ISC"
 }
