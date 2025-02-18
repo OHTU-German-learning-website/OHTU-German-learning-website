@@ -16,7 +16,7 @@ const Navbar = () => {
       </div>
 
       <div className="navbar-center nav-links">
-        <Link href="#">Benutzer</Link> <br />
+        <Link href="#">Benutzer</Link>
         <Link href="#">Sich abmelden</Link>
       </div>
     </nav>

@@ -3,7 +3,7 @@ import { useState } from "react";
 import LessonsLayout from "./layout";
 import Link from "next/link";
 
-const initialGrammatikTopics = [
+const initialGrammarTopics = [
   {
     title: "Grammatik 1",
     exercises: ["Übung 1", "Übung 2", "Übung 3", "Übung 4", "Übung 5"],
@@ -23,20 +23,20 @@ const initialGrammatikTopics = [
 ];
 
 export default function LessonsPage() {
-  const [grammatik, setGrammatik] = useState(
-    initialGrammatikTopics.map(() => false)
+  const [grammar, setGrammar] = useState(
+    initialGrammarTopics.map(() => false)
   );
 
   const toggleShowMore = (event, index) => {
     event.preventDefault();
-    setGrammatik(grammatik.map((show, i) => (i === index ? !show : show)));
+    setGrammar(grammar.map((show, i) => (i === index ? !show : show)));
   };
 
   return (
     <LessonsLayout>
       <div className="lessons-container">
         <h1>Übungen</h1>
-        {initialGrammatikTopics.map((topic, index) => (
+        {initialGrammarTopics.map((topic, index) => (
           <div className="flex-parent-element" key={`${topic.title}-${index}`}>
             <div className="flex-child-element">
               <h2>{topic.title}</h2>
@@ -49,7 +49,7 @@ export default function LessonsPage() {
                     </Link>
                   </li>
                 ))}
-                {grammatik[index] &&
+                {grammar[index] &&
                   topic.exercises.slice(3).map((exercise, exIndex) => (
                     <li key={`${index}-more-${exIndex}`} className="more">
                       <Link href={`/lessons/exercises`}>
@@ -63,7 +63,7 @@ export default function LessonsPage() {
                   className="show-more-link"
                   onClick={(e) => toggleShowMore(e, index)}
                 >
-                  {grammatik[index] ? "weniger anzeigen" : "mehr anzeigen"}{" "}
+                  {grammar[index] ? "weniger anzeigen" : "mehr anzeigen"}{" "}
                 </button>
               </div>
             </div>

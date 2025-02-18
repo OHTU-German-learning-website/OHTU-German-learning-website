@@ -3,7 +3,7 @@ import { useState } from "react";
 import LessonsLayout from "./layout";
 import Link from "next/link";
 
-const initialGrammatikTopics = [
+const initialGrammarTopics = [
   {
     title: "Grammatik 1",
     exercises: ["Übung 1", "Übung 2", "Übung 3", "Übung 4", "Übung 5"],
@@ -11,13 +11,13 @@ const initialGrammatikTopics = [
 ];
 
 export default function LessonsPage() {
-  const [grammatik, setGrammatik] = useState(
-    initialGrammatikTopics.map(() => false)
+  const [grammar, setgrammar] = useState(
+    initialGrammarTopics.map(() => false)
   );
 
   const toggleShowMore = (event, index) => {
     event.preventDefault();
-    setGrammatik(grammatik.map((show, i) => (i === index ? !show : show)));
+    setgrammar(grammar.map((show, i) => (i === index ? !show : show)));
   };
 
   return (
@@ -26,7 +26,7 @@ export default function LessonsPage() {
         <h1>Grammatik 1</h1>
         <div className="flex-parent-element">
           <ul className="exercise-list">
-            {initialGrammatikTopics[0].exercises.map((exercise, exIndex) => (
+            {initialGrammarTopics[0].exercises.map((exercise, exIndex) => (
               <li key={`exercise-${exIndex}`}>
                 <Link href={`/lessons/exercises`}>
                   <button className="exercise-link">{exercise}</button>
