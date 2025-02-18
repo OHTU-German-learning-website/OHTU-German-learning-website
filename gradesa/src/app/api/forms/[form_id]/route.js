@@ -1,9 +1,12 @@
+"use server";
 import { DB } from "@/backend/db";
-export function GET(request) {
-  const form_id = request.params.form_id;
-  const user_id = request.user.id;
+import { NextResponse } from "next/server";
 
-  const formRows = DB.pool(
+export async function GET(request, params) {
+  const { form_id } = await params;
+  const user_id = 42;
+
+  const formRows = await DB.pool(
     `
 WITH questions AS
          (SELECT pq.id, pq.title, pq.form_part_id
@@ -13,6 +16,7 @@ WITH questions AS
      parts as
          (SELECT fp.id,
                  fp.title,
+                 fp.form_id,
                  jsonb_agg(
                          to_jsonb(
                                  pq.*
@@ -25,6 +29,7 @@ WITH questions AS
      forms as
          (SELECT f.id,
                  f.title,
+                 f.description,
                  f.iso_language_code,
                  jsonb_agg(
                          to_jsonb(
@@ -32,7 +37,7 @@ WITH questions AS
                          )
                  ) as parts
           FROM forms f
-                   JOIN parts fp ON f.id = fp.id
+                   JOIN parts fp ON f.id = fp.form_id
           WHERE f.id = $2
           GROUP BY f.id)
 SELECT *
@@ -40,4 +45,9 @@ FROM forms;
   `,
     [user_id, form_id]
   );
+
+  if (!formRows.rowCount) {
+    return NextResponse.json({ error: "Form not found" }, { status: 404 });
+  }
+  return NextResponse.json(formRows.rows[0]);
 }

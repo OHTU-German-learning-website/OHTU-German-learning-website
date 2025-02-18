@@ -6,7 +6,7 @@ import { useState } from "react";
 export default function Home() {
   const [mode, setMode] = useState("normal");
 
-  const { data, error, isLoading } = useQuery("/hello", { mode });
+  const { data, error, isLoading } = useQuery("/forms/1");
 
   return (
     <div className={styles.page}>

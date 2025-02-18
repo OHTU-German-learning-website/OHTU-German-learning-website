@@ -7,8 +7,8 @@ CREATE OR REPLACE FUNCTION updated_at() RETURNS TRIGGER AS $$
 	END;
 $$ LANGUAGE plpgsql;
 
-ALTER TABLE users ADD COLUMN created_at timestamptz NOT NULL DEFAULT now();
-ALTER TABLE users ADD COLUMN updated_at timestamptz NOT NULL DEFAULT now();
+ALTER TABLE users ADD COLUMN IF NOT EXISTS created_at timestamptz NOT NULL DEFAULT now();
+ALTER TABLE users ADD COLUMN IF NOT EXISTS updated_at timestamptz NOT NULL DEFAULT now();
 
 CREATE TRIGGER updated_at
     BEFORE UPDATE
