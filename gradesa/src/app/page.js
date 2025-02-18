@@ -4,6 +4,7 @@ import styles from "./page.module.css";
 import useQuery from "@/shared/hooks/useQuery";
 import { useState } from "react";
 import { Button } from "@/components/ui/button/button";
+import { Dropdown } from "@/components/ui/dropdown/dropdown";
 export default function Home() {
   const [mode, setMode] = useState("normal");
 
@@ -28,6 +29,25 @@ export default function Home() {
         <Button variant="outline" size="sm" width="fit">
           Outline
         </Button>
+        <Dropdown
+          options={[
+            {
+              label: "Option 1",
+              value: "option1",
+            },
+            {
+              label: "Option 2",
+              value: "option2",
+            },
+            {
+              label: "Option 3",
+              value: "option3",
+              disabled: true,
+            },
+          ]}
+        >
+          <Button>Dropdown</Button>
+        </Dropdown>
         <Image
           className={styles.logo}
           src="/next.svg"
