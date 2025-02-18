@@ -1,7 +1,8 @@
 "use client";
 import Image from "next/image";
 import styles from "./page.module.css";
-import { Grid, Box, Container } from "@radix-ui/themes";
+import { Grid } from "@radix-ui/themes";
+import BoxLayout from "@/components/ui/box";
 import useQuery from "@/shared/hooks/useQuery";
 import { useState } from "react";
 import Link from "next/link";
@@ -14,25 +15,15 @@ export default function Home() {
     <div className={styles.page}>
       <main className={styles.main}>
         <Grid columns={{ initial: "1", md: "2" }} gap="3" width="auto">
-          <Box height="128px" width="256px">
-            <Link href="#">How You Learn</Link>
-          </Box>
-          <Box height="128px" width="256px">
+          <BoxLayout>
+            <Link style={{ color: "red" }} href="#">
+              How You Learn
+            </Link>
+          </BoxLayout>
+          <BoxLayout>
             <Link href="/lessons">Learn Grammar</Link>
-          </Box>
+          </BoxLayout>
         </Grid>
-        <Box
-          style={{
-            background: "var(--gray-a2)",
-            borderRadius: "var(--radius-3)",
-          }}
-        >
-          <Container size="1">
-            <Box>
-              <Box py="9" /> Hi
-            </Box>
-          </Container>
-        </Box>
         <Image
           className={styles.logo}
           src="/next.svg"
