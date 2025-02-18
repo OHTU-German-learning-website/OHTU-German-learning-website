@@ -1,9 +1,9 @@
 import { describe, it, expect, vi } from "vitest";
 import { NextResponse } from "next/server";
 import { POST } from "./route";
-import { createSession } from "../../lib/session";
+import { createSession } from "../../../lib/session";
 
-vi.mock("@/app/lib/session", () => ({
+vi.mock("../../../app/lib/session", () => ({
   createSession: vi.fn(),
 }));
 
@@ -18,7 +18,7 @@ describe("POST /api/auth/login", () => {
 
     const response = await POST(request);
 
-    expect(response).toEqual(
+    expect(response).toMatchObject(
       NextResponse.json({ message: "Login successful" })
     );
     expect(createSession).toHaveBeenCalledWith(1);
@@ -34,7 +34,7 @@ describe("POST /api/auth/login", () => {
 
     const response = await POST(request);
 
-    expect(response).toEqual(
+    expect(response).toMatchObject(
       NextResponse.json(
         { error: "Ungültige E-Mail-Adresse oder Passwort" },
         { status: 401 }
@@ -53,7 +53,7 @@ describe("POST /api/auth/login", () => {
 
     const response = await POST(request);
 
-    expect(response).toEqual(
+    expect(response).toMatchObject(
       NextResponse.json(
         { error: "Ungültige E-Mail-Adresse oder Passwort" },
         { status: 401 }

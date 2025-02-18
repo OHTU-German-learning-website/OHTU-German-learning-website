@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createSession } from "@/app/lib/session";
+import { createSession } from "../../../lib/session";
 
 export async function POST(request) {
   const { email, password } = await request.json();

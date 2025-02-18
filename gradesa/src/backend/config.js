@@ -76,6 +76,7 @@ function create() {
   }
 
   const config = {
+    host: "http://localhost:3000",
     db: {
       host: readString("DB_HOST"),
       port: readInt("DB_PORT"),
