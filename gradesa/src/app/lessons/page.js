@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import LessonsLayout from "./layout";
 import Link from "next/link";
 
 const initialGrammarTopics = [
@@ -33,7 +32,6 @@ export default function LessonsPage() {
   };
 
   return (
-    <LessonsLayout>
       <div className="lessons-container">
         <h1>Übungen</h1>
         {initialGrammarTopics.map((topic, index) => (
@@ -70,6 +68,5 @@ export default function LessonsPage() {
           </div>
         ))}
       </div>
-    </LessonsLayout>
   );
 }

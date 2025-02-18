@@ -154,3 +154,16 @@ a {
     color-scheme: dark;
   }
 }
+
+.lessons-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.lessons-content {
+  flex: 1;
+  padding: 10px;
+}
