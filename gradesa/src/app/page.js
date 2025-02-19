@@ -5,6 +5,8 @@ import useQuery from "@/shared/hooks/useQuery";
 import { useState } from "react";
 import { Button } from "@/components/ui/button/button";
 import { Dropdown } from "@/components/ui/dropdown/dropdown";
+import { Grid } from "@radix-ui/themes";
+import Link from "next/link";
 export default function Home() {
   const [mode, setMode] = useState("normal");
 
@@ -13,6 +15,14 @@ export default function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
+        <Grid columns={{ initial: "1", md: "2" }} gap="3" width="auto">
+          <Button variant="outline" size="lg" width="fit">
+            <Link href="#">How You Learn</Link>
+          </Button>
+          <Button variant="outline" size="lg" width="fit">
+            <Link href="/lessons">Learn Grammar</Link>
+          </Button>
+        </Grid>
         <Button>Default</Button>
         <Button variant="primary" size="sm">
           Primary
