@@ -10,7 +10,7 @@ const initialGrammarTopics = [
   },
 ];
 
-export default function ExercisePage() {
+export default function ExercisePage( {}) {
   const [grammar, setgrammar] = useState(
     initialGrammarTopics.map(() => false)
   );

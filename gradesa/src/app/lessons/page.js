@@ -22,49 +22,50 @@ const initialGrammarTopics = [
 ];
 
 export default function LessonsPage() {
-  const [grammar, setGrammar] = useState(
-    initialGrammarTopics.map(() => false)
-  );
+  const [grammar, setGrammar] = useState(initialGrammarTopics.map(() => false));
 
   const toggleShowMore = (event, index) => {
     setGrammar(grammar.map((show, i) => (i === index ? !show : show)));
   };
 
   return (
-      <div className="lessons-container">
-        <h1>Übungen</h1>
-        {initialGrammarTopics.map((topic, index) => (
-          <div className="flex-parent-element" key={`${topic.title}-${index}`}>
-            <div className="flex-child-element">
-              <h2>{topic.title}</h2>
-              <ul>
-                {topic.exercises.filter((item, index) => grammar[index] || index < 3).map((exercise, exIndex) => (
+    <div className="lessons-container">
+      <h1>Übungen</h1>
+      {initialGrammarTopics.map((topic, index) => (
+        <div className="flex-parent-element" key={`${topic.title}-${index}`}>
+          <div className="flex-child-element">
+            <h2>{topic.title}</h2>
+            <ul>
+              {topic.exercises
+                .filter((item, index) => grammar[index] || index < 3)
+                .map((exercise, exIndex) => (
                   <li key={`${index}-exercise-${exIndex}`}>
-                    <Link href={`/lessons/exercises`}> 
+                    {/* All links go to the same page -> WIP (need DB) */}
+                    <Link href={`/lessons/exercises`}>
                       <button className="exercise-link">{exercise}</button>
                     </Link>
                   </li>
                 ))}
-                {grammar[index] &&
-                  topic.exercises.slice(3).map((exercise, exIndex) => (
-                    <li key={`${index}-more-${exIndex}`} className="more">
-                      <Link href={`/lessons/exercises`}>
-                        <button className="exercise-link">{exercise}</button>
-                      </Link>{" "}
-                    </li>
-                  ))}
-              </ul>
-              <div className="show-list">
-                <button
-                  className="show-more-link"
-                  onClick={(e) => toggleShowMore(e, index)}
-                >
-                  {grammar[index] ? "weniger anzeigen" : "mehr anzeigen"}{" "}
-                </button>
-              </div>
+              {grammar[index] &&
+                topic.exercises.slice(3).map((exercise, exIndex) => (
+                  <li key={`${index}-more-${exIndex}`} className="more">
+                    <Link href={`/lessons/exercises`}>
+                      <button className="exercise-link">{exercise}</button>
+                    </Link>{" "}
+                  </li>
+                ))}
+            </ul>
+            <div className="show-list">
+              <button
+                className="show-more-link"
+                onClick={(e) => toggleShowMore(e, index)}
+              >
+                {grammar[index] ? "weniger anzeigen" : "mehr anzeigen"}{" "}
+              </button>
             </div>
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
+    </div>
   );
 }
