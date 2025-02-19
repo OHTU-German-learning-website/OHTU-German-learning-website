@@ -2,7 +2,8 @@
 import { DB } from "@/backend/db";
 import { NextResponse } from "next/server";
 
-export async function GET(request, params) {
+export async function GET(_, { params }) {
+  console.log("params", params);
   const { public_id } = await params;
   const user_id = 42;
 
@@ -50,8 +51,8 @@ FROM forms;
   `,
     [user_id, public_id]
   );
-
-  if (!formRows.rowCount) {
+  console.log(formRows.rows);
+  if (!formRows.rows.length) {
     return NextResponse.json({ error: "Form not found" }, { status: 404 });
   }
   return NextResponse.json(formRows.rows[0]);
