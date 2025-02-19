@@ -76,8 +76,7 @@ export default function Login() {
             name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            // Poistettu required-attribuutti
-            disabled={isLoading}  // Estää muokkauksen, kun lomake on lähetettävänä
+            disabled={isLoading}
           />
         </div>
 
