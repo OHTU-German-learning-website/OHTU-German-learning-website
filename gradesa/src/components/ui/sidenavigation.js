@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import "./sidebar.css";
+import { Dropdown } from "@/components/ui/dropdown/dropdown";
+import { Button } from "@/components/ui/button/button";
 
 const Sidebar = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -32,6 +34,25 @@ const Sidebar = () => {
           )}
         </div>
       </div>
+      <Dropdown
+        options={[
+          {
+            label: "Option 1",
+            value: "option1",
+          },
+          {
+            label: "Option 2",
+            value: "option2",
+          },
+          {
+            label: "Option 3",
+            value: "option3",
+            disabled: true,
+          },
+        ]}
+      >
+        <Button>Lektionen</Button>
+      </Dropdown>
     </nav>
   );
 };

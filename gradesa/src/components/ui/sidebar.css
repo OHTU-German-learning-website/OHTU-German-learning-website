@@ -49,8 +49,6 @@
   text-align: left;
 }
 
-/* Note: this refers to the dropdown-menu 
-in sidenavigation.js */
 .dropdown-menu {
   display: flex;
   flex-direction: column;
