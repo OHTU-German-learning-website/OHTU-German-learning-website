@@ -8,6 +8,11 @@ export function useTestRequest() {
       new NextRequest(`${config.apiUrl}${url}`, {
         method: "GET",
       }),
+    mockPost: (url, data) =>
+      new NextRequest(`${config.apiUrl}${url}`, {
+        method: "POST",
+        body: JSON.stringify(data),
+      }),
     mockParams: async (params) => params,
   };
 }
