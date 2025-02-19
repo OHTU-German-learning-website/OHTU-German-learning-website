@@ -1,7 +1,7 @@
 "use client";
-import Image from "next/image";
 import styles from "./page.module.css";
 import { Button } from "@/components/ui/button/button";
+import { Dropdown } from "@/components/ui/dropdown/dropdown";
 
 export default function Home() {
   return (
@@ -23,14 +23,25 @@ export default function Home() {
         <Button variant="outline" size="sm" width="fit">
           Outline
         </Button>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
+        <Dropdown
+          options={[
+            {
+              label: "Option 1",
+              value: "option1",
+            },
+            {
+              label: "Option 2",
+              value: "option2",
+            },
+            {
+              label: "Option 3",
+              value: "option3",
+              disabled: true,
+            },
+          ]}
+        >
+          <Button>Dropdown</Button>
+        </Dropdown>
       </main>
     </div>
   );

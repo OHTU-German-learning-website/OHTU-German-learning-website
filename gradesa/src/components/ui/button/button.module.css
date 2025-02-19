@@ -11,6 +11,9 @@
     transform 0.1s ease-in-out,
     opacity 0.1s ease-in-out;
 
+  &:focus {
+    outline: none;
+  }
   &:active {
     transform: scale(0.99);
     opacity: 0.9;
@@ -20,6 +23,7 @@
 .baseButton.sm {
   padding: 0.25rem 0.5rem;
   width: 8rem;
+  border-radius: var(--radius-sm);
   font-size: var(--font-sm);
 }
 
@@ -27,18 +31,21 @@
   padding: 0.5rem 1rem;
   width: 12rem;
   font-size: var(--font-md);
+  border-radius: var(--radius-md);
 }
 
 .baseButton.lg {
   padding: 0.75rem 1.5rem;
   width: 16rem;
   font-size: var(--font-lg);
+  border-radius: var(--radius-md);
 }
 
 .baseButton.xl {
   padding: 1rem 2rem;
   width: 20rem;
   font-size: var(--font-xl);
+  border-radius: var(--radius-lg);
 }
 
 .baseButton.full {

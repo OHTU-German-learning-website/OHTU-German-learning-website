@@ -1,6 +1,7 @@
 "use client";
-import { useState, Suspense } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useRequest } from "../../../shared/hooks/useRequest";
 
 export default function Login() {
   const router = useRouter();
@@ -8,31 +9,24 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const request = useRequest();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
     setIsLoading(true);
 
-    console.log("Email:", email);
-    console.log("Password:", password);
-
-    // Mock backend validation
     try {
-      const mockEmail = "user@example.com";
-      const mockPassword = "Demonstration1";
+      const response = await request("/auth/login", { email, password });
 
-      // API call simulation
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      if (email !== mockEmail || password !== mockPassword) {
-        throw new Error("Ungültige E-Mail-Adresse oder Passwort");
+      if (response.status !== 200) {
+        throw new Error(response.data.error);
       }
 
-      console.log("Login successful!");
+      // Login successful
       router.push("/");
     } catch (error) {
-      console.log("Validation failed");
+      // Failed validation
       setError(error.message);
     } finally {
       setIsLoading(false);
@@ -40,7 +34,7 @@ export default function Login() {
   };
 
   return (
-    <Suspense fallback={<div>Laden...</div>}>
+    <div>
       <h1 className="auth-title">Anmeldung</h1>
 
       {error && <div className="error-message">{error}</div>}
@@ -82,6 +76,6 @@ export default function Login() {
           {isLoading ? "Wird bearbeitet..." : "Einloggen"}
         </button>
       </form>
-    </Suspense>
+    </div>
   );
 }

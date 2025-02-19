@@ -6,9 +6,9 @@ export const Button = ({
   variant = "primary",
   size = "md",
   width,
+  className,
   ...props
 }) => {
-  console.log(styles);
   return (
     <button
       {...props}
@@ -17,7 +17,7 @@ export const Button = ({
         styles[variant],
         styles[size],
         styles[width],
-        props.className,
+        className,
       ].join(" ")}
     >
       {children}
