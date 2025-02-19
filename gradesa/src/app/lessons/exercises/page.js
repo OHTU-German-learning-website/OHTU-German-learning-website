@@ -10,15 +10,10 @@ const initialGrammarTopics = [
   },
 ];
 
-export default function LessonsPage() {
+export default function ExercisePage() {
   const [grammar, setgrammar] = useState(
     initialGrammarTopics.map(() => false)
   );
-
-  const toggleShowMore = (event, index) => {
-    event.preventDefault();
-    setgrammar(grammar.map((show, i) => (i === index ? !show : show)));
-  };
 
   return (
     <LessonsLayout>
@@ -36,7 +31,6 @@ export default function LessonsPage() {
           </ul>
         </div>
       </div>
-      <br></br>
       <Link href="/lessons">
         <button className="back-button">Back to lessons</button>
       </Link>

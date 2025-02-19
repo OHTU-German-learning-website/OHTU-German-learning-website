@@ -27,7 +27,6 @@ export default function LessonsPage() {
   );
 
   const toggleShowMore = (event, index) => {
-    event.preventDefault();
     setGrammar(grammar.map((show, i) => (i === index ? !show : show)));
   };
 
@@ -39,10 +38,9 @@ export default function LessonsPage() {
             <div className="flex-child-element">
               <h2>{topic.title}</h2>
               <ul>
-                {topic.exercises.slice(0, 3).map((exercise, exIndex) => (
+                {topic.exercises.filter((item, index) => grammar[index] || index < 3).map((exercise, exIndex) => (
                   <li key={`${index}-exercise-${exIndex}`}>
                     <Link href={`/lessons/exercises`}> 
-                    {/* At the moment, all the Übung-links goes to the same page. */}
                       <button className="exercise-link">{exercise}</button>
                     </Link>
                   </li>
