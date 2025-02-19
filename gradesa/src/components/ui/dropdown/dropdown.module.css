@@ -1,0 +1,32 @@
+.content {
+  background-color: var(--bg1);
+  border-radius: var(--radius-md);
+  padding: var(--u-xs);
+  display: flex;
+  flex-direction: column;
+  min-width: 12rem;
+  border: 1px solid var(--fg5);
+  box-shadow: 0 0 4 4px #000000dd;
+  &:focus-within {
+    outline: none;
+  }
+  &:focus {
+    outline: none;
+  }
+}
+
+.item {
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: var(--radius-sm);
+  &:hover {
+    background-color: var(--bg3);
+  }
+  &:focus {
+    outline: none;
+  }
+}
+
+.portal {
+  z-index: 1000;
+}

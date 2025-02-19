@@ -76,6 +76,9 @@ function create() {
   }
 
   const config = {
+    sessionSecret: readString("SESSION_SECRET"),
+    sessionTTL: readIntOptional("SESSION_TTL", 7 * 24 * 60 * 60 * 1000),
+    host: "http://localhost:3000",
     db: {
       host: readString("DB_HOST"),
       port: readInt("DB_PORT"),
