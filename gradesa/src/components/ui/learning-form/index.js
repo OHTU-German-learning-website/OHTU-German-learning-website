@@ -31,16 +31,42 @@ export const LearningForm = ({ form, language }) => {
 
 function StepQuestion({ question, language }) {
   return (
-    <div className={styles.learningFormStepQuestion}>
-      {getLanguageTitle(question, language)}
-    </div>
+    <>
+      <div className={styles.learningFormStepQuestion}>
+        <span className={styles.questionTitle}>
+          {getLanguageTitle(question, language)}
+        </span>
+      </div>
+      <div className={styles.questionOptionsContainer}>
+        <formfield>
+          <input type="radio" className={styles.questionOption} />
+          <fieldset className={styles.questionOption}>1</fieldset>
+        </formfield>
+        <formfield>
+          <input type="radio" className={styles.questionOption} />
+          <fieldset className={styles.questionOption}>2</fieldset>
+        </formfield>
+        <formfield>
+          <input type="radio" className={styles.questionOption} />
+          <fieldset className={styles.questionOption}>3</fieldset>
+        </formfield>
+        <formfield>
+          <input type="radio" className={styles.questionOption} />
+          <fieldset className={styles.questionOption}>4</fieldset>
+        </formfield>
+        <formfield>
+          <input type="radio" className={styles.questionOption} />
+          <fieldset className={styles.questionOption}>5</fieldset>
+        </formfield>
+      </div>
+    </>
   );
 }
 
 function FormStep({ part, language }) {
   const renderStepQuestions = () => {
     return (
-      <div className={styles.learningFormStepQuestions}>
+      <div className={styles.questionContainer}>
         {part.questions.map((question) => (
           <StepQuestion
             question={question}
@@ -52,10 +78,8 @@ function FormStep({ part, language }) {
     );
   };
   return (
-    <div className={styles.learningFormStep}>
-      <h3 className={styles.learningFormStepDescription}>
-        {getLanguageTitle(part, language)}
-      </h3>
+    <div className={styles.stepContainer}>
+      <h3 className={styles.stepTitle}>{getLanguageTitle(part, language)}</h3>
       {renderStepQuestions()}
     </div>
   );
