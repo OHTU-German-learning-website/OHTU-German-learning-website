@@ -22,6 +22,7 @@ describe("POST /api/auth/logout", () => {
 
   it("should delete session and redirect to login page", async () => {
     const response = await POST();
+    const setCookieHeader = response.headers.get("Set-Cookie");
 
     expect(deleteSession).toHaveBeenCalled();
     expect(response).toBeInstanceOf(NextResponse);
@@ -29,5 +30,6 @@ describe("POST /api/auth/logout", () => {
       "http://localhost:3000/auth/login"
     );
     expect(response.status).toBe(307);
+    expect(setCookieHeader).toContain("session=; Max-Age=0");
   });
 });

@@ -36,7 +36,7 @@ This should be all that's needed:
     - DB_PASSWORD=password
     - DB_NAME=gradesa
 
-    Add session secret key to .env
+    Create session secret key with `openssl rand -base64 32` adding it to .env
 
     - SESSION_SECRET=your_secret_key
 

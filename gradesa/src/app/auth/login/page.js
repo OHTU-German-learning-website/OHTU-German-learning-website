@@ -16,9 +16,6 @@ export default function Login() {
     setError("");
     setIsLoading(true);
 
-    console.log("Email:", email);
-    console.log("Password:", password);
-
     try {
       const response = await request("/auth/login", { email, password });
 
@@ -26,10 +23,10 @@ export default function Login() {
         throw new Error(response.data.error);
       }
 
-      console.log("Login successful!");
+      // Login successful
       router.push("/");
     } catch (error) {
-      console.log("Validation failed");
+      // Failed validation
       setError(error.message);
     } finally {
       setIsLoading(false);
