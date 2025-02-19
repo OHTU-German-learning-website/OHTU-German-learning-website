@@ -6,4 +6,5 @@ export default function LessonsLayout({ children }) {
       <section className="lessons-content">{children}</section>
     </div>
   );
-}3
+}
+3;
