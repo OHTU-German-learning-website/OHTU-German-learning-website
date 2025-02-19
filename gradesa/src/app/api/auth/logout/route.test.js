@@ -1,17 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { NextResponse } from "next/server";
 import { POST } from "./route";
-import { deleteSession } from "../../../lib/session";
-import { getConfig } from "../../../../backend/config";
+import { deleteSession } from "@/app/lib/session";
 
-vi.mock("../../../lib/session", () => ({
+vi.mock("@/app/lib/session", () => ({
   deleteSession: vi.fn().mockResolvedValue(undefined),
-}));
-
-vi.mock("../../../../backend/config", () => ({
-  getConfig: vi.fn().mockReturnValue({
-    host: "http://localhost:3000",
-  }),
 }));
 
 describe("POST /api/auth/logout", () => {

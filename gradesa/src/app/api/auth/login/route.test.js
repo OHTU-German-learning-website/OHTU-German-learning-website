@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { POST } from "./route";
-import { createSession } from "../../../lib/session";
+import { createSession } from "@/app/lib/session";
 
-vi.mock("../../../lib/session", () => ({
+vi.mock("@/app/lib/session", () => ({
   createSession: vi.fn().mockResolvedValue(undefined),
 }));
 

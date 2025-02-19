@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { deleteSession } from "../../../lib/session";
-import { getConfig } from "../../../../backend/config";
+import { deleteSession } from "@/app/lib/session";
+import { getConfig } from "@/backend/config";
 
 export async function POST() {
   const config = getConfig();
