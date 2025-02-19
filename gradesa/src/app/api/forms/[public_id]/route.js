@@ -3,20 +3,22 @@ import { DB } from "@/backend/db";
 import { NextResponse } from "next/server";
 
 export async function GET(request, params) {
-  const { form_id } = await params;
+  const { public_id } = await params;
   const user_id = 42;
 
   const formRows = await DB.pool(
     `
 WITH questions AS
-         (SELECT pq.id, pq.title, pq.form_part_id
+         (SELECT pq.id, pq.title_en, pq.title_de, pq.form_part_id
           FROM part_questions pq
                   LEFT JOIN user_question_answers uqa ON pq.id = uqa.part_question_id AND uqa.user_id = $1
                   ),
      parts as
          (SELECT fp.id,
-                 fp.title,
+                 fp.title_en,
+                 fp.title_de,
                  fp.form_id,
+                 fp.step_number,
                  jsonb_agg(
                          to_jsonb(
                                  pq.*
@@ -25,12 +27,15 @@ WITH questions AS
           FROM form_parts fp
                    JOIN questions pq
                         ON fp.id = pq.form_part_id
-          GROUP BY fp.id),
+                        GROUP BY fp.id
+                        ORDER BY fp.step_number
+          ),
      forms as
          (SELECT f.id,
-                 f.title,
-                 f.description,
-                 f.iso_language_code,
+                 f.title_en,
+                 f.title_de,
+                 f.description_en,
+                 f.description_de,
                  jsonb_agg(
                          to_jsonb(
                                  fp.*
@@ -38,12 +43,12 @@ WITH questions AS
                  ) as parts
           FROM forms f
                    JOIN parts fp ON f.id = fp.form_id
-          WHERE f.id = $2
+          WHERE f.public_id = $2
           GROUP BY f.id)
 SELECT *
 FROM forms;
   `,
-    [user_id, form_id]
+    [user_id, public_id]
   );
 
   if (!formRows.rowCount) {
