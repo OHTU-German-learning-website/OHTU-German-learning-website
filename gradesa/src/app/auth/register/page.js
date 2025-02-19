@@ -4,7 +4,6 @@ import { useState } from "react";
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(null);
 
@@ -12,32 +11,23 @@ export default function Register() {
     event.preventDefault();
     if (email === "" || password === "") {
       setError(true);
+      setSubmitted(false);
     } else {
       setSubmitted(true);
       setError(false);
     }
   };
+
   const successMessage = () => {
-    return (
-      <div className="success">
-        {!!submitted && <h1>Benutzer {email} erfolgreich registriert</h1>}
-      </div>
-    );
+    return submitted ? (
+      <div className="success-message">Benutzer {email} erfolgreich registriert</div>
+    ) : null;
   };
 
   const errorMessage = () => {
-    return (
-      <div
-        className="error"
-        style={{
-          display: error ? "" : "none",
-        }}
-      >
-        <h1>Bitte alle Felder ausfüllen</h1>
-      </div>
-    );
+    return error ? <div className="error-message">Bitte alle Felder ausfüllen</div> : null;
   };
-
+  
   return (
     <>
       <h1 className="auth-title">Registrieren</h1>

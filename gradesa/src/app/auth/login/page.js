@@ -14,6 +14,12 @@ export default function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
+
+    if (email === "" || password === "") {
+      setError("Bitte alle Felder ausfüllen");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -33,11 +39,15 @@ export default function Login() {
     }
   };
 
+  const errorMessage = () => {
+    return error ? <div className="error-message">{error}</div> : null;
+  };
+
   return (
     <div>
       <h1 className="auth-title">Anmeldung</h1>
 
-      {error && <div className="error-message">{error}</div>}
+      {errorMessage()}
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
@@ -46,12 +56,11 @@ export default function Login() {
           </label>
           <input
             className="form-input"
-            type="email"
+            type="text"
             id="email"
             name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
             disabled={isLoading}
           />
         </div>
@@ -67,8 +76,8 @@ export default function Login() {
             name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
-            disabled={isLoading}
+            // Poistettu required-attribuutti
+            disabled={isLoading}  // Estää muokkauksen, kun lomake on lähetettävänä
           />
         </div>
 
