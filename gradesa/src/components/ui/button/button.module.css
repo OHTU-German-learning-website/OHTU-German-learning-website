@@ -1,0 +1,111 @@
+.baseButton {
+  background-color: var(--bg1);
+  color: var(--fg1);
+  border: 1px solid var(--fg1);
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition:
+    background-color 0.1s ease-in-out,
+    border-color 0.1s ease-in-out,
+    transform 0.1s ease-in-out,
+    opacity 0.1s ease-in-out;
+
+  &:focus {
+    outline: none;
+  }
+  &:active {
+    transform: scale(0.99);
+    opacity: 0.9;
+  }
+}
+
+.baseButton.sm {
+  padding: 0.25rem 0.5rem;
+  width: 8rem;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-sm);
+}
+
+.baseButton.md {
+  padding: 0.5rem 1rem;
+  width: 12rem;
+  font-size: var(--font-md);
+  border-radius: var(--radius-md);
+}
+
+.baseButton.lg {
+  padding: 0.75rem 1.5rem;
+  width: 16rem;
+  font-size: var(--font-lg);
+  border-radius: var(--radius-md);
+}
+
+.baseButton.xl {
+  padding: 1rem 2rem;
+  width: 20rem;
+  font-size: var(--font-xl);
+  border-radius: var(--radius-lg);
+}
+
+.baseButton.full {
+  width: 100%;
+}
+
+.baseButton.fit {
+  width: fit-content;
+}
+
+.baseButton.primary {
+  background-color: var(--primary1);
+  color: var(--fg1);
+  border: 1px solid var(--primary5);
+
+  &:hover {
+    background-color: var(--primary2);
+    border: 1px solid var(--primary6);
+  }
+}
+
+.baseButton.secondary {
+  background-color: var(--secondary1);
+  color: var(--fg1);
+  border: 1px solid var(--secondary5);
+
+  &:hover {
+    background-color: var(--secondary2);
+    border: 1px solid var(--secondary6);
+  }
+}
+
+.baseButton.tertiary {
+  background-color: var(--tertiary1);
+  color: var(--fg1);
+  border: 1px solid var(--tertiary5);
+
+  &:hover {
+    background-color: var(--tertiary2);
+    border: 1px solid var(--tertiary6);
+  }
+}
+
+.baseButton.none {
+  background-color: transparent;
+  color: var(--fg1);
+  border: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.baseButton.outline {
+  background-color: transparent;
+  color: var(--fg1);
+  border: 1px solid var(--fg7);
+
+  &:hover {
+    background-color: var(--bg2);
+    border: 1px solid var(--fg2);
+  }
+}

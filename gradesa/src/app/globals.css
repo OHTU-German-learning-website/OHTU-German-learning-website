@@ -10,12 +10,12 @@
 
   /* foreground colors (text, icons, etc.) */
   --fg1: hsl(240, 40%, 5%);
-  --fg2: hsl(240, 40%, 9%);
-  --fg3: hsl(240, 40%, 13%);
-  --fg4: hsl(240, 40%, 17%);
-  --fg5: hsl(240, 40%, 21%);
-  --fg6: hsl(240, 40%, 25%);
-  --fg7: hsl(240, 40%, 29%);
+  --fg2: hsl(240, 40%, 11%);
+  --fg3: hsl(240, 40%, 17%);
+  --fg4: hsl(240, 40%, 23%);
+  --fg5: hsl(240, 40%, 29%);
+  --fg6: hsl(240, 40%, 35%);
+  --fg7: hsl(240, 40%, 41%);
 
   --tertiary1: hsl(351, 90%, 90%);
   --tertiary2: hsl(351, 90%, 80%);
@@ -68,9 +68,9 @@
   --radius-xs: 2px;
   --radius-sm: 4px;
   --radius-md: 8px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
-  --radius-2xl: 32px;
+  --radius-lg: 10px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -85,32 +85,32 @@
     --bg7: hsl(240, 40%, 29%);
 
     --fg1: hsl(240, 40%, 98%);
-    --fg2: hsl(240, 40%, 95%);
-    --fg3: hsl(240, 40%, 92%);
-    --fg4: hsl(240, 40%, 89%);
-    --fg5: hsl(240, 40%, 86%);
-    --fg6: hsl(240, 40%, 83%);
-    --fg7: hsl(240, 40%, 80%);
+    --fg2: hsl(240, 40%, 92%);
+    --fg3: hsl(240, 40%, 86%);
+    --fg4: hsl(240, 40%, 80%);
+    --fg5: hsl(240, 40%, 74%);
+    --fg6: hsl(240, 40%, 68%);
+    --fg7: hsl(240, 40%, 62%);
 
-    --tertiary1: hsl(351, 90%, 30%);
-    --tertiary2: hsl(351, 90%, 40%);
-    --tertiary3: hsl(351, 90%, 50%);
-    --tertiary4: hsl(351, 90%, 60%);
-    --tertiary5: hsl(351, 90%, 70%);
-    --tertiary6: hsl(351, 90%, 80%);
-    --tertiary7: hsl(351, 90%, 85%);
-    --tertiary8: hsl(351, 90%, 90%);
-    --tertiary9: hsl(351, 90%, 95%);
+    --tertiary1: hsl(351, 40%, 30%);
+    --tertiary2: hsl(351, 40%, 40%);
+    --tertiary3: hsl(351, 40%, 50%);
+    --tertiary4: hsl(351, 40%, 60%);
+    --tertiary5: hsl(351, 40%, 70%);
+    --tertiary6: hsl(351, 40%, 80%);
+    --tertiary7: hsl(351, 40%, 85%);
+    --tertiary8: hsl(351, 40%, 90%);
+    --tertiary9: hsl(351, 40%, 95%);
 
-    --secondary1: hsl(249, 90%, 30%);
-    --secondary2: hsl(249, 90%, 40%);
-    --secondary3: hsl(249, 90%, 50%);
-    --secondary4: hsl(249, 90%, 60%);
-    --secondary5: hsl(249, 90%, 70%);
-    --secondary6: hsl(249, 90%, 80%);
-    --secondary7: hsl(249, 90%, 85%);
-    --secondary8: hsl(249, 90%, 90%);
-    --secondary9: hsl(249, 90%, 95%);
+    --secondary1: hsl(249, 60%, 30%);
+    --secondary2: hsl(249, 60%, 40%);
+    --secondary3: hsl(249, 60%, 50%);
+    --secondary4: hsl(249, 60%, 60%);
+    --secondary5: hsl(249, 60%, 70%);
+    --secondary6: hsl(249, 60%, 80%);
+    --secondary7: hsl(249, 60%, 85%);
+    --secondary8: hsl(249, 60%, 90%);
+    --secondary9: hsl(249, 60%, 95%);
 
     --primary1: hsl(161, 35%, 30%);
     --primary2: hsl(161, 35%, 40%);
