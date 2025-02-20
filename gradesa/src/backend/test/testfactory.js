@@ -38,6 +38,7 @@ const user = modelFactory("users", () => ({
   password_hash: createHash("sha256")
     .update(faker.internet.password())
     .digest("hex"),
+  salt: faker.string.alphanumeric(16),
 }));
 
 export const TestFactory = {
