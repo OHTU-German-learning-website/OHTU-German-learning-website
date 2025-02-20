@@ -20,14 +20,18 @@ export default function Register() {
 
   const successMessage = () => {
     return submitted ? (
-      <div className="success-message">Benutzer {email} erfolgreich registriert</div>
+      <div className="success-message">
+        Benutzer {email} erfolgreich registriert
+      </div>
     ) : null;
   };
 
   const errorMessage = () => {
-    return error ? <div className="error-message">Bitte alle Felder ausfüllen</div> : null;
+    return error ? (
+      <div className="error-message">Bitte alle Felder ausfüllen</div>
+    ) : null;
   };
-  
+
   return (
     <>
       <h1 className="auth-title">Registrieren</h1>

@@ -49,14 +49,14 @@ export default function Login() {
 
       {errorMessage()}
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <div className="form-group">
           <label className="form-label" htmlFor="email">
             E-Mail-Adresse
           </label>
           <input
             className="form-input"
-            type="text"
+            type="email"
             id="email"
             name="email"
             value={email}
