@@ -18,7 +18,28 @@ export async function POST(request) {
     email,
   ]);
   if (existingUser.rows.length > 0) {
-    return Response.json({ message: "Account already exists.", status: 400 });
+    return Response.json(
+      { message: "Account already exists." },
+      { status: 409 }
+    );
+  }
+  if (email === "" || password === "") {
+    return Response.json(
+      { message: "Email and password are required." },
+      { status: 400 }
+    );
+  }
+  if (!email.includes("@")) {
+    return Response.json(
+      { message: "Invalid email address." },
+      { status: 422 }
+    );
+  }
+  if (password.length < 8 || password.length > 64) {
+    return Response.json(
+      { message: "Password must be at least 8 characters long." },
+      { status: 422 }
+    );
   }
 
   await DB.pool(

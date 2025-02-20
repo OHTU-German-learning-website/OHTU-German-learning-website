@@ -7,27 +7,39 @@ export default function Register() {
   const [password, setPassword] = useState("");
 
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
 
   const makeRequest = useRequest();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = await makeRequest("/register", { email, password });
-    console.log(data);
-    if (data.status === 200) {
+    try {
+      const data = await makeRequest("/register", { email, password });
+      console.log(data);
       setSubmitted(true);
-      setError(false);
-    } else {
-      setError(true);
-      setSubmitted(false);
+      setError("");
+    } catch (error) {
+      if (error.status === 409) {
+        setError("Konto ist bereits vorhanden.");
+        setSubmitted(false);
+      }
+      if (error.status === 400) {
+        setError("E-Mail und Passwort sind erforderlich.");
+        setSubmitted(false);
+      }
+      if (error.status === 422) {
+        setError(
+          "Ungültige E-Mail-Adresse oder Passwort zu kurz. (min. 8 Zeichen)"
+        );
+        setSubmitted(false);
+      }
     }
   };
 
   const successMessage = () => {
     return (
       <div className="success">
-        {!!submitted && <h1>Benutzer {email} erfolgreich registriert</h1>}
+        {!!submitted && <h1>Benutzer erfolgreich registriert</h1>}
       </div>
     );
   };
@@ -40,7 +52,7 @@ export default function Register() {
           display: error ? "" : "none",
         }}
       >
-        <h1>Bitte alle Felder ausfüllen</h1>
+        <h1>{error}</h1>
       </div>
     );
   };
