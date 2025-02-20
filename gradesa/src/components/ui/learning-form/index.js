@@ -29,40 +29,6 @@ export const LearningForm = ({ form, language }) => {
   );
 };
 
-function StepQuestion({ question, language }) {
-  return (
-    <>
-      <div className={styles.learningFormStepQuestion}>
-        <span className={styles.questionTitle}>
-          {getLanguageTitle(question, language)}
-        </span>
-      </div>
-      <div className={styles.questionOptionsContainer}>
-        <formfield>
-          <input type="radio" className={styles.questionOption} />
-          <fieldset className={styles.questionOption}>1</fieldset>
-        </formfield>
-        <formfield>
-          <input type="radio" className={styles.questionOption} />
-          <fieldset className={styles.questionOption}>2</fieldset>
-        </formfield>
-        <formfield>
-          <input type="radio" className={styles.questionOption} />
-          <fieldset className={styles.questionOption}>3</fieldset>
-        </formfield>
-        <formfield>
-          <input type="radio" className={styles.questionOption} />
-          <fieldset className={styles.questionOption}>4</fieldset>
-        </formfield>
-        <formfield>
-          <input type="radio" className={styles.questionOption} />
-          <fieldset className={styles.questionOption}>5</fieldset>
-        </formfield>
-      </div>
-    </>
-  );
-}
-
 function FormStep({ part, language }) {
   const renderStepQuestions = () => {
     return (
@@ -85,20 +51,44 @@ function FormStep({ part, language }) {
   );
 }
 
+function StepQuestion({ question, language }) {
+  const renderRadios = () => {
+    return Array.from({ length: 5 }).map((_, index) => (
+      <div className={styles.questionRadioContainer}>
+        <input
+          type="radio"
+          name={question.id}
+          className={styles.questionRadioInput}
+        />
+        <fieldset className={styles.questionFieldset}>{index + 1}</fieldset>
+      </div>
+    ));
+  };
+  return (
+    <>
+      <div className={styles.learningFormStepQuestion}>
+        <span className={styles.questionTitle}>
+          {getLanguageTitle(question, language)}
+        </span>
+      </div>
+      <div className={styles.questionOptionsContainer}>{renderRadios()}</div>
+    </>
+  );
+}
+
 function StepSelector({ form, onSelect }) {
   return (
     <div className={styles.learningFormStepSelector}>
       {form.parts.map((part) => (
-        <div className={styles.learningFormStepSelectorItem}>
-          <Button
-            variant="none"
-            width="fit"
-            className={styles.stepSelectorButton}
-            onClick={() => onSelect(part)}
-          >
-            <span>{part.step_number}</span>
-          </Button>
-        </div>
+        <Button
+          variant="none"
+          width="fit"
+          key={part.id}
+          className={styles.stepSelectorButton}
+          onClick={() => onSelect(part)}
+        >
+          <span>{part.step_number}</span>
+        </Button>
       ))}
     </div>
   );

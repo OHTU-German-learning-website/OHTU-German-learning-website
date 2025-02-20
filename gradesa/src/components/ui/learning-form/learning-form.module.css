@@ -1,7 +1,9 @@
 .learningForm {
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
   gap: var(--u-xl);
+  overflow: hidden;
 }
 
 .learningFormHeader {
@@ -17,6 +19,9 @@
 
 .learningFormContainer {
   display: flex;
+  overflow: hidden;
+  flex-grow: 1;
+  justify-content: space-between;
   flex-direction: column;
   gap: var(--u-md);
 }
@@ -24,23 +29,25 @@
 .learningFormStepSelector {
   display: flex;
   gap: var(--u-md);
+  margin: 0 auto;
 }
 
 .stepSelectorButton {
   font-size: var(--font-lg);
   padding: var(--u-sm);
   border-radius: var(--radius-md);
-  background-color: var(--bg2);
+  background-color: var(--bg3) !important;
   color: var(--fg2);
   cursor: pointer;
   &:hover {
-    background-color: var(--bg3);
+    background-color: var(--bg4) !important;
     color: var(--fg1);
   }
 }
 
 .stepContainer {
   display: flex;
+  overflow: hidden;
   flex-direction: column;
   gap: var(--u-md);
 }
@@ -51,17 +58,63 @@
 }
 
 .questionContainer {
+  flex-grow: 1;
+  overflow-y: auto;
   display: grid;
-  grid-template-columns: 3fr 1fr;
+  grid-template-columns: auto max-content;
+  grid-template-rows: 1fr;
+  background-color: var(--bg2);
   gap: var(--u-md);
+  padding: var(--u-md);
+}
+
+.learningFormStepQuestion {
+  background-color: var(--bg1);
+  padding: var(--u-md);
 }
 
 .questionOptionsContainer {
   display: flex;
+  width: fit-content;
+  padding: var(--u-md);
+  background-color: var(--bg1);
   gap: var(--u-md);
 }
 
-.questionOption {
+.questionRadioContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  justify-content: center;
+  height: 20px;
+}
+
+.questionFieldset {
   font-size: var(--font-md);
   color: var(--fg2);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: none;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+}
+
+.questionRadioInput {
+  font-size: var(--font-md);
+  color: var(--fg2);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid var(--fg2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
