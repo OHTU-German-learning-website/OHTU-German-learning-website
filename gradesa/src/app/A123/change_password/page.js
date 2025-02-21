@@ -11,7 +11,7 @@ export default function ChangePassword() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
-  const handlePasswordSubmit = (e) => {
+  const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
@@ -24,7 +24,25 @@ export default function ChangePassword() {
       return;
     }
 
-    setSuccess(true);
+    try {
+      const respone = await fetch("../../api/usersettings_password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: "user@example.com",
+          newPassword: passwords.password,
+        }),
+      });
+
+      const data = await respone.json();
+
+      if (!respone.ok) {
+        throw new Error(data.error || "Failed to update the password");
+      }
+      setSuccess(true);
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
