@@ -1,0 +1,11 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: gradesa-route
+spec:
+  host: gradesa.yourdomain.com
+  to:
+    kind: Service
+    name: gradesa-app
+  port:
+    targetPort: 8080
