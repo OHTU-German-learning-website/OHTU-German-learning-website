@@ -1,0 +1,6 @@
+.view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-xl);
+  flex-grow: 1;
+}
