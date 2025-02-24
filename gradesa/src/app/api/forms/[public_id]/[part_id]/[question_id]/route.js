@@ -1,7 +1,9 @@
 import { DB } from "@/backend/db";
 import { logger } from "@/backend/logging";
 import { NextResponse } from "next/server";
-export async function PUT(request, { params }) {
+import { withAuth } from "@/backend/middleware/withAuth";
+
+export const PUT = withAuth(async (request, { params }) => {
   const { public_id, part_id, question_id } = await params;
   const user = request.user;
   const valid_form = await DB.pool(
@@ -68,4 +70,4 @@ SET answer = COALESCE(EXCLUDED.answer, 0)
   });
 
   return NextResponse.json({ success: true });
-}
+});

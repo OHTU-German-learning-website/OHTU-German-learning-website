@@ -76,7 +76,7 @@ CREATE TABLE public.user_form_answers (
   updated_at timestamp without time zone NOT NULL DEFAULT now(),
   user_id integer NOT NULL,
   form_id integer NOT NULL,
-  answer integer NOT NULL
+  answer numeric(5,1) NOT NULL
 );
 
 CREATE UNIQUE INDEX user_form_answers_user_id_form_id_idx ON public.user_form_answers USING btree (user_id, form_id);
@@ -111,7 +111,7 @@ CREATE TABLE public.user_part_answers (
   updated_at timestamp without time zone NOT NULL DEFAULT now(),
   user_id integer NOT NULL,
   form_part_id integer NOT NULL,
-  answer integer NOT NULL
+  answer numeric(5,1) NOT NULL
 );
 
 CREATE UNIQUE INDEX user_part_answers_user_id_form_part_id_idx ON public.user_part_answers USING btree (user_id, form_part_id);

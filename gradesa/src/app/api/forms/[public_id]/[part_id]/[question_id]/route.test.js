@@ -90,7 +90,7 @@ describe("answers", () => {
     const response1_2 = await submitAnswer(form, part1, question1_2, 2);
     expect(response1_2.status).toBe(200);
 
-    const response1_3 = await submitAnswer(form, part1, question1_3, 4);
+    await submitAnswer(form, part1, question1_3, 4);
 
     const response2_1 = await submitAnswer(form, part2, question2_1, 3);
     expect(response2_1.status).toBe(200);

@@ -3,8 +3,8 @@ import { useState } from "react";
 import { Dropdown } from "@/components/ui/dropdown/dropdown";
 import { Button } from "@/components/ui/button/button";
 import useQuery from "@/shared/hooks/useQuery";
-import styles from "./learning.module.css";
 import layout from "@/shared/styles/layout.module.css";
+import { useRequest } from "@/shared/hooks/useRequest";
 
 import { LearningForm } from "@/components/ui/learning-form";
 const languageOptions = [
@@ -19,14 +19,41 @@ const languageOptions = [
 ];
 export default function Learning() {
   const [language, setLanguage] = useState(languageOptions[0]);
-  const { data } = useQuery("/forms/learning_type");
+  const { data, refetch } = useQuery("/forms/learning_type");
+  const makeRequest = useRequest();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const submitAnswer = async (form, part, question, answer) => {
+    try {
+      setIsLoading(true);
+      const response = await makeRequest(
+        `/api/forms/${form.public_id}/${part.id}/${question.id}`,
+        {
+          method: "POST",
+          body: JSON.stringify({ answer }),
+        }
+      );
+      refetch();
+      return response;
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   console.log(data);
   return (
     <div className={layout.view}>
       <Dropdown options={languageOptions} onSelect={setLanguage}>
         <Button>{language.label}</Button>
       </Dropdown>
-      {data && <LearningForm form={data} language={language.value} />}
+      {data && (
+        <LearningForm
+          form={data}
+          language={language.value}
+          onSubmitAnswer={submitAnswer}
+        />
+      )}
     </div>
   );
 }

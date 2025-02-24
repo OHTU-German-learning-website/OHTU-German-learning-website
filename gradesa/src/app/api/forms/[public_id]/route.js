@@ -1,8 +1,9 @@
 "use server";
 import { DB } from "@/backend/db";
 import { NextResponse } from "next/server";
+import { withAuth } from "@/backend/middleware/withAuth";
 
-export async function GET(request, { params }) {
+export const GET = withAuth(async (request, { params }) => {
   const { public_id } = await params;
   const user = request.user;
   const user_id = user.id;
@@ -66,4 +67,4 @@ FROM forms;
   // Not json so it's returned as a string...
   form.average_answer = parseFloat(form.average_answer);
   return NextResponse.json(form);
-}
+});

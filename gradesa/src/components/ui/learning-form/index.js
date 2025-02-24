@@ -1,7 +1,6 @@
 import { Button } from "../button/button";
 import { useState } from "react";
 import styles from "./learning-form.module.css";
-
 const getLanguageTitle = (obj, language) => {
   return obj[`title_${language}`];
 };
@@ -10,9 +9,12 @@ const getLanguageDescription = (obj, language) => {
   return obj[`description_${language}`];
 };
 
-export function LearningForm({ form, language }) {
+export function LearningForm({ form, language, onSubmitAnswer }) {
   const [selectedPart, setSelectedPart] = useState(form.parts[0]);
 
+  const submitAnswer = async (part, question, answer) => {
+    await onSubmitAnswer(form, part, question, answer);
+  };
   return (
     <div className={styles.learningForm}>
       <h1 className={styles.learningFormHeader}>
@@ -22,14 +24,21 @@ export function LearningForm({ form, language }) {
         {getLanguageDescription(form, language)}
       </p>
       <div className={styles.learningFormContainer}>
-        <FormStep part={selectedPart} language={language} />
+        <FormStep
+          part={selectedPart}
+          language={language}
+          onSubmitAnswer={submitAnswer}
+        />
         <StepSelector form={form} onSelect={setSelectedPart} />
       </div>
     </div>
   );
 }
 
-function FormStep({ part, language }) {
+function FormStep({ part, language, onSubmitAnswer }) {
+  const submitAnswer = async (question, answer) => {
+    await onSubmitAnswer(part, question, answer);
+  };
   const renderStepQuestions = () => {
     return (
       <div className={styles.questionContainer} key={part.id}>
@@ -38,6 +47,7 @@ function FormStep({ part, language }) {
             question={question}
             key={question.id}
             language={language}
+            onSubmitAnswer={submitAnswer}
           />
         ))}
       </div>
@@ -51,14 +61,16 @@ function FormStep({ part, language }) {
   );
 }
 
-function StepQuestion({ question, language }) {
+function StepQuestion({ question, language, onSubmitAnswer }) {
   const renderRadios = () => {
     return Array.from({ length: 5 }).map((_, index) => (
       <div className={styles.questionRadioContainer} key={index}>
         <input
           type="radio"
+          checked={question.answer === index + 1}
           name={question.id}
           className={styles.questionRadioInput}
+          onChange={() => onSubmitAnswer(question, index + 1)}
         />
         <fieldset className={styles.questionFieldset}>{index + 1}</fieldset>
       </div>
