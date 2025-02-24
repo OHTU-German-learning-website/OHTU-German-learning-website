@@ -10,7 +10,7 @@ const getLanguageDescription = (obj, language) => {
   return obj[`description_${language}`];
 };
 
-export const LearningForm = ({ form, language }) => {
+export function LearningForm({ form, language }) {
   const [selectedPart, setSelectedPart] = useState(form.parts[0]);
 
   return (
@@ -27,12 +27,12 @@ export const LearningForm = ({ form, language }) => {
       </div>
     </div>
   );
-};
+}
 
 function FormStep({ part, language }) {
   const renderStepQuestions = () => {
     return (
-      <div className={styles.questionContainer}>
+      <div className={styles.questionContainer} key={part.id}>
         {part.questions.map((question) => (
           <StepQuestion
             question={question}
@@ -54,7 +54,7 @@ function FormStep({ part, language }) {
 function StepQuestion({ question, language }) {
   const renderRadios = () => {
     return Array.from({ length: 5 }).map((_, index) => (
-      <div className={styles.questionRadioContainer}>
+      <div className={styles.questionRadioContainer} key={index}>
         <input
           type="radio"
           name={question.id}
@@ -87,7 +87,7 @@ function StepSelector({ form, onSelect }) {
           className={styles.stepSelectorButton}
           onClick={() => onSelect(part)}
         >
-          <span>{part.step_number}</span>
+          <span>{part.step_label}</span>
         </Button>
       ))}
     </div>

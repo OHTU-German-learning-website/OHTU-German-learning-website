@@ -16,7 +16,7 @@ ALTER TABLE forms ALTER COLUMN description DROP NOT NULL;
 ALTER TABLE form_parts ALTER COLUMN title DROP NOT NULL;
 ALTER TABLE part_questions ALTER COLUMN title DROP NOT NULL;
 
-ALTER TABLE form_parts ADD COLUMN IF NOT EXISTS step_number INT;
+ALTER TABLE form_parts ADD COLUMN IF NOT EXISTS step_label TEXT;
 
 DO $$
 DECLARE
@@ -56,8 +56,8 @@ BEGIN
   )
   RETURNING id INTO new_form_id;
 
-  INSERT INTO form_parts (form_id, title_en, title_de, step_number)
-  VALUES (new_form_id, 'Part A', 'Teil A – Erinnerungsvermögen verbessern', 1)
+  INSERT INTO form_parts (form_id, title_en, title_de, step_label)
+  VALUES (new_form_id, 'Part A', 'Teil A – Erinnerungsvermögen verbessern', 'A')
   RETURNING id INTO part_id;
 
   INSERT INTO part_questions (form_part_id, title_en, title_de)
@@ -108,8 +108,8 @@ BEGIN
       E'Ich merke mir neue Wörter in der Fremdsprache, indem ich mich beim Wiederholen an den Ort erinnere, wo sie waren, z.B. im Heft oder Buch, an der Tafel oder auf einem Straßenschild.'
     );
 
-  INSERT INTO form_parts (form_id, title_en, title_de, step_number)
-  VALUES (new_form_id, 'Part B', 'Teil B – Lerntechniken benutzen', 2)
+  INSERT INTO form_parts (form_id, title_en, title_de, step_label)
+  VALUES (new_form_id, 'Part B', 'Teil B – Lerntechniken benutzen', 'B')
   RETURNING id INTO part_id;
 
   INSERT INTO part_questions (form_part_id, title_en, title_de)
@@ -185,8 +185,8 @@ BEGIN
       E'Ich mache Zusammenfassungen von Nachrichten, die ich in der Fremdsprache lese bzw. höre.'
     );
 
-  INSERT INTO form_parts (form_id, title_en, title_de, step_number)
-  VALUES (new_form_id, 'Part C', 'Teil C – Fehlende Kenntnisse kompensieren', 3)
+  INSERT INTO form_parts (form_id, title_en, title_de, step_label)
+  VALUES (new_form_id, 'Part C', 'Teil C – Fehlende Kenntnisse kompensieren', 'C')
   RETURNING id INTO part_id;
 
   INSERT INTO part_questions (form_part_id, title_en, title_de)
@@ -222,8 +222,8 @@ BEGIN
       E'Wenn ich das passende Wort in der Fremdsprache nicht finde, suche ich nach einem Synonym oder einer Umschreibung.'
     );
 
-  INSERT INTO form_parts (form_id, title_en, title_de, step_number)
-  VALUES (new_form_id, 'Part D', 'Teil D – Das Lernen organisieren und evaluieren', 4)
+  INSERT INTO form_parts (form_id, title_en, title_de, step_label)
+  VALUES (new_form_id, 'Part D', 'Teil D – Das Lernen organisieren und evaluieren', 'D')
   RETURNING id INTO part_id;
 
   INSERT INTO part_questions (form_part_id, title_en, title_de)
@@ -274,8 +274,8 @@ BEGIN
       E'Ich nehme meine Fortschritte in der Fremdsprache wahr.'
     );
 
-  INSERT INTO form_parts (form_id, title_en, title_de, step_number)
-  VALUES (new_form_id, 'Part E', 'Teil E – Gefühle und Emotionen managen', 5)
+  INSERT INTO form_parts (form_id, title_en, title_de, step_label)
+  VALUES (new_form_id, 'Part E', 'Teil E – Gefühle und Emotionen managen', 'E')
   RETURNING id INTO part_id;
 
   INSERT INTO part_questions (form_part_id, title_en, title_de)
@@ -311,8 +311,8 @@ BEGIN
       E'Ich spreche mit anderen über meine Empfindung beim Sprachenlernen.'
     );
 
-  INSERT INTO form_parts (form_id, title_en, title_de, step_number)
-  VALUES (new_form_id, 'Part F', 'Teil F – Von anderen lernen', 6)
+  INSERT INTO form_parts (form_id, title_en, title_de, step_label)
+  VALUES (new_form_id, 'Part F', 'Teil F – Von anderen lernen', 'F')
   RETURNING id INTO part_id;
 
   INSERT INTO part_questions (form_part_id, title_en, title_de)
@@ -365,6 +365,6 @@ ALTER TABLE forms ADD CONSTRAINT unique_public_id UNIQUE (public_id);
 UPDATE forms SET public_id = 'learning_type' WHERE public_id IS NULL;
 ALTER TABLE forms ALTER COLUMN public_id SET NOT NULL;
 
-ALTER TABLE form_parts ADD CONSTRAINT unique_step_number UNIQUE (form_id, step_number);
-ALTER TABLE form_parts ADD CONSTRAINT check_step_number CHECK (step_number > 0);
-ALTER TABLE form_parts ALTER COLUMN step_number SET NOT NULL;
+ALTER TABLE form_parts ADD CONSTRAINT unique_step_label UNIQUE (form_id, step_label);
+ALTER TABLE form_parts ADD CONSTRAINT check_step_label CHECK (step_label ~ '^[A-Za-z0-9]$');
+ALTER TABLE form_parts ALTER COLUMN step_label SET NOT NULL;
