@@ -4,11 +4,11 @@ WORKDIR /app/gradesa
 # Disable Husky during install
 ENV HUSKY=0
 
-COPY package*.json ./
+
 COPY gradesa/package*.json ./
 
 RUN npm ci --omit=dev
-COPY . .
+COPY gradesa/ .
 
 RUN npm run build
 
