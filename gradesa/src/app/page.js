@@ -10,7 +10,7 @@ export default function Home() {
       <main className={styles.main}>
         <Grid columns={{ initial: "1", md: "2" }} gap="3" width="auto">
           <Button variant="outline" size="lg" width="fit">
-            <Link href="#">How You Learn</Link>
+            <Link href="/forms">How You Learn</Link>
           </Button>
           <Button variant="outline" size="lg" width="fit">
             <Link href="/lessons">Learn Grammar</Link>
