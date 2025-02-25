@@ -1,8 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { POST } from "./route";
-import { createSession } from "../../../lib/session";
+import { createSession } from "@/app/lib/session";
+import { useTestRequest } from "@/backend/test/mock-request";
 
-vi.mock("../../../lib/session", () => ({
+vi.mock("@/app/lib/session", () => ({
   createSession: vi.fn().mockResolvedValue(undefined),
 }));
 
@@ -13,12 +14,11 @@ describe("POST /api/auth/login", () => {
   });
 
   it("should return success message for valid credentials", async () => {
-    const request = {
-      json: async () => ({
-        email: "user@example.com",
-        password: "Demonstration1",
-      }),
-    };
+    const { mockPost } = useTestRequest();
+    const request = mockPost("/api/auth/login", {
+      email: "user@example.com",
+      password: "Demonstration1",
+    });
 
     const response = await POST(request);
     const responseData = await response.json();
@@ -29,12 +29,11 @@ describe("POST /api/auth/login", () => {
   });
 
   it("should return error message for invalid email", async () => {
-    const request = {
-      json: async () => ({
-        email: "wrong@example.com",
-        password: "Demonstration1",
-      }),
-    };
+    const { mockPost } = useTestRequest();
+    const request = mockPost("/api/auth/login", {
+      email: "wrong@example.com",
+      password: "Demonstration1",
+    });
 
     const response = await POST(request);
     const responseData = await response.json();
@@ -47,12 +46,11 @@ describe("POST /api/auth/login", () => {
   });
 
   it("should return error message for invalid password", async () => {
-    const request = {
-      json: async () => ({
-        email: "user@example.com",
-        password: "wrongpassword",
-      }),
-    };
+    const { mockPost } = useTestRequest();
+    const request = mockPost("/api/auth/login", {
+      email: "user@example.com",
+      password: "wrongpassword",
+    });
 
     const response = await POST(request);
     const responseData = await response.json();

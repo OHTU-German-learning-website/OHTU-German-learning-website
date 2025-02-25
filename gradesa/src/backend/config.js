@@ -69,16 +69,17 @@ function create() {
     }
     return parseInt(val);
   }
-  // Unused-vars
+
   function readIntOptional(key, defaultValue) {
     const value = getFromEnv(key);
     return value === undefined ? defaultValue : parseInt(value);
   }
 
   const config = {
+    url: "http://localhost:3000",
+    apiUrl: "http://localhost:3000/api",
     sessionSecret: readString("SESSION_SECRET"),
     sessionTTL: readIntOptional("SESSION_TTL", 7 * 24 * 60 * 60 * 1000),
-    host: "http://localhost:3000",
     db: {
       host: readString("DB_HOST"),
       port: readInt("DB_PORT"),
