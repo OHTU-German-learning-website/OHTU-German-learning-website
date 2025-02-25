@@ -1,5 +1,5 @@
 import { randomBytes } from "crypto";
-import { password } from "../register/route";
+import { password } from "../../app/api/auth/register/route";
 
 const salt = randomBytes(16).toString("hex");
 export const hash_password = await new Promise((resolve, reject) => {

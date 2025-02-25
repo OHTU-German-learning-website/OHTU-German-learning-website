@@ -1,13 +1,10 @@
 import { DB } from "../../../../backend/db";
-import { randomBytes } from "crypto";
-import { hash_password, salt } from "../hash/route";
+import { hash_password, salt } from "../../../../backend/auth/hash";
 
 export const emailRegex = new RegExp(
   `^([-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*|"([]!#-[^-~ \t]|(\\[\t -~]))+")@([-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*|\[[\t -Z^-~]*])$`,
   "i"
 );
-
-const crypto = require("crypto");
 
 export async function POST(request) {
   const json = await request.json();
