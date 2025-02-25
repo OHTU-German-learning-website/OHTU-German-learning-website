@@ -7,8 +7,8 @@ ENV HUSKY=0
 # Copy package files from gradesa
 COPY gradesa/package*.json ./
 
-# Install dependencies (including dev dependencies temporarily)
-RUN npm ci --production=false
+# Install ALL dependencies (including dev) for build
+RUN npm ci
 
 # Copy app files including .env.production
 COPY gradesa/ .
