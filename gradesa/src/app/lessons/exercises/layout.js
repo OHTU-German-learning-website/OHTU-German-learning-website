@@ -7,4 +7,3 @@ export default function LessonsLayout({ children }) {
     </div>
   );
 }
-3;
