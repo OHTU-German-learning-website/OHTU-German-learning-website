@@ -42,16 +42,6 @@ USER nonroot
 ENV PORT 8080
 EXPOSE 8080
 
-ENV SESSION_SECRET= \
 
-    DB_HOST= \
-
-    DB_PORT= \
-
-    DB_USER= \
-
-    DB_PASSWORD= \
-
-    DB_NAME=
 
 CMD ["npm", "start"]
