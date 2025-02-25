@@ -4,6 +4,21 @@ WORKDIR /app/gradesa
 # Disable Husky during install
 ENV HUSKY=0
 
+# Set default environment variables for build
+
+ENV SESSION_SECRET=secret \
+
+    DB_HOST=localhost \
+
+    DB_PORT=5432 \
+
+    DB_USER=postgres \
+
+    DB_PASSWORD=password \
+
+    DB_NAME=postgres
+
+
 # Copy package files from gradesa
 COPY gradesa/package*.json ./
 
@@ -26,5 +41,17 @@ USER nonroot
 # Next.js needs to listen on 8080
 ENV PORT 8080
 EXPOSE 8080
+
+ENV SESSION_SECRET= \
+
+    DB_HOST= \
+
+    DB_PORT= \
+
+    DB_USER= \
+
+    DB_PASSWORD= \
+
+    DB_NAME=
 
 CMD ["npm", "start"]
