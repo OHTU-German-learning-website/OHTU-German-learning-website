@@ -14,7 +14,7 @@ export default function Register() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const data = await makeRequest("/register", { email, password });
+      const data = await makeRequest("/auth/register", { email, password });
       console.log(data);
       setSubmitted(true);
       setError("");

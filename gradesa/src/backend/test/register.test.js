@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { useTestDatabase } from "./testdb";
-import { POST } from "../../app/api/register/route";
+import { POST } from "../../app/api/auth/register/route";
 import { DB } from "../db";
 
 describe("POST /register", () => {

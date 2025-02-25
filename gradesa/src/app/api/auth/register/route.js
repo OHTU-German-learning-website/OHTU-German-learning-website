@@ -1,5 +1,11 @@
-import { DB } from "../../../backend/db";
+import { DB } from "../../../../backend/db";
 import { randomBytes } from "crypto";
+import { hash_password, salt } from "../hash/route";
+
+export const emailRegex = new RegExp(
+  `^([-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*|"([]!#-[^-~ \t]|(\\[\t -~]))+")@([-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*|\[[\t -Z^-~]*])$`,
+  "i"
+);
 
 const crypto = require("crypto");
 
@@ -7,13 +13,13 @@ export async function POST(request) {
   const json = await request.json();
   const email = json["email"];
   const password = json["password"];
-  const salt = randomBytes(16).toString("hex");
-  const hash_password = await new Promise((resolve, reject) => {
-    crypto.scrypt(password, salt, 64, (err, derivedKey) => {
-      if (err) reject(err);
-      resolve(derivedKey.toString("hex"));
-    });
-  });
+  //  const salt = randomBytes(16).toString("hex");
+  //  const hash_password = await new Promise((resolve, reject) => {
+  //    crypto.scrypt(password, salt, 64, (err, derivedKey) => {
+  //      if (err) reject(err);
+  //      resolve(derivedKey.toString("hex"));
+  //   });
+  //  });
   const existingUser = await DB.pool("SELECT * FROM users WHERE email = $1", [
     email,
   ]);
@@ -29,7 +35,7 @@ export async function POST(request) {
       { status: 400 }
     );
   }
-  if (!email.includes("@")) {
+  if (emailRegex.test(email) === false) {
     return Response.json(
       { message: "Invalid email address." },
       { status: 422 }
