@@ -1,6 +1,6 @@
 import { DB } from "../db";
 import { describe, it, expect } from "vitest";
-import { useTestDatabase } from "./testdb";
+import { useTestDatabase } from "@/backend/test/testdb";
 describe("database", () => {
   useTestDatabase();
 
