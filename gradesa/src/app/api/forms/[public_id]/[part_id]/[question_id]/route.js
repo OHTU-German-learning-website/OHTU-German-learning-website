@@ -6,6 +6,7 @@ import { withAuth } from "@/backend/middleware/withAuth";
 export const PUT = withAuth(async (request, { params }) => {
   const { public_id, part_id, question_id } = await params;
   const user = request.user;
+
   const valid_form = await DB.pool(
     `SELECT f.id FROM forms f
       JOIN form_parts fp ON f.id = fp.form_id

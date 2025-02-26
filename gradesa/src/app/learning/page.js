@@ -27,10 +27,10 @@ export default function Learning() {
     try {
       setIsLoading(true);
       const response = await makeRequest(
-        `/api/forms/${form.public_id}/${part.id}/${question.id}`,
+        `/forms/${form.public_id}/${part.id}/${question.id}`,
+        { answer },
         {
-          method: "POST",
-          body: JSON.stringify({ answer }),
+          method: "PUT",
         }
       );
       refetch();
