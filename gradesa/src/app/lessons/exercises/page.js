@@ -30,7 +30,7 @@ export default function ExercisePage({}) {
         </div>
       </div>
       <Link href="/lessons">
-        <button className="back-button">Back to lessons</button>
+        <button className="back-button">Zurück zu den Übungen</button>
       </Link>
     </LessonsLayout>
   );
