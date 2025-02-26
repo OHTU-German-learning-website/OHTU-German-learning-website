@@ -36,12 +36,17 @@
   font-size: var(--font-lg);
   padding: var(--u-sm);
   border-radius: var(--radius-md);
-  background-color: var(--bg3) !important;
+  background-color: var(--bg5) !important;
   color: var(--fg2);
   cursor: pointer;
   &:hover {
-    background-color: var(--bg4) !important;
+    background-color: var(--bg6) !important;
     color: var(--fg1);
+  }
+  &:disabled {
+    opacity: 0.4;
+    color: var(--fg2);
+    cursor: not-allowed;
   }
 }
 

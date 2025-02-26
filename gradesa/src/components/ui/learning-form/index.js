@@ -29,7 +29,11 @@ export function LearningForm({ form, language, onSubmitAnswer }) {
           language={language}
           onSubmitAnswer={submitAnswer}
         />
-        <StepSelector form={form} onSelect={setSelectedPart} />
+        <StepSelector
+          form={form}
+          onSelect={setSelectedPart}
+          currentPart={selectedPart}
+        />
       </div>
     </div>
   );
@@ -88,20 +92,67 @@ function StepQuestion({ question, language, onSubmitAnswer }) {
   );
 }
 
-function StepSelector({ form, onSelect }) {
+function StepSelector({ form, onSelect, currentPart }) {
+  const renderStepButtons = () => {
+    return form.parts.map((part, i) => {
+      const isPrevPartValid =
+        !form.parts[i - 1] || isPartValid(form.parts[i - 1]);
+      return (
+        <FormPartButton
+          key={part.id}
+          part={part}
+          onSelect={onSelect}
+          isDisabled={!isPrevPartValid}
+        />
+      );
+    });
+  };
+  const isCurrentPartValid = isPartValid(currentPart);
+  const currentPartIndex = form.parts.findIndex(
+    (part) => part.id === currentPart.id
+  );
   return (
     <div className={styles.learningFormStepSelector}>
-      {form.parts.map((part) => (
-        <Button
-          variant="none"
-          width="fit"
-          key={part.id}
-          className={styles.stepSelectorButton}
-          onClick={() => onSelect(part)}
-        >
-          <span>{part.step_label}</span>
-        </Button>
-      ))}
+      <Button
+        variant="none"
+        width="fit"
+        className={styles.stepSelectorButton}
+        onClick={() => onSelect(form.parts[currentPartIndex - 1])}
+        disabled={currentPartIndex === 0}
+      >
+        <span>Previous</span>
+      </Button>
+      {renderStepButtons()}
+      <Button
+        variant="none"
+        width="fit"
+        disabled={!isCurrentPartValid}
+        className={styles.stepSelectorButton}
+        onClick={() =>
+          form.parts[currentPartIndex + 1] &&
+          onSelect(form.parts[currentPartIndex + 1])
+        }
+      >
+        <span>Next</span>
+      </Button>
     </div>
   );
+}
+
+function FormPartButton({ part, onSelect, isDisabled }) {
+  return (
+    <Button
+      variant="none"
+      className={styles.stepSelectorButton}
+      width="fit"
+      onClick={() => onSelect(part)}
+      disabled={isDisabled}
+    >
+      <span>{part.step_label}</span>
+    </Button>
+  );
+}
+
+function isPartValid(part) {
+  return part.questions.every((question) => question.answer !== 0);
 }
