@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dropdown } from "@/components/ui/dropdown/dropdown";
 import { Button } from "@/components/ui/button/button";
 import useQuery from "@/shared/hooks/useQuery";
@@ -41,7 +41,6 @@ export default function Learning() {
       setIsLoading(false);
     }
   };
-  console.log(data);
   return (
     <div className={layout.view}>
       <Dropdown options={languageOptions} onSelect={setLanguage}>

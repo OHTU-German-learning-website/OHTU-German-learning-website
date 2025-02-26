@@ -11,11 +11,12 @@ const getLanguageDescription = (obj, language) => {
 };
 
 export function LearningForm({ form, language, onSubmitAnswer }) {
-  const [selectedPart, setSelectedPart] = useState(form.parts[0]);
+  const [selectedPartIdx, setSelectedPartIdx] = useState(0);
 
   const submitAnswer = async (part, question, answer) => {
     await onSubmitAnswer(form, part, question, answer);
   };
+
   return (
     <div className={styles.learningForm}>
       <h1 className={styles.learningFormHeader}>
@@ -26,14 +27,14 @@ export function LearningForm({ form, language, onSubmitAnswer }) {
       </p>
       <div className={styles.learningFormContainer}>
         <FormStep
-          part={selectedPart}
+          part={form.parts[selectedPartIdx]}
           language={language}
           onSubmitAnswer={submitAnswer}
         />
         <StepSelector
           form={form}
-          onSelect={setSelectedPart}
-          currentPart={selectedPart}
+          onSelect={setSelectedPartIdx}
+          currentPart={form.parts[selectedPartIdx]}
         />
       </div>
     </div>
@@ -44,6 +45,7 @@ function FormStep({ part, language, onSubmitAnswer }) {
   const submitAnswer = async (question, answer) => {
     await onSubmitAnswer(part, question, answer);
   };
+
   const renderStepQuestions = () => {
     return (
       <div className={styles.questionContainer} key={part.id}>
@@ -68,18 +70,21 @@ function FormStep({ part, language, onSubmitAnswer }) {
 
 function StepQuestion({ question, language, onSubmitAnswer }) {
   const renderRadios = () => {
-    return Array.from({ length: 5 }).map((_, index) => (
-      <div className={styles.questionRadioContainer} key={index}>
-        <Radio
-          label={`${index + 1}`}
-          checked={question.answer === index + 1}
-          name={question.id}
-          className={styles.questionRadioInput}
-          onChange={() => onSubmitAnswer(question, index + 1)}
-        />
-        <fieldset className={styles.questionFieldset}>{index + 1}</fieldset>
-      </div>
-    ));
+    return Array.from({ length: 5 }).map((_, index) => {
+      return (
+        <div className={styles.questionRadioContainer} key={index}>
+          <Radio
+            label={`${index + 1}`}
+            radioLabel={`${index + 1}`}
+            size="lg"
+            checked={question.answer === index + 1}
+            name={question.id}
+            className={styles.questionRadioInput}
+            onChange={() => onSubmitAnswer(question, index + 1)}
+          />
+        </div>
+      );
+    });
   };
   return (
     <>
@@ -103,7 +108,7 @@ function StepSelector({ form, onSelect, currentPart }) {
           key={part.id}
           current={part.id === currentPart.id}
           part={part}
-          onSelect={onSelect}
+          onSelect={() => onSelect(i)}
           isDisabled={!isPrevPartValid}
         />
       );
@@ -118,7 +123,7 @@ function StepSelector({ form, onSelect, currentPart }) {
       <Button
         variant="none"
         className={`${styles.stepSelectorButton} ${styles.stepNavButton}`}
-        onClick={() => onSelect(form.parts[currentPartIndex - 1])}
+        onClick={() => onSelect(currentPartIndex - 1)}
         disabled={currentPartIndex === 0}
       >
         <span>Previous</span>
@@ -129,8 +134,7 @@ function StepSelector({ form, onSelect, currentPart }) {
         disabled={!isCurrentPartValid}
         className={`${styles.stepSelectorButton} ${styles.stepNavButton}`}
         onClick={() =>
-          form.parts[currentPartIndex + 1] &&
-          onSelect(form.parts[currentPartIndex + 1])
+          form.parts[currentPartIndex + 1] && onSelect(currentPartIndex + 1)
         }
       >
         <span>Next</span>
@@ -146,7 +150,7 @@ function FormPartButton({ part, onSelect, isDisabled, current }) {
       className={styles.stepSelectorButton}
       width="fit"
       data-current={current}
-      onClick={() => onSelect(part)}
+      onClick={onSelect}
       disabled={isDisabled}
     >
       <span>{part.step_label}</span>

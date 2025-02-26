@@ -1,16 +1,21 @@
 .radioContainer {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: var(--u-sm);
+  position: relative;
+  justify-content: center;
 }
 
 .radioInput {
   appearance: none;
-  background-color: var(--primary1);
+  background-color: var(--bg5);
   border: 1px solid var(--fg2);
   border-radius: 50%;
   position: relative;
   cursor: pointer;
+  &:checked {
+    border-color: var(--primary5);
+  }
   transition:
     background-color 0.2s ease-in-out,
     border-color 0.2s ease-in-out;
@@ -20,8 +25,8 @@
   width: 16px;
   height: 16px;
   &:checked::after {
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
   }
 }
 
@@ -29,18 +34,50 @@
   width: 20px;
   height: 20px;
   &:checked::after {
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
   }
 }
 
 .radioInput.lg {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   &:checked::after {
-    width: 14px;
-    height: 14px;
+    width: 18px;
+    height: 18px;
   }
+}
+
+.radioFieldset {
+  color: var(--fg2);
+  border-radius: var(--radius-sm);
+  border: none;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+}
+
+.radioFieldset.sm {
+  font-size: 8px;
+  width: 16px;
+  height: 16px;
+}
+
+.radioFieldset.md {
+  font-size: 10px;
+  width: 20px;
+  height: 20px;
+}
+
+.radioFieldset.lg {
+  font-size: 12px;
+  width: 26px;
+  height: 26px;
 }
 
 .radioInput:checked::after {
@@ -48,7 +85,7 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  background-color: var(--fg1);
+  background-color: var(--primary1);
   border-radius: 50%;
   transform: translate(-50%, -50%);
 }
