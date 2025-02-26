@@ -1,13 +1,18 @@
-import { Button } from "../button/button";
+import { Button } from "../button";
 import { useState } from "react";
 import styles from "./learning-form.module.css";
 import { Radio } from "../radio";
-const getLanguageTitle = (obj, language) => {
-  return obj[`title_${language}`];
+import { useRouter } from "next/navigation";
+
+export const getLanguageField = (obj, field, language) => {
+  return obj[`${field}_${language}`];
+};
+export const getLanguageTitle = (obj, language) => {
+  return getLanguageField(obj, "title", language);
 };
 
 const getLanguageDescription = (obj, language) => {
-  return obj[`description_${language}`];
+  return getLanguageField(obj, "description", language);
 };
 
 export function LearningForm({ form, language, onSubmitAnswer }) {
@@ -99,6 +104,7 @@ function StepQuestion({ question, language, onSubmitAnswer }) {
 }
 
 function StepSelector({ form, onSelect, currentPart }) {
+  const router = useRouter();
   const renderStepButtons = () => {
     return form.parts.map((part, i) => {
       const isPrevPartValid =
@@ -133,9 +139,13 @@ function StepSelector({ form, onSelect, currentPart }) {
         variant="none"
         disabled={!isCurrentPartValid}
         className={`${styles.stepSelectorButton} ${styles.stepNavButton}`}
-        onClick={() =>
-          form.parts[currentPartIndex + 1] && onSelect(currentPartIndex + 1)
-        }
+        onClick={() => {
+          if (form.parts[currentPartIndex + 1]) {
+            onSelect(currentPartIndex + 1);
+          } else {
+            router.push("/learning/answers");
+          }
+        }}
       >
         <span>Next</span>
       </Button>

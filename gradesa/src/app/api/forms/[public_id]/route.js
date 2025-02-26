@@ -22,18 +22,18 @@ WITH questions AS
                  fp.title_de,
                  fp.form_id,
                  fp.step_label,
+                 fp.advice_en,
+                 fp.advice_de,
+                 fp.advice_threshold,
                  jsonb_agg(
                          to_jsonb(
                                  pq.*
                          )
-                 ) as questions,
-                 COALESCE(upa.answer, 0) as average_answer
+                 ) as questions
         FROM form_parts fp
                    JOIN questions pq
                         ON fp.id = pq.form_part_id
-        LEFT JOIN user_part_answers upa 
-        ON fp.id = upa.form_part_id AND upa.user_id = $1
-                        GROUP BY fp.id, upa.id
+                        GROUP BY fp.id
                         ORDER BY fp.step_label
           ),
      forms as
@@ -47,13 +47,11 @@ WITH questions AS
                          to_jsonb(
                                  fp.*
                          )
-                 ) as parts,
-                 COALESCE(ufa.answer, 0) as average_answer
+                 ) as parts
           FROM forms f
                    JOIN parts fp ON f.id = fp.form_id
-                   LEFT JOIN user_form_answers ufa ON f.id = ufa.form_id AND ufa.user_id = $1
           WHERE f.public_id = $2
-          GROUP BY f.id, ufa.id)
+          GROUP BY f.id)
 SELECT *
 FROM forms;
   `,
@@ -63,8 +61,5 @@ FROM forms;
     return NextResponse.json({ error: "Form not found" }, { status: 404 });
   }
   const form = formRows.rows[0];
-
-  // Not json so it's returned as a string...
-  form.average_answer = parseFloat(form.average_answer);
   return NextResponse.json(form);
 });
