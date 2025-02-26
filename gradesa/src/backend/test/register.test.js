@@ -10,7 +10,7 @@ describe("POST /register", () => {
   it("should return 409 if account already exists", async () => {
     const user = await TestFactory.user();
     const { mockPost } = useTestRequest();
-    const email = user.email;
+    const email = user.email.toLowerCase().trim();
     const password = user.password_hash;
 
     const request = mockPost("@/api/auth/register", {
@@ -22,7 +22,7 @@ describe("POST /register", () => {
     const result = await response.json();
 
     expect(response.status).toBe(409);
-    expect(result.error).toBe("Account already exists.");
+    expect(result.error).toBe("Konto ist bereits vorhanden.");
   });
 
   it("should return 400 if email and password are empty", async () => {
@@ -39,7 +39,7 @@ describe("POST /register", () => {
     const result = await response.json();
 
     expect(response.status).toBe(400);
-    expect(result.error).toBe("Email and password are required.");
+    expect(result.error).toBe("E-Mail und Passwort sind erforderlich.");
   });
 
   it("should return 422 if email is invalid", async () => {
@@ -56,7 +56,7 @@ describe("POST /register", () => {
     const result = await response.json();
 
     expect(response.status).toBe(422);
-    expect(result.error).toBe("Invalid email address.");
+    expect(result.error).toBe("Ungültige E-Mail-Adresse.");
   });
 
   it("should return 422 if password is too short", async () => {
@@ -73,7 +73,9 @@ describe("POST /register", () => {
     const result = await response.json();
 
     expect(response.status).toBe(422);
-    expect(result.error).toBe("Password must be at least 8 characters long.");
+    expect(result.error).toBe(
+      "Das Passwort muss mindestens 8 Zeichen lang sein."
+    );
   });
 
   it("should return 422 if password is too long", async () => {
@@ -91,7 +93,9 @@ describe("POST /register", () => {
     const result = await response.json();
 
     expect(response.status).toBe(422);
-    expect(result.error).toBe("Password must be at least 8 characters long.");
+    expect(result.error).toBe(
+      "Das Passwort muss mindestens 8 Zeichen lang sein."
+    );
   });
 
   it("should return 200 if account is created", async () => {

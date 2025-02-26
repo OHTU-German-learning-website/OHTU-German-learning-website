@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRequest } from "@/shared/hooks/useRequest";
 import { useRouter } from "next/navigation";
+import { set } from "zod";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -18,29 +19,13 @@ export default function Register() {
     try {
       const data = await makeRequest("/auth/register", { email, password });
       setSubmitted(true);
-      if (submitted) {
-        setTimeout(() => {
-          router.push("/auth/login");
-        }, 2000);
-      }
+      setTimeout(() => {
+        router.push("/auth/login");
+      }, 2000);
       setError("");
     } catch (error) {
-      if (error.message === "Account already exists.") {
-        setError("Konto ist bereits vorhanden.");
-        setSubmitted(false);
-      }
-      if (error.message === "Email and password are required.") {
-        setError("E-Mail und Passwort sind erforderlich.");
-        setSubmitted(false);
-      }
-      if (error.message === "Invalid email address.") {
-        setError("Ungültige E-Mail-Adresse.");
-        setSubmitted(false);
-      }
-      if (error.message === "Password must be at least 8 characters long.") {
-        setError("Das Passwort muss mindestens 8 Zeichen lang sein.");
-        setSubmitted(false);
-      }
+      setError(error.message);
+      setSubmitted(false);
     }
   };
 
