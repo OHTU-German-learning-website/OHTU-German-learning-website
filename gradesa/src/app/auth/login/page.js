@@ -14,6 +14,12 @@ export default function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
+
+    if (email === "" || password === "") {
+      setError("Bitte alle Felder ausfüllen");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -33,13 +39,17 @@ export default function Login() {
     }
   };
 
+  const errorMessage = () => {
+    return error ? <div className="error-message">{error}</div> : null;
+  };
+
   return (
     <div>
       <h1 className="auth-title">Anmeldung</h1>
 
-      {error && <div className="error-message">{error}</div>}
+      {errorMessage()}
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <div className="form-group">
           <label className="form-label" htmlFor="email">
             E-Mail-Adresse
@@ -51,7 +61,6 @@ export default function Login() {
             name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
             disabled={isLoading}
           />
         </div>
@@ -67,7 +76,6 @@ export default function Login() {
             name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
             disabled={isLoading}
           />
         </div>
