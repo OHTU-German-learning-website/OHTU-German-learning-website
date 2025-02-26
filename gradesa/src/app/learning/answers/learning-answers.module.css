@@ -8,11 +8,15 @@
   display: flex;
   padding: var(--u-lg);
   border-radius: var(--radius-lg);
-  height: fit-content;
+  height: 100%;
   flex-direction: column;
   border: 1px solid var(--primary2);
   align-items: center;
   gap: var(--u-xl);
+  text-align: center;
+  & span {
+    margin-bottom: auto;
+  }
 }
 
 .learningAnswerAverage {
