@@ -15,26 +15,20 @@ export async function POST(request) {
     email,
   ]);
   if (existingUser.rows.length > 0) {
-    return Response.json(
-      { message: "Account already exists." },
-      { status: 409 }
-    );
+    return Response.json({ error: "Account already exists." }, { status: 409 });
   }
   if (email === "" || password === "") {
     return Response.json(
-      { message: "Email and password are required." },
+      { error: "Email and password are required." },
       { status: 400 }
     );
   }
   if (emailRegex.test(email) === false) {
-    return Response.json(
-      { message: "Invalid email address." },
-      { status: 422 }
-    );
+    return Response.json({ error: "Invalid email address." }, { status: 422 });
   }
   if (password.length < 8 || password.length > 64) {
     return Response.json(
-      { message: "Password must be at least 8 characters long." },
+      { error: "Password must be at least 8 characters long." },
       { status: 422 }
     );
   }
