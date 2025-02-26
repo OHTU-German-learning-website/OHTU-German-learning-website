@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import "./navbar.css";
+import { LockClosedIcon } from "@radix-ui/react-icons";
 
 const Navbar = () => {
   return (
@@ -19,7 +20,9 @@ const Navbar = () => {
       </div>
 
       <div className="navbar-center nav-links">
-        <Link href="/auth/login">Anmeldung</Link>
+        <Link href="/auth/login">
+          <LockClosedIcon /> Anmeldung
+        </Link>
       </div>
     </nav>
   );
