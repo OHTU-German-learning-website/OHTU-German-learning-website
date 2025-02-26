@@ -53,3 +53,21 @@
   flex: 1;
   padding: 10px;
 }
+
+.exercise-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.exercise-content {
+  flex: 1;
+  padding: 160px;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
