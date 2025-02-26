@@ -7,13 +7,15 @@ const Navbar = () => {
     <nav className="navbar">
       {/* Layout UI */}
       <div className="navbar-left">
-        <Image
-          src="/logo_placeholder.png"
-          width={190}
-          height={140}
-          alt="Logo placeholder"
-          priority={true}
-        />
+        <Link href="/">
+          <Image
+            src="/logo_placeholder2.png"
+            width={240}
+            height={179}
+            alt="Logo placeholder"
+            priority={true}
+          />
+        </Link>
       </div>
 
       <div className="navbar-center nav-links">
