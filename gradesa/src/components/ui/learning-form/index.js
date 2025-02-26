@@ -74,6 +74,7 @@ function StepQuestion({ question, language, onSubmitAnswer }) {
           label={`${index + 1}`}
           checked={question.answer === index + 1}
           name={question.id}
+          className={styles.questionRadioInput}
           onChange={() => onSubmitAnswer(question, index + 1)}
         />
         <fieldset className={styles.questionFieldset}>{index + 1}</fieldset>

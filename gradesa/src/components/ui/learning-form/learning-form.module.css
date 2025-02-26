@@ -119,19 +119,10 @@
   pointer-events: none;
   top: 0;
   left: 0;
+  .questionRadioInput:checked + .questionFieldset {
+    color: var(--bg1) !important;
+  }
 }
 
 .questionRadioInput {
-  font-size: var(--font-md);
-  color: var(--fg2);
-  width: 20px;
-  height: 20px;
-  border: 1px solid var(--fg2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  &:checked {
-    border: none;
-    background-color: var(--primary1);
-  }
 }
