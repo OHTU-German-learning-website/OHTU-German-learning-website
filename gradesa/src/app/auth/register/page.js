@@ -1,26 +1,38 @@
 "use client";
 import { useState } from "react";
+import { useRequest } from "@/shared/hooks/useRequest";
+import { useRouter } from "next/navigation";
+import { set } from "zod";
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
+  const router = useRouter();
+
+  const makeRequest = useRequest();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (email === "" || password === "") {
-      setError(true);
-    } else {
+    try {
+      const data = await makeRequest("/auth/register", { email, password });
       setSubmitted(true);
-      setError(false);
+      setTimeout(() => {
+        router.push("/auth/login");
+      }, 2000);
+      setError("");
+    } catch (error) {
+      setError(error.message);
+      setSubmitted(false);
     }
   };
+
   const successMessage = () => {
     return (
       <div className="success">
-        {!!submitted && <h1>Benutzer {email} erfolgreich registriert</h1>}
+        {!!submitted && <h1>Benutzer erfolgreich registriert</h1>}
       </div>
     );
   };
@@ -33,7 +45,7 @@ export default function Register() {
           display: error ? "" : "none",
         }}
       >
-        <h1>Bitte alle Felder ausfüllen</h1>
+        <h1>{error}</h1>
       </div>
     );
   };
