@@ -10,17 +10,13 @@ describe("POST /register", () => {
   it("should return 409 if account already exists", async () => {
     const user = await TestFactory.user();
     const { mockPost } = useTestRequest();
-    const email = user.email.toLowerCase().trim();
-    const password = user.password_hash;
-
     const request = mockPost("@/api/auth/register", {
-      email,
-      password,
+      email: user.email,
+      password: user.password_hash,
     });
 
     const response = await POST(request);
     const result = await response.json();
-
     expect(response.status).toBe(409);
     expect(result.error).toBe("Konto ist bereits vorhanden.");
   });

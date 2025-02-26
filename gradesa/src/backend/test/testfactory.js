@@ -34,7 +34,7 @@ function modelFactory(tableName, base) {
 faker.seed(123);
 
 const user = modelFactory("users", () => ({
-  email: faker.internet.email(),
+  email: faker.internet.email().toLowerCase().trim(),
   password_hash: createHash("sha256")
     .update(faker.internet.password())
     .digest("hex"),
