@@ -31,36 +31,31 @@ export default function LessonsPage() {
   return (
     <div className="lessons-container">
       <h1>Übungen</h1>
-      {initialGrammarTopics.map((topic, index) => (
-        <div className="flex-parent-element" key={`${topic.title}-${index}`}>
+      {initialGrammarTopics.map((topic, i) => (
+        <div className="flex-parent-element" key={`${topic.title}-${i}`}>
           <div className="flex-child-element">
             <h2>{topic.title}</h2>
             <ul>
               {topic.exercises
-                .filter((item, index) => grammar[index] || index < 3)
+                .filter((_, j) => {
+                  console.log(grammar[i] || j < 3);
+                  return grammar[i] || j < 3;
+                })
                 .map((exercise, exIndex) => (
-                  <li key={`${index}-exercise-${exIndex}`}>
+                  <li key={`${i}-exercise-${exIndex}`}>
                     {/* All links go to the same page -> WIP (need DB) */}
                     <Link href={`/lessons/exercises`}>
                       <button className="exercise-link">{exercise}</button>
                     </Link>
                   </li>
                 ))}
-              {grammar[index] &&
-                topic.exercises.slice(3).map((exercise, exIndex) => (
-                  <li key={`${index}-more-${exIndex}`} className="more">
-                    <Link href={`/lessons/exercises`}>
-                      <button className="exercise-link">{exercise}</button>
-                    </Link>{" "}
-                  </li>
-                ))}
             </ul>
             <div className="show-list">
               <button
                 className="show-more-link"
-                onClick={(e) => toggleShowMore(e, index)}
+                onClick={(e) => toggleShowMore(e, i)}
               >
-                {grammar[index] ? "weniger anzeigen" : "mehr anzeigen"}{" "}
+                {grammar[i] ? "weniger anzeigen" : "mehr anzeigen"}{" "}
               </button>
             </div>
           </div>
