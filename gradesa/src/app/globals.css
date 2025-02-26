@@ -154,3 +154,30 @@ a {
     color-scheme: dark;
   }
 }
+
+h1 {
+  font-size: var(--u-3xl);
+  padding-left: 30%;
+}
+
+h2 {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: var(--tertiary1);
+  margin-bottom: 15px;
+}
+
+ul {
+  list-style-type: circle;
+}
+
+ul.exercise-list {
+  list-style-type: circle;
+  padding-left: 30%;
+}
+
+button.back-button {
+  padding-left: 30%;
+  background-color: transparent;
+  border: none;
+}
