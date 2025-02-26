@@ -27,6 +27,10 @@
     margin-bottom: var(--u-md);
   }
 
+.navigate-register p {
+    margin-top: 20px;
+  }
+
 .form-input {
     width: 100%;
     padding: var(--u-md);

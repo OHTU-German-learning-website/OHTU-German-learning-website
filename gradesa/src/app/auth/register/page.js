@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -15,6 +16,10 @@ export default function Register() {
     } else {
       setSubmitted(true);
       setError(false);
+
+      setTimeout(() => {
+        window.location.href = "/auth/login";
+      }, 1500);
     }
   };
 
@@ -71,10 +76,21 @@ export default function Register() {
           />
         </div>
 
-        <button onClick={handleSubmit} type="submit" className="form-button">
+        <button
+          onClick={handleSubmit}
+          type="submit"
+          className="form-button"
+          style={{ marginBottom: "20px" }}
+        >
           Registrieren
         </button>
       </form>
+
+      <div className="navigate-login">
+        <p>
+          Bereits registriert? <Link href="/auth/login">Anmelden</Link>
+        </p>
+      </div>
     </>
   );
 }

@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useRequest } from "../../../shared/hooks/useRequest";
+import { useRequest } from "@/shared/hooks/useRequest";
+import Link from "next/link";
 
 export default function Login() {
   const router = useRouter();
@@ -84,6 +85,12 @@ export default function Login() {
           {isLoading ? "Wird bearbeitet..." : "Einloggen"}
         </button>
       </form>
+
+      <div className="navigate-register">
+        <p>
+          Noch keinen Account? <Link href="/auth/register">Registrieren</Link>
+        </p>
+      </div>
     </div>
   );
 }
