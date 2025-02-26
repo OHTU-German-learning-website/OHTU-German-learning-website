@@ -1,10 +1,13 @@
-import { randomBytes } from "crypto";
-import { password } from "../../app/api/auth/register/route";
+const crypto = require("crypto");
 
-const salt = randomBytes(16).toString("hex");
-export const hash_password = await new Promise((resolve, reject) => {
-  crypto.scrypt(password, salt, 64, (err, derivedKey) => {
-    if (err) reject(err);
-    resolve(derivedKey.toString("hex"));
+export async function hashPassword(password) {
+  const salt = crypto.randomBytes(16).toString("hex");
+
+  return new Promise((resolve, reject) => {
+    crypto.scrypt(password, salt, 64, (err, derivedKey) => {
+      if (err) reject(err);
+      const hashedPassword = derivedKey.toString("hex");
+      resolve({ salt, hashedPassword });
+    });
   });
-});
+}

@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRequest } from "@/shared/hooks/useRequest";
+import { useRouter } from "next/navigation";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -8,6 +9,7 @@ export default function Register() {
 
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
+  const router = useRouter();
 
   const makeRequest = useRequest();
 
@@ -15,22 +17,28 @@ export default function Register() {
     event.preventDefault();
     try {
       const data = await makeRequest("/auth/register", { email, password });
-      console.log(data);
       setSubmitted(true);
+      if (submitted) {
+        setTimeout(() => {
+          router.push("/auth/login");
+        }, 2000);
+      }
       setError("");
     } catch (error) {
-      if (error.status === 409) {
+      if (error.message === "Account already exists.") {
         setError("Konto ist bereits vorhanden.");
         setSubmitted(false);
       }
-      if (error.status === 400) {
+      if (error.message === "Email and password are required.") {
         setError("E-Mail und Passwort sind erforderlich.");
         setSubmitted(false);
       }
-      if (error.status === 422) {
-        setError(
-          "Ungültige E-Mail-Adresse oder Passwort zu kurz. (min. 8 Zeichen)"
-        );
+      if (error.message === "Invalid email address.") {
+        setError("Ungültige E-Mail-Adresse.");
+        setSubmitted(false);
+      }
+      if (error.message === "Password must be at least 8 characters long.") {
+        setError("Das Passwort muss mindestens 8 Zeichen lang sein.");
         setSubmitted(false);
       }
     }

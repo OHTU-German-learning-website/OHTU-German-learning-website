@@ -1,5 +1,5 @@
 import { DB } from "../../../../backend/db";
-import { hash_password, salt } from "../../../../backend/auth/hash";
+import { hashPassword } from "@/backend/auth/hash";
 
 export const emailRegex = new RegExp(
   `^([-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*|"([]!#-[^-~ \t]|(\\[\t -~]))+")@([-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*|\[[\t -Z^-~]*])$`,
@@ -10,13 +10,7 @@ export async function POST(request) {
   const json = await request.json();
   const email = json["email"];
   const password = json["password"];
-  //  const salt = randomBytes(16).toString("hex");
-  //  const hash_password = await new Promise((resolve, reject) => {
-  //    crypto.scrypt(password, salt, 64, (err, derivedKey) => {
-  //      if (err) reject(err);
-  //      resolve(derivedKey.toString("hex"));
-  //   });
-  //  });
+  const { salt, hashedPassword } = await hashPassword(password);
   const existingUser = await DB.pool("SELECT * FROM users WHERE email = $1", [
     email,
   ]);
@@ -47,7 +41,7 @@ export async function POST(request) {
 
   await DB.pool(
     "INSERT INTO users (email, password_hash, salt) VALUES ($1, $2, $3)",
-    [email, hash_password, salt]
+    [email, hashedPassword, salt]
   );
   return Response.json({
     status: 200,
