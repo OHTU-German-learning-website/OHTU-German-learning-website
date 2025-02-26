@@ -48,6 +48,15 @@
     color: var(--fg2);
     cursor: not-allowed;
   }
+  &[data-current="true"] {
+    background-color: var(--bg6) !important;
+    border: 2px solid var(--primary2);
+    color: var(--fg1);
+  }
+}
+
+.stepSelectorButton.stepNavButton {
+  width: 100px;
 }
 
 .stepContainer {
@@ -68,7 +77,7 @@
   display: grid;
   grid-template-columns: auto max-content;
   grid-template-rows: 1fr;
-  background-color: var(--bg2);
+  background-color: var(--bg4);
   gap: var(--u-md);
   padding: var(--u-md);
 }
@@ -100,7 +109,7 @@
   color: var(--fg2);
   width: 20px;
   height: 20px;
-  border-radius: 50%;
+  border-radius: var(--radius-sm);
   border: none;
   text-align: center;
   display: flex;
@@ -117,9 +126,12 @@
   color: var(--fg2);
   width: 20px;
   height: 20px;
-  border-radius: 50%;
   border: 1px solid var(--fg2);
   display: flex;
   align-items: center;
   justify-content: center;
+  &:checked {
+    border: none;
+    background-color: var(--primary1);
+  }
 }

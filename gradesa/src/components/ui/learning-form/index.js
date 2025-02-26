@@ -1,6 +1,7 @@
 import { Button } from "../button/button";
 import { useState } from "react";
 import styles from "./learning-form.module.css";
+import { Radio } from "../radio";
 const getLanguageTitle = (obj, language) => {
   return obj[`title_${language}`];
 };
@@ -69,11 +70,10 @@ function StepQuestion({ question, language, onSubmitAnswer }) {
   const renderRadios = () => {
     return Array.from({ length: 5 }).map((_, index) => (
       <div className={styles.questionRadioContainer} key={index}>
-        <input
-          type="radio"
+        <Radio
+          label={`${index + 1}`}
           checked={question.answer === index + 1}
           name={question.id}
-          className={styles.questionRadioInput}
           onChange={() => onSubmitAnswer(question, index + 1)}
         />
         <fieldset className={styles.questionFieldset}>{index + 1}</fieldset>
@@ -100,6 +100,7 @@ function StepSelector({ form, onSelect, currentPart }) {
       return (
         <FormPartButton
           key={part.id}
+          current={part.id === currentPart.id}
           part={part}
           onSelect={onSelect}
           isDisabled={!isPrevPartValid}
@@ -115,8 +116,7 @@ function StepSelector({ form, onSelect, currentPart }) {
     <div className={styles.learningFormStepSelector}>
       <Button
         variant="none"
-        width="fit"
-        className={styles.stepSelectorButton}
+        className={`${styles.stepSelectorButton} ${styles.stepNavButton}`}
         onClick={() => onSelect(form.parts[currentPartIndex - 1])}
         disabled={currentPartIndex === 0}
       >
@@ -125,9 +125,8 @@ function StepSelector({ form, onSelect, currentPart }) {
       {renderStepButtons()}
       <Button
         variant="none"
-        width="fit"
         disabled={!isCurrentPartValid}
-        className={styles.stepSelectorButton}
+        className={`${styles.stepSelectorButton} ${styles.stepNavButton}`}
         onClick={() =>
           form.parts[currentPartIndex + 1] &&
           onSelect(form.parts[currentPartIndex + 1])
@@ -139,12 +138,13 @@ function StepSelector({ form, onSelect, currentPart }) {
   );
 }
 
-function FormPartButton({ part, onSelect, isDisabled }) {
+function FormPartButton({ part, onSelect, isDisabled, current }) {
   return (
     <Button
       variant="none"
       className={styles.stepSelectorButton}
       width="fit"
+      data-current={current}
       onClick={() => onSelect(part)}
       disabled={isDisabled}
     >
