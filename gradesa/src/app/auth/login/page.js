@@ -76,6 +76,9 @@ export default function Login() {
           {isLoading ? "Wird bearbeitet..." : "Einloggen"}
         </button>
       </form>
+      <p>
+        Not registered yet? <a href="/auth/register">Register here</a>
+      </p>
     </div>
   );
 }
