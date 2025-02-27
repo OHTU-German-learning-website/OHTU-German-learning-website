@@ -19,7 +19,7 @@ CREATE TABLE public.form_parts (
   step_label text NOT NULL,
   advice_en text,
   advice_de text,
-  advice_threshold numeric(5,2) DEFAULT 2.5
+  advice_threshold numeric(5,2) DEFAULT 3
 );
 
 ALTER TABLE public.form_parts
