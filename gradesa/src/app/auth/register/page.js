@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRequest } from "@/shared/hooks/useRequest";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -30,9 +31,9 @@ export default function Register() {
   const successMessage = () => {
     return (
       <div className="success">
-        {submitted && <h1>Benutzer erfolgreich registriert</h1>}
+        <h1>Benutzer erfolgreich registriert</h1>
       </div>
-    ) : null;
+    );
   };
 
   const errorMessage = () => {
@@ -47,8 +48,8 @@ export default function Register() {
     <>
       <h1 className="auth-title">Registrieren</h1>
       <div className="messages">
-        {errorMessage()}
-        {successMessage()}
+        {!!error && errorMessage()}
+        {submitted && successMessage()}
       </div>
 
       <form onSubmit={handleSubmit}>
