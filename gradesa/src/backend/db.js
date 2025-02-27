@@ -90,8 +90,6 @@ async function destroy() {
     if (!_pool.ended && !_pool.ending) {
       await _pool.end();
       logger.info("Pool destroyed");
-    } else {
-      logger.warn("Pool already destroyed");
     }
   }
   _pool = undefined;

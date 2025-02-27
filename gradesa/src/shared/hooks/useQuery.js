@@ -74,7 +74,6 @@ const useQuery = (url, params, config) => {
     // Reset attempt and backoff on each call
     currentAttemptRef.current = 0;
     currentBackoffRef.current = config.refetchBackoff;
-    setData(null);
     setError(null);
     let exponent = 1;
     const maxAttempts = config.refetchBackoffMaxAttempts;
