@@ -57,7 +57,7 @@ BEGIN
   RETURNING id INTO new_form_id;
 
   INSERT INTO form_parts (form_id, title_en, title_de, step_label)
-  VALUES (new_form_id, 'Part A', 'Teil A – Erinnerungsvermögen verbessern', 'A')
+  VALUES (new_form_id, 'Part A', 'Teil A', 'A')
   RETURNING id INTO part_id;
 
   INSERT INTO part_questions (form_part_id, title_en, title_de)
@@ -109,7 +109,7 @@ BEGIN
     );
 
   INSERT INTO form_parts (form_id, title_en, title_de, step_label)
-  VALUES (new_form_id, 'Part B', 'Teil B – Lerntechniken benutzen', 'B')
+  VALUES (new_form_id, 'Part B', 'Teil B', 'B')
   RETURNING id INTO part_id;
 
   INSERT INTO part_questions (form_part_id, title_en, title_de)
@@ -186,7 +186,7 @@ BEGIN
     );
 
   INSERT INTO form_parts (form_id, title_en, title_de, step_label)
-  VALUES (new_form_id, 'Part C', 'Teil C – Fehlende Kenntnisse kompensieren', 'C')
+  VALUES (new_form_id, 'Part C', 'Teil C', 'C')
   RETURNING id INTO part_id;
 
   INSERT INTO part_questions (form_part_id, title_en, title_de)
@@ -223,7 +223,7 @@ BEGIN
     );
 
   INSERT INTO form_parts (form_id, title_en, title_de, step_label)
-  VALUES (new_form_id, 'Part D', 'Teil D – Das Lernen organisieren und evaluieren', 'D')
+  VALUES (new_form_id, 'Part D', 'Teil D', 'D')
   RETURNING id INTO part_id;
 
   INSERT INTO part_questions (form_part_id, title_en, title_de)
@@ -275,7 +275,7 @@ BEGIN
     );
 
   INSERT INTO form_parts (form_id, title_en, title_de, step_label)
-  VALUES (new_form_id, 'Part E', 'Teil E – Gefühle und Emotionen managen', 'E')
+  VALUES (new_form_id, 'Part E', 'Teil E', 'E')
   RETURNING id INTO part_id;
 
   INSERT INTO part_questions (form_part_id, title_en, title_de)
@@ -312,7 +312,7 @@ BEGIN
     );
 
   INSERT INTO form_parts (form_id, title_en, title_de, step_label)
-  VALUES (new_form_id, 'Part F', 'Teil F – Von anderen lernen', 'F')
+  VALUES (new_form_id, 'Part F', 'Teil F', 'F')
   RETURNING id INTO part_id;
 
   INSERT INTO part_questions (form_part_id, title_en, title_de)

@@ -124,6 +124,7 @@ function StepSelector({ form, onSelect, currentPart }) {
   const currentPartIndex = form.parts.findIndex(
     (part) => part.id === currentPart.id
   );
+  const isDone = currentPartIndex === form.parts.length - 1;
   return (
     <div className={styles.learningFormStepSelector}>
       <Button
@@ -140,14 +141,14 @@ function StepSelector({ form, onSelect, currentPart }) {
         disabled={!isCurrentPartValid}
         className={`${styles.stepSelectorButton} ${styles.stepNavButton}`}
         onClick={() => {
-          if (form.parts[currentPartIndex + 1]) {
-            onSelect(currentPartIndex + 1);
-          } else {
+          if (isDone) {
             router.push("/learning/answers");
+          } else if (form.parts[currentPartIndex + 1]) {
+            onSelect(currentPartIndex + 1);
           }
         }}
       >
-        <span>Next</span>
+        <span>{isDone ? "Finish" : "Next"}</span>
       </Button>
     </div>
   );
