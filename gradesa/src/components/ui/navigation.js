@@ -1,24 +1,28 @@
 import Image from "next/image";
 import Link from "next/link";
 import "./navbar.css";
+import { LockClosedIcon } from "@radix-ui/react-icons";
 
 const Navbar = () => {
   return (
     <nav className="navbar">
       {/* Layout UI */}
       <div className="navbar-left">
-        <Image
-          src="/logo_placeholder.png"
-          width={190}
-          height={140}
-          alt="Logo placeholder"
-          priority={true}
-        />
+        <Link href="/">
+          <Image
+            src="/logo_placeholder2.png"
+            width={240}
+            height={179}
+            alt="Logo placeholder"
+            priority={true}
+          />
+        </Link>
       </div>
 
       <div className="navbar-center nav-links">
-        <Link href="#">Benutzer</Link>
-        <Link href="#">Sich abmelden</Link>
+        <Link href="/auth/login">
+          <LockClosedIcon /> Anmeldung
+        </Link>
       </div>
     </nav>
   );

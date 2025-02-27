@@ -83,7 +83,8 @@ CREATE TABLE public.users (
   email text UNIQUE NOT NULL,
   password_hash text NOT NULL,
   created_at timestamp with time zone NOT NULL DEFAULT now(),
-  updated_at timestamp with time zone NOT NULL DEFAULT now()
+  updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  salt text NOT NULL
 );
 
 CREATE TRIGGER updated_at BEFORE UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION updated_at();

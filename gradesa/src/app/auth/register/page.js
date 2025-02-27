@@ -1,39 +1,45 @@
 "use client";
 import { useState } from "react";
+import { useRequest } from "@/shared/hooks/useRequest";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
+  const router = useRouter();
+
+  const makeRequest = useRequest();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (email === "" || password === "") {
-      setError(true);
-    } else {
+    try {
+      const data = await makeRequest("/auth/register", { email, password });
       setSubmitted(true);
-      setError(false);
+      setTimeout(() => {
+        router.push("/auth/login");
+      }, 2000);
+      setError("");
+    } catch (error) {
+      setError(error.message);
+      setSubmitted(false);
     }
   };
+
   const successMessage = () => {
     return (
       <div className="success">
-        {!!submitted && <h1>Benutzer {email} erfolgreich registriert</h1>}
+        <h1>Benutzer erfolgreich registriert</h1>
       </div>
     );
   };
 
   const errorMessage = () => {
     return (
-      <div
-        className="error"
-        style={{
-          display: error ? "" : "none",
-        }}
-      >
-        <h1>Bitte alle Felder ausfüllen</h1>
+      <div className="error">
+        <h1>{error}</h1>
       </div>
     );
   };
@@ -42,8 +48,8 @@ export default function Register() {
     <>
       <h1 className="auth-title">Registrieren</h1>
       <div className="messages">
-        {errorMessage()}
-        {successMessage()}
+        {!!error && errorMessage()}
+        {submitted && successMessage()}
       </div>
 
       <form onSubmit={handleSubmit}>
@@ -77,10 +83,21 @@ export default function Register() {
           />
         </div>
 
-        <button onClick={handleSubmit} type="submit" className="form-button">
+        <button
+          onClick={handleSubmit}
+          type="submit"
+          className="form-button"
+          style={{ marginBottom: "20px" }}
+        >
           Registrieren
         </button>
       </form>
+
+      <div className="navigate-login">
+        <p>
+          Bereits registriert? <Link href="/auth/login">Anmelden</Link>
+        </p>
+      </div>
     </>
   );
 }
