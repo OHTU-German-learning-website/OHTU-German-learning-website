@@ -32,19 +32,14 @@ export default function Register() {
   const successMessage = () => {
     return (
       <div className="success">
-        {!!submitted && <h1>Benutzer erfolgreich registriert</h1>}
+        {submitted && <h1>Benutzer erfolgreich registriert</h1>}
       </div>
     );
   };
 
   const errorMessage = () => {
     return (
-      <div
-        className="error"
-        style={{
-          display: error ? "" : "none",
-        }}
-      >
+      <div className="error">
         <h1>{error}</h1>
       </div>
     );
