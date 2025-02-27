@@ -34,10 +34,7 @@ describe("answers", () => {
     const part2 = form.parts[1];
     const question2_1 = part2.questions[0];
     const question2_2 = part2.questions[1];
-    const u = await DB.pool(`select * from users`);
-    for (const user of u.rows) {
-      console.log(user);
-    }
+
     const response1_1 = await submitAnswer(form, part1, question1_1, 1);
     const response1_1x2 = await submitAnswer(form, part1, question1_1, 2);
     expect(response1_1.status).toBe(200);

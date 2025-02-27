@@ -43,7 +43,6 @@ describe("forms", () => {
       [user.id, formJson.parts[0].questions[0].id, 1]
     );
     const result = await DB.pool(`SELECT * FROM user_question_answers`);
-    console.log(result.rows);
 
     const formWithAnswers = await GET(
       mockGet("/api/forms/learning_type"),

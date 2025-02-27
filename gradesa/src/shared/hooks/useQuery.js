@@ -64,7 +64,6 @@ const useQuery = (url, params, config) => {
       signal: abortCtrl.signal,
     });
     if (isMounted && !!response.data) {
-      console.log("SET");
       setData(response.data);
     } else {
       throw new Error("Failed to fetch data");
