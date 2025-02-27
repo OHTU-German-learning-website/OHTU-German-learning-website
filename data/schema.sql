@@ -93,7 +93,8 @@ CREATE TABLE public.users (
   email text UNIQUE NOT NULL,
   password_hash text NOT NULL,
   created_at timestamp with time zone NOT NULL DEFAULT now(),
-  updated_at timestamp with time zone NOT NULL DEFAULT now()
+  updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  salt text NOT NULL
 );
 
 ALTER TABLE public.user_question_answers
