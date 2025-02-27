@@ -35,7 +35,7 @@ export const Dropdown = ({
       <_DropdownMenu.Item
         key={option.value}
         className={styles.item}
-        onClick={() => handleSelect(option.value)}
+        onClick={() => handleSelect(option)}
       >
         {option.label}
       </_DropdownMenu.Item>

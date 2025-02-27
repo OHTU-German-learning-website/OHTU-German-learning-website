@@ -1,0 +1,128 @@
+.learningForm {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: var(--u-xl);
+  overflow: hidden;
+}
+
+.learningFormHeader {
+  font-size: var(--font-2xl);
+  font-weight: bold;
+}
+
+.learningFormDescription {
+  font-size: var(--font-md);
+  color: var(--fg2);
+  white-space: pre-wrap;
+}
+
+.learningFormContainer {
+  display: flex;
+  overflow: hidden;
+  flex-grow: 1;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: var(--u-md);
+}
+
+.learningFormStepSelector {
+  display: flex;
+  gap: var(--u-md);
+  margin: 0 auto;
+}
+
+.stepSelectorButton {
+  font-size: var(--font-lg);
+  padding: var(--u-sm);
+  border-radius: var(--radius-md);
+  background-color: var(--bg5) !important;
+  color: var(--fg2);
+  cursor: pointer;
+  &:hover {
+    background-color: var(--bg6) !important;
+    color: var(--fg1);
+  }
+  &:disabled {
+    opacity: 0.4;
+    color: var(--fg2);
+    cursor: not-allowed;
+  }
+  &[data-current="true"] {
+    background-color: var(--bg6) !important;
+    border: 2px solid var(--primary2);
+    color: var(--fg1);
+  }
+}
+
+.stepSelectorButton.stepNavButton {
+  width: 100px;
+}
+
+.stepContainer {
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  gap: var(--u-md);
+}
+
+.stepTitle {
+  font-size: var(--font-lg);
+  font-weight: bold;
+}
+
+.questionContainer {
+  flex-grow: 1;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: auto max-content;
+  grid-template-rows: 1fr;
+  background-color: var(--bg4);
+  gap: var(--u-md);
+  padding: var(--u-md);
+}
+
+.learningFormStepQuestion {
+  background-color: var(--bg1);
+  padding: var(--u-md);
+}
+
+.questionOptionsContainer {
+  display: flex;
+  width: fit-content;
+  padding: var(--u-md);
+  background-color: var(--bg1);
+  gap: var(--u-md);
+}
+
+.questionRadioContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  justify-content: center;
+  height: 20px;
+}
+
+.questionFieldset {
+  font-size: var(--font-md);
+  color: var(--fg2);
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-sm);
+  border: none;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  .questionRadioInput:checked + .questionFieldset {
+    color: var(--bg1) !important;
+  }
+}
+
+.questionRadioInput {
+}

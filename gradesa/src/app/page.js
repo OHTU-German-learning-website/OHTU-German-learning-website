@@ -1,6 +1,6 @@
 "use client";
 import styles from "./page.module.css";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/components/ui/button";
 import { Grid } from "@radix-ui/themes";
 import Link from "next/link";
 export default function Home() {
