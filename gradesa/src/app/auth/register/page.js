@@ -2,12 +2,10 @@
 import { useState } from "react";
 import { useRequest } from "@/shared/hooks/useRequest";
 import { useRouter } from "next/navigation";
-import { set } from "zod";
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
@@ -34,7 +32,7 @@ export default function Register() {
       <div className="success">
         {submitted && <h1>Benutzer erfolgreich registriert</h1>}
       </div>
-    );
+    ) : null;
   };
 
   const errorMessage = () => {
@@ -84,10 +82,21 @@ export default function Register() {
           />
         </div>
 
-        <button onClick={handleSubmit} type="submit" className="form-button">
+        <button
+          onClick={handleSubmit}
+          type="submit"
+          className="form-button"
+          style={{ marginBottom: "20px" }}
+        >
           Registrieren
         </button>
       </form>
+
+      <div className="navigate-login">
+        <p>
+          Bereits registriert? <Link href="/auth/login">Anmelden</Link>
+        </p>
+      </div>
     </>
   );
 }
