@@ -9,10 +9,10 @@ export default function Home() {
       <main className={styles.main}>
         <Grid columns="2" gap="3" width="auto">
           <Button variant="outline" size="lg" width="fit">
-            <Link href="/forms">How You Learn</Link>
+            <Link href="/learning">Entdecke deine Lernstrategien</Link>
           </Button>
           <Button variant="outline" size="lg" width="fit">
-            <Link href="/lessons">Learn Grammar</Link>
+            <Link href="/lessons">Grammatik lernen</Link>
           </Button>
         </Grid>
       </main>
