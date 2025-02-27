@@ -28,6 +28,9 @@ RUN npm ci
 # Copy app files including .env.production
 COPY gradesa/ .
 
+#This is for memory optimizing
+ENV NODE_OPTIONS="--max-old-space-size=8192"
+
 #this builds the application
 RUN npm run build
 
