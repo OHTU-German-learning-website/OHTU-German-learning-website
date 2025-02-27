@@ -1,31 +1,16 @@
 import { NextResponse } from "next/server";
 import { createSession } from "../../../lib/session";
 import { DB } from "@/backend/db";
-import { scrypt } from "crypto";
-import { promisify } from "util";
-
-const scryptAsync = promisify(scrypt);
+import { verifyPassWord } from "@/backend/auth/hash";
 
 export async function POST(request) {
   const { email, password } = await request.json();
   const errorMsg = "Ungültige E-Mail-Adresse oder Passwort";
 
-  // Mock user credentials
-  //const mockEmail = "user@example.com";
-  //const mockPassword = "Demonstration1";
-
-  //if (email !== mockEmail || password !== mockPassword) {
-  //  return NextResponse.json(
-  //    { error: "Ungültige E-Mail-Adresse oder Passwort" },
-  //    { status: 401 }
-  //  );
-  //}
-
   // Perform DB query
-  const userResult = await DB.pool.query(
-    "SELECT * FROM users WHERE email = $1",
-    [email]
-  );
+  const userResult = await DB.pool("SELECT * FROM users WHERE email = $1", [
+    email,
+  ]);
 
   // If the user does not exist, return an error
   if (userResult.rowCount === 0) {
@@ -38,10 +23,8 @@ export async function POST(request) {
   // Extract salt from user object
   const salt = user.salt;
 
-  // Hash and salt the input password
-  const inputPasswordHash = (await scryptAsync(password, salt, 64)).toString(
-    "hex"
-  );
+  // Verify user input password by hashing and salting it first
+  const inputPasswordHash = await verifyPassWord(password, salt);
 
   // If the hashed password does not match the one stored in DB, return an error
   if (user.password_hash !== inputPasswordHash) {
