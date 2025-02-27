@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useRequest } from "../../../shared/hooks/useRequest";
+import { useRequest } from "@/shared/hooks/useRequest";
+import Link from "next/link";
 
 export default function Login() {
   const router = useRouter();
@@ -14,6 +15,12 @@ export default function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
+
+    if (email === "" || password === "") {
+      setError("Bitte alle Felder ausfüllen");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -33,13 +40,17 @@ export default function Login() {
     }
   };
 
+  const errorMessage = () => {
+    return error ? <div className="error-message">{error}</div> : null;
+  };
+
   return (
     <div>
       <h1 className="auth-title">Anmeldung</h1>
 
-      {error && <div className="error-message">{error}</div>}
+      {errorMessage()}
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <div className="form-group">
           <label className="form-label" htmlFor="email">
             E-Mail-Adresse
@@ -51,7 +62,6 @@ export default function Login() {
             name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
             disabled={isLoading}
           />
         </div>
@@ -67,7 +77,6 @@ export default function Login() {
             name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
             disabled={isLoading}
           />
         </div>
@@ -76,9 +85,11 @@ export default function Login() {
           {isLoading ? "Wird bearbeitet..." : "Einloggen"}
         </button>
       </form>
-      <p>
-        Not registered yet? <a href="/auth/register">Register here</a>
-      </p>
+      <div className="navigate-register">
+        <p>
+          Noch keinen Account? <Link href="/auth/register">Registrieren</Link>
+        </p>
+      </div>
     </div>
   );
 }

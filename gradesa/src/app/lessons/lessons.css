@@ -1,0 +1,55 @@
+.flex-child-element .exercise-link {
+  color: var(--secondar1);
+}
+
+.flex-child-element .show-more-link {
+  font-style: italic;
+  color: var(--secondary3);
+  font-size: var(--font-sm);
+}
+
+.show-more-link,
+.exercise-link {
+  background: none;
+  border: none;
+  color: var(--secondary3);
+  text-decoration: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.flex-parent-element {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  padding-left: 0;
+  padding-top: 20px;
+}
+
+.flex-child-element {
+  flex-grow: 1;
+  flex-shrink: 0;
+  flex-basis: 50%;
+  border: 2px solid var(--fg7);
+  background-color: var(--fg3);
+  color: var(--secondary1);
+}
+
+.flex-child-element:first-child {
+  margin-right: 40%;
+  margin-left: 30%;
+  padding: 30px;
+}
+
+.lessons-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.lessons-content {
+  flex: 1;
+  padding: 10px;
+}

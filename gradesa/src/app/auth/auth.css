@@ -27,6 +27,10 @@
     margin-bottom: var(--u-md);
   }
 
+.navigate-register p {
+    margin-top: 20px;
+  }
+
 .form-input {
     width: 100%;
     padding: var(--u-md);
@@ -52,14 +56,21 @@
 .error-message {
     padding: var(--u-md);
     background-color: var(--tertiary5);
+    font-size: var(--font-md);
     color: var(--fg1);
     border-radius: var(--radius-sm);
     margin-bottom: var(--u-lg);
+    text-align: center
 }
 
-.success {
+.success-message {
+  padding: var(--u-md);
+  background-color: var(--tertiary10);
+  font-size: var(--font-md);
+  color: var(--fg9);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--u-lg);
   text-align: center;
-  margin-bottom: 1.5rem;
 }
 
 .error {
