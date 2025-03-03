@@ -43,8 +43,6 @@ CREATE TABLE public.forms (
   description_de text
 );
 
-CREATE TRIGGER updated_at BEFORE UPDATE ON public.forms FOR EACH ROW EXECUTE FUNCTION updated_at();
-
 ALTER TABLE public.form_parts
 ADD CONSTRAINT form_parts_form_id_fkey
 FOREIGN KEY (form_id) REFERENCES forms(id) ON DELETE RESTRICT;
@@ -57,8 +55,6 @@ CREATE TABLE public.part_questions (
   title_en text,
   title_de text
 );
-
-CREATE TRIGGER updated_at BEFORE UPDATE ON public.part_questions FOR EACH ROW EXECUTE FUNCTION updated_at();
 
 ALTER TABLE public.part_questions
 ADD CONSTRAINT part_questions_form_part_id_fkey
@@ -84,8 +80,6 @@ ALTER TABLE public.user_question_answers
 ADD CONSTRAINT user_question_answers_user_id_part_question_id_key
 UNIQUE (user_id, part_question_id);
 
-CREATE TRIGGER updated_at BEFORE UPDATE ON public.user_question_answers FOR EACH ROW EXECUTE FUNCTION updated_at();
-
 ALTER TABLE public.user_question_answers
 ADD CONSTRAINT user_question_answers_part_question_id_fkey
 FOREIGN KEY (part_question_id) REFERENCES part_questions(id) ON DELETE RESTRICT;
@@ -98,8 +92,6 @@ CREATE TABLE public.users (
   updated_at timestamp with time zone NOT NULL DEFAULT now(),
   salt text NOT NULL
 );
-
-CREATE TRIGGER updated_at BEFORE UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION updated_at();
 
 ALTER TABLE public.user_question_answers
 ADD CONSTRAINT user_question_answers_user_id_fkey
