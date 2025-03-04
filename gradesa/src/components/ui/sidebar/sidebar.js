@@ -1,13 +1,22 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import styles from "./sidebar.module.css";
 
 const Sidebar = () => {
   return (
     <nav className={styles.sidebar}>
-      <div>
-        <h1 className={styles.logo}>Gradesa</h1>
+      <div className="logo">
+        <Link href="/">
+          <Image
+            src="/logo_placeholder2.png"
+            width={240}
+            height={179}
+            alt="Logo placeholder"
+            priority={true}
+          />
+        </Link>
       </div>
       <div className={styles.sidebarLinks}>
         <div className={styles.navItem}>

@@ -59,8 +59,6 @@ CREATE TABLE public.forms (
   description_de text
 );
 
-CREATE TRIGGER updated_at BEFORE UPDATE ON public.forms FOR EACH ROW EXECUTE FUNCTION updated_at();
-
 ALTER TABLE public.form_parts
 ADD CONSTRAINT form_parts_form_id_fkey
 FOREIGN KEY (form_id) REFERENCES forms(id) ON DELETE RESTRICT;
