@@ -23,11 +23,15 @@ export async function POST(request) {
   // Extract salt from user object
   const salt = user.salt;
 
-  // Verify user input password by hashing and salting it first
-  const inputPasswordHash = await verifyPassWord(password, salt);
+  // Verify user input password by hashing and salting it and comparing it to the hashed password in the DB
+  const passwordValid = await verifyPassWord(
+    password,
+    salt,
+    user.password_hash
+  );
 
   // If the hashed password does not match the one stored in DB, return an error
-  if (user.password_hash !== inputPasswordHash) {
+  if (!passwordValid) {
     return NextResponse.json({ error: errorMsg }, { status: 401 });
   }
 
