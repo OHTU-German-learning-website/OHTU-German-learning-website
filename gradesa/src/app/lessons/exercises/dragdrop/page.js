@@ -3,6 +3,7 @@ import styles from "../../../page.module.css";
 import DragdropLayout from "./layout";
 import { Grid } from "@radix-ui/themes";
 import { Box } from "@/components/ui/box/box";
+import { DragBox } from "@/components/ui/dragdrop/dragbox";
 
 export default function Dragdrop({}) {
   return (
@@ -15,6 +16,9 @@ export default function Dragdrop({}) {
             Schule <br></br>
             Auto
           </Box>
+          {/* <DragBox className="drag-box">
+              kräääääh
+          </DragBox> */}
           <Grid columns="3" gap="3" rows="2" width="auto" justify="center">
             <Box gridrow="2 / 2" variant="outline" size="xl" minwidth="500px">
               Kurs

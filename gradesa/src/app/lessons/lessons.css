@@ -63,11 +63,11 @@
 
 .exercise-content {
   flex: 1;
-  padding: 170px;
+  padding: 5px;
 }
 
 .top-box {
-  margin-bottom: 20px;
+  margin-bottom: 140px;
   width: 100% !important;
   height: 150px !important;
 }
