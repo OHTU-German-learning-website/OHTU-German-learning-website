@@ -176,7 +176,6 @@ a {
 
 h1 {
   font-size: var(--u-3xl);
-  padding-left: 30%;
 }
 
 h2 {
@@ -192,11 +191,9 @@ ul {
 
 ul.exercise-list {
   list-style-type: circle;
-  padding-left: 30%;
 }
 
 button.back-button {
-  padding-left: 30%;
   background-color: transparent;
   border: none;
 }
