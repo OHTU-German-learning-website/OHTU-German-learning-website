@@ -35,16 +35,16 @@ export default function Register() {
 
   const successMessage = () => {
     return (
-      <div className="success">
-        <h1>Benutzer erfolgreich registriert</h1>
+      <div className="success-message">
+        <p>Benutzer erfolgreich registriert</p>
       </div>
     );
   };
 
   const errorMessage = () => {
     return (
-      <div className="error">
-        <h1>{error}</h1>
+      <div className="error-message">
+        <p>{error}</p>
       </div>
     );
   };

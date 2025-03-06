@@ -85,7 +85,6 @@ export default function Login() {
           {isLoading ? "Wird bearbeitet..." : "Einloggen"}
         </button>
       </form>
-
       <div className="navigate-register">
         <p>
           Noch keinen Account? <Link href="/auth/register">Registrieren</Link>

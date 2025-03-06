@@ -14,7 +14,7 @@
   }
   
 .auth-title {
-    text-align: center;
+    text-align: left;
     margin-bottom: var(--u-xl);
   }
 
@@ -60,7 +60,8 @@
     color: var(--fg1);
     border-radius: var(--radius-sm);
     margin-bottom: var(--u-lg);
-    text-align: center
+    text-align: center;
+    margin-top: var(--u-lg);
 }
 
 .success-message {
@@ -71,6 +72,7 @@
   border-radius: var(--radius-sm);
   margin-bottom: var(--u-lg);
   text-align: center;
+  margin-top: var(--u-lg);
 }
 
 .error {

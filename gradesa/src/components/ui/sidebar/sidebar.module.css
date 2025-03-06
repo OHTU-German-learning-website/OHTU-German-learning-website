@@ -1,0 +1,41 @@
+@import "@/shared/styles/layout.module.css";
+
+.logo {
+  font-size: var(--font-2xl);
+  font-weight: bold;
+  margin: 0 12px;
+  color: var(--primary3);
+}
+
+.sidebar {
+  width: 300px;
+  height: 100%;
+  z-index: var(--z-10);
+  flex-shrink: 0;
+  padding: 36px 24px;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg3);
+  gap: var(--u-3xl);
+}
+
+.sidebarLinks {
+  display: flex;
+  flex-direction: column;
+}
+
+.navItem {
+  width: 100%;
+  padding: 12px 12px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  & .sidebarLink {
+    text-decoration: none;
+    color: var(--fg2);
+    font-size: var(--font-lg);
+  }
+  &:hover {
+    color: var(--fg1);
+    background-color: var(--bg2);
+  }
+}
