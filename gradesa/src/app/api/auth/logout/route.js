@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { deleteSession } from "@/app/lib/session";
+import { deleteSession } from "@/backend/auth/session";
 import { getConfig } from "@/backend/config";
 
 export async function POST() {

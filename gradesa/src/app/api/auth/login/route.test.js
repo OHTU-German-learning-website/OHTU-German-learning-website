@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { POST } from "./route";
-import { createSession } from "@/app/lib/session";
+import { createSession } from "@/backend/auth/session";
 import { useTestRequest } from "@/backend/test/mock-request";
 import { DB } from "@/backend/db";
 
-vi.mock("@/app/lib/session", () => ({
+vi.mock("@/backend/auth/session", () => ({
   createSession: vi.fn().mockResolvedValue(undefined),
 }));
 
