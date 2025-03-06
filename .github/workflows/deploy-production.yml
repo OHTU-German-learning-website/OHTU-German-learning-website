@@ -2,7 +2,7 @@ name: Deploy Docker image to GitHub registry
 
 on:
   push:
-    branches: ["axel/openshift"]
+    branches: ["master"]
 
 env:
   REGISTRY: ghcr.io
