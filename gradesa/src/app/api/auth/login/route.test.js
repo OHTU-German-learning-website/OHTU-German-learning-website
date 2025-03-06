@@ -52,7 +52,7 @@ describe("POST /api/auth/login", () => {
     const responseData = await response.json();
 
     expect(responseData).toEqual({
-      error: "Ungültige E-Mail-Adresse oder Passwort",
+      error: "Ungültige Benutzername/E-Mail-Adresse oder Passwort",
     });
     expect(response.status).toBe(401);
     expect(createSession).not.toHaveBeenCalled();
