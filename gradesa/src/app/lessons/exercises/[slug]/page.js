@@ -1,5 +1,5 @@
 const Post = () => {
-  return <p>Post: {slug}</p>;
+  return <p>Post</p>;
 };
 
 export default Post;
