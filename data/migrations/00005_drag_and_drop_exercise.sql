@@ -9,7 +9,7 @@ CREATE TABLE draggable_words (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     word TEXT NOT NULL,
     correct_answer TEXT NOT NULL,
-    UNIQUE (word, correct_answer),
+    UNIQUE (word, correct_answer)
 );
 
 CREATE TRIGGER updated_at
