@@ -4,17 +4,22 @@ import { DB } from "@/backend/db";
 import { verifyPassWord } from "@/backend/auth/hash";
 
 export async function POST(request) {
-  const { email, password } = await request.json();
-  const errorMsg = "Ungültige E-Mail-Adresse oder Passwort";
+  const { identifier, password } = await request.json();
+  const errorMsg = "Ungültige Benutzername/E-Mail-Adresse oder Passwort";
 
   // Perform DB query
-  const userResult = await DB.pool("SELECT * FROM users WHERE email = $1", [
-    email,
+  let userResult = await DB.pool("SELECT * FROM users WHERE email = $1", [
+    identifier,
   ]);
 
   // If the user does not exist, return an error
   if (userResult.rowCount === 0) {
-    return NextResponse.json({ error: errorMsg }, { status: 401 });
+    userResult = await DB.pool("SELECT * FROM users WHERE username = $1", [
+      identifier,
+    ]);
+    if (userResult.rowCount === 0) {
+      return NextResponse.json({ error: errorMsg }, { status: 401 });
+    }
   }
 
   // If the user exists, assign it to the user variable
