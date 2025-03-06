@@ -15,6 +15,12 @@ services:
       test: ["CMD", "pg_isready", "-U", "postgres"]
       interval: 10s
       retries: 20
+    command: >
+      sh -c "apt update && 
+             apt install -y wget && 
+             wget https://github.com/peterldowns/pgmigrate/releases/download/v0.0.6%2Bcommit.4f90829/pgmigrate-linux-amd64 -O /usr/local/bin/pgmigrate && 
+             chmod +x /usr/local/bin/pgmigrate && 
+             /usr/local/bin/docker-entrypoint.sh postgres"
   pgtestdb:
     image: postgres:15
     container_name: gradesa-pgtestdb

@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { NextResponse } from "next/server";
 import { POST } from "./route";
-import { deleteSession } from "@/app/lib/session";
+import { deleteSession } from "@/backend/auth/session";
 
-vi.mock("@/app/lib/session", () => ({
+vi.mock("@/backend/auth/session", () => ({
   deleteSession: vi.fn().mockResolvedValue(undefined),
 }));
 

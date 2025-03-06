@@ -26,6 +26,8 @@
   --tertiary7: hsl(351, 90%, 30%);
   --tertiary8: hsl(351, 90%, 20%);
   --tertiary9: hsl(351, 90%, 10%);
+  --tertiary10: hsl(120, 60%, 50%);
+
 
   --secondary1: hsl(249, 90%, 90%);
   --secondary2: hsl(249, 90%, 80%);
@@ -60,9 +62,9 @@
   --u-sm: 4px;
   --u-md: 8px;
   --u-lg: 14px;
-  --u-xl: 20px;
-  --u-2xl: 26px;
-  --u-3xl: 32px;
+  --u-xl: 22px;
+  --u-2xl: 30px;
+  --u-3xl: 42px;
 
   /* border radius sizes */
   --radius-xs: 2px;
@@ -71,6 +73,19 @@
   --radius-lg: 10px;
   --radius-xl: 16px;
   --radius-2xl: 24px;
+
+  /* z-index */
+  --z-1: 10;
+  --z-2: 20;
+  --z-3: 30;
+  --z-4: 40;
+  --z-5: 50;
+  --z-6: 60;
+  --z-7: 70;
+  --z-8: 80;
+  --z-9: 90;
+  --z-10: 100;
+  --z-max: 9999;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -83,6 +98,7 @@
     --bg5: hsl(240, 40%, 21%);
     --bg6: hsl(240, 40%, 25%);
     --bg7: hsl(240, 40%, 29%);
+    --bg8: hsl(118, 95%, 43%);
 
     --fg1: hsl(240, 40%, 98%);
     --fg2: hsl(240, 40%, 92%);
@@ -91,6 +107,7 @@
     --fg5: hsl(240, 40%, 74%);
     --fg6: hsl(240, 40%, 68%);
     --fg7: hsl(240, 40%, 62%);
+    --fg8: hsl(0, 0%, 0%);
 
     --tertiary1: hsl(351, 40%, 30%);
     --tertiary2: hsl(351, 40%, 40%);
@@ -101,6 +118,7 @@
     --tertiary7: hsl(351, 40%, 85%);
     --tertiary8: hsl(351, 40%, 90%);
     --tertiary9: hsl(351, 40%, 95%);
+    --tertiary10: hsl(113, 93%, 49%);
 
     --secondary1: hsl(249, 60%, 30%);
     --secondary2: hsl(249, 60%, 40%);
@@ -126,7 +144,8 @@
 
 html,
 body {
-  max-width: 100vw;
+  width: 100vw;
+  height: 100vh;
   overflow-x: hidden;
 }
 
@@ -153,4 +172,31 @@ a {
   html {
     color-scheme: dark;
   }
+}
+
+h1 {
+  font-size: var(--u-3xl);
+  padding-left: 30%;
+}
+
+h2 {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: var(--tertiary1);
+  margin-bottom: 15px;
+}
+
+ul {
+  list-style-type: circle;
+}
+
+ul.exercise-list {
+  list-style-type: circle;
+  padding-left: 30%;
+}
+
+button.back-button {
+  padding-left: 30%;
+  background-color: transparent;
+  border: none;
 }
