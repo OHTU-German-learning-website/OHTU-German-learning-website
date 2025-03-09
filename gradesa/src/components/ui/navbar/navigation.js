@@ -1,19 +1,31 @@
-import Image from "next/image";
 import Link from "next/link";
-import "./navbar.css";
-import { LockClosedIcon } from "@radix-ui/react-icons";
 
-const Navbar = () => {
+function Navbar() {
   return (
     <nav className="navbar">
-      {/* Layout UI */}
-      <div className="navbar-right nav-links">
-        <Link href="/auth/login">
-          <LockClosedIcon /> Anmeldung
+      <div className="nav-brand">
+        <Link href="/">
+          <h2>Learn German</h2>
         </Link>
+      </div>
+      <div className="nav-links">
+        <Link href="/learning">Courses</Link>
+        <a>Modules</a>
+        <a>For Teachers</a>
+        <a>Learning Environment</a>
+        <a>Research</a>
+        <a>About Us</a>
+      </div>
+      <div className="nav-auth">
+        <button className="login-btn">
+          <Link href="/auth/login">Login</Link>
+        </button>
+        <button className="signup-btn">
+          <Link href="/auth/register">Sign Up</Link>
+        </button>
       </div>
     </nav>
   );
-};
+}
 
 export default Navbar;
