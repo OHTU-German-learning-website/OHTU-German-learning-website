@@ -12,11 +12,10 @@ export default function Dragdrop({}) {
     <DragdropLayout>
       <div className={styles.page}>
         <div className="exercise-container">
+          <h1>Übung 1 Substantiv</h1>
           <DndProvider backend={HTML5Backend}>
             <Container />
           </DndProvider>
-
-          <h1>Übung 1 Substantiv</h1>
           <Box variant="outline" size="lg" className="top-box">
             Kurs <br></br>
             Schule <br></br>

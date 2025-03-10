@@ -10,10 +10,10 @@ const style = {
   cursor: "move",
   float: "left",
 };
-export const Box = ({ name }) => {
+export const WordBox = ({ name }) => {
   const [{ isDragging }, drag] = useDrag(
     () => ({
-      type: ItemTypes.BOX,
+      type: ItemTypes.WORDBOX,
       item: { name },
       end: (item, monitor) => {
         const dropResult = monitor.getDropResult();

@@ -1,7 +1,7 @@
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Frame, { FrameContextConsumer } from "react-frame-component";
-import { Box } from "./box.js";
+import { WordBox } from "./wordbox.js";
 import { Dustbin } from "./dustbin.js";
 
 const FrameBindingContext = ({ children }) => (
@@ -24,9 +24,9 @@ export const Container = () => {
               <Dustbin />
             </div>
             <div style={{ overflow: "hidden", clear: "both" }}>
-              <Box name="Glass" />
-              <Box name="Banana" />
-              <Box name="Paper" />
+              <WordBox name="Glass" />
+              <WordBox name="Banana" />
+              <WordBox name="Paper" />
             </div>
           </div>
         </FrameBindingContext>
