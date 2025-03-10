@@ -1,8 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { POST } from "./route";
-import { createSession } from "@/backend/auth/session";
 import { useTestRequest } from "@/backend/test/mock-request";
-import { DB } from "@/backend/db";
 import { useTestDatabase } from "@/backend/test/testdb";
 import { TestFactory } from "@/backend/test/testfactory";
 import { hashPassword } from "@/backend/auth/hash";
@@ -19,7 +17,7 @@ describe("POST /login", () => {
     });
 
     const { mockPost } = useTestRequest();
-    const request = mockPost("@/api/auth/login", {
+    const request = mockPost("/api/auth/login", {
       identifier: user.email,
       password: plainPassword,
     });
