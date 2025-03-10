@@ -3,22 +3,25 @@ import styles from "../../../page.module.css";
 import DragdropLayout from "./layout";
 import { Grid } from "@radix-ui/themes";
 import { Box } from "@/components/ui/box/box";
-import { DragBox } from "@/components/ui/dragdrop/dragbox";
+import { Container } from "@/components/ui/dragdrop/container";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 export default function Dragdrop({}) {
   return (
     <DragdropLayout>
       <div className={styles.page}>
         <div className="exercise-container">
+          <DndProvider backend={HTML5Backend}>
+            <Container />
+          </DndProvider>
+
           <h1>Übung 1 Substantiv</h1>
           <Box variant="outline" size="lg" className="top-box">
             Kurs <br></br>
             Schule <br></br>
             Auto
           </Box>
-          {/* <DragBox className="drag-box">
-              kräääääh
-          </DragBox> */}
           <Grid columns="3" gap="3" rows="2" width="auto" justify="center">
             <Box gridrow="2 / 2" variant="outline" size="xl" minwidth="500px">
               Kurs
