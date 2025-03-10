@@ -5,19 +5,28 @@ import { useTestRequest } from "@/backend/test/mock-request";
 import { DB } from "@/backend/db";
 import { useTestDatabase } from "@/backend/test/testdb";
 import { TestFactory } from "@/backend/test/testfactory";
+import { hashPassword } from "@/backend/auth/hash";
 
 describe("POST /login", () => {
   useTestDatabase();
+
   it("should return success message for valid credentials", async () => {
-    const user = await TestFactory.user();
+    const plainPassword = "Demonstration1";
+    const { salt, hashedPassword } = await hashPassword(plainPassword);
+    const user = await TestFactory.user({
+      password_hash: hashedPassword,
+      salt: salt,
+    });
+
     const { mockPost } = useTestRequest();
     const request = mockPost("@/api/auth/login", {
       identifier: user.email,
-      password: user.password_hash,
+      password: plainPassword,
     });
 
     const response = await POST(request);
     const result = await response.json();
+
     expect(response.status).toBe(200);
     expect(result.message).toBe("Login successful");
   });
