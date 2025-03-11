@@ -36,9 +36,7 @@ export const Dustbin = memo(function Dustbin({
   }
   return (
     <div ref={drop} style={{ ...style, backgroundColor }} data-testid="dustbin">
-      {isActive
-        ? "Release to drop"
-        : `This dustbin accepts: ${accept.join(", ")}`}
+      {isActive ? "Release to drop" : `${accept.join(", ")}`}
 
       {lastDroppedItem && (
         <p>Last dropped: {JSON.stringify(lastDroppedItem)}</p>
