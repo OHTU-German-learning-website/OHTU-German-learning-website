@@ -3,7 +3,7 @@ import styles from "../../../page.module.css";
 import DragdropLayout from "./layout";
 import { Grid } from "@radix-ui/themes";
 import { Box } from "@/components/ui/box/box";
-import { Container } from "@/components/ui/dragdrop/container";
+import { Area } from "@/components/ui/dragdrop/area";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
@@ -14,7 +14,7 @@ export default function Dragdrop({}) {
         <div className="exercise-container">
           <h1>Übung 1 Substantiv</h1>
           <DndProvider backend={HTML5Backend}>
-            <Container />
+            <Area />
           </DndProvider>
           <Box variant="outline" size="lg" className="top-box">
             Kurs <br></br>

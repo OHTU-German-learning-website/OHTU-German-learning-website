@@ -1,3 +1,5 @@
 export const ItemTypes = {
-  WORDBOX: "wordbox",
+  DER: "der",
+  DIE: "die",
+  DAS: "das",
 };
