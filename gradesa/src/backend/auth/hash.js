@@ -12,7 +12,7 @@ export async function hashPassword(password) {
   });
 }
 
-export async function verifyPassWord(password, salt, hashedPasswordFromDB) {
+export async function verifyPassword(password, salt, hashedPasswordFromDB) {
   return new Promise((resolve, reject) => {
     crypto.scrypt(password, salt, 64, (err, derivedKey) => {
       if (err) reject(err);

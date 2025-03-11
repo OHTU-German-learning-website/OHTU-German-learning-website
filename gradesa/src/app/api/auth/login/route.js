@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createSession } from "@/backend/auth/session";
 import { DB } from "@/backend/db";
-import { verifyPassWord } from "@/backend/auth/hash";
+import { verifyPassword } from "@/backend/auth/hash";
 
 export async function POST(request) {
   const { identifier, password } = await request.json();
@@ -29,7 +29,7 @@ export async function POST(request) {
   const salt = user.salt;
 
   // Verify user input password by hashing and salting it and comparing it to the hashed password in the DB
-  const passwordValid = await verifyPassWord(
+  const passwordValid = await verifyPassword(
     password,
     salt,
     user.password_hash
