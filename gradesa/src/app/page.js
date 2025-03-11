@@ -9,9 +9,9 @@ export default function home() {
         <section className="hero">
           <h1>Deutch lerner</h1>
           <p>
-            Master the German language with our comprehensive learning platform.
-            From basics to fluency, we're here to guide you every step of the
-            way.
+            Beherrschen Sie die Grundlagen der deutschen Grammatik,
+            einschließlich Artikel, Verbkonjugationen und grundlegender
+            Satzstruktur.
           </p>
           <Link href="/learning" className="cta-button">
             Entdecke deine Lernstrategien{" "}
@@ -20,26 +20,21 @@ export default function home() {
 
         <div className="features">
           <div className="feature-card">
-            <span className="level-indicator beginner">Beginner</span>
-            <h3>Basic Grammar</h3>
-            <p>
-              Master the fundamentals of German grammar, including articles,
-              verb conjugations, and basic sentence structure.
-            </p>
+            <h3>Lernplan</h3>
+            <p>Finde die für dich passende Lernstrategie</p>
             <Link href="/learning" className="cta-button">
-              Learning{" "}
+              Entdecke deine Lernstrategien{" "}
             </Link>
           </div>
 
           <div className="feature-card">
-            <span className="level-indicator intermediate">Intermediate</span>
-            <h3>Conversation Skills</h3>
+            <h3>Übungen</h3>
             <p>
-              Practice everyday conversations and improve your speaking skills
-              with interactive lessons.
+              Üben Sie alltägliche Gespräche und verbessern Sie Ihre
+              Sprechfähigkeiten mit interaktiven Lektionen.
             </p>
             <Link href="/lessons" className="cta-button">
-              Lessons{" "}
+              Übungen{" "}
             </Link>
           </div>
         </div>
