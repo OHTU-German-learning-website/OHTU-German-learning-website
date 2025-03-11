@@ -11,10 +11,10 @@ function Navbar() {
       <div className="nav-links"></div>
       <div className="nav-auth">
         <button className="login-btn">
-          <Link href="/auth/login">Login</Link>
+          <Link href="/auth/login">Anmelden</Link>
         </button>
         <button className="signup-btn">
-          <Link href="/auth/register">Sign Up</Link>
+          <Link href="/auth/register">Registrieren</Link>
         </button>
       </div>
     </nav>
