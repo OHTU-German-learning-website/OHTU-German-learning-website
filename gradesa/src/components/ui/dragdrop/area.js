@@ -1,6 +1,6 @@
 import update from "immutability-helper";
 import { memo, useCallback, useState } from "react";
-import { ItemTypes } from "./itemtypes.js";
+import { ItemTypes } from "../../../app/lessons/exercises/dragdrop/itemtypes.js";
 import { WordBox } from "./wordbox.js";
 import { Dustbin } from "./dustbin.js";
 
@@ -14,7 +14,9 @@ export const Area = memo(function Area() {
     { name: "Kurs", type: ItemTypes.DER },
     { name: "Elefant", type: ItemTypes.DER },
     { name: "Schule", type: ItemTypes.DIE },
+    { name: "Eule", type: ItemTypes.DIE },
     { name: "Auto", type: ItemTypes.DAS },
+    { name: "Kaninchen", type: ItemTypes.DAS },
   ]);
   const [droppedBoxNames, setDroppedBoxNames] = useState([]);
   function isDropped(boxName) {
