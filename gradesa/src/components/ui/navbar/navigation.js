@@ -1,23 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import "./navbar.css";
 import { LockClosedIcon } from "@radix-ui/react-icons";
+import { useAuth } from "@/context/authContext";
 
 const Navbar = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    async function checkUserSession() {
-      const response = await fetch("/api/auth/session");
-      if (response.ok) {
-        const data = await response.json();
-        setIsLoggedIn(data.loggedIn);
-      }
-    }
-    checkUserSession();
-  }, []);
+  const { isLoggedIn } = useAuth();
 
   return (
     <nav className="navbar">

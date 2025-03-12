@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useRequest } from "@/shared/hooks/useRequest";
 import Link from "next/link";
+import { useAuth } from "@/context/authContext";
 
 export default function Login() {
   const router = useRouter();
@@ -11,6 +12,7 @@ export default function Login() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const request = useRequest();
+  const { setIsLoggedIn } = useAuth();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -34,6 +36,7 @@ export default function Login() {
       }
 
       // Login successful
+      setIsLoggedIn(true);
       router.push("/");
     } catch (error) {
       // Failed validation
