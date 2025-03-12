@@ -14,11 +14,7 @@ const style = {
   float: "left",
 };
 
-export const Dustbin = memo(function Dustbin({
-  accept,
-  lastDroppedItem,
-  onDrop,
-}) {
+export const Dustbin = memo(function Dustbin({ accept, droppedItems, onDrop }) {
   const [{ isOver, canDrop }, drop] = useDrop({
     accept,
     drop: onDrop,
@@ -38,8 +34,12 @@ export const Dustbin = memo(function Dustbin({
     <div ref={drop} style={{ ...style, backgroundColor }} data-testid="dustbin">
       {isActive ? `${accept.join(", ")}` : `${accept.join(", ")}`}
 
-      {lastDroppedItem && (
-        <p>Last dropped: {JSON.stringify(lastDroppedItem)}</p>
+      {droppedItems && (
+        <div>
+          {droppedItems.map((item) => (
+            <span key={item.name}>{item.name}</span>
+          ))}
+        </div>
       )}
     </div>
   );

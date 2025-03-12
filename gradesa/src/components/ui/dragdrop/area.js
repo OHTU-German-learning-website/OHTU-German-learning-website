@@ -6,12 +6,13 @@ import { Dustbin } from "./dustbin.js";
 
 export const Area = memo(function Area() {
   const [dustbins, setDustbins] = useState([
-    { accepts: [ItemTypes.DER], lastDroppedItem: null },
-    { accepts: [ItemTypes.DIE], lastDroppedItem: null },
-    { accepts: [ItemTypes.DAS], lastDroppedItem: null },
+    { accepts: [ItemTypes.DER], droppedItems: [] },
+    { accepts: [ItemTypes.DIE], droppedItems: [] },
+    { accepts: [ItemTypes.DAS], droppedItems: [] },
   ]);
   const [boxes] = useState([
     { name: "Kurs", type: ItemTypes.DER },
+    { name: "Elefant", type: ItemTypes.DER },
     { name: "Schule", type: ItemTypes.DIE },
     { name: "Auto", type: ItemTypes.DAS },
   ]);
@@ -28,8 +29,8 @@ export const Area = memo(function Area() {
       setDustbins(
         update(dustbins, {
           [index]: {
-            lastDroppedItem: {
-              $set: item,
+            droppedItems: {
+              $push: item ? [{ name, type: item.type }] : [],
             },
           },
         })
@@ -51,10 +52,10 @@ export const Area = memo(function Area() {
         ))}
       </div>
       <div style={{ overflow: "hidden", clear: "both" }}>
-        {dustbins.map(({ accepts, lastDroppedItem }, index) => (
+        {dustbins.map(({ accepts, droppedItems }, index) => (
           <Dustbin
             accept={accepts}
-            lastDroppedItem={lastDroppedItem}
+            droppedItems={droppedItems}
             onDrop={(item) => handleDrop(index, item)}
             key={index}
           />
