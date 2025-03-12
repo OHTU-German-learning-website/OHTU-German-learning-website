@@ -6,10 +6,10 @@ const style = {
   width: "12rem",
   marginRight: "1.5rem",
   marginBottom: "1.5rem",
-  color: "white",
-  padding: "1rem",
+  color: "var(--fg3)",
+  fontSize: "var(--font-lg)",
+  padding: "var(--u-lg)",
   textAlign: "center",
-  fontSize: "1rem",
   lineHeight: "normal",
   float: "left",
 };
@@ -37,7 +37,10 @@ export const Dustbin = memo(function Dustbin({ accept, droppedItems, onDrop }) {
       {droppedItems && (
         <div>
           {droppedItems.map((item) => (
-            <span key={item.name}>{item.name}</span>
+            <span key={item.name}>
+              {item.name}
+              <br></br>
+            </span>
           ))}
         </div>
       )}

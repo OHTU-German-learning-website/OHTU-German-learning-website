@@ -2,11 +2,11 @@ import { memo } from "react";
 import { useDrag } from "react-dnd";
 
 const style = {
-  border: "1px dashed gray",
-  backgroundColor: "black",
-  padding: "0.5rem 1rem",
-  marginRight: "1.5rem",
-  marginBottom: "1.5rem",
+  border: "var(--radius-xxs) dashed",
+  backgroundColor: "var(--fg8)",
+  padding: "var(--u-md)",
+  marginRight: "var(--u-md)",
+  marginBottom: "var(--u-xl)",
   cursor: "move",
   float: "left",
 };
