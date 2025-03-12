@@ -4,7 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Grid } from "@radix-ui/themes";
 import { Container } from "@/components/ui/layout/container";
 import Link from "next/link";
+import { useAuth } from "@/context/authContext";
+
 export default function Home() {
+  const { isLoggedIn } = useAuth();
+
   return (
     <div className={styles.page}>
       <main className={styles.main}>
@@ -18,6 +22,11 @@ export default function Home() {
             </Button>
           </Container>
         </Grid>
+        {isLoggedIn && (
+          <div>
+            <p>You are logged in</p>
+          </div>
+        )}
       </main>
     </div>
   );
