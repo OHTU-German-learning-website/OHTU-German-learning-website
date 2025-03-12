@@ -3,22 +3,27 @@ import { memo, useCallback, useState } from "react";
 import { ItemTypes } from "../../../app/lessons/exercises/dragdrop/itemtypes.js";
 import { WordBox } from "./wordbox.js";
 import { Dustbin } from "./dustbin.js";
+import { Button } from "@/components/ui/button";
 
 export const Area = memo(function Area() {
-  const [dustbins, setDustbins] = useState([
+  const initialDustbins = [
     { accepts: [ItemTypes.DER], droppedItems: [] },
     { accepts: [ItemTypes.DIE], droppedItems: [] },
     { accepts: [ItemTypes.DAS], droppedItems: [] },
-  ]);
-  const [boxes] = useState([
+  ];
+  const initialBoxes = [
     { name: "Kurs", type: ItemTypes.DER },
     { name: "Elefant", type: ItemTypes.DER },
     { name: "Schule", type: ItemTypes.DIE },
     { name: "Eule", type: ItemTypes.DIE },
     { name: "Auto", type: ItemTypes.DAS },
     { name: "Kaninchen", type: ItemTypes.DAS },
-  ]);
+  ];
+
+  const [dustbins, setDustbins] = useState(initialDustbins);
+  const [boxes] = useState(initialBoxes);
   const [droppedBoxNames, setDroppedBoxNames] = useState([]);
+
   function isDropped(boxName) {
     return droppedBoxNames.indexOf(boxName) > -1;
   }
@@ -40,6 +45,11 @@ export const Area = memo(function Area() {
     },
     [droppedBoxNames, dustbins]
   );
+
+  const reset = () => {
+    setDustbins(initialDustbins);
+    setDroppedBoxNames([]);
+  };
 
   return (
     <div>
@@ -63,6 +73,7 @@ export const Area = memo(function Area() {
           />
         ))}
       </div>
+      <Button onClick={reset}>Erneut versuchen</Button>
     </div>
   );
 });
