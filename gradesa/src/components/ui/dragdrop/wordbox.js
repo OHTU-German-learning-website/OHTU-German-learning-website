@@ -15,11 +15,12 @@ export const WordBox = memo(function WordBox({ name, type, isDropped }) {
     () => ({
       type,
       item: { name },
+      canDrag: !isDropped,
       collect: (monitor) => ({
         opacity: monitor.isDragging() ? 0.4 : 1,
       }),
     }),
-    [name, type]
+    [name, type, isDropped]
   );
   return (
     <div ref={drag} style={{ ...style, opacity }} data-testid="wordbox">
