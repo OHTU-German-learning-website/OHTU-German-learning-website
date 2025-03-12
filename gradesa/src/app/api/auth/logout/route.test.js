@@ -19,10 +19,7 @@ describe("POST /api/auth/logout", () => {
 
     expect(deleteSession).toHaveBeenCalled();
     expect(response).toBeInstanceOf(NextResponse);
-    expect(response.headers.get("Location")).toBe(
-      "http://localhost:3000/auth/login"
-    );
-    expect(response.status).toBe(307);
+    expect(response.status).toBe(200);
     expect(setCookieHeader).toContain("session=; Max-Age=0");
   });
 });

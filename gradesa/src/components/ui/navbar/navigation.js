@@ -1,25 +1,41 @@
 "use client";
-
-import Link from "next/link";
 import "./navbar.css";
-import { LockClosedIcon } from "@radix-ui/react-icons";
+import { useRouter } from "next/navigation";
+import { LockClosedIcon, LockOpen1Icon } from "@radix-ui/react-icons";
 import { useAuth } from "@/context/authContext";
 
 const Navbar = () => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, setIsLoggedIn } = useAuth();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    const response = await fetch("/api/auth/logout", {
+      method: "POST",
+    });
+
+    if (response.ok) {
+      setIsLoggedIn(false);
+      window.location.reload();
+    }
+  };
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    router.push("/auth/login");
+  };
 
   return (
     <nav className="navbar">
       {/* Layout UI */}
       <div className="navbar-right nav-links">
         {isLoggedIn ? (
-          <Link href="/auth/logout">
-            <LockClosedIcon /> Abmeldung
-          </Link>
+          <button onClick={handleLogout} className="auth-button">
+            <LockOpen1Icon /> Abmeldung
+          </button>
         ) : (
-          <Link href="/auth/login">
+          <button onClick={handleLogin} className="auth-button">
             <LockClosedIcon /> Anmeldung
-          </Link>
+          </button>
         )}
       </div>
     </nav>
