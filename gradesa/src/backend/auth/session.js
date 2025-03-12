@@ -45,6 +45,18 @@ export async function createSession(userId) {
   });
 }
 
+export async function checkSession() {
+  const cookieStore = await cookies();
+  const session = cookieStore.get("session");
+  if (session) {
+    const payload = await verifySession(session.value);
+    if (payload) {
+      return payload.userId;
+    }
+  }
+  return null;
+}
+
 export async function deleteSession() {
   const cookieStore = await cookies();
   cookieStore.delete("session");
