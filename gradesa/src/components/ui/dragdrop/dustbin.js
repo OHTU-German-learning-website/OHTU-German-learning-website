@@ -1,18 +1,6 @@
 import { memo } from "react";
 import { useDrop } from "react-dnd";
-
-const style = {
-  height: "12rem",
-  width: "12rem",
-  marginRight: "1.5rem",
-  marginBottom: "1.5rem",
-  color: "var(--fg3)",
-  fontSize: "var(--font-lg)",
-  padding: "var(--u-lg)",
-  textAlign: "center",
-  lineHeight: "normal",
-  float: "left",
-};
+import { dustbin } from "./dragdrop.css";
 
 export const Dustbin = memo(function Dustbin({ accept, droppedItems, onDrop }) {
   const [{ isOver, canDrop }, drop] = useDrop({
@@ -31,7 +19,12 @@ export const Dustbin = memo(function Dustbin({ accept, droppedItems, onDrop }) {
     backgroundColor = "var(--bg5";
   }
   return (
-    <div ref={drop} style={{ ...style, backgroundColor }} data-testid="dustbin">
+    <div
+      ref={drop}
+      style={{ backgroundColor }}
+      className="dustbin"
+      data-testid="dustbin"
+    >
       {isActive ? `${accept.join(", ")}` : `${accept.join(", ")}`}
 
       {droppedItems && (

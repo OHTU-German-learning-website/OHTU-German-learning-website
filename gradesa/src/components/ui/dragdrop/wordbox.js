@@ -1,15 +1,7 @@
 import { memo } from "react";
 import { useDrag } from "react-dnd";
+import { wordbox } from "./dragdrop.css";
 
-const style = {
-  border: "var(--radius-xxs) dashed",
-  backgroundColor: "var(--fg8)",
-  padding: "var(--u-md)",
-  marginRight: "var(--u-md)",
-  marginBottom: "var(--u-xl)",
-  cursor: "move",
-  float: "left",
-};
 export const WordBox = memo(function WordBox({ name, type, isDropped }) {
   const [{ opacity }, drag] = useDrag(
     () => ({
@@ -23,7 +15,12 @@ export const WordBox = memo(function WordBox({ name, type, isDropped }) {
     [name, type, isDropped]
   );
   return (
-    <div ref={drag} style={{ ...style, opacity }} data-testid="wordbox">
+    <div
+      ref={drag}
+      style={{ opacity }}
+      className="wordbox"
+      data-testid="wordbox"
+    >
       {isDropped ? <s>{name}</s> : name}
     </div>
   );
