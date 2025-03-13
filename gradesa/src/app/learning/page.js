@@ -36,7 +36,7 @@ export default function Learning() {
           method: "PUT",
         }
       );
-      refetch();
+      await refetch();
       return response;
     } catch (error) {
       console.error(error);

@@ -38,8 +38,8 @@ export default function LearningAnswersPage() {
     return form?.parts
       .sort(
         (a, b) =>
-          a.advice_threshold <
-          a.answers?.[a.id](b.advice_threshold < b.answers?.[b.id])
+          (b.advice_threshold < answers?.[b.id]) -
+          (a.advice_threshold < answers?.[a.id])
       )
       .map((part) => {
         return (
