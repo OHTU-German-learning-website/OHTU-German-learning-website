@@ -9,10 +9,12 @@
   display: flex;
   flex-grow: 1;
   padding: 36px;
+  overflow-y: auto;
 }
 
 .sidebarMain {
   display: flex;
   flex-direction: row;
   flex-grow: 1;
+  overflow: hidden;
 }

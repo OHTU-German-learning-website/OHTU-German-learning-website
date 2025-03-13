@@ -20,7 +20,7 @@ const Sidebar = () => {
       </div>
       <div className={styles.sidebarLinks}>
         <div className={styles.navItem}>
-          <Link className={styles.sidebarLink} href="/learning">
+          <Link className={styles.sidebarLink} href="/resources">
             Lernen
           </Link>
         </div>
