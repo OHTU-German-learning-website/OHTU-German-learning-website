@@ -11,12 +11,15 @@ import { Dropdown } from "@/components/ui/dropdown";
 import { Button } from "@/components/ui/button";
 import layout from "@/shared/styles/layout.module.css";
 import { useRouter } from "next/navigation";
-
+import useLocalStorage from "@/shared/utils/useLocalStorage";
 export default function LearningAnswersPage() {
   const { data: answers } = useQuery("/forms/learning_type/answer");
   const { data: form } = useQuery("/forms/learning_type");
   const router = useRouter();
-  const [language, setLanguage] = useState(FORM_LANGUAGE_OPTIONS[0]);
+  const [language, setLanguage] = useLocalStorage(
+    "language",
+    FORM_LANGUAGE_OPTIONS[0]
+  );
   const renderAverages = () => {
     return form?.parts.map((part, index) => {
       const average = answers?.[part.id];
@@ -35,8 +38,8 @@ export default function LearningAnswersPage() {
     return form?.parts
       .sort(
         (a, b) =>
-          a.advice_threshold <
-          a.answers?.[a.id](b.advice_threshold < b.answers?.[b.id])
+          (b.advice_threshold < answers?.[b.id]) -
+          (a.advice_threshold < answers?.[a.id])
       )
       .map((part) => {
         return (
@@ -57,7 +60,7 @@ export default function LearningAnswersPage() {
           <Button>{language.label}</Button>
         </Dropdown>
         <Button onClick={() => router.push("/learning")}>
-          {language === "de" ? "Test neu machen" : "Retake Test"}
+          {language.value === "de" ? "Test neu machen" : "Retake Test"}
         </Button>
       </div>
       <div className={styles.learningAnswers}>{renderAverages()}</div>
