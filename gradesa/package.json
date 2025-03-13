@@ -16,6 +16,7 @@
     "@radix-ui/themes": "^3.2.0",
     "axios": "^1.7.9",
     "dotenv": "^16.4.7",
+    "immutability-helper": "^3.1.1",
     "jose": "^5.10.0",
     "next": "15.1.5",
     "pg": "^8.13.1",
@@ -24,6 +25,7 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^19.0.0",
+    "react-frame-component": "^5.2.7",
     "zod": "^3.24.2"
   },
   "devDependencies": {
@@ -37,6 +39,7 @@
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-refresh": "^0.4.18",
     "eslint-plugin-unused-imports": "^4.1.4",
+    "happy-dom": "^17.4.3",
     "jsdom": "^26.0.0",
     "prettier": "^3.2.4",
     "ts-node": "^10.9.2",

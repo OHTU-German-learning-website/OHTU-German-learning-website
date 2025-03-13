@@ -33,10 +33,19 @@ export default function LearningAnswersPage() {
 
   const renderAdvices = () => {
     return form?.parts
-      .filter((part) => part.advice_threshold < answers?.[part.id])
-      .map((part, index) => {
+      .sort(
+        (a, b) =>
+          a.advice_threshold <
+          a.answers?.[a.id](b.advice_threshold < b.answers?.[b.id])
+      )
+      .map((part) => {
         return (
-          <LearningAdvice key={part.id} part={part} language={language.value} />
+          <LearningAdvice
+            key={part.id}
+            part={part}
+            language={language.value}
+            highlight={part.advice_threshold < answers?.[part.id]}
+          />
         );
       });
   };
@@ -47,7 +56,9 @@ export default function LearningAnswersPage() {
         <Dropdown options={FORM_LANGUAGE_OPTIONS} onSelect={setLanguage}>
           <Button>{language.label}</Button>
         </Dropdown>
-        <Button onClick={() => router.push("/learning")}>Retake Test</Button>
+        <Button onClick={() => router.push("/learning")}>
+          {language === "de" ? "Test neu machen" : "Retake Test"}
+        </Button>
       </div>
       <div className={styles.learningAnswers}>{renderAverages()}</div>
       <div className={styles.learningAdvices}>{renderAdvices()}</div>
@@ -55,11 +66,16 @@ export default function LearningAnswersPage() {
   );
 }
 
-function LearningAdvice({ part, language }) {
+function LearningAdvice({ part, language, highlight }) {
   return (
-    <div className={styles.learningAdvice}>
+    <div
+      className={[
+        styles.learningAdvice,
+        highlight && styles.learningAdviceHighlight,
+      ].join(" ")}
+    >
       <span className={styles.learningAdviceTitle}>
-        Advice {part.step_label}
+        {language === "de" ? "Ratschlag" : "Advice"} {part.step_label}
       </span>
       <p>{getLanguageField(part, "advice", language)}</p>
     </div>
