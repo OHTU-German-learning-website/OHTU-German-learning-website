@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import { Button } from "../button";
+import { Container } from "../layout/container";
 
 const WordSelectionExercise = ({
   title,
-  instructions,
   targetCategory,
   targetWords,
   allWords,
@@ -41,11 +42,11 @@ const WordSelectionExercise = ({
     let feedbackMessage = "";
     if (score === 100) {
       feedbackMessage =
-        "Perfect! You identified all the " + targetCategory + " correctly!";
+        "Perfekt! Du hast alle " + targetCategory + " korrekt identifiziert!";
     } else if (score >= 70) {
-      feedbackMessage = "Good job! Score: " + score + "%";
+      feedbackMessage = "Gut gemacht! Punktzahl: " + score + "%";
     } else {
-      feedbackMessage = "Keep practicing! Score: " + score + "%";
+      feedbackMessage = "Weiter üben! Punktzahl: " + score + "%";
     }
 
     setFeedback(feedbackMessage);
@@ -58,57 +59,67 @@ const WordSelectionExercise = ({
     setFeedback("");
   };
 
-  return (
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded shadow-md">
-      <h2 className="text-2xl font-bold mb-4">{title}</h2>
-      <p className="mb-6">
-        {instructions ||
-          `Select all the ${targetCategory} from the list below.`}
-      </p>
+  const textColor = (word) => {
+    if (selectedWords.includes(word)) {
+      if (isSubmitted) {
+        return targetWords.includes(word)
+          ? { backgroundColor: "#38a169", color: "#fff" } // green
+          : { backgroundColor: "#e53e3e", color: "#fff" }; // red
+      } else {
+        return { backgroundColor: "hsl(240, 40%, 92%)" }; // blue
+      }
+    } else {
+      if (isSubmitted && targetWords.includes(word)) {
+        return {
+          backgroundColor: "#faf089",
+          border: "1px solid #d69e2e",
+        }; // yellow with border
+      }
+    }
+  };
 
-      <div className="mb-8 flex flex-wrap gap-2">
+  return (
+    <div>
+      <h1>{title}</h1>
+
+      <br />
+
+      <i>{`Wähle alle ${targetCategory} aus dem untenstehenden Text aus.`}</i>
+
+      <br />
+      <br />
+
+      <Container>
         {allWords.map((word, index) => (
-          <button
+          <Button
             key={index}
             onClick={() => handleWordClick(word)}
-            className={`px-4 py-2 rounded-full transition-colors ${
-              selectedWords.includes(word)
-                ? isSubmitted
-                  ? targetWords.includes(word)
-                    ? "bg-green-500 text-white"
-                    : "bg-red-500 text-white"
-                  : "bg-blue-500 text-white"
-                : isSubmitted && targetWords.includes(word)
-                  ? "bg-yellow-200 border border-yellow-500"
-                  : "bg-gray-200 hover:bg-gray-300"
-            }`}
+            variant="click"
+            style={textColor(word)}
           >
             {word}
-          </button>
+          </Button>
         ))}
-      </div>
+      </Container>
+
+      <br />
 
       {feedback && (
-        <div className="mb-4 p-3 bg-blue-100 rounded text-blue-800">
-          {feedback}
-        </div>
+        <>
+          <div>{feedback}</div>
+          <br />
+        </>
       )}
 
-      <div className="flex gap-4">
+      <div>
         {!isSubmitted ? (
-          <button
-            onClick={checkAnswers}
-            className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-          >
-            Check Answers
-          </button>
+          <Button size="sm" onClick={checkAnswers}>
+            Antworten überprüfen
+          </Button>
         ) : (
-          <button
-            onClick={resetExercise}
-            className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-          >
-            Try Again
-          </button>
+          <Button size="sm" onClick={resetExercise}>
+            Erneut versuchen
+          </Button>
         )}
       </div>
     </div>

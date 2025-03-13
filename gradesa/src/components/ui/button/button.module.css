@@ -110,3 +110,14 @@
     border: 1px solid var(--fg2);
   }
 }
+
+.baseButton.click {
+    padding: 2px;
+    border: none;
+    background-color: transparent;
+    width: fit-content;
+
+    &:hover {
+        background-color: var(--bg2);
+    }
+}
