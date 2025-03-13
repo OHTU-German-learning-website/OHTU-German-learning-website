@@ -1,77 +1,62 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { POST } from "./route";
-import { createSession } from "@/backend/auth/session";
 import { useTestRequest } from "@/backend/test/mock-request";
-import { DB } from "@/backend/db";
+import { useTestDatabase } from "@/backend/test/testdb";
+import { TestFactory } from "@/backend/test/testfactory";
+import { hashPassword } from "@/backend/auth/hash";
 
-vi.mock("@/backend/auth/session", () => ({
-  createSession: vi.fn().mockResolvedValue(undefined),
-}));
+describe("POST /login", () => {
+  useTestDatabase();
 
-vi.mock("@/backend/db", () => ({
-  DB: {
-    pool: vi.fn(),
-  },
-}));
+  const plainPassword = "Demonstration1";
+  let user;
 
-describe("POST /api/auth/login", () => {
-  beforeEach(() => {
-    // Clear mock calls between tests
-    vi.clearAllMocks();
+  // create user with hashed password and salt before each test
+  beforeEach(async () => {
+    const { salt, hashedPassword } = await hashPassword(plainPassword);
+    user = await TestFactory.user({
+      password_hash: hashedPassword,
+      salt: salt,
+    });
   });
 
-  // it("should return success message for valid credentials", async () => {
-  //   const { mockPost } = useTestRequest();
-  //   const request = mockPost("/api/auth/login", {
-  //     email: "user@example.com",
-  //     password: "Demonstration1",
-  //   });
-
-  //   const response = await POST(request);
-  //   const responseData = await response.json();
-
-  //   expect(responseData).toEqual({ message: "Login successful" });
-  //   expect(response.status).toBe(200);
-  //   expect(createSession).toHaveBeenCalledWith(1);
-  // });
-
-  it("should return error message for invalid email", async () => {
+  // helper function to send login request
+  const loginRequest = async (id, psw) => {
     const { mockPost } = useTestRequest();
     const request = mockPost("/api/auth/login", {
-      email: "wrong@example.com",
-      password: "Demonstration1",
+      identifier: id,
+      password: psw,
     });
-
-    // Mock the database response for an invalid user
-    DB.pool.mockResolvedValue({
-      rowCount: 0,
-      rows: [],
-    });
-
     const response = await POST(request);
-    const responseData = await response.json();
+    const result = await response.json();
+    return { status: response.status, ...result };
+  };
 
-    expect(responseData).toEqual({
-      error: "Ungültige Benutzername/E-Mail-Adresse oder Passwort",
-    });
-    expect(response.status).toBe(401);
-    expect(createSession).not.toHaveBeenCalled();
+  it("should return success message for valid email credentials", async () => {
+    const result = await loginRequest(user.email, plainPassword);
+    expect(result.status).toBe(200);
+    expect(result.message).toBe("Login successful");
   });
 
-  //   it("should return error message for invalid password", async () => {
-  //     const { mockPost } = useTestRequest();
-  //     const request = mockPost("/api/auth/login", {
-  //       email: "user@example.com",
-  //       password: "wrongpassword",
-  //     });
+  it("should return success message for valid username credentials", async () => {
+    const result = await loginRequest(user.username, plainPassword);
+    expect(result.status).toBe(200);
+    expect(result.message).toBe("Login successful");
+  });
 
-  //     const response = await POST(request);
-  //     const responseData = await response.json();
+  it("should return error message for invalid identifier", async () => {
+    const result = await loginRequest("wrongidentifier", plainPassword);
+    expect(result.status).toBe(401);
+    expect(result.error).toBe(
+      "Ungültige Benutzername/E-Mail-Adresse oder Passwort"
+    );
+  });
 
-  //     expect(responseData).toEqual({
-  //       error: "Ungültige E-Mail-Adresse oder Passwort",
-  //     });
-  //     expect(response.status).toBe(401);
-  //     expect(createSession).not.toHaveBeenCalled();
-  //   });
+  it("should return error message for invalid password", async () => {
+    const result = await loginRequest(user.email, "wrongpassword");
+    expect(result.status).toBe(401);
+    expect(result.error).toBe(
+      "Ungültige Benutzername/E-Mail-Adresse oder Passwort"
+    );
+  });
 });
