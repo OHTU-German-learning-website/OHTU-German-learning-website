@@ -4,6 +4,7 @@ import Link from "next/link";
 
 export default function home() {
   return (
+
     <>
       <div className="container">
         <section className="hero">
@@ -40,5 +41,6 @@ export default function home() {
         </div>
       </div>
     </>
+
   );
 }

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import useQuery from "@/shared/hooks/useQuery";
 import layout from "@/shared/styles/layout.module.css";
 import { useRequest } from "@/shared/hooks/useRequest";
-
+import useLocalStorage from "@/shared/utils/useLocalStorage";
 import { LearningForm } from "@/components/ui/learning-form";
 export const FORM_LANGUAGE_OPTIONS = [
   {
@@ -18,7 +18,10 @@ export const FORM_LANGUAGE_OPTIONS = [
   },
 ];
 export default function Learning() {
-  const [language, setLanguage] = useState(FORM_LANGUAGE_OPTIONS[0]);
+  const [language, setLanguage] = useLocalStorage(
+    "language",
+    FORM_LANGUAGE_OPTIONS[0]
+  );
   const { data, refetch } = useQuery("/forms/learning_type");
   const makeRequest = useRequest();
   const [isLoading, setIsLoading] = useState(false);
@@ -33,7 +36,7 @@ export default function Learning() {
           method: "PUT",
         }
       );
-      refetch();
+      await refetch();
       return response;
     } catch (error) {
       console.error(error);

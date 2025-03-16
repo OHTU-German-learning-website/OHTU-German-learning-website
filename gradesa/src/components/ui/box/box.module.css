@@ -1,0 +1,76 @@
+.baseBox {
+    background-color: var(--bg1);
+    color: var(--fg1);
+    border: 1px solid var(--fg1);
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+  }
+  
+  .baseBox.sm {
+    padding: 0.25rem 0.5rem;
+    width: 8rem;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-sm);
+  }
+  
+  .baseBox.md {
+    padding: 0.5rem 1rem;
+    width: 12rem;
+    font-size: var(--font-md);
+    border-radius: var(--radius-md);
+  }
+  
+  .baseBox.lg {
+    padding: 0.75rem 1.5rem;
+    width: 16rem;
+    font-size: var(--font-lg);
+    border-radius: var(--radius-md);
+  }
+  
+  .baseBox.xl {
+    padding: 8rem 2rem;
+    margin: 0.5rem;
+    min-width: 15rem;
+    max-width: 20rem;
+    font-size: var(--font-lg);
+    border-radius: var(--radius-lg);
+  }
+  
+  .baseBox.full {
+    width: 100%;
+  }
+  
+  .baseBox.fit {
+    width: fit-content;
+  }
+  
+  .baseBox.primary {
+    background-color: var(--primary1);
+    color: var(--fg1);
+    border: 1px solid var(--primary5);
+  }
+  
+  .baseBox.secondary {
+    background-color: var(--secondary1);
+    color: var(--fg1);
+    border: 1px solid var(--secondary5);
+  }
+  
+  .baseBox.tertiary {
+    background-color: var(--tertiary1);
+    color: var(--fg1);
+    border: 1px solid var(--tertiary5);
+  }
+  
+  .baseBox.none {
+    background-color: transparent;
+    color: var(--fg1);
+    border: none;
+  }
+  
+  .baseBox.outline {
+    background-color: transparent;
+    color: var(--fg1);
+    border: 1px solid var(--fg7);
+  }
+  

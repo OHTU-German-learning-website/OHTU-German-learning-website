@@ -6,8 +6,8 @@ import Link from "next/link";
 
 export default function Login() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const request = useRequest();
@@ -16,7 +16,7 @@ export default function Login() {
     event.preventDefault();
     setError("");
 
-    if (email === "" || password === "") {
+    if (identifier === "" || password === "") {
       setError("Bitte alle Felder ausfüllen");
       return;
     }
@@ -24,7 +24,10 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      const response = await request("/auth/login", { email, password });
+      const response = await request("/auth/login", {
+        identifier,
+        password,
+      });
 
       if (response.status !== 200) {
         throw new Error(response.data.error);
@@ -52,17 +55,18 @@ export default function Login() {
 
       <form onSubmit={handleSubmit} noValidate>
         <div className="form-group">
-          <label className="form-label" htmlFor="email">
-            E-Mail-Adresse
+          <label className="form-label" htmlFor="identifier">
+            Benutzername oder E-Mail-Adresse
           </label>
           <input
             className="form-input"
-            type="email"
-            id="email"
-            name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="text"
+            id="identifier"
+            name="identifier"
+            value={identifier}
+            onChange={(e) => setIdentifier(e.target.value)}
             disabled={isLoading}
+            required
           />
         </div>
 

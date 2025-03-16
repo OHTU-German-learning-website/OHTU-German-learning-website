@@ -83,6 +83,7 @@
   --u-3xl: 42px;
 
   /* border radius sizes */
+  --radius-2xs: 1px;
   --radius-xs: 2px;
   --radius-sm: 4px;
   --radius-md: 8px;
@@ -389,13 +390,15 @@ body {
   padding: 2rem 0;
 }
 
+
 .feature-card {
   background: white;
   padding: 2rem;
   border-radius: 15px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease;
-}
+
+
 
 .feature-card:hover {
   transform: translateY(-5px);
@@ -407,6 +410,7 @@ body {
   margin-bottom: 1rem;
 }
 
+
 .feature-card p {
   color: #4a5568;
   line-height: 1.6;
@@ -415,6 +419,14 @@ body {
 .cta-button {
   background: linear-gradient(to right, #A0AEC0 12%, #90CDF4 47%, #5297FF 75%);
   color: white;
+
+ul.exercise-list {
+  list-style-type: circle;
+}
+
+button.back-button {
+
+
   border: none;
   padding: 1rem 2rem;
   font-size: 1.1rem;

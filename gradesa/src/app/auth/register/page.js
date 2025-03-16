@@ -7,6 +7,7 @@ import Link from "next/link";
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
@@ -16,7 +17,11 @@ export default function Register() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const data = await makeRequest("/auth/register", { email, password });
+      const data = await makeRequest("/auth/register", {
+        email,
+        password,
+        username,
+      });
       setSubmitted(true);
       setTimeout(() => {
         router.push("/auth/login");
@@ -53,6 +58,20 @@ export default function Register() {
       </div>
 
       <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label className="form-label" htmlFor="username">
+            Benutzername
+          </label>
+          <input
+            className="form-input"
+            type="username"
+            id="username"
+            name="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+        </div>
         <div className="form-group">
           <label className="form-label" htmlFor="email">
             E-Mail-Adresse

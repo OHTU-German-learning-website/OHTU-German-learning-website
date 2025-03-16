@@ -11,12 +11,15 @@ import { Dropdown } from "@/components/ui/dropdown";
 import { Button } from "@/components/ui/button";
 import layout from "@/shared/styles/layout.module.css";
 import { useRouter } from "next/navigation";
-
+import useLocalStorage from "@/shared/utils/useLocalStorage";
 export default function LearningAnswersPage() {
   const { data: answers } = useQuery("/forms/learning_type/answer");
   const { data: form } = useQuery("/forms/learning_type");
   const router = useRouter();
-  const [language, setLanguage] = useState(FORM_LANGUAGE_OPTIONS[0]);
+  const [language, setLanguage] = useLocalStorage(
+    "language",
+    FORM_LANGUAGE_OPTIONS[0]
+  );
   const renderAverages = () => {
     return form?.parts.map((part, index) => {
       const average = answers?.[part.id];
@@ -33,10 +36,19 @@ export default function LearningAnswersPage() {
 
   const renderAdvices = () => {
     return form?.parts
-      .filter((part) => part.advice_threshold < answers?.[part.id])
-      .map((part, index) => {
+      .sort(
+        (a, b) =>
+          (b.advice_threshold < answers?.[b.id]) -
+          (a.advice_threshold < answers?.[a.id])
+      )
+      .map((part) => {
         return (
-          <LearningAdvice key={part.id} part={part} language={language.value} />
+          <LearningAdvice
+            key={part.id}
+            part={part}
+            language={language.value}
+            highlight={part.advice_threshold < answers?.[part.id]}
+          />
         );
       });
   };
@@ -47,7 +59,9 @@ export default function LearningAnswersPage() {
         <Dropdown options={FORM_LANGUAGE_OPTIONS} onSelect={setLanguage}>
           <Button>{language.label}</Button>
         </Dropdown>
-        <Button onClick={() => router.push("/learning")}>Retake Test</Button>
+        <Button onClick={() => router.push("/learning")}>
+          {language.value === "de" ? "Test neu machen" : "Retake Test"}
+        </Button>
       </div>
       <div className={styles.learningAnswers}>{renderAverages()}</div>
       <div className={styles.learningAdvices}>{renderAdvices()}</div>
@@ -55,11 +69,16 @@ export default function LearningAnswersPage() {
   );
 }
 
-function LearningAdvice({ part, language }) {
+function LearningAdvice({ part, language, highlight }) {
   return (
-    <div className={styles.learningAdvice}>
+    <div
+      className={[
+        styles.learningAdvice,
+        highlight && styles.learningAdviceHighlight,
+      ].join(" ")}
+    >
       <span className={styles.learningAdviceTitle}>
-        Advice {part.step_label}
+        {language === "de" ? "Ratschlag" : "Advice"} {part.step_label}
       </span>
       <p>{getLanguageField(part, "advice", language)}</p>
     </div>
