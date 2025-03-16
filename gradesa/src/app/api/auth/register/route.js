@@ -6,6 +6,7 @@ export async function POST(request) {
   const json = await request.json();
   const email = json["email"].toLowerCase().trim();
   const password = json["password"];
+  const username = json["username"];
   const { salt, hashedPassword } = await hashPassword(password);
   const existingUser = await DB.pool("SELECT * FROM users WHERE email = $1", [
     email,
@@ -16,9 +17,9 @@ export async function POST(request) {
       { status: 409 }
     );
   }
-  if (email === "" || password === "") {
+  if (email === "" || password === "" || username === "") {
     return Response.json(
-      { error: "E-Mail und Passwort sind erforderlich." },
+      { error: "E-Mail, Benutzername und Passwort sind erforderlich." },
       { status: 400 }
     );
   }
@@ -34,10 +35,16 @@ export async function POST(request) {
       { status: 422 }
     );
   }
+  if (username.length < 3 || username.length > 20) {
+    return Response.json(
+      { error: "Der Benutzername muss zwischen 3 und 20 Zeichen lang sein." },
+      { status: 422 }
+    );
+  }
 
   await DB.pool(
-    "INSERT INTO users (email, password_hash, salt) VALUES ($1, $2, $3)",
-    [email, hashedPassword, salt]
+    "INSERT INTO users (email, password_hash, salt, username) VALUES ($1, $2, $3, $4)",
+    [email, hashedPassword, salt, username]
   );
   return Response.json({
     status: 200,
