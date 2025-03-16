@@ -418,7 +418,7 @@ body {
 
 .cta-button {
   background: linear-gradient(to right, #A0AEC0 12%, #90CDF4 47%, #5297FF 75%);
-  color: white;
+  color: white;}
 
 ul.exercise-list {
   list-style-type: circle;
