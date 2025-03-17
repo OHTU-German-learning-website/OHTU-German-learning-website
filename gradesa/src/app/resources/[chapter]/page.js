@@ -7,6 +7,7 @@ import layout from "@/shared/styles/layout.module.css";
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+
 export default function Chapters() {
   const { chapter } = useParams();
   const router = useRouter();
@@ -25,58 +26,67 @@ export default function Chapters() {
 
   return (
     <Column className={layout.viewContent}>
-      <Row justify="space-between">
-        {!!previousChapter && (
-          <Container mr="auto">
-            <Link href={`/resources/${previousChapter.id}`}>
-              <Button>Zurück</Button>
-            </Link>
-          </Container>
-        )}
-        {!!nextChapter && (
-          <Container ml="auto">
-            <Link href={`/resources/${nextChapter.id}`}>
-              <Button>Weiter</Button>
-            </Link>
-          </Container>
-        )}
-      </Row>
       {Chapter && (
         <>
           <h1>{Chapter.title}</h1>
           <Chapter.content />
         </>
       )}
+      <Row justify="space-between">
+        {!!previousChapter && (
+          <Container mr="auto">
+            <Link href={previousChapter.link}>
+              <Button>Zurück</Button>
+            </Link>
+          </Container>
+        )}
+        {!!nextChapter ? (
+          <Container ml="auto">
+            <Link href={nextChapter.link}>
+              <Button>Weiter</Button>
+            </Link>
+          </Container>
+        ) : (
+          <Link href="/learning">
+            <Button>Starte den Test</Button>
+          </Link>
+        )}
+      </Row>
     </Column>
   );
 }
 
-const chapters = [
+export const chapters = [
   {
     id: "1",
     title: "1. Über das Lernen",
     content: Chapter1,
+    link: "/resources/1",
   },
   {
     id: "2",
     title: "2. Die Arten des Wissens",
     content: Chapter2,
+    link: "/resources/2",
   },
   {
     id: "3",
     title:
       "3. Was sind die Unterschiede zwischen Lernen im Klassenraum und allein lernen?",
     content: Chapter3,
+    link: "/resources/3",
   },
   {
     id: "4",
     title: "4. Was für ein Lerntyp bin ich?",
     content: Chapter4,
+    link: "/resources/4",
   },
   {
     id: "5",
     title: "5.Freiwilliger Selbst-Test zu Lernstrategien",
     content: Chapter5,
+    link: "/resources/5",
   },
 ];
 
@@ -993,9 +1003,6 @@ function Chapter5() {
         höher der Wert ist, desto mehr bevorzugst du Lernstrategien dieser
         Bereiche. Dann kannst du für dich geeignete Übungen auswählen.
       </p>
-      <Link href="/learning">
-        <Button>Starte den Test</Button>
-      </Link>
     </Column>
   );
 }

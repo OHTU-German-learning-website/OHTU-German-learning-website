@@ -159,7 +159,6 @@ export const Container = memo(({ children, className, ...props }) => {
       ...mediaQueries,
     };
   }, [validLayoutPropsEntries]);
-  console.log(style);
   return (
     <div style={style} className={className}>
       {children}
