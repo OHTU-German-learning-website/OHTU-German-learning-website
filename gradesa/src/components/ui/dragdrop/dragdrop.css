@@ -3,10 +3,9 @@
     background-color: var(--fg3);
     color: var(--secondary1);
     padding: var(--u-md);
-    margin-right: var(--u-md);
-    margin-bottom: var(--u-xl);
+    margin-right: var(--u-sm);
+    margin-bottom: var(--u-sm);
     cursor: move;
-    float: left;
 }
 
 .dustbin {
@@ -14,6 +13,7 @@
     width: 12rem;
     margin-right: var(--u-xl);
     margin-bottom: var(--u-xl);
+    margin-top: var(--u-xl);
     color: var(--fg3);
     font-size: var(--font-lg);
     padding: var(--u-lg);

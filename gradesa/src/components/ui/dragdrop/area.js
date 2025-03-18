@@ -13,8 +13,11 @@ export const Area = memo(function Area() {
   const initialBoxes = [
     { name: "Kurs", type: ItemTypes.DER },
     { name: "Elefant", type: ItemTypes.DER },
+    { name: "Hund", type: ItemTypes.DER },
     { name: "Schule", type: ItemTypes.DIE },
     { name: "Eule", type: ItemTypes.DIE },
+    { name: "Zeit", type: ItemTypes.DIE },
+    { name: "Schmetterling", type: ItemTypes.DIE },
     { name: "Auto", type: ItemTypes.DAS },
     { name: "Kaninchen", type: ItemTypes.DAS },
     { name: "Geld", type: ItemTypes.DAS },
@@ -91,7 +94,14 @@ export const Area = memo(function Area() {
 
   return (
     <div>
-      <div style={{ overflow: "hidden", clear: "both" }}>
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          width: "calc(36rem + 2 * var(--u-xl))",
+          gap: "var(--u-md)",
+        }}
+      >
         {boxes.map(({ name, type }, index) => (
           <WordBox
             name={name}
