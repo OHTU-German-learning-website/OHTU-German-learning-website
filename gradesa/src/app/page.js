@@ -7,7 +7,6 @@ export default function home() {
     <>
       <div className="container">
         <section className="hero">
-
           <h1>Deutsch lerner</h1>
 
           <p>
@@ -30,7 +29,6 @@ export default function home() {
           </div>
 
           <div className="feature-card">
-
             <h3>Grammatik</h3>
             <p>
               Üben Sie alltägliche Gespräche und verbessern Sie Ihre
