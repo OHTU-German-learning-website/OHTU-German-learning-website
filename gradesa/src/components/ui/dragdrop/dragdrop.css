@@ -10,7 +10,7 @@
 }
 
 .dustbin {
-    height: 12rem;
+    min-height: 12rem;
     width: 12rem;
     margin-right: var(--u-xl);
     margin-bottom: var(--u-xl);

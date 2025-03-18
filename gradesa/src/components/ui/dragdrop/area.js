@@ -17,6 +17,10 @@ export const Area = memo(function Area() {
     { name: "Eule", type: ItemTypes.DIE },
     { name: "Auto", type: ItemTypes.DAS },
     { name: "Kaninchen", type: ItemTypes.DAS },
+    { name: "Geld", type: ItemTypes.DAS },
+    { name: "Wort", type: ItemTypes.DAS },
+    { name: "Haus", type: ItemTypes.DAS },
+    { name: "Bild", type: ItemTypes.DAS },
   ];
 
   const [dustbins, setDustbins] = useState(initialDustbins);
