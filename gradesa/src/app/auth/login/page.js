@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useRequest } from "@/shared/hooks/useRequest";
 import Link from "next/link";
 import { useAuth } from "@/context/authContext";
@@ -13,6 +13,8 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const request = useRequest();
   const { setIsLoggedIn } = useAuth();
+  const searchParams = useSearchParams(); // Access query parameters
+  const redirectPath = searchParams.get("redirect") || "/";
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -37,7 +39,7 @@ export default function Login() {
 
       // Login successful
       setIsLoggedIn(true);
-      router.push("/");
+      router.push(redirectPath);
     } catch (error) {
       // Failed validation
       setError(error.message);
