@@ -23,25 +23,59 @@ export const Area = memo(function Area() {
   const [dustbins, setDustbins] = useState(initialDustbins);
   const [boxes] = useState(initialBoxes);
   const [droppedBoxNames, setDroppedBoxNames] = useState([]);
+  const [isExerciseComplete, setIsExerciseComplete] = useState(false);
 
   function isDropped(boxName) {
     return droppedBoxNames.indexOf(boxName) > -1;
   }
+
+  const checkExerciseComplete = (updatedDustbins) => {
+    const totalDroppedItems = updatedDustbins.reduce(
+      (sum, dustbin) => sum + dustbin.droppedItems.length,
+      0
+    );
+
+    const allBoxesPlaced = totalDroppedItems === initialBoxes.length;
+
+    const allItemsCorrect = updatedDustbins.every((dustbin) =>
+      dustbin.droppedItems.every((item) => item.type === dustbin.accepts[0])
+    );
+
+    console.log("Exercise complete check:", {
+      totalDroppedItems,
+      totalBoxes: initialBoxes.length,
+      allBoxesPlaced,
+      allItemsCorrect,
+    });
+
+    return allBoxesPlaced && allItemsCorrect;
+  };
+
   const handleDrop = useCallback(
     (index, item) => {
-      const { name } = item;
-      setDroppedBoxNames(
-        update(droppedBoxNames, name ? { $push: [name] } : { $push: [] })
-      );
-      setDustbins(
-        update(dustbins, {
-          [index]: {
-            droppedItems: {
-              $push: item ? [{ name, type: item.type }] : [],
-            },
-          },
-        })
-      );
+      const { name, type } = item;
+      console.log("Handling drop:", { name, type, index });
+
+      if (!isDropped(name)) {
+        const updatedDroppedBoxNames = [...droppedBoxNames, name];
+        const updatedDustbins = [...dustbins];
+        updatedDustbins[index] = {
+          ...updatedDustbins[index],
+          droppedItems: [
+            ...updatedDustbins[index].droppedItems,
+            { name, type },
+          ],
+        };
+
+        console.log("Updated dustbin:", updatedDustbins[index]);
+
+        setDroppedBoxNames(updatedDroppedBoxNames);
+        setDustbins(updatedDustbins);
+
+        const isComplete = checkExerciseComplete(updatedDustbins);
+        console.log("Setting exercise complete:", isComplete);
+        setIsExerciseComplete(isComplete);
+      }
     },
     [droppedBoxNames, dustbins]
   );
@@ -49,6 +83,7 @@ export const Area = memo(function Area() {
   const reset = () => {
     setDustbins(initialDustbins);
     setDroppedBoxNames([]);
+    setIsExerciseComplete(false);
   };
 
   return (
@@ -74,6 +109,11 @@ export const Area = memo(function Area() {
         ))}
       </div>
       <Button onClick={reset}>Erneut versuchen</Button>
+      {isExerciseComplete && (
+        <div className="success-message">
+          Super! Du hast die Übung abgeschlossen.
+        </div>
+      )}
     </div>
   );
 });
