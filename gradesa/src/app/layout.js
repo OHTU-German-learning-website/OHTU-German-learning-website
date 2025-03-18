@@ -28,6 +28,8 @@ export default function RootLayout({ children }) {
         <div className={styles.sidebarMain}>
           <main className={styles.main}>{children}</main>
         </div>
+
+        <Footer />
       </body>
     </html>
   );

@@ -7,7 +7,9 @@ export default function home() {
     <>
       <div className="container">
         <section className="hero">
-          <h1>Deutch lerner</h1>
+
+          <h1>Deutsch lerner</h1>
+
           <p>
             Beherrschen Sie die Grundlagen der deutschen Grammatik,
             einschließlich Artikel, Verbkonjugationen und grundlegender
@@ -28,7 +30,8 @@ export default function home() {
           </div>
 
           <div className="feature-card">
-            <h3>Übungen</h3>
+
+            <h3>Grammatik</h3>
             <p>
               Üben Sie alltägliche Gespräche und verbessern Sie Ihre
               Sprechfähigkeiten mit interaktiven Lektionen.

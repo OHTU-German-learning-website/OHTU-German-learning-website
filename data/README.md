@@ -26,4 +26,4 @@ This will clear all tables, and rerun migrations.
 
 ### Adding migrations
 
-To add a migration, creat a new SQL file with the migration you want to run and give it a name with the next number. (ex. `00042_create_user.sql`)
+To add a migration, create a new SQL file with the migration you want to run and give it a name with the next number. (ex. `00042_create_user.sql`)

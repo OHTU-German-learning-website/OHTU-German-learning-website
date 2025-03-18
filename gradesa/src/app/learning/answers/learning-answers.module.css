@@ -54,6 +54,7 @@
   padding: var(--u-lg);
   border-radius: var(--radius-lg);
   border: 1px solid var(--bg6);
+  opacity: 0.7;
   background-color: var(--bg2);
   gap: var(--u-md);
   & span {
@@ -63,6 +64,11 @@
   & p {
     margin: 0;
   }
+}
+
+.learningAdviceHighlight {
+  border-color: var(--primary1);
+  opacity: 1 !important;
 }
 
 .learningAdvices {
