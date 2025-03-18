@@ -1,4 +1,3 @@
-import update from "immutability-helper";
 import { memo, useCallback, useState } from "react";
 import { ItemTypes } from "../../../app/lessons/exercises/dragdrop/itemtypes.js";
 import { WordBox } from "./wordbox.js";
@@ -108,12 +107,21 @@ export const Area = memo(function Area() {
           />
         ))}
       </div>
-      <Button onClick={reset}>Erneut versuchen</Button>
       {isExerciseComplete && (
         <div className="success-message">
           Super! Du hast die Übung abgeschlossen.
         </div>
       )}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          width: "100%",
+          marginTop: "var(--u-xl)",
+        }}
+      >
+        <Button onClick={reset}>Erneut versuchen</Button>
+      </div>
     </div>
   );
 });
