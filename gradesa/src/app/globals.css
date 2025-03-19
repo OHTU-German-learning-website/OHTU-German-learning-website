@@ -1,21 +1,22 @@
 :root {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  
+
   color-scheme: light;
-  background: linear-gradient(120deg, #A0AEC0 12%, #90CDF4 47%, #5297FF 75%);
-  
+  background: linear-gradient(120deg, #a0aec0 12%, #90cdf4 47%, #5297ff 75%);
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-
-
-
-
-    /* background colors (page, cards, etc.) */
+  /* Colors for light mode */
+  /* background colors (page, cards, etc.) */
   --bg1: hsl(240, 40%, 98%);
   --bg2: hsl(240, 40%, 95%);
   --bg3: hsl(240, 40%, 92%);
@@ -43,7 +44,6 @@
   --tertiary8: hsl(351, 90%, 20%);
   --tertiary9: hsl(351, 90%, 10%);
   --tertiary10: hsl(120, 60%, 50%);
-
 
   --secondary1: hsl(249, 90%, 90%);
   --secondary2: hsl(249, 90%, 80%);
@@ -105,7 +105,6 @@
   --z-max: 9999;
 }
 
-
 @media (prefers-color-scheme: dark) {
   :root {
     /* Inverted background colors for dark mode */
@@ -160,15 +159,15 @@
   }
 }
 
-
-
-
-
-
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
 }
 
 .navbar {
@@ -317,12 +316,12 @@ body {
 
 .form-group input:focus {
   outline: none;
-  border-color: #FF9809;
+  border-color: #ff9809;
   box-shadow: 0 0 0 3px rgba(255, 152, 9, 0.1);
 }
 
 .signup-submit {
-  background: linear-gradient(to right,  #A0AEC0 12%, #90CDF4 47%, #5297FF 75%);
+  background: linear-gradient(to right, #a0aec0 12%, #90cdf4 47%, #5297ff 75%);
   color: white;
   padding: 1rem;
   border: none;
@@ -345,7 +344,7 @@ body {
 }
 
 .login-link a {
-  color: #FF9809;
+  color: #ff9809;
   text-decoration: none;
   font-weight: 500;
 }
@@ -363,7 +362,7 @@ body {
 .hero {
   text-align: center;
   padding: 4rem 2rem;
-  background: linear-gradient(120deg, #A0AEC0 12%, #90CDF4 47%, #5297FF 75%);
+  background: linear-gradient(120deg, #a0aec0 12%, #90cdf4 47%, #5297ff 75%);
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   margin-bottom: 3rem;
@@ -390,7 +389,6 @@ body {
   padding: 2rem 0;
 }
 
-
 .feature-card {
   background: white;
   padding: 2rem;
@@ -398,8 +396,6 @@ body {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease;
 }
-
-
 
 .feature-card:hover {
   transform: translateY(-5px);
@@ -411,14 +407,13 @@ body {
   margin-bottom: 1rem;
 }
 
-
 .feature-card p {
   color: #4a5568;
   line-height: 1.6;
 }
 
 .cta-button {
-  background: linear-gradient(to right, #A0AEC0 12%, #90CDF4 47%, #5297FF 75%);
+  background: linear-gradient(to right, #a0aec0 12%, #90cdf4 47%, #5297ff 75%);
   color: white;
 }
 
@@ -427,14 +422,14 @@ ul.exercise-list {
 }
 
 button.back-button {
-
-
   border: none;
   padding: 1rem 2rem;
   font-size: 1.1rem;
   border-radius: 30px;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
   font-weight: 600;
   margin-top: 2rem;
   text-decoration: none;
@@ -453,96 +448,6 @@ button.back-button {
   font-size: 0.9rem;
   font-weight: 600;
   margin-bottom: 1rem;
-}
-
-.beginner { background: #9ae6b4; color: #22543d; }
-.intermediate { background: #90cdf4; color: #2c5282; }
-.advanced { background: #feb2b2; color: #822727; }
-
-.footer {
-  background: rgba(0, 0, 0, 0.95);
-  color: white;
-  padding: 4rem 2rem 2rem;
-  margin-top: 4rem;
-}
-
-.footer-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 3rem;
-}
-
-.footer-section h3 {
-  color: #09deff;
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-}
-
-.footer-section h4 {
-  color: #09deff;
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
-}
-
-.footer-section p {
-  color: #a0aec0;
-  line-height: 1.6;
-}
-
-.footer-section ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.footer-section ul li {
-  margin-bottom: 0.5rem;
-}
-
-.footer-section ul li a {
-  color: #a0aec0;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.footer-section ul li a:hover {
-  color: #09c6ff;
-}
-
-.footer-bottom {
-  max-width: 1200px;
-  margin: 3rem auto 0;
-  padding-top: 2rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.footer-legal {
-  display: flex;
-  gap: 2rem;
-  margin-bottom: 1rem;
-}
-
-.footer-legal a {
-  color: #a0aec0;
-  text-decoration: none;
-  font-size: 0.9rem;
-  transition: color 0.3s ease;
-}
-
-.footer-legal a:hover {
-  color: #09fffb;
-}
-
-.footer-bottom p {
-  color: #a0aec0;
-  font-size: 0.9rem;
-  margin: 0;
 }
 
 /* Courses Page Styles */
@@ -623,7 +528,7 @@ button.back-button {
 }
 
 .enroll-button {
-  background: linear-gradient(to right, #000000, #FF1A1A, #FF9809);
+  background: linear-gradient(to right, #000000, #ff1a1a, #ff9809);
   color: white;
   border: none;
   padding: 0.8rem 1.5rem;
@@ -641,19 +546,9 @@ button.back-button {
   .nav-links {
     display: none;
   }
-  
+
   .nav-auth {
     display: none;
-  }
-  
-  .footer-content {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 2rem;
-  }
-  
-  .footer-legal {
-    flex-direction: column;
-    gap: 1rem;
   }
 
   .form-row {
@@ -663,13 +558,17 @@ button.back-button {
 
 @media (max-width: 768px) {
   .courses-grid {
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
     grid-template-columns: 1fr;
   }
-  
+
   .courses-header h1 {
     font-size: 2rem;
   }
-  
+
   .search-input {
     font-size: 1rem;
     padding: 0.8rem 1.2rem;
