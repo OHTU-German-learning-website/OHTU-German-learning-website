@@ -9,6 +9,7 @@
 
   color-scheme: light;
   background: linear-gradient(120deg, #a0aec0 12%, #90cdf4 47%, #5297ff 75%);
+  color: var(--fg3);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -24,6 +25,7 @@
   --bg5: hsl(240, 40%, 86%);
   --bg6: hsl(240, 40%, 83%);
   --bg7: hsl(240, 40%, 80%);
+  --bg8: hsl(229, 70%, 76%);
 
   /* foreground colors (text, icons, etc.) */
   --fg1: hsl(240, 40%, 5%);
@@ -115,7 +117,7 @@
     --bg5: hsl(240, 40%, 21%);
     --bg6: hsl(240, 40%, 25%);
     --bg7: hsl(240, 40%, 29%);
-    --bg8: hsl(118, 95%, 43%);
+    --bg8: hsl(241, 96%, 9%);
 
     --fg1: hsl(240, 40%, 98%);
     --fg2: hsl(240, 40%, 92%);
@@ -168,65 +170,6 @@ body {
 h1 {
   font-size: 2rem;
   margin-bottom: 1rem;
-}
-
-.navbar {
-  background: rgba(0, 0, 0, 0.9);
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-}
-
-.nav-brand h2 {
-  color: #09deff;
-  margin: 0;
-  font-size: 1.5rem;
-  font-weight: 700;
-}
-
-.nav-brand a {
-  text-decoration: none;
-}
-
-.nav-links {
-  display: flex;
-  gap: 2rem;
-  align-items: center;
-}
-
-.nav-links a {
-  color: white;
-  text-decoration: none;
-  font-size: 1rem;
-  font-weight: 500;
-  transition: color 0.3s ease;
-}
-
-.nav-links a:hover {
-  color: #09ffef;
-}
-
-.nav-auth {
-  display: flex;
-  gap: 1rem;
-}
-
-.nav-auth button {
-  padding: 0.5rem 1.5rem;
-  border-radius: 20px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.nav-auth button a {
-  text-decoration: none;
-  color: inherit;
 }
 
 .login-btn {
