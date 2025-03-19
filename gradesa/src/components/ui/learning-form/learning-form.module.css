@@ -10,11 +10,12 @@
 .learningFormHeader {
   font-size: var(--font-2xl);
   font-weight: bold;
+  color: var(--fg8);
 }
 
 .learningFormDescription {
   font-size: var(--font-md);
-  color: var(--fg2);
+  color: var(--fg8);
   white-space: pre-wrap;
 }
 
