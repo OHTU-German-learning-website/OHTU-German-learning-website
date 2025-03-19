@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import LessonsLayout from "./layout";
+import GrammarLayout from "./layout";
 import Link from "next/link";
 
 const initialGrammarTopics = [
@@ -14,14 +14,14 @@ export default function ExercisePage({}) {
   const [grammar, setgrammar] = useState(initialGrammarTopics.map(() => false));
 
   return (
-    <LessonsLayout>
-      <div className="lessons-container">
+    <GrammarLayout>
+      <div className="grammar-container">
         <h1>Grammatik 1</h1>
         <div className="flex-parent-element">
           <ul className="exercise-list">
             {initialGrammarTopics[0].exercises.map((exercise, exIndex) => (
               <li key={`exercise-${exIndex}`}>
-                <Link href={`/lessons/exercises`}>
+                <Link href={`/grammar/exercises`}>
                   <button className="exercise-link">{exercise}</button>
                 </Link>
               </li>
@@ -29,9 +29,9 @@ export default function ExercisePage({}) {
           </ul>
         </div>
       </div>
-      <Link href="/lessons">
+      <Link href="/grammar">
         <button className="back-button">Zurück zu den Übungen</button>
       </Link>
-    </LessonsLayout>
+    </GrammarLayout>
   );
 }

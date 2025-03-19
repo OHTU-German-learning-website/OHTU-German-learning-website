@@ -33,8 +33,8 @@ export default function home() {
               Üben Sie alltägliche Gespräche und verbessern Sie Ihre
               Sprechfähigkeiten mit interaktiven Lektionen.
             </p>
-            <Link href="/lessons" className="cta-button">
-              Übungen{" "}
+            <Link href="/grammar" className="cta-button">
+              Grammatik{" "}
             </Link>
           </div>
         </div>
