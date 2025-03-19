@@ -310,3 +310,11 @@ button.back-button {
     grid-template-columns: 1fr;
   }
 }
+
+a:hover{
+  color: var(--fg1);
+}
+
+a:active { 
+  color: var(--fg1);
+}
