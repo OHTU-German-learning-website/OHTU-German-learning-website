@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Container } from "../../components/ui/layout/container";
+import { Button } from "../../components/ui/button";
 
 const initialGrammarTopics = [
   {
@@ -31,13 +32,15 @@ export default function GrammarPage() {
 
   return (
     <div>
-      <h1>Übungen</h1>
       <Container p={["8px", "12px", "16px"]}>
         {initialGrammarTopics.map((topic, i) => (
           <div className="flex-parent-element" key={`${topic.title}-${i}`}>
             <div className="flex-child-element">
               <h2>{topic.title}</h2>
               <ul>
+                <Link href={"/grammar/exercises/dragdrop"}>
+                  <button className="exercise-link">Drag and Drop</button>
+                </Link>
                 {topic.exercises
                   .filter((_, j) => {
                     console.log(grammar[i] || j < 3);
