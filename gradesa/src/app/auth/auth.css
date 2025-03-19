@@ -1,26 +1,34 @@
 @import "../globals.css";
 
 .auth-container {
-  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 .auth-box {
   width: 100%;
   max-width: 400px;
+  background-color: var(--bg2);
+  border-radius: var(--radius-2xl);
   padding: var(--u-3xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-lg);
 }
 
 .auth-title {
   text-align: left;
-  margin-bottom: var(--u-xl);
+  margin-bottom: var(--u-lg);
+  color: var(--fg1);
 }
 
 .form-group label {
-  margin-bottom: var(--u-lg);
-  color: #4a5568;
+  margin-top: var(--u-lg);
+  margin-bottom: 0;
+  color: var(--fg4);
   font-size: 0.9rem;
   font-weight: 500;
 }
@@ -37,45 +45,24 @@
   gap: 0.5rem;
 }
 
-.form-group input {
-  padding: 0.75rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: border-color 0.3s ease;
-}
-
-.form-group input:focus {
-  outline: none;
-  border-color: #ff9809;
-  box-shadow: 0 0 0 3px rgba(255, 152, 9, 0.1);
-}
-
 .form-label {
   display: block;
   margin-bottom: var(--u-md);
 }
 
 .navigate-register p {
-  margin-top: 20px;
+  margin-top: var(--u-sm);
+  margin-bottom: 0;
 }
 
 .form-input {
   width: 100%;
   padding: var(--u-md);
-  border: 1px solid var(--fg2);
   border-radius: var(--radius-sm);
 }
 
 .form-button {
-  width: 100%;
-  padding: var(--u-md);
-  background-color: var(--primary2);
-  color: var(--fg1);
-  border: none;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  margin-top: var(--u-lg);
+  margin-top: var(--u-2xl);
 }
 
 .form-button:hover {

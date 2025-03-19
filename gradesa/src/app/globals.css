@@ -8,8 +8,7 @@
   font-weight: 400;
 
   color-scheme: light;
-  background: linear-gradient(120deg, #a0aec0 12%, #90cdf4 47%, #5297ff 75%);
-
+  background: var(--site-bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -17,14 +16,24 @@
 
   /* Colors for light mode */
   /* background colors (page, cards, etc.) */
-  --bg1: hsl(240, 40%, 98%);
-  --bg2: hsl(240, 40%, 95%);
-  --bg3: hsl(240, 40%, 92%);
-  --bg4: hsl(240, 40%, 89%);
-  --bg5: hsl(240, 40%, 86%);
-  --bg6: hsl(240, 40%, 83%);
-  --bg7: hsl(240, 40%, 80%);
-  --bg8: hsl(229, 70%, 76%);
+  --bg1: hsl(213, 80%, 98%);
+  --bg2: hsl(213, 80%, 95%);
+  --bg3: hsl(213, 80%, 92%);
+  --bg4: hsl(213, 80%, 89%);
+  --bg5: hsl(213, 80%, 86%);
+  --bg6: hsl(213, 80%, 83%);
+  --bg7: hsl(213, 80%, 80%);
+  --bg8: hsl(213, 80%, 76%);
+  --bg9: hsl(213, 80%, 62%);
+
+  --linear-gradient: linear-gradient(
+    120deg,
+    var(--primary1) 12%,
+    var(--primary3) 47%,
+    var(--primary4) 75%
+  );
+
+  --site-bg: hsl(213, 80%, 98%);
 
   /* foreground colors (text, icons, etc.) */
   --fg1: hsl(240, 40%, 5%);
@@ -56,15 +65,15 @@
   --secondary8: hsl(249, 90%, 20%);
   --secondary9: hsl(249, 90%, 10%);
 
-  --primary1: hsl(161, 35%, 90%);
-  --primary2: hsl(161, 35%, 80%);
-  --primary3: hsl(161, 35%, 70%);
-  --primary4: hsl(161, 35%, 60%);
-  --primary5: hsl(161, 35%, 50%);
-  --primary6: hsl(161, 35%, 40%);
-  --primary7: hsl(161, 35%, 30%);
-  --primary8: hsl(161, 35%, 20%);
-  --primary9: hsl(161, 35%, 10%);
+  --primary9: hsl(213, 90%, 85%);
+  --primary8: hsl(213, 90%, 80%);
+  --primary7: hsl(213, 90%, 75%);
+  --primary6: hsl(213, 90%, 70%);
+  --primary5: hsl(213, 90%, 65%);
+  --primary4: hsl(213, 90%, 60%);
+  --primary3: hsl(213, 90%, 55%);
+  --primary2: hsl(213, 90%, 50%);
+  --primary1: hsl(213, 90%, 45%);
 
   /* font sizes */
   --font-xs: 8px;
@@ -109,22 +118,31 @@
 @media (prefers-color-scheme: dark) {
   :root {
     /* Inverted background colors for dark mode */
-    --bg1: hsl(240, 40%, 5%);
-    --bg2: hsl(240, 40%, 9%);
-    --bg3: hsl(240, 40%, 13%);
-    --bg4: hsl(240, 40%, 17%);
-    --bg5: hsl(240, 40%, 21%);
-    --bg6: hsl(240, 40%, 25%);
-    --bg7: hsl(240, 40%, 29%);
-    --bg8: hsl(241, 96%, 9%);
+    --bg1: hsl(213, 10%, 2%);
+    --bg2: hsl(213, 10%, 6%);
+    --bg3: hsl(213, 10%, 10%);
+    --bg4: hsl(213, 10%, 14%);
+    --bg5: hsl(213, 10%, 18%);
+    --bg6: hsl(213, 10%, 22%);
+    --bg7: hsl(213, 10%, 26%);
+    --bg8: hsl(213, 16%, 30%);
 
-    --fg1: hsl(240, 40%, 98%);
-    --fg2: hsl(240, 40%, 92%);
-    --fg3: hsl(240, 40%, 86%);
-    --fg4: hsl(240, 40%, 80%);
-    --fg5: hsl(240, 40%, 74%);
-    --fg6: hsl(240, 40%, 68%);
-    --fg7: hsl(240, 40%, 62%);
+    --linear-gradient: linear-gradient(
+      120deg,
+      var(--primary1) 12%,
+      var(--primary3) 47%,
+      var(--primary4) 75%
+    );
+
+    --site-bg: hsl(213, 60%, 14%);
+
+    --fg1: hsl(213, 20%, 98%);
+    --fg2: hsl(213, 20%, 94%);
+    --fg3: hsl(213, 20%, 90%);
+    --fg4: hsl(213, 20%, 86%);
+    --fg5: hsl(213, 20%, 82%);
+    --fg6: hsl(213, 20%, 78%);
+    --fg7: hsl(213, 20%, 74%);
     --fg8: hsl(0, 0%, 0%);
 
     --tertiary1: hsl(351, 40%, 30%);
@@ -138,32 +156,35 @@
     --tertiary9: hsl(351, 40%, 95%);
     --tertiary10: hsl(113, 93%, 49%);
 
-    --secondary1: hsl(249, 60%, 30%);
-    --secondary2: hsl(249, 60%, 40%);
-    --secondary3: hsl(249, 60%, 50%);
-    --secondary4: hsl(249, 60%, 60%);
-    --secondary5: hsl(249, 60%, 70%);
-    --secondary6: hsl(249, 60%, 80%);
-    --secondary7: hsl(249, 60%, 85%);
-    --secondary8: hsl(249, 60%, 90%);
-    --secondary9: hsl(249, 60%, 95%);
+    --secondary1: hsl(178, 60%, 30%);
+    --secondary2: hsl(178, 60%, 40%);
+    --secondary3: hsl(178, 80%, 52%);
+    --secondary4: hsl(178, 60%, 60%);
+    --secondary5: hsl(178, 60%, 70%);
+    --secondary6: hsl(178, 60%, 80%);
+    --secondary7: hsl(178, 60%, 85%);
+    --secondary8: hsl(178, 60%, 90%);
+    --secondary9: hsl(178, 60%, 95%);
 
-    --primary1: hsl(161, 35%, 30%);
-    --primary2: hsl(161, 35%, 40%);
-    --primary3: hsl(161, 35%, 50%);
-    --primary4: hsl(161, 35%, 60%);
-    --primary5: hsl(161, 35%, 70%);
-    --primary6: hsl(161, 35%, 80%);
-    --primary7: hsl(161, 35%, 85%);
-    --primary8: hsl(161, 35%, 90%);
-    --primary9: hsl(161, 35%, 95%);
+    --primary1: hsl(213, 45%, 15%);
+    --primary2: hsl(213, 45%, 20%);
+    --primary3: hsl(213, 45%, 25%);
+    --primary4: hsl(213, 45%, 30%);
+    --primary5: hsl(213, 45%, 35%);
+    --primary6: hsl(213, 45%, 40%);
+    --primary7: hsl(213, 45%, 45%);
+    --primary8: hsl(213, 45%, 50%);
+    --primary9: hsl(213, 45%, 55%);
   }
 }
 
 body {
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden;
   margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 h1 {
@@ -171,26 +192,32 @@ h1 {
   margin-bottom: 1rem;
 }
 
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
 .login-btn {
   background: transparent;
-  border: 2px solid #09fff7;
-  color: #09fff7;
+  border: 2px solid var(--secondary5);
+  color: var(--secondary5);
 }
 
 .login-btn:hover {
-  background: #09fbff;
-  color: black;
+  background: var(--secondary5);
+  color: var(--fg1);
 }
 
 .signup-btn {
-  background: #0978ff;
-  border: 2px solid #093eff;
-  color: rgb(255, 255, 255);
+  background: var(--primary5);
+  border: 2px solid var(--primary7);
+  color: var(--fg1);
 }
 
 .signup-btn:hover {
   background: transparent;
-  color: #09ffe2;
+  color: var(--primary5);
 }
 
 .container {
@@ -201,25 +228,34 @@ h1 {
 
 .hero {
   text-align: center;
-  padding: 4rem 2rem;
-  background: linear-gradient(120deg, #a0aec0 12%, #90cdf4 47%, #5297ff 75%);
+  padding: var(--u-2xl) var(--u-3xl);
+  /* background: linear-gradient(120deg, #a0aec0 12%, #90cdf4 47%, #5297ff 75%); */
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   margin-bottom: 3rem;
+  background: var(--linear-gradient);
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-lg);
 }
 
 .hero h1 {
   font-size: 3.5rem;
-  color: #ffffff;
-  margin-bottom: 1rem;
+  color: var(--fg1);
+  margin: 0;
   font-weight: 800;
 }
 
 .hero p {
   font-size: 1.25rem;
-  color: #ffffff;
+  color: var(--fg1);
   max-width: 600px;
   margin: 0 auto;
+  display: flex;
+}
+
+.hero a {
+  margin-top: auto;
 }
 
 .features {
@@ -230,25 +266,27 @@ h1 {
 }
 
 .feature-card {
-  background: white;
+  gap: var(--u-lg);
+  background: var(--bg3);
   padding: 2rem;
   border-radius: 15px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease;
-}
-
-.feature-card:hover {
-  transform: translateY(-5px);
+  display: flex;
+  flex-direction: column;
 }
 
 .feature-card h3 {
-  color: #2d3748;
+  color: var(--fg3);
   font-size: 1.5rem;
-  margin-bottom: 1rem;
+  margin: 0;
+}
+
+.feature-card > a {
+  margin-top: auto;
 }
 
 .feature-card p {
-  color: #4a5568;
+  color: var(--fg3);
   line-height: 1.6;
 }
 
@@ -287,7 +325,7 @@ button.back-button {
   font-size: 1.1rem;
   border: none;
   border-radius: 30px;
-  background: white;
+  background: var(--bg2);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 }
@@ -311,10 +349,51 @@ button.back-button {
   }
 }
 
-a:hover{
+a {
+  color: var(--primary9);
+}
+
+a:visited {
+  color: var(--primary9);
+}
+
+a:hover {
   color: var(--fg1);
 }
 
-a:active { 
+a:active {
   color: var(--fg1);
+}
+
+h1 {
+  font-size: var(--u-3xl);
+  margin: 0;
+}
+
+h2 {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: var(--tertiary1);
+  margin-bottom: 15px;
+}
+
+ul {
+  list-style-type: circle;
+}
+
+p {
+  margin: 0;
+}
+
+input {
+  border: 1px solid var(--primary8);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-md);
+  background: var(--bg5);
+  padding: var(--u-md) var(--u-lg);
+  color: var(--fg1);
+  &:focus {
+    outline: none;
+    border-color: var(--primary9);
+  }
 }

@@ -10,12 +10,12 @@
 .learningFormHeader {
   font-size: var(--font-2xl);
   font-weight: bold;
-  color: var(--fg8);
+  color: var(--fg1);
 }
 
 .learningFormDescription {
   font-size: var(--font-md);
-  color: var(--fg8);
+  color: var(--fg2);
   white-space: pre-wrap;
 }
 
@@ -71,6 +71,7 @@
 .stepTitle {
   font-size: var(--font-lg);
   font-weight: bold;
+  color: var(--fg1);
 }
 
 .questionContainer {

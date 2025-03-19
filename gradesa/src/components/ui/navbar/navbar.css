@@ -1,7 +1,7 @@
 @import "/globals.css";
 
 .navbar {
-  background: rgba(0, 0, 0, 0.9);
+  background: var(--bg2);
   padding: var(--u-md) var(--u-2xl);
   display: flex;
   justify-content: space-between;

@@ -14,18 +14,22 @@ export default function home() {
             einschließlich Artikel, Verbkonjugationen und grundlegender
             Satzstruktur.
           </p>
-          <Button variant="outline" width="fit">
-            <Link href="/learning">Entdecke deine Lernstrategien</Link>
-          </Button>
+          <Link href="/learning">
+            <Button variant="primary" size="lg" width="fit">
+              Entdecke deine Lernstrategien
+            </Button>
+          </Link>
         </section>
 
         <div className="features">
           <div className="feature-card">
             <h3>Lernplan</h3>
             <p>Finde die für dich passende Lernstrategie</p>
-            <Button variant="outline" width="fit">
-              <Link href="/learning">Entdecke deine Lernstrategien </Link>
-            </Button>
+            <Link href="/learning">
+              <Button variant="outline" width="fit">
+                Entdecke deine Lernstrategien
+              </Button>
+            </Link>
           </div>
 
           <div className="feature-card">
@@ -34,9 +38,11 @@ export default function home() {
               Üben Sie alltägliche Gespräche und verbessern Sie Ihre
               Sprechfähigkeiten mit interaktiven Lektionen.
             </p>
-            <Button variant="outline" width="fit">
-              <Link href="/lessons">Übungen </Link>
-            </Button>
+            <Link href="/lessons">
+              <Button variant="outline" width="fit">
+                Übungen
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

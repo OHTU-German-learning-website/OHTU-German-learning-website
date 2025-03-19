@@ -25,6 +25,7 @@ export default function RootLayout({ children }) {
       <body>
         <Navbar />
         <div className={styles.sidebarMain}>
+          <Sidebar />
           <main className={styles.main}>{children}</main>
         </div>
       </body>

@@ -58,13 +58,13 @@
 }
 
 .baseButton.primary {
-  background-color: var(--secondary1);
+  background-color: var(--primary1);
   color: var(--fg1);
   border: 1px solid var(--primary5);
 
   &:hover {
-    background-color: var(--fg1);
-    border: 1px solid var(--secondary2);
+    background-color: var(--primary2);
+    border: 1px solid var(--primary6);
   }
 }
 
@@ -106,7 +106,7 @@
   border: 1px solid var(--fg7);
 
   &:hover {
-    background-color: var(--secondary1);
-    border: 1px solid var(--fg2);
+    color: var(--primary6);
+    border: 1px solid var(--primary9);
   }
 }

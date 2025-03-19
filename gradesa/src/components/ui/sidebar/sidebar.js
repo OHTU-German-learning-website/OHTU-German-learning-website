@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import styles from "./sidebar.module.css";
 import { usePathname } from "next/navigation";
 import { chapters } from "@/app/resources/[chapter]/page";
@@ -10,17 +9,6 @@ const Sidebar = () => {
   const pathname = usePathname();
   return (
     <nav className={styles.sidebar}>
-      <div className="logo">
-        <Link href="/">
-          <Image
-            src="/logo_placeholder2.png"
-            width={240}
-            height={179}
-            alt="Logo placeholder"
-            priority={true}
-          />
-        </Link>
-      </div>
       <Column gap="xl">
         <SidebarGroup title="Lernen" sublinks={chapters} />
         <Link

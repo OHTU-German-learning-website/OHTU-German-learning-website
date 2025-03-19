@@ -32,7 +32,7 @@ export default function Chapters() {
           <Chapter.content />
         </>
       )}
-      <Row justify="space-between">
+      <Row justify="space-between" pb="xl">
         {!!previousChapter && (
           <Container mr="auto">
             <Link href={previousChapter.link}>
