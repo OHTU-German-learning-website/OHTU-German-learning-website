@@ -1,4 +1,4 @@
-import "../../lessons.css";
+import "../../grammar.css";
 
 export default function DragdropLayout({ children }) {
   return (

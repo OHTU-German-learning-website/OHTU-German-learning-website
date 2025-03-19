@@ -22,7 +22,7 @@ const initialGrammarTopics = [
   },
 ];
 
-export default function LessonsPage() {
+export default function GrammarPage() {
   const [grammar, setGrammar] = useState(initialGrammarTopics.map(() => false));
 
   const toggleShowMore = (event, index) => {
@@ -46,7 +46,7 @@ export default function LessonsPage() {
                   .map((exercise, exIndex) => (
                     <li key={`${i}-exercise-${exIndex}`}>
                       {/* All links go to the same page -> WIP (need DB) */}
-                      <Link href={`/lessons/exercises`}>
+                      <Link href={`/grammar/exercises`}>
                         <button className="exercise-link">{exercise}</button>
                       </Link>
                     </li>
