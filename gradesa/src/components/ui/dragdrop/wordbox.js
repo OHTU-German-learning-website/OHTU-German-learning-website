@@ -6,7 +6,7 @@ export const WordBox = memo(function WordBox({ name, type, isDropped }) {
   const [{ opacity }, drag] = useDrag(
     () => ({
       type,
-      item: { name },
+      item: { name, type },
       canDrag: !isDropped,
       collect: (monitor) => ({
         opacity: monitor.isDragging() ? 0.4 : 1,

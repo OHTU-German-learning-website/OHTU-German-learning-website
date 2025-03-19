@@ -1,24 +1,44 @@
 "use client";
-import styles from "./page.module.css";
-import { Button } from "@/components/ui/button";
-import { Grid } from "@radix-ui/themes";
-import { Container } from "@/components/ui/layout/container";
+
 import Link from "next/link";
-export default function Home() {
+
+export default function home() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Grid columns="2" gap="3" width="auto">
-          <Container fontSize="sm" p="xl">
-            <Button variant="outline" size="lg" width="fit">
-              <Link href="/learning">Entdecke deine Lernstrategien</Link>
-            </Button>
-            <Button variant="outline" size="lg" width="fit">
-              <Link href="/lessons">Grammatik lernen</Link>
-            </Button>
-          </Container>
-        </Grid>
-      </main>
-    </div>
+    <>
+      <div className="container">
+        <section className="hero">
+          <h1>Deutsch lerner</h1>
+          <p>
+            Beherrschen Sie die Grundlagen der deutschen Grammatik,
+            einschließlich Artikel, Verbkonjugationen und grundlegender
+            Satzstruktur.
+          </p>
+          <Link href="/learning" className="cta-button">
+            Entdecke deine Lernstrategien{" "}
+          </Link>
+        </section>
+
+        <div className="features">
+          <div className="feature-card">
+            <h3>Lernplan</h3>
+            <p>Finde die für dich passende Lernstrategie</p>
+            <Link href="/learning" className="cta-button">
+              Entdecke deine Lernstrategien{" "}
+            </Link>
+          </div>
+
+          <div className="feature-card">
+            <h3>Grammatik</h3>
+            <p>
+              Üben Sie alltägliche Gespräche und verbessern Sie Ihre
+              Sprechfähigkeiten mit interaktiven Lektionen.
+            </p>
+            <Link href="/lessons" className="cta-button">
+              Übungen{" "}
+            </Link>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }

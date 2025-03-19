@@ -1,4 +1,3 @@
-import update from "immutability-helper";
 import { memo, useCallback, useState } from "react";
 import { ItemTypes } from "../../../app/lessons/exercises/dragdrop/itemtypes.js";
 import { WordBox } from "./wordbox.js";
@@ -14,34 +13,75 @@ export const Area = memo(function Area() {
   const initialBoxes = [
     { name: "Kurs", type: ItemTypes.DER },
     { name: "Elefant", type: ItemTypes.DER },
+    { name: "Hund", type: ItemTypes.DER },
     { name: "Schule", type: ItemTypes.DIE },
     { name: "Eule", type: ItemTypes.DIE },
+    { name: "Zeit", type: ItemTypes.DIE },
+    { name: "Schmetterling", type: ItemTypes.DIE },
     { name: "Auto", type: ItemTypes.DAS },
     { name: "Kaninchen", type: ItemTypes.DAS },
+    { name: "Geld", type: ItemTypes.DAS },
+    { name: "Wort", type: ItemTypes.DAS },
+    { name: "Haus", type: ItemTypes.DAS },
+    { name: "Bild", type: ItemTypes.DAS },
   ];
 
   const [dustbins, setDustbins] = useState(initialDustbins);
   const [boxes] = useState(initialBoxes);
   const [droppedBoxNames, setDroppedBoxNames] = useState([]);
+  const [isExerciseComplete, setIsExerciseComplete] = useState(false);
 
   function isDropped(boxName) {
     return droppedBoxNames.indexOf(boxName) > -1;
   }
+
+  const checkExerciseComplete = (updatedDustbins) => {
+    const totalDroppedItems = updatedDustbins.reduce(
+      (sum, dustbin) => sum + dustbin.droppedItems.length,
+      0
+    );
+
+    const allBoxesPlaced = totalDroppedItems === initialBoxes.length;
+
+    const allItemsCorrect = updatedDustbins.every((dustbin) =>
+      dustbin.droppedItems.every((item) => item.type === dustbin.accepts[0])
+    );
+
+    console.log("Exercise complete check:", {
+      totalDroppedItems,
+      totalBoxes: initialBoxes.length,
+      allBoxesPlaced,
+      allItemsCorrect,
+    });
+
+    return allBoxesPlaced && allItemsCorrect;
+  };
+
   const handleDrop = useCallback(
     (index, item) => {
-      const { name } = item;
-      setDroppedBoxNames(
-        update(droppedBoxNames, name ? { $push: [name] } : { $push: [] })
-      );
-      setDustbins(
-        update(dustbins, {
-          [index]: {
-            droppedItems: {
-              $push: item ? [{ name, type: item.type }] : [],
-            },
-          },
-        })
-      );
+      const { name, type } = item;
+      console.log("Handling drop:", { name, type, index });
+
+      if (!isDropped(name)) {
+        const updatedDroppedBoxNames = [...droppedBoxNames, name];
+        const updatedDustbins = [...dustbins];
+        updatedDustbins[index] = {
+          ...updatedDustbins[index],
+          droppedItems: [
+            ...updatedDustbins[index].droppedItems,
+            { name, type },
+          ],
+        };
+
+        console.log("Updated dustbin:", updatedDustbins[index]);
+
+        setDroppedBoxNames(updatedDroppedBoxNames);
+        setDustbins(updatedDustbins);
+
+        const isComplete = checkExerciseComplete(updatedDustbins);
+        console.log("Setting exercise complete:", isComplete);
+        setIsExerciseComplete(isComplete);
+      }
     },
     [droppedBoxNames, dustbins]
   );
@@ -49,11 +89,19 @@ export const Area = memo(function Area() {
   const reset = () => {
     setDustbins(initialDustbins);
     setDroppedBoxNames([]);
+    setIsExerciseComplete(false);
   };
 
   return (
     <div>
-      <div style={{ overflow: "hidden", clear: "both" }}>
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          width: "calc(36rem + 2 * var(--u-xl))",
+          gap: "var(--u-md)",
+        }}
+      >
         {boxes.map(({ name, type }, index) => (
           <WordBox
             name={name}
@@ -73,7 +121,21 @@ export const Area = memo(function Area() {
           />
         ))}
       </div>
-      <Button onClick={reset}>Erneut versuchen</Button>
+      {isExerciseComplete && (
+        <div className="success-message">
+          Super! Du hast die Übung abgeschlossen.
+        </div>
+      )}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          width: "100%",
+          marginTop: "var(--u-xl)",
+        }}
+      >
+        <Button onClick={reset}>Erneut versuchen</Button>
+      </div>
     </div>
   );
 });
