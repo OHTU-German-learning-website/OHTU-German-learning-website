@@ -115,7 +115,7 @@
   --z-max: 9999;
 }
 
-@media (prefers-color-scheme: light) {
+@media (prefers-color-scheme: dark) {
   :root {
     /* Inverted background colors for dark mode */
     --bg1: hsl(213, 10%, 2%);
