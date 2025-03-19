@@ -40,6 +40,7 @@ export function LearningForm({ form, language, onSubmitAnswer }) {
           form={form}
           onSelect={setSelectedPartIdx}
           currentPart={form.parts[selectedPartIdx]}
+          language={language}
         />
       </div>
     </div>
@@ -103,7 +104,7 @@ function StepQuestion({ question, language, onSubmitAnswer }) {
   );
 }
 
-function StepSelector({ form, onSelect, currentPart }) {
+function StepSelector({ form, onSelect, currentPart, language }) {
   const router = useRouter();
   const renderStepButtons = () => {
     return form.parts.map((part, i) => {
@@ -133,7 +134,7 @@ function StepSelector({ form, onSelect, currentPart }) {
         onClick={() => onSelect(currentPartIndex - 1)}
         disabled={currentPartIndex === 0}
       >
-        <span>Previous</span>
+        <span>{language === "de" ? "Zurück" : "Previous"}</span>
       </Button>
       {renderStepButtons()}
       <Button
@@ -148,7 +149,15 @@ function StepSelector({ form, onSelect, currentPart }) {
           }
         }}
       >
-        <span>{isDone ? "Finish" : "Next"}</span>
+        <span>
+          {isDone
+            ? language === "de"
+              ? "Fertig"
+              : "Finish"
+            : language === "de"
+              ? "Weiter"
+              : "Next"}
+        </span>
       </Button>
     </div>
   );

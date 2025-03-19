@@ -8,6 +8,19 @@
     padding: 1rem;
 
 }
+
+.nav-left {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px; /* Space between logo and text */
+  }
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between logo and text */
+  }
   
 .navbar-right.nav-links {
     display: flex;    
@@ -17,3 +30,24 @@
     margin-left: auto;
     align-items: right !important;
 }
+
+.brand-container {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 10px; /* Space between logo and text */
+    text-decoration: none;
+  }
+  
+.logo-container {
+    width: 100px; /* Adjust width as needed */
+    height: auto; /* Maintain aspect ratio */
+    display: flex;
+    align-items: center;
+  }
+  
+.brand-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #000; /* Adjust text color */
+  }
