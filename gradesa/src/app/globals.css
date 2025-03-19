@@ -65,15 +65,15 @@
   --secondary8: hsl(249, 90%, 20%);
   --secondary9: hsl(249, 90%, 10%);
 
-  --primary9: hsl(213, 90%, 85%);
-  --primary8: hsl(213, 90%, 80%);
-  --primary7: hsl(213, 90%, 75%);
-  --primary6: hsl(213, 90%, 70%);
+  --primary1: hsl(213, 90%, 85%);
+  --primary2: hsl(213, 90%, 80%);
+  --primary3: hsl(213, 90%, 75%);
+  --primary4: hsl(213, 90%, 70%);
   --primary5: hsl(213, 90%, 65%);
-  --primary4: hsl(213, 90%, 60%);
-  --primary3: hsl(213, 90%, 55%);
-  --primary2: hsl(213, 90%, 50%);
-  --primary1: hsl(213, 90%, 45%);
+  --primary6: hsl(213, 90%, 60%);
+  --primary7: hsl(213, 90%, 55%);
+  --primary8: hsl(213, 90%, 50%);
+  --primary9: hsl(213, 90%, 45%);
 
   /* font sizes */
   --font-xs: 8px;
@@ -115,7 +115,7 @@
   --z-max: 9999;
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
   :root {
     /* Inverted background colors for dark mode */
     --bg1: hsl(213, 10%, 2%);
