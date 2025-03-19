@@ -4,6 +4,7 @@
   flex-grow: 1;
   gap: var(--u-xl);
   overflow: hidden;
+  color: var(--fg2);
 }
 
 .learningFormHeader {
