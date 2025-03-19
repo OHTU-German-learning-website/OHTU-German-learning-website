@@ -194,108 +194,6 @@ h1 {
   color: #09ffe2;
 }
 
-/* Sign Up Page Styles */
-.signup-container {
-  min-height: calc(100vh - 200px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.signup-card {
-  background: white;
-  padding: 2.5rem;
-  border-radius: 15px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 500px;
-}
-
-.signup-card h2 {
-  color: #2d3748;
-  text-align: center;
-  margin-bottom: 0.5rem;
-}
-
-.signup-subtitle {
-  color: #718096;
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.signup-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.form-group label {
-  color: #4a5568;
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-.form-group input {
-  padding: 0.75rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: border-color 0.3s ease;
-}
-
-.form-group input:focus {
-  outline: none;
-  border-color: #ff9809;
-  box-shadow: 0 0 0 3px rgba(255, 152, 9, 0.1);
-}
-
-.signup-submit {
-  background: linear-gradient(to right, #a0aec0 12%, #90cdf4 47%, #5297ff 75%);
-  color: white;
-  padding: 1rem;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-  margin-top: 1rem;
-}
-
-.signup-submit:hover {
-  transform: translateY(-2px);
-}
-
-.login-link {
-  text-align: center;
-  margin-top: 1.5rem;
-  color: #718096;
-}
-
-.login-link a {
-  color: #ff9809;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.login-link a:hover {
-  text-decoration: underline;
-}
-
 .container {
   max-width: 1200px;
   margin: 2rem auto;
@@ -355,11 +253,6 @@ h1 {
   line-height: 1.6;
 }
 
-.cta-button {
-  background: linear-gradient(to right, #a0aec0 12%, #90cdf4 47%, #5297ff 75%);
-  color: white;
-}
-
 ul.exercise-list {
   list-style-type: circle;
 }
@@ -384,27 +277,6 @@ button.back-button {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
-.level-indicator {
-  display: inline-block;
-  padding: 0.25rem 1rem;
-  border-radius: 15px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-/* Courses Page Styles */
-.courses-header {
-  text-align: center;
-  margin-bottom: 3rem;
-}
-
-.courses-header h1 {
-  color: white;
-  font-size: 2.5rem;
-  margin-bottom: 1.5rem;
-}
-
 .search-container {
   max-width: 600px;
   margin: 0 auto;
@@ -426,65 +298,6 @@ button.back-button {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.courses-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2rem;
-  padding: 2rem 0;
-}
-
-.course-card {
-  background: white;
-  padding: 2rem;
-  border-radius: 15px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease;
-  display: flex;
-  flex-direction: column;
-}
-
-.course-card:hover {
-  transform: translateY(-5px);
-}
-
-.course-card h3 {
-  color: #2d3748;
-  font-size: 1.3rem;
-  margin: 1rem 0;
-}
-
-.course-card p {
-  color: #4a5568;
-  line-height: 1.6;
-  flex-grow: 1;
-}
-
-.course-details {
-  margin: 1.5rem 0;
-  color: #718096;
-  font-size: 0.9rem;
-}
-
-.course-details span {
-  display: inline-block;
-  margin-right: 0.5rem;
-}
-
-.enroll-button {
-  background: linear-gradient(to right, #000000, #ff1a1a, #ff9809);
-  color: white;
-  border: none;
-  padding: 0.8rem 1.5rem;
-  border-radius: 25px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.enroll-button:hover {
-  transform: translateY(-2px);
-}
-
 @media (max-width: 1024px) {
   .nav-links {
     display: none;
@@ -496,24 +309,5 @@ button.back-button {
 
   .form-row {
     grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 768px) {
-  .courses-grid {
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-    }
-    grid-template-columns: 1fr;
-  }
-
-  .courses-header h1 {
-    font-size: 2rem;
-  }
-
-  .search-input {
-    font-size: 1rem;
-    padding: 0.8rem 1.2rem;
   }
 }
