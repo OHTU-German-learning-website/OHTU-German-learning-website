@@ -1,10 +1,10 @@
 .flex-child-element .exercise-link {
-  color: rgb(0, 0, 0);
+  color: var(--fg2);
 }
 
 .flex-child-element .show-more-link {
   font-style: italic;
-  color: rgb(0, 0, 0);
+  color: var(--fg2);
   font-size: var(--font-sm);
 }
 
@@ -12,7 +12,7 @@
 .exercise-link {
   background: none;
   border: none;
-  color: rgb(0, 0, 0);
+  color: var(--fg2);
   text-decoration: none;
   cursor: pointer;
   padding: 0;
@@ -30,9 +30,9 @@
   flex-grow: 1;
   flex-shrink: 0;
   flex-basis: 50%;
-  border: 2px darkblue;
-  background-color: rgba(255, 255, 255, 0.42);
-  color: rgb(0, 0, 0);
+  border: 2px var(--fg7);
+  background-color: var(--bg8);
+  color: var(--fg2);
 }
 
 .flex-child-element:first-child {
