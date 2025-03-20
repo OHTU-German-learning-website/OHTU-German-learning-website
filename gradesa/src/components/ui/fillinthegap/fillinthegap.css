@@ -16,13 +16,6 @@
     margin-bottom: 1.5rem;
     }
   
-input[type="text"] {
-    font-size: var(--font-lg);
-    margin: 0.5rem;
-    padding: var(--u-md);
-    text-align: center;
-    }
-  
 button {
     color: var(--fg1);
     padding: var(--u-md);
@@ -35,7 +28,7 @@ button {
     }
   
 .wunderbar {
-    color: var(--tertiary11);
+    color: var(--green6);
     font-size: var(--font-2xl);
     font-weight: bold;
     text-align: center;

@@ -42,9 +42,6 @@
   --tertiary7: hsl(351, 90%, 30%);
   --tertiary8: hsl(351, 90%, 20%);
   --tertiary9: hsl(351, 90%, 10%);
-  --tertiary10: hsl(120, 60%, 50%);
-  --tertiary11: hsl(110, 100%, 30%);
-
 
   --secondary1: hsl(249, 90%, 90%);
   --secondary2: hsl(249, 90%, 80%);
@@ -65,6 +62,16 @@
   --primary7: hsl(161, 35%, 30%);
   --primary8: hsl(161, 35%, 20%);
   --primary9: hsl(161, 35%, 10%);
+
+  --green1: hsl(120, 60%, 90%);
+  --green2: hsl(120, 60%, 80%);
+  --green3: hsl(120, 60%, 70%);
+  --green4: hsl(120, 60%, 60%);
+  --green5: hsl(120, 60%, 50%);
+  --green6: hsl(120, 60%, 40%);
+  --green7: hsl(120, 60%, 30%);
+  --green8: hsl(120, 60%, 20%);
+  --green9: hsl(120, 60%, 10%);
 
   /* font sizes */
   --font-xs: 8px;
@@ -158,6 +165,17 @@
     --primary7: hsl(161, 35%, 85%);
     --primary8: hsl(161, 35%, 90%);
     --primary9: hsl(161, 35%, 95%);
+
+    --green1: hsl(120, 40%, 30%);
+    --green2: hsl(120, 40%, 40%);
+    --green3: hsl(120, 40%, 50%);
+    --green4: hsl(120, 40%, 60%);
+    --green5: hsl(120, 40%, 70%);
+    --green6: hsl(120, 40%, 80%);
+    --green7: hsl(120, 40%, 85%);
+    --green8: hsl(120, 40%, 90%);
+    --green9: hsl(120, 40%, 95%);
+    
   }
 }
 
@@ -676,3 +694,10 @@ button.back-button {
     padding: 0.8rem 1.2rem;
   }
 }
+
+input[type="text"] {
+  font-size: var(--font-lg);
+  margin: 0.5rem;
+  padding: var(--u-md);
+  text-align: center;
+  }

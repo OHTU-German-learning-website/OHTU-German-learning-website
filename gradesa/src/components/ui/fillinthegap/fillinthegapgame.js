@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import SentenceWithGaps from "./sentencewithgaps";
+import { Row } from "../layout/container";
 import "./fillinthegap.css";
 
 export default function FillInTheGapGame() {
@@ -109,17 +110,10 @@ export default function FillInTheGapGame() {
         handleChange={handleChange}
       />
 
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          gap: "8px",
-        }}
-      >
+      <Row gap="8px" align="center">
         <button onClick={handleReset}>zurücksetzen</button>
         <button onClick={handleSubmit}>überprüfen</button>
-      </div>
+      </Row>
     </div>
   );
 }
