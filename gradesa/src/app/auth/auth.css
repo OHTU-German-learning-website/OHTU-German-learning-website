@@ -1,67 +1,71 @@
-@import '../globals.css';
+@import "../globals.css";
 
 .auth-container {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .auth-box {
-    width: 100%;
-    max-width: 400px;
-    padding: var(--u-3xl);
-  }
-  
+  width: 100%;
+  max-width: 400px;
+  padding: var(--u-3xl);
+}
+
 .auth-title {
-    text-align: left;
-    margin-bottom: var(--u-xl);
-  }
+  text-align: left;
+  margin-bottom: var(--u-lg);
+}
+
+form {
+  margin-top: var(--u-2xl);
+}
 
 .form-group {
-    margin-bottom: var(--u-lg);
-  }
+  margin-bottom: var(--u-lg);
+}
 
 .form-label {
-    display: block;
-    margin-bottom: var(--u-md);
-  }
+  display: block;
+  margin-bottom: var(--u-md);
+}
 
 .navigate-register p {
-    margin-top: 20px;
-  }
+  margin-top: 20px;
+}
 
 .form-input {
-    width: 100%;
-    padding: var(--u-md);
-    border: 1px solid var(--fg2);
-    border-radius: var(--radius-sm);
-  }
+  width: 100%;
+  padding: var(--u-md);
+  border: 1px solid var(--fg2);
+  border-radius: var(--radius-sm);
+}
 
 .form-button {
-    width: 100%;
-    padding: var(--u-md);
-    background-color: var(--primary2);
-    color: var(--fg1);
-    border: none;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    margin-top: var(--u-lg);
-  }
+  width: 100%;
+  padding: var(--u-md);
+  background-color: var(--primary2);
+  color: var(--fg1);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  margin-top: var(--u-lg);
+}
 
 .form-button:hover {
-    background-color: var(--primary1);
-  }
+  background-color: var(--primary1);
+}
 
 .error-message {
-    padding: var(--u-md);
-    background-color: var(--tertiary5);
-    font-size: var(--font-md);
-    color: var(--fg1);
-    border-radius: var(--radius-sm);
-    margin-bottom: var(--u-lg);
-    text-align: center;
-    margin-top: var(--u-lg);
+  padding: var(--u-md);
+  background-color: var(--tertiary5);
+  font-size: var(--font-md);
+  color: var(--fg1);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--u-lg);
+  text-align: center;
+  margin-top: var(--u-lg);
 }
 
 .success-message {

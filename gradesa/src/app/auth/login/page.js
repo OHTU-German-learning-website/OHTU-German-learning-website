@@ -56,6 +56,8 @@ export default function Login() {
     <div>
       <h1 className="auth-title">Anmeldung</h1>
 
+      <p>Zugriff auf weitere Inhalte durch Anmeldung</p>
+
       {errorMessage()}
 
       <form onSubmit={handleSubmit} noValidate>
