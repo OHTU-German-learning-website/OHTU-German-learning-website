@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 // Paths only logged-in users can access
-const protectedPaths = ["/learning"]; // learning page selected for testing purposes
+const protectedPaths = [];
 
 // Restricted paths logged-in users cannot access
 const restrictedPaths = ["/auth/login", "/auth/register"];
@@ -33,5 +33,5 @@ export async function middleware(request) {
 
 // All the routes where the middleware should run
 export const config = {
-  matcher: ["/learning", "/auth/login", "/auth/register"],
+  matcher: ["/auth/login", "/auth/register"],
 };
