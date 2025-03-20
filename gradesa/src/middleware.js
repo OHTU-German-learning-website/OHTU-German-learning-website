@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 // Paths only logged-in users can access
-const protectedPaths = [];
+const protectedPaths = ["/lessons/exercises"];
 
 // Restricted paths logged-in users cannot access
 const restrictedPaths = ["/auth/login", "/auth/register"];
@@ -14,7 +14,7 @@ export async function middleware(request) {
   const hasCookie = !!sessionCookie && sessionCookie.value !== "";
 
   // Redirect logged-out users trying to access protected paths
-  if (!hasCookie && protectedPaths.includes(pathname)) {
+  if (!hasCookie && protectedPaths.some((path) => pathname.startsWith(path))) {
     const loginUrl = new URL("/auth/login", request.url);
     loginUrl.searchParams.set("redirect", pathname); // Add the original path as a query parameter
     return NextResponse.redirect(loginUrl);
@@ -33,5 +33,5 @@ export async function middleware(request) {
 
 // All the routes where the middleware should run
 export const config = {
-  matcher: ["/auth/login", "/auth/register"],
+  matcher: ["/auth/login", "/auth/register", "/lessons/exercises/:path*"],
 };

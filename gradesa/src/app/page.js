@@ -24,7 +24,7 @@ export default function Home() {
         </Grid>
         {isLoggedIn && (
           <div>
-            <p>You are logged in</p>
+            <p>Sie sind angemeldet</p>
           </div>
         )}
       </main>
