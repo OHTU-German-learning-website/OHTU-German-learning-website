@@ -1,5 +1,6 @@
 .content {
   background-color: var(--bg1);
+  color: var(--fg1);
   border-radius: var(--radius-md);
   padding: var(--u-xs);
   display: flex;

@@ -27,13 +27,12 @@ export const Dustbin = memo(function Dustbin({ accept, droppedItems, onDrop }) {
     >
       {isActive ? `${accept.join(", ")}` : `${accept.join(", ")}`}
 
-      {droppedItems && (
-        <div>
-          {droppedItems.map((item) => (
-            <span key={item.name}>
+      {droppedItems && droppedItems.length > 0 && (
+        <div className="dropped-items">
+          {droppedItems.map((item, index) => (
+            <div key={`${item.name}-${index}`} className="dropped-item">
               {item.name}
-              <br></br>
-            </span>
+            </div>
           ))}
         </div>
       )}
