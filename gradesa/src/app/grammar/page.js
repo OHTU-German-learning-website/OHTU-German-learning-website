@@ -42,7 +42,6 @@ export default function GrammarPage() {
                 </Link>
                 {topic.exercises
                   .filter((_, j) => {
-                    console.log(grammar[i] || j < 3);
                     return grammar[i] || j < 3;
                   })
                   .map((exercise, exIndex) => (
