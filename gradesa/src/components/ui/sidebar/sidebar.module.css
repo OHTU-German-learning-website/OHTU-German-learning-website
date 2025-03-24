@@ -8,7 +8,7 @@
 }
 
 .sidebar {
-  width: 300px;
+  width: 240px;
   height: 100%;
   z-index: var(--z-10);
   flex-shrink: 0;
@@ -23,7 +23,7 @@
   display: flex;
   text-decoration: none;
   flex-direction: column;
-  font-size: var(--font-xl);
+  font-size: var(--font-lg);
   font-weight: bold;
   padding: var(--u-sm) var(--u-md);
   color: var(--fg1);
@@ -52,7 +52,7 @@
 
 .sublink {
   text-decoration: none;
-  font-size: var(--font-lg);
+  font-size: var(--font-md);
   font-weight: normal;
   padding: var(--u-sm) var(--u-md);
   border-radius: var(--radius-md);
