@@ -17,7 +17,7 @@ export async function POST(req) {
     // Initialize MailerSend securely
     const mailersend = new MailerSend({
       apiKey:
-        "mlsn.9348398e42d0ba656a212815a4317bdd7f59455df2e1e3fa6343e94adad07354", // Use environment variable
+        "mlsn.9348398e42d0ba656a212815a4317bdd7f59455df2e1e3fa6343e94adad07354", // pitää muuttaa enviks
     });
 
     // Set up sender (must be from a verified domain)
