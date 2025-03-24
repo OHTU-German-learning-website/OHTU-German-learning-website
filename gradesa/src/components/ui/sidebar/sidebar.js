@@ -5,27 +5,79 @@ import styles from "./sidebar.module.css";
 import { usePathname } from "next/navigation";
 import { chapters } from "@/app/resources/[chapter]/page";
 import { Column } from "../layout/container";
+import { Dropdown } from "../dropdown";
+import { useUser, userOptions } from "@/shared/user.context";
+import { Button } from "../button";
+
 const Sidebar = () => {
-  const pathname = usePathname();
+  const { auth, setActAs } = useUser();
+
+  const handleActAsChange = (actAs) => {
+    setActAs(actAs);
+  };
+  const renderSidebar = () => {
+    if (auth.actAs.value === "admin") {
+      return <AdminSideBar />;
+    }
+    return <StudentSideBar />;
+  };
   return (
     <nav className={styles.sidebar}>
       <Column gap="xl">
-        <SidebarGroup title="Lernen" sublinks={chapters} />
-        <Link
-          className={[
-            styles.sidebarLink,
-            pathname === "/vocabulary" ? styles.active : "",
-          ].join(" ")}
-          href="/vocabulary"
+        <Dropdown
+          options={userOptions}
+          onSelect={handleActAsChange}
+          value={auth.actAs}
         >
-          Vokabeln
-        </Link>
+          <Button variant="outline">{auth.actAs.label}</Button>
+        </Dropdown>
+        {renderSidebar()}
       </Column>
     </nav>
   );
 };
 
-function SidebarGroup({ title, sublinks }) {
+function StudentSideBar() {
+  const pathname = usePathname();
+
+  return (
+    <>
+      <SidebarGroup title="Lernen" sublinks={chapters} topLink="/resources" />
+      <Link
+        className={[
+          styles.sidebarLink,
+          pathname === "/vocabulary" ? styles.active : "",
+        ].join(" ")}
+        href="/vocabulary"
+      >
+        Vokabeln
+      </Link>
+    </>
+  );
+}
+
+const adminSidebarLinks = [
+  {
+    title: "Übungen erstellen",
+    linkLabel: "Übungen erstellen",
+    link: "/admin/create-exercise",
+  },
+];
+
+function AdminSideBar() {
+  const pathname = usePathname();
+  return (
+    <>
+      <SidebarGroup
+        title="Admin"
+        sublinks={adminSidebarLinks}
+        topLink="/admin"
+      />
+    </>
+  );
+}
+
+function SidebarGroup({ title, sublinks, topLink }) {
   const pathname = usePathname();
   const renderSublinks = () => {
     return sublinks.map((sublink) => (
@@ -37,7 +89,7 @@ function SidebarGroup({ title, sublinks }) {
         key={sublink.id}
         href={sublink.link}
       >
-        Kapitel {sublink.id}
+        {sublink.linkLabel}
       </Link>
     ));
   };
@@ -45,10 +97,10 @@ function SidebarGroup({ title, sublinks }) {
   return (
     <div className={styles.sidebarGroup}>
       <Link
-        href="/resources"
+        href={topLink}
         className={[
           styles.sidebarLink,
-          pathname === "/resources" ? styles.active : "",
+          pathname === topLink ? styles.active : "",
         ].join(" ")}
       >
         {title}
