@@ -2,6 +2,7 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { getConfig, isTest } from "../../backend/config";
+import { AUTH_COOKIE_NAME } from "@/shared/const";
 
 const { sessionSecret, sessionTTL } = getConfig();
 const encodedKey = new TextEncoder().encode(sessionSecret);
@@ -36,7 +37,7 @@ export async function createSession(userId) {
   }
   const cookieStore = await cookies();
 
-  cookieStore.set("session", session, {
+  cookieStore.set(AUTH_COOKIE_NAME, session, {
     httpOnly: true,
     secure: true,
     expires: expiresAt,
@@ -47,7 +48,7 @@ export async function createSession(userId) {
 
 export async function checkSession() {
   const cookieStore = await cookies();
-  const session = cookieStore.get("session");
+  const session = cookieStore.get(AUTH_COOKIE_NAME);
   if (session) {
     const payload = await verifySession(session.value);
     if (payload) {
@@ -59,5 +60,5 @@ export async function checkSession() {
 
 export async function deleteSession() {
   const cookieStore = await cookies();
-  cookieStore.delete("session");
+  cookieStore.delete(AUTH_COOKIE_NAME);
 }

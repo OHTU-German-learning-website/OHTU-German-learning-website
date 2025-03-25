@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
+import { AUTH_COOKIE_NAME } from "@/shared/const";
 
 // Paths only logged-in users can access
-const protectedPaths = ["/lessons/exercises"];
+const authRequired = ["/lessons/exercises"];
 
 // Restricted paths logged-in users cannot access
-const restrictedPaths = ["/auth/login", "/auth/register"];
+const unauthRequired = ["/auth/login", "/auth/register"];
 
-const AUTH_COOKIE_NAME = "session";
+//const AUTH_COOKIE_NAME = "session";
 
 export async function middleware(request) {
   const { pathname } = request.nextUrl;
@@ -14,14 +15,14 @@ export async function middleware(request) {
   const hasCookie = !!sessionCookie && sessionCookie.value !== "";
 
   // Redirect logged-out users trying to access protected paths
-  if (!hasCookie && protectedPaths.some((path) => pathname.startsWith(path))) {
+  if (!hasCookie && authRequired.some((path) => pathname.startsWith(path))) {
     const loginUrl = new URL("/auth/login", request.url);
     loginUrl.searchParams.set("redirect", pathname); // Add the original path as a query parameter
     return NextResponse.redirect(loginUrl);
   }
 
   // Redirect logged-in users trying to access the restricted paths
-  if (hasCookie && restrictedPaths.includes(pathname)) {
+  if (hasCookie && unauthRequired.includes(pathname)) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
@@ -32,6 +33,11 @@ export async function middleware(request) {
 }
 
 // All the routes where the middleware should run
+//export const config = {
+//  matcher: ["/auth/login", "/auth/register", "/lessons/exercises/:path*"],
+//};
 export const config = {
-  matcher: ["/auth/login", "/auth/register", "/lessons/exercises/:path*"],
+  matcher: [
+    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
+  ],
 };

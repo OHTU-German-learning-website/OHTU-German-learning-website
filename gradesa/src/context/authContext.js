@@ -20,8 +20,18 @@ export const AuthProvider = ({ children }) => {
     checkUserSession();
   }, []);
 
+  const logout = async () => {
+    const response = await fetch("/api/auth/logout", {
+      method: "POST",
+    });
+    if (response.ok) {
+      setIsLoggedIn(false);
+      window.location.reload();
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
+    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, logout }}>
       {children}
     </AuthContext.Provider>
   );

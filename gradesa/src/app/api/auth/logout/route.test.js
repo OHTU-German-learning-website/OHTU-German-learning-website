@@ -13,7 +13,7 @@ describe("POST /api/auth/logout", () => {
     vi.clearAllMocks();
   });
 
-  it("should delete session and redirect to login page", async () => {
+  it("should delete session", async () => {
     const response = await POST();
     const setCookieHeader = response.headers.get("Set-Cookie");
 
