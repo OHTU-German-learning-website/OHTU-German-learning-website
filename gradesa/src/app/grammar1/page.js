@@ -15,7 +15,7 @@ export default function grammar1() {
             <Container fontSize="sm" p="xl">
               <Button variant="outline" size="lg" width="fit">
                 <Link href="/grammar1/communications">
-                  Kommunikationssituationen{" "}
+                  Kommunikationssituationen
                 </Link>
               </Button>
 
