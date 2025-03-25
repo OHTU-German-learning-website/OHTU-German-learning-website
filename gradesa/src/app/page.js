@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function home() {
   return (
@@ -13,8 +14,10 @@ export default function home() {
             einschließlich Artikel, Verbkonjugationen und grundlegender
             Satzstruktur.
           </p>
-          <Link href="/learning" className="cta-button">
-            Entdecke deine Lernstrategien{" "}
+          <Link href="/learning">
+            <Button variant="primary" size="lg" width="fit">
+              Entdecke deine Lernstrategien
+            </Button>
           </Link>
         </section>
 
@@ -22,8 +25,10 @@ export default function home() {
           <div className="feature-card">
             <h3>Lernplan</h3>
             <p>Finde die für dich passende Lernstrategie</p>
-            <Link href="/learning" className="cta-button">
-              Entdecke deine Lernstrategien{" "}
+            <Link href="/learning">
+              <Button variant="outline" width="fit">
+                Entdecke deine Lernstrategien
+              </Button>
             </Link>
           </div>
 
@@ -34,7 +39,7 @@ export default function home() {
               Sprechfähigkeiten mit interaktiven Lektionen.
             </p>
             <Link href="/grammar" className="cta-button">
-              Grammatik{" "}
+              Grammatik lernen
             </Link>
           </div>
         </div>

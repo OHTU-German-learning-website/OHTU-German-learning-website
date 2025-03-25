@@ -11,6 +11,9 @@
   background-color: var(--bg5);
   border: 1px solid var(--fg2);
   border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
   cursor: pointer;
   &:checked {
@@ -58,8 +61,6 @@
   justify-content: center;
   position: absolute;
   pointer-events: none;
-  top: 0;
-  left: 0;
 }
 
 .radioFieldset.sm {
