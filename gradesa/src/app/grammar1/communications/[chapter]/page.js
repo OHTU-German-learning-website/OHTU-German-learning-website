@@ -28,6 +28,11 @@ export default function Chapters() {
       {Chapter && (
         <>
           <h1>{Chapter.title}</h1>
+          <p>
+            Auf dieser Seite wird die Kommunikationssituation {Chapter.title}{" "}
+            erklärt.
+          </p>
+          <p>Folgende Grammatik-Themen sind damit verbunden: </p>
           <Chapter.content />
         </>
       )}
