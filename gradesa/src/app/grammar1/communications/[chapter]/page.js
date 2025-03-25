@@ -2,7 +2,7 @@
 
 import { Column, Container, Row } from "@/components/ui/layout/container";
 import Link from "next/link";
-import "../../resources/[chapter]/chapters.css";
+import "../../../resources/[chapter]/chapters.css";
 import layout from "@/shared/styles/layout.module.css";
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
