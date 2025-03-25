@@ -40,7 +40,7 @@ export default function home() {
             </p>
             <Link href="/grammar1">
               <Button variant="outline" width="fit">
-                Grammatik
+                Grammatik lernen
               </Button>
             </Link>
           </div>
