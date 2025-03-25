@@ -32,13 +32,14 @@ export const Area = memo(function Area() {
   const [availableWords, setAvailableWords] = useState([...allWords]);
   const [visibleWords, setVisibleWords] = useState([]);
 
-  const getRandomWords = (count) => {
+  const getRandomUnusedWords = (count) => {
+    if (availableWords.length === 0) return [];
     const shuffled = [...availableWords].sort(() => Math.random() - 0.5);
-    return shuffled.slice(0, count);
+    return shuffled.slice(0, Math.min(count, shuffled.length));
   };
 
   useEffect(() => {
-    setVisibleWords(getRandomWords(5));
+    setVisibleWords(getRandomUnusedWords(5));
   }, []);
 
   function isDropped(boxName) {
@@ -89,13 +90,22 @@ export const Area = memo(function Area() {
           (word) => word.name !== name
         );
 
-        const updatedVisibleWords = visibleWords.map((word) =>
-          word.name === name && updatedAvailableWords.length > 0
-            ? updatedAvailableWords[
-                Math.floor(Math.random() * updatedAvailableWords.length)
-              ]
-            : word
+        const remainingVisibleWords = visibleWords.filter(
+          (word) => word.name !== name
         );
+
+        let updatedVisibleWords = [...remainingVisibleWords];
+        if (updatedAvailableWords.length > 0) {
+          const newWord =
+            updatedAvailableWords[
+              Math.floor(Math.random() * updatedAvailableWords.length)
+            ];
+          if (
+            !remainingVisibleWords.find((word) => word.name === newWord.name)
+          ) {
+            updatedVisibleWords = [...remainingVisibleWords, newWord];
+          }
+        }
 
         setDroppedBoxNames(updatedDroppedBoxNames);
         setDustbins(updatedDustbins);
@@ -115,7 +125,7 @@ export const Area = memo(function Area() {
     setDroppedBoxNames([]);
     setIsExerciseComplete(false);
     setAvailableWords([...allWords]);
-    setVisibleWords(getRandomWords(5));
+    setVisibleWords(getRandomUnusedWords(5));
   };
 
   return (
