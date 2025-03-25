@@ -55,6 +55,5 @@
 .dropped-item {
   padding: var(--u-md);
   background-color: var(--fg3);
-  color: var(--secondary1);
   border-radius: var(--radius-sm);
 }

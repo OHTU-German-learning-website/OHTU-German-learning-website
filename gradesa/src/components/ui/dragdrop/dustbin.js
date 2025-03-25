@@ -1,5 +1,6 @@
 import { memo } from "react";
 import { useDrop } from "react-dnd";
+import { ItemColors } from "@/app/lessons/exercises/dragdrop/itemtypes";
 import { dustbin } from "./dragdrop.css";
 
 export const Dustbin = memo(function Dustbin({ accept, droppedItems, onDrop }) {
@@ -30,7 +31,11 @@ export const Dustbin = memo(function Dustbin({ accept, droppedItems, onDrop }) {
       {droppedItems && droppedItems.length > 0 && (
         <div className="dropped-items">
           {droppedItems.map((item, index) => (
-            <div key={`${item.name}-${index}`} className="dropped-item">
+            <div
+              key={`${item.name}-${index}`}
+              className="dropped-item"
+              style={{ color: ItemColors[accept[0]] }}
+            >
               {item.name}
             </div>
           ))}
