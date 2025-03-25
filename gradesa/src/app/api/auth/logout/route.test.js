@@ -4,7 +4,9 @@ import { POST } from "./route";
 import { deleteSession } from "@/backend/auth/session";
 
 vi.mock("@/backend/auth/session", () => ({
-  deleteSession: vi.fn().mockResolvedValue(undefined),
+  deleteSession: vi.fn().mockImplementation(() => {
+    return;
+  }),
 }));
 
 describe("POST /api/auth/logout", () => {
@@ -20,6 +22,6 @@ describe("POST /api/auth/logout", () => {
     expect(deleteSession).toHaveBeenCalled();
     expect(response).toBeInstanceOf(NextResponse);
     expect(response.status).toBe(200);
-    expect(setCookieHeader).toContain("session=; Max-Age=0");
+    expect(setCookieHeader).toBeNull();
   });
 });

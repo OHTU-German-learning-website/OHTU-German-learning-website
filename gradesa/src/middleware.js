@@ -7,8 +7,6 @@ const authRequired = ["/lessons/exercises"];
 // Restricted paths logged-in users cannot access
 const unauthRequired = ["/auth/login", "/auth/register"];
 
-//const AUTH_COOKIE_NAME = "session";
-
 export async function middleware(request) {
   const { pathname } = request.nextUrl;
   const sessionCookie = request.cookies.get(AUTH_COOKIE_NAME);
@@ -32,10 +30,6 @@ export async function middleware(request) {
   return response;
 }
 
-// All the routes where the middleware should run
-//export const config = {
-//  matcher: ["/auth/login", "/auth/register", "/lessons/exercises/:path*"],
-//};
 export const config = {
   matcher: [
     "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
