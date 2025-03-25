@@ -90,7 +90,7 @@ const WordSelectionExercise = ({
       <br />
 
       <Container>
-        {allWords.map((word, index) => (
+        {allWords?.map((word, index) => (
           <Button
             key={index}
             onClick={() => handleWordClick(word)}

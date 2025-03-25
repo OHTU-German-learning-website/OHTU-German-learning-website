@@ -1,8 +1,9 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import WordSelectionExercise from "@/components/ui/click/click.js";
 import { Button } from "@/components/ui/button";
+import useQuery from "@/shared/hooks/useQuery";
 
 // This would typically come from an API or database
 const getDummyExercise = (id) => {
@@ -65,22 +66,43 @@ const getDummyExercise = (id) => {
 
 export default function StudentExercisePage() {
   const router = useRouter();
-  const id = router.query;
+  const [error, setError] = useState(null);
+  const [exercise, setExercise] = useState(null);
+  const [id, setId] = useState(null);
 
-  // In a real application, you would fetch the exercise data from an API
-  const exercise = getDummyExercise(id);
+  useEffect(() => {
+    const fetchId = async () => {
+      if (!router.isReady) return;
 
-  if (!exercise) {
-    return <div>Übung wird geladen...</div>;
+      const { id } = router.query;
+      console.log(id);
+      setId(id);
+    };
+
+    fetchId();
+  }, [router.isReady, router.query]);
+
+  const response = useQuery(`/exercises/click/${id}`);
+
+  (async () => {
+    const exercise = await response.data[0];
+    setExercise(exercise);
+  })();
+
+  if (error) {
+    return <div>{error}</div>;
   }
 
+  if (!exercise) {
+    return <div>Keine Übung gefunden.</div>;
+  }
   return (
     <div>
       <WordSelectionExercise
         title={exercise.title}
-        targetCategory={exercise.targetCategory}
-        targetWords={exercise.targetWords}
-        allWords={exercise.allWords}
+        targetCategory={exercise.category}
+        targetWords={exercise.target_words}
+        allWords={exercise.all_words}
       />
 
       <br />
