@@ -1,4 +1,4 @@
-import { memo, useCallback, useState } from "react";
+import { memo, useCallback, useState, useEffect } from "react";
 import { ItemTypes } from "../../../app/lessons/exercises/dragdrop/itemtypes.js";
 import { WordBox } from "./wordbox.js";
 import { Dustbin } from "./dustbin.js";
@@ -10,7 +10,7 @@ export const Area = memo(function Area() {
     { accepts: [ItemTypes.DIE], droppedItems: [] },
     { accepts: [ItemTypes.DAS], droppedItems: [] },
   ];
-  const initialBoxes = [
+  const allWords = [
     { name: "Kurs", type: ItemTypes.DER },
     { name: "Elefant", type: ItemTypes.DER },
     { name: "Hund", type: ItemTypes.DER },
@@ -27,9 +27,19 @@ export const Area = memo(function Area() {
   ];
 
   const [dustbins, setDustbins] = useState(initialDustbins);
-  const [boxes] = useState(initialBoxes);
   const [droppedBoxNames, setDroppedBoxNames] = useState([]);
   const [isExerciseComplete, setIsExerciseComplete] = useState(false);
+  const [availableWords, setAvailableWords] = useState([...allWords]);
+  const [visibleWords, setVisibleWords] = useState([]);
+
+  const getRandomWords = (count) => {
+    const shuffled = [...availableWords].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, count);
+  };
+
+  useEffect(() => {
+    setVisibleWords(getRandomWords(5));
+  }, []);
 
   function isDropped(boxName) {
     return droppedBoxNames.indexOf(boxName) > -1;
@@ -41,7 +51,7 @@ export const Area = memo(function Area() {
       0
     );
 
-    const allBoxesPlaced = totalDroppedItems === initialBoxes.length;
+    const allBoxesPlaced = totalDroppedItems === allWords.length;
 
     const allItemsCorrect = updatedDustbins.every((dustbin) =>
       dustbin.droppedItems.every((item) => item.type === dustbin.accepts[0])
@@ -49,7 +59,7 @@ export const Area = memo(function Area() {
 
     console.log("Exercise complete check:", {
       totalDroppedItems,
-      totalBoxes: initialBoxes.length,
+      totalBoxes: allWords.length,
       allBoxesPlaced,
       allItemsCorrect,
     });
@@ -75,21 +85,37 @@ export const Area = memo(function Area() {
 
         console.log("Updated dustbin:", updatedDustbins[index]);
 
+        const updatedAvailableWords = availableWords.filter(
+          (word) => word.name !== name
+        );
+
+        const updatedVisibleWords = visibleWords.map((word) =>
+          word.name === name && updatedAvailableWords.length > 0
+            ? updatedAvailableWords[
+                Math.floor(Math.random() * updatedAvailableWords.length)
+              ]
+            : word
+        );
+
         setDroppedBoxNames(updatedDroppedBoxNames);
         setDustbins(updatedDustbins);
+        setAvailableWords(updatedAvailableWords);
+        setVisibleWords(updatedVisibleWords);
 
         const isComplete = checkExerciseComplete(updatedDustbins);
         console.log("Setting exercise complete:", isComplete);
         setIsExerciseComplete(isComplete);
       }
     },
-    [droppedBoxNames, dustbins]
+    [droppedBoxNames, dustbins, availableWords, visibleWords]
   );
 
   const reset = () => {
     setDustbins(initialDustbins);
     setDroppedBoxNames([]);
     setIsExerciseComplete(false);
+    setAvailableWords([...allWords]);
+    setVisibleWords(getRandomWords(5));
   };
 
   return (
@@ -102,12 +128,12 @@ export const Area = memo(function Area() {
           gap: "var(--u-md)",
         }}
       >
-        {boxes.map(({ name, type }, index) => (
+        {visibleWords.map(({ name, type }, index) => (
           <WordBox
             name={name}
             type={type}
             isDropped={isDropped(name)}
-            key={index}
+            key={`${name}-${index}`}
           />
         ))}
       </div>
