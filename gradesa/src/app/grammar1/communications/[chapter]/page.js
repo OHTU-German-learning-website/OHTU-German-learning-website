@@ -39,16 +39,12 @@ export default function Chapters() {
             </Link>
           </Container>
         )}
-        {!!nextChapter ? (
+        {!!nextChapter && (
           <Container ml="auto">
             <Link href={nextChapter.link}>
               <Button>Weiter</Button>
             </Link>
           </Container>
-        ) : (
-          <Link href="/learning">
-            <Button>Starte den Test</Button>
-          </Link>
         )}
       </Row>
     </Column>
@@ -298,7 +294,7 @@ function Chapter12() {
   return (
     <Column className="chapter-content">
       <ul>
-        Futur I<li>Vergangenheitstempora, auch (hyster.) Präsens</li>
+        <li>Vergangenheitstempora, auch (hyster.) Präsens</li>
         <li>Temporaladverbien</li>
       </ul>
     </Column>
