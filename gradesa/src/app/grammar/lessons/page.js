@@ -30,7 +30,7 @@ export default function LessonsPage() {
 
   return (
     <div className="lessons-container">
-      <h1>Übungen</h1>
+      <h1>Themen der Grammatik</h1>
       {initialGrammarTopics.map((topic, i) => (
         <div className="flex-parent-element" key={`${topic.title}-${i}`}>
           <div className="flex-child-element">
