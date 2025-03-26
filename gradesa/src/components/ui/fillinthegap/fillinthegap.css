@@ -1,0 +1,36 @@
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--u-md);
+    }
+  
+.task-title {
+    font-size: var(--font-xl);
+    margin-bottom: 1.5rem;
+    }
+
+.task-sentence {
+    font-size: var(--font-lg);
+    margin-bottom: 1.5rem;
+    }
+  
+button {
+    color: var(--fg1);
+    padding: var(--u-md);
+    font-size: var(--font-lg);
+    }
+  
+.result {
+    font-size: var(--font-lg);
+    margin-top: 1.5rem;
+    }
+  
+.wunderbar {
+    color: var(--green6);
+    font-size: var(--font-2xl);
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    }

@@ -4,7 +4,7 @@
   font-size: var(--font-2xl);
   font-weight: bold;
   margin: 0 12px;
-  color: var(--primary3);
+  color: var(--fg1);
 }
 
 .sidebar {
@@ -15,13 +15,65 @@
   padding: 36px 24px;
   display: flex;
   flex-direction: column;
-  background-color: var(--bg3);
+  background-color: var(--bg2);
   gap: var(--u-3xl);
 }
 
-.sidebarLinks {
+.sidebarLink {
+  display: flex;
+  text-decoration: none;
+  flex-direction: column;
+  font-size: var(--font-xl);
+  font-weight: bold;
+  padding: var(--u-sm) var(--u-md);
+  color: var(--fg1);
+  border-radius: var(--radius-md);
+  &:visited {
+    color: var(--fg1);
+  }
+  &:hover {
+    color: var(--fg2);
+    background-color: var(--bg3);
+  }
+  &.active {
+    color: var(--fg2);
+    background-color: var(--bg3);
+  }
+}
+
+.sublinkContainer {
   display: flex;
   flex-direction: column;
+  gap: var(--u-md);
+  margin-left: 12px;
+  padding-left: 6px;
+  border-left: 1px solid var(--fg1);
+}
+
+.sublink {
+  text-decoration: none;
+  font-size: var(--font-lg);
+  font-weight: normal;
+  padding: var(--u-sm) var(--u-md);
+  border-radius: var(--radius-md);
+  color: var(--fg1);
+  &:visited {
+    color: var(--fg1);
+  }
+  &.active {
+    color: var(--fg2);
+    background-color: var(--bg3);
+  }
+  &:hover {
+    color: var(--fg2);
+    background-color: var(--bg3);
+  }
+}
+
+.sidebarGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-md);
 }
 
 .navItem {

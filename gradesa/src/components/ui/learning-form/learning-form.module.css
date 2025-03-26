@@ -4,11 +4,13 @@
   flex-grow: 1;
   gap: var(--u-xl);
   overflow: hidden;
+  color: var(--fg2);
 }
 
 .learningFormHeader {
   font-size: var(--font-2xl);
   font-weight: bold;
+  color: var(--fg1);
 }
 
 .learningFormDescription {
@@ -69,6 +71,7 @@
 .stepTitle {
   font-size: var(--font-lg);
   font-weight: bold;
+  color: var(--fg1);
 }
 
 .questionContainer {

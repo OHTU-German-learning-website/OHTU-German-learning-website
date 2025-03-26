@@ -1,22 +1,60 @@
 .wordbox {
     border: var(--radius-2xs) dashed;
-    background-color: var(--fg8);
+    background-color: var(--fg3);
+    color: var(--secondary1);
     padding: var(--u-md);
-    margin-right: var(--u-md);
-    margin-bottom: var(--u-xl);
+    margin-right: var(--u-sm);
+    margin-bottom: var(--u-sm);
     cursor: move;
-    float: left;
 }
 
 .dustbin {
-    height: 12rem;
+    min-height: 12rem;
     width: 12rem;
-    margin-right: 1.5rem;
-    margin-bottom: 1.5rem;
+    margin-right: var(--u-xl);
+    margin-bottom: var(--u-xl);
+    margin-top: var(--u-xl);
     color: var(--fg3);
     font-size: var(--font-lg);
     padding: var(--u-lg);
     text-align: center;
     line-height: normal;
     float: left;
+}
+
+.success-message {
+    width: 50%;
+    background-color: var(--fg3);
+    color: var(--secondary1);
+    padding: var(--u-lg);
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: var(--u-xl);
+    border-radius: var(--radius-xs);
+    box-shadow: 0.5px 0.5px 5px var(--secondary2);
+    text-align: center;
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+}
+}
+
+.dropped-items {
+  margin-top: var(--u-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dropped-item {
+  padding: var(--u-md);
+  background-color: var(--fg3);
+  color: var(--secondary1);
+  border-radius: var(--radius-sm);
 }
