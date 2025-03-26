@@ -6,35 +6,96 @@ import { Button } from "@/components/ui/button";
 const initialGrammarTopics = [
   {
     title: "Das Adjektiv",
-    exercises: ["Übung 1", "Übung 2", "Übung 3", "Übung 4", "Übung 5"],
+    subtopics: [
+      "prädikative und adverbiale Adjektive",
+      "attributive Adjektive",
+      "Vergleiche, Komparation und Graduierung",
+      "die Rektion der Adjektive",
+      "die Wortbildung der Adjektive",
+    ],
   },
   {
     title: "Das Adverb",
-    exercises: ["Übung 1", "Übung 2", "Übung 3", "Übung 4", "Übung 5"],
+    subtopics: [
+      "hin und her",
+      "Pronominaladverbien",
+      "Konjunktionaladverbien",
+      "die Unterscheidung zu anderen Wortarten (Konjunktion, prädikatives Attribut, Modalwort, Partikel)",
+    ],
   },
   {
     title: "Das Artikelwort",
-    exercises: ["Übung 1", "Übung 2", "Übung 3", "Übung 4", "Übung 5"],
+    subtopics: [
+      "Formen von Artikelwörtern",
+      "der Gebrauch von bestimmtem, unbestimmtem und Nullartikel",
+      "der Gebrauch anderer Artikelwörter",
+    ],
   },
   {
     title: "Das Pronomen",
-    exercises: ["Übung 1", "Übung 2", "Übung 3", "Übung 4", "Übung 5"],
+    subtopics: [
+      "das Personalpronomen",
+      "das Demonstrativpronomen",
+      "das Possessivpronomen",
+      "das Relativpronomen",
+      "das Pronomen es",
+    ],
   },
   {
     title: "Das Substantiv",
-    exercises: ["Übung 1", "Übung 2", "Übung 3", "Übung 4", "Übung 5"],
+    subtopics: [
+      "Genuszuordnung",
+      "Pluralbildung",
+      "die Kasusformen und ihre Bildung: Nominativ, Akkusativ, Dativ, Genitiv",
+      "besondere Namen (geographische, Nationalitäten usw.)",
+      "Homonyme",
+    ],
   },
   {
     title: "Das Verb",
-    exercises: ["Übung 1", "Übung 2", "Übung 3", "Übung 4", "Übung 5"],
+    subtopics: [
+      "Die Tempora",
+      "Der Numerus",
+      "die Kategorien des Verbs",
+      "trennbare Verben",
+      "Modalverben",
+      "reflexive Verben",
+      "der Modus",
+      "das Genus Verbi",
+      "die Rektion der Verben",
+      "Infinitivformen",
+      "das Funktionsverbgefüge",
+    ],
   },
   {
     title: "Die Präposition",
-    exercises: ["Übung 1", "Übung 2", "Übung 3", "Übung 4", "Übung 5"],
+    subtopics: [
+      "mit Nominativ",
+      "mit Akkusativ",
+      "mit Dativ",
+      "mit Genitiv",
+      "Wechselpräpositionen",
+      "Lokalpräpositionen",
+    ],
   },
   {
     title: "Die Syntax",
-    exercises: ["Übung 1", "Übung 2", "Übung 3", "Übung 4", "Übung 5"],
+    subtopics: [
+      "Konjunktionalsätze",
+      "Konditionalsätze (real/irreal mit Konjunktiv II und würde)",
+      "Kausalsätze",
+      "Konsekutivsätze",
+      "Konzessivsätze",
+      "Lokalsätze",
+      "Temporalsätze (mit Chronologie in Prozessbeschreibungen)",
+      "indirekte Fragesätze",
+      "Relativsätze",
+      "die Satzklammer",
+      "uneingeleitete Nebensätze",
+      "Infinitivkonstruktionen",
+      "Konjunktionen und Konjunktionaladverbien",
+      "die Satzperiode",
+    ],
   },
 ];
 
@@ -60,21 +121,18 @@ export default function LessonsPage() {
             <div className="flex-child-element">
               <h2>{topic.title}</h2>
               <ul>
-                {topic.exercises
+                {/* The topics should link to the respective pages (WIP) */}
+                {topic.subtopics
                   .filter((_, j) => {
                     console.log(grammar[i] || j < 3);
                     return grammar[i] || j < 3;
                   })
-                  .map((exercise, exIndex) => (
-                    <li key={`${i}-exercise-${exIndex}`}>
-                      {/* All links go to the same page -> WIP (need DB) */}
-                      <Link href={`/lessons/exercises`}>
-                        <button className="exercise-link">{exercise}</button>
-                      </Link>
-                    </li>
+                  .map((subtopic, subIndex) => (
+                    <li key={`${i}-subtopic-${subIndex}`}>{subtopic}</li>
                   ))}
               </ul>
               <div className="show-list">
+                {/* This button should not be visible if there are 3 or less subtopics */}
                 <button
                   className="show-more-link"
                   onClick={(e) => toggleShowMore(e, i)}
