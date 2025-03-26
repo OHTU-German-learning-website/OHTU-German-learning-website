@@ -72,7 +72,11 @@ export default function StudentExercisePage() {
   const { click_id } = params;
 
   const response = useQuery(`/exercises/click/${click_id}`);
-  console.log(response);
+
+  (async () => {
+    const exercise = await response.data[0];
+    setExercise(exercise);
+  })();
 
   if (error) {
     return <div>{error}</div>;
