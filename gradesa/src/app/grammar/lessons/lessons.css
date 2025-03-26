@@ -71,3 +71,9 @@
   width: 100% !important;
   height: 150px !important;
 }
+
+.lessons-title {
+  font-size: var(--font-lg);
+  font-weight: bold;
+  color: var(--fg2);
+}
