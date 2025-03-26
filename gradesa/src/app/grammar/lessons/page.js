@@ -4,19 +4,35 @@ import Link from "next/link";
 
 const initialGrammarTopics = [
   {
-    title: "Grammatik 1",
+    title: "Das Adjektiv",
     exercises: ["Übung 1", "Übung 2", "Übung 3", "Übung 4", "Übung 5"],
   },
   {
-    title: "Grammatik 2",
+    title: "Das Adverb",
     exercises: ["Übung 1", "Übung 2", "Übung 3", "Übung 4", "Übung 5"],
   },
   {
-    title: "Grammatik 3",
+    title: "Das Artikelwort",
     exercises: ["Übung 1", "Übung 2", "Übung 3", "Übung 4", "Übung 5"],
   },
   {
-    title: "Grammatik 4",
+    title: "Das Pronomen",
+    exercises: ["Übung 1", "Übung 2", "Übung 3", "Übung 4", "Übung 5"],
+  },
+  {
+    title: "Das Substantiv",
+    exercises: ["Übung 1", "Übung 2", "Übung 3", "Übung 4", "Übung 5"],
+  },
+  {
+    title: "Das Verb",
+    exercises: ["Übung 1", "Übung 2", "Übung 3", "Übung 4", "Übung 5"],
+  },
+  {
+    title: "Die Präposition",
+    exercises: ["Übung 1", "Übung 2", "Übung 3", "Übung 4", "Übung 5"],
+  },
+  {
+    title: "Die Syntax",
     exercises: ["Übung 1", "Übung 2", "Übung 3", "Übung 4", "Übung 5"],
   },
 ];
