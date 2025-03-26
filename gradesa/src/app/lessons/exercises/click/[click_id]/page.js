@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, use } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import WordSelectionExercise from "@/components/ui/click/click.js";
 import { Button } from "@/components/ui/button";
 import useQuery from "@/shared/hooks/useQuery";
@@ -65,29 +65,14 @@ const getDummyExercise = (id) => {
 };
 
 export default function StudentExercisePage() {
-  const router = useRouter();
+  const params = useParams();
   const [error, setError] = useState(null);
   const [exercise, setExercise] = useState(null);
-  const [id, setId] = useState(null);
+  console.log(params);
+  const { click_id } = params;
 
-  useEffect(() => {
-    const fetchId = async () => {
-      if (!router.isReady) return;
-
-      const { id } = router.query;
-      console.log(id);
-      setId(id);
-    };
-
-    fetchId();
-  }, [router.isReady, router.query]);
-
-  const response = useQuery(`/exercises/click/${id}`);
-
-  (async () => {
-    const exercise = await response.data[0];
-    setExercise(exercise);
-  })();
+  const response = useQuery(`/exercises/click/${click_id}`);
+  console.log(response);
 
   if (error) {
     return <div>{error}</div>;
