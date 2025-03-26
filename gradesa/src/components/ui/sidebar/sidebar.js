@@ -14,15 +14,6 @@ const Sidebar = () => {
         <Link className={styles.sidebarLink} href="/grammar/communications">
           Kommunikations-situationen
         </Link>
-        <Link
-          className={[
-            styles.sidebarLink,
-            pathname === "/vocabulary" ? styles.active : "",
-          ].join(" ")}
-          href="/vocabulary"
-        >
-          Vokabeln
-        </Link>
       </Column>
     </nav>
   );
