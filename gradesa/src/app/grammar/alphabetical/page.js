@@ -68,7 +68,7 @@ export const chapters = [
   },
   {
     id: "13",
-    title: "indirekte Fragesätze",
+    title: "Indirekte Fragesätze",
     link: "/grammar/lessons/indirekte-fragesatze",
   },
   {

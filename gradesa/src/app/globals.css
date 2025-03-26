@@ -381,7 +381,7 @@ button.back-button {
   }
 }
 
-a {
+a:link {
   color: var(--primary9);
 }
 
