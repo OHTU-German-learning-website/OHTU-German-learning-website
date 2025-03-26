@@ -129,12 +129,12 @@ export default function LessonsPage() {
 
   return (
     <div className="lessons-title">
-      <h1>Themen der Grammatik</h1>
-      <Button>
+      <Button variant="fit">
         <Link href="/grammar/alphabetical">
           Grammatik in alphabetischer Reihenfolge
         </Link>
       </Button>
+      <h1>Themen der Grammatik</h1>
 
       <div className="lessons-container">
         {initialGrammarTopics.map((topic, i) => (

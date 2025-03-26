@@ -226,7 +226,7 @@ export const chapters = [
 export default function Chapter() {
   return (
     <Column gap="md">
-      <Button>
+      <Button variant="fit">
         <Link href="/grammar/lessons">Themen der Grammatik</Link>
       </Button>
       <h1>Grammatik in alphabetischer Reihenfolge</h1>

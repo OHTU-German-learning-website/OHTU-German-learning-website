@@ -55,6 +55,8 @@
 
 .baseButton.fit {
   width: fit-content;
+  background-color: var(--primary1);
+  color: var(--fg1);
 }
 
 .baseButton.primary {
