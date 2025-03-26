@@ -9,217 +9,217 @@ export const chapters = [
   {
     id: "1",
     title: "Adjektivdeklination",
-    link: "/grammar/lessons/adjektivdeklination", //this is supposed to link to the grammar article page
+    link: "/grammar/themes/adjektivdeklination", //this is supposed to link to the grammar article page
   },
   {
     id: "2",
     title: "Adjektivkomparation",
-    link: "/grammar/lessons/adjektivkomparation",
+    link: "/grammar/themes/adjektivkomparation",
   },
   {
     id: "3",
     title: "Akkusativ",
-    link: "/grammar/lessons/akkusativ",
+    link: "/grammar/themes/akkusativ",
   },
   {
     id: "4",
     title: "Artikelverwendung",
-    link: "/grammar/lessons/artikelverwendung",
+    link: "/grammar/themes/artikelverwendung",
   },
   {
     id: "5",
     title: "Artikelwörter",
-    link: "/grammar/lessons/artikelwörter",
+    link: "/grammar/themes/artikelwörter",
   },
   {
     id: "6",
     title: "Dativ",
-    link: "/grammar/lessons/dativ",
+    link: "/grammar/themes/dativ",
   },
   {
     id: "7",
     title: "Dativ-Verben",
-    link: "/grammar/lessons/dativ-verben",
+    link: "/grammar/themes/dativ-verben",
   },
   {
     id: "8",
     title: "Funktionsverbgefüge",
-    link: "/grammar/lessons/funktionsverbgefüge",
+    link: "/grammar/themes/funktionsverbgefüge",
   },
   {
     id: "9",
     title: "Futur",
-    link: "/grammar/lessons/futur",
+    link: "/grammar/themes/futur",
   },
   {
     id: "10",
     title: "Genitiv",
-    link: "/grammar/lessons/genitiv",
+    link: "/grammar/themes/genitiv",
   },
   {
     id: "11",
     title: "Genuszuordnung",
-    link: "/grammar/lessons/genuszuordnung",
+    link: "/grammar/themes/genuszuordnung",
   },
   {
     id: "12",
     title: "Hilfsverben (Konjugation Präsens und Präteritum)",
-    link: "/grammar/lessons/hilfsverben",
+    link: "/grammar/themes/hilfsverben",
   },
   {
     id: "13",
     title: "Indirekte Fragesätze",
-    link: "/grammar/lessons/indirekte-fragesatze",
+    link: "/grammar/themes/indirekte-fragesatze",
   },
   {
     id: "14",
     title: "Infinitivkonstruktionen",
-    link: "/grammar/lessons/infinitivkonstruktionen",
+    link: "/grammar/themes/infinitivkonstruktionen",
   },
   {
     id: "15",
     title: "Kategorien des Verbs",
-    link: "/grammar/lessons/kategorien-des-verbs",
+    link: "/grammar/themes/kategorien-des-verbs",
   },
   {
     id: "16",
     title: "Kausalsätze",
-    link: "/grammar/lessons/kausalsatze",
+    link: "/grammar/themes/kausalsatze",
   },
   {
     id: "17",
     title: "Konditionalsätze (real/irreal mit Konjunktiv II und würde)",
-    link: "/grammar/lessons/konditionalsatze",
+    link: "/grammar/themes/konditionalsatze",
   },
   {
     id: "18",
     title: "Konjunktiv I Bildung",
-    link: "/grammar/lessons/konjunktiv-i-bildung",
+    link: "/grammar/themes/konjunktiv-i-bildung",
   },
   {
     id: "19",
     title: "Konjunktiv II Bildung",
-    link: "/grammar/lessons/konjunktiv-ii-bildung",
+    link: "/grammar/themes/konjunktiv-ii-bildung",
   },
   {
     id: "20",
     title: "Konjunktionalsätze",
-    link: "/grammar/lessons/konjunktionalsatze",
+    link: "/grammar/themes/konjunktionalsatze",
   },
   {
     id: "21",
     title: "Konsekutivsätze",
-    link: "/grammar/lessons/konsekutivsatze",
+    link: "/grammar/themes/konsekutivsatze",
   },
   {
     id: "22",
     title: "Konzessivsätze",
-    link: "/grammar/lessons/konzessivsatze",
+    link: "/grammar/themes/konzessivsatze",
   },
   {
     id: "23",
     title: "Lokalpräpositionen",
-    link: "/grammar/lessons/lokalprapositionen",
+    link: "/grammar/themes/lokalprapositionen",
   },
   {
     id: "24",
     title: "Lokalsätze",
-    link: "/grammar/lessons/lokalsatze",
+    link: "/grammar/themes/lokalsatze",
   },
   {
     id: "25",
     title: "Modalverben und subjektive Modalität",
-    link: "/grammar/lessons/modalverben",
+    link: "/grammar/themes/modalverben",
   },
   {
     id: "26",
     title: "Nebensätze (mit uneingeleiteten)",
-    link: "/grammar/lessons/nebensatze",
+    link: "/grammar/themes/nebensatze",
   },
   {
     id: "27",
     title: "Nominativ (mit Kopulaverben)",
-    link: "/grammar/lessons/nominativ",
+    link: "/grammar/themes/nominativ",
   },
   {
     id: "28",
     title: "Passiv",
-    link: "/grammar/lessons/passiv",
+    link: "/grammar/themes/passiv",
   },
   {
     id: "29",
     title: "Perfekt",
-    link: "/grammar/lessons/perfekt",
+    link: "/grammar/themes/perfekt",
   },
   {
     id: "30",
     title: "Pluralbildung der Substantive",
-    link: "/grammar/lessons/pluralbildung-der-substantive",
+    link: "/grammar/themes/pluralbildung-der-substantive",
   },
   {
     id: "31",
     title: "PQ",
-    link: "/grammar/lessons/pq",
+    link: "/grammar/themes/pq",
   },
   {
     id: "32",
     title: "Präpositionen (Rektion)",
-    link: "/grammar/lessons/prapositionen",
+    link: "/grammar/themes/prapositionen",
   },
   {
     id: "33",
     title: "Präsens",
-    link: "/grammar/lessons/prasens",
+    link: "/grammar/themes/prasens",
   },
   {
     id: "34",
     title: "Präteritum",
-    link: "/grammar/lessons/prateritum",
+    link: "/grammar/themes/prateritum",
   },
   {
     id: "35",
     title: "Pronomen es",
-    link: "/grammar/lessons/pronomen-es",
+    link: "/grammar/themes/pronomen-es",
   },
   {
     id: "36",
     title: "Pronomina",
-    link: "/grammar/lessons/pronomina",
+    link: "/grammar/themes/pronomina",
   },
   {
     id: "37",
     title: "Reflexive Verben",
-    link: "/grammar/lessons/reflexive-verben",
+    link: "/grammar/themes/reflexive-verben",
   },
   {
     id: "38",
     title: "Rektion der Verben",
-    link: "/grammar/lessons/rektion-der-verben",
+    link: "/grammar/themes/rektion-der-verben",
   },
   {
     id: "39",
     title: "Relativsätze",
-    link: "/grammar/lessons/relativsatze",
+    link: "/grammar/themes/relativsatze",
   },
   {
     id: "40",
     title: "Satzklammer",
-    link: "/grammar/lessons/satzklammer",
+    link: "/grammar/themes/satzklammer",
   },
   {
     id: "41",
     title: "Temporalsätze (mit Chronologie in Prozessbeschreibungen)",
-    link: "/grammar/lessons/temporalsatze",
+    link: "/grammar/themes/temporalsatze",
   },
   {
     id: "42",
     title: "Vergleiche",
-    link: "/grammar/lessons/vergleiche",
+    link: "/grammar/themes/vergleiche",
   },
   {
     id: "43",
     title: "Zusammengesetzte Verben (trennbar/untrennbar)",
-    link: "/grammar/lessons/zusammengesetzte-verben",
+    link: "/grammar/themes/zusammengesetzte-verben",
   },
 ];
 
@@ -227,7 +227,7 @@ export default function Chapter() {
   return (
     <Column gap="md">
       <Button variant="fit">
-        <Link href="/grammar/lessons">Themen der Grammatik</Link>
+        <Link href="/grammar/themes">Themen der Grammatik</Link>
       </Button>
       <h1>Grammatik in alphabetischer Reihenfolge</h1>
 

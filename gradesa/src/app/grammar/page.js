@@ -20,7 +20,7 @@ export default function grammar() {
               </Button>
 
               <Button variant="outline" size="lg" width="fit">
-                <Link href="/grammar/lessons">Themen der Grammatik</Link>
+                <Link href="/grammar/themes">Themen der Grammatik</Link>
               </Button>
             </Container>
           </Grid>

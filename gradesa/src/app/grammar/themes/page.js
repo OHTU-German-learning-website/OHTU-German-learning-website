@@ -120,7 +120,7 @@ const initialGrammarTopics = [
   },
 ];
 
-export default function LessonsPage() {
+export default function ThemesPage() {
   const [grammar, setGrammar] = useState(initialGrammarTopics.map(() => false));
 
   const toggleShowMore = (event, index) => {
@@ -128,7 +128,7 @@ export default function LessonsPage() {
   };
 
   return (
-    <div className="lessons-title">
+    <div className="themes-title">
       <Button variant="fit">
         <Link href="/grammar/alphabetical">
           Grammatik in alphabetischer Reihenfolge
