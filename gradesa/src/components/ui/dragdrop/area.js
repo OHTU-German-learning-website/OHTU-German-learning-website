@@ -129,8 +129,13 @@ export const Area = memo(function Area() {
     setDroppedBoxNames([]);
     setIsExerciseComplete(false);
     setAvailableWords([...allWords]);
-    setVisibleWords(getRandomUnusedWords(5));
   };
+
+  useEffect(() => {
+    if (availableWords.length === allWords.length) {
+      setVisibleWords(getRandomUnusedWords(5));
+    }
+  }, [availableWords]);
 
   return (
     <div>
