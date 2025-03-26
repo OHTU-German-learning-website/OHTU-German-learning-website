@@ -2,19 +2,11 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/context/authContext";
 
 export default function Home() {
-  const { isLoggedIn } = useAuth();
-
   return (
     <>
       <div className="container">
-        {isLoggedIn && (
-          <div>
-            <p>Sie sind angemeldet</p>
-          </div>
-        )}
         <section className="hero">
           <h1>Deutsch lerner</h1>
           <p>

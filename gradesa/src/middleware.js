@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { AUTH_COOKIE_NAME } from "@/shared/const";
 
 // Paths only logged-in users can access
-const authRequired = ["/lessons/exercises"];
+const authRequired = ["/grammar1/lessons/exercises"];
 
 // Restricted paths logged-in users cannot access
 const unauthRequired = ["/auth/login", "/auth/register"];
