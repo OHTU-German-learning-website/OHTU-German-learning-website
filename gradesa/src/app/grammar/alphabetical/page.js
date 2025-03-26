@@ -227,7 +227,7 @@ export default function Chapter() {
   return (
     <Column gap="md">
       <Button>
-        <Link href="/grammar/lessons">Lessons page</Link>
+        <Link href="/grammar/lessons">Themen der Grammatik</Link>
       </Button>
       <h1>Grammatik in alphabetischer Reihenfolge</h1>
 

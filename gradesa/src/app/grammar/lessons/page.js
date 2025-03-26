@@ -55,13 +55,13 @@ const initialGrammarTopics = [
   {
     title: "Das Verb",
     subtopics: [
-      "Die Tempora",
+      "die Tempora",
       "das Präsens",
       "das Perfekt",
       "das Präteritum",
       "das Plusquamperfekt",
       "das Futur I und II",
-      "Der Numerus",
+      "der Numerus",
       "die Konjugation",
       "schwache Verben",
       "starke und unregelmäßige Verben",
