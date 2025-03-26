@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Grid } from "@radix-ui/themes";
 import { Container } from "@/components/ui/layout/container";
 
-export default function grammar1() {
+export default function grammar() {
   return (
     <>
       <div className={styles.page}>
@@ -14,13 +14,13 @@ export default function grammar1() {
           <Grid columns="2" gap="3" width="auto">
             <Container fontSize="sm" p="xl">
               <Button variant="outline" size="lg" width="fit">
-                <Link href="/grammar1/communications">
+                <Link href="/grammar/communications">
                   Kommunikationssituationen
                 </Link>
               </Button>
 
               <Button variant="outline" size="lg" width="fit">
-                <Link href="/grammar1/lessons">Themen der Grammatik</Link>
+                <Link href="/grammar/lessons">Themen der Grammatik</Link>
               </Button>
             </Container>
           </Grid>

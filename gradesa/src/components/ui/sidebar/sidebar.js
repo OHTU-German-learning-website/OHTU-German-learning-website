@@ -11,7 +11,7 @@ const Sidebar = () => {
     <nav className={styles.sidebar}>
       <Column gap="xl">
         <SidebarGroup title="Lernen" sublinks={chapters} />
-        <Link className={styles.sidebarLink} href="/grammar1/communications">
+        <Link className={styles.sidebarLink} href="/grammar/communications">
           Kommunikations-situationen
         </Link>
         <Link
