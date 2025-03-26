@@ -24,9 +24,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <AuthProvider>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} ${styles.body}`}
-        >
+        <body>
           <Navbar />
           <div className={styles.sidebarMain}>
             <Sidebar />

@@ -59,6 +59,7 @@ export const layoutPropsRegistry = {
   fontSize: "fontSize",
   borderWidth: "borderWidth",
   gap: "gap",
+  bg: "backgroundColor",
 };
 
 export const breakpoints = {
@@ -92,7 +93,7 @@ const getValue = (cssProp, value) => {
   return value;
 };
 
-export const Container = memo(({ children, ...props }) => {
+export const Container = memo(({ children, className, ...props }) => {
   const mediaQueries = {};
 
   const validLayoutPropsEntries = useMemo(
@@ -158,8 +159,11 @@ export const Container = memo(({ children, ...props }) => {
       ...mediaQueries,
     };
   }, [validLayoutPropsEntries]);
-  console.log(style);
-  return <div style={style}>{children}</div>;
+  return (
+    <div style={style} className={className}>
+      {children}
+    </div>
+  );
 });
 
 export const Row = memo(({ children, ...props }) => {

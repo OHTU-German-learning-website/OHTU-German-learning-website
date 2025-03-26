@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useRequest } from "@/shared/hooks/useRequest";
 import Link from "next/link";
 import { useAuth } from "@/context/authContext";
+import { Button } from "@/components/ui/button";
 
 export default function Login() {
   const router = useRouter();
@@ -53,7 +54,7 @@ export default function Login() {
   };
 
   return (
-    <div>
+    <>
       <h1 className="auth-title">Anmeldung</h1>
 
       <p>Zugriff auf weitere Inhalte durch Anmeldung</p>
@@ -91,16 +92,21 @@ export default function Login() {
             disabled={isLoading}
           />
         </div>
-
-        <button type="submit" className="form-button" disabled={isLoading}>
+        <Button
+          className="form-button"
+          type="submit"
+          size="md"
+          width={"full"}
+          disabled={isLoading}
+        >
           {isLoading ? "Wird bearbeitet..." : "Einloggen"}
-        </button>
+        </Button>
       </form>
       <div className="navigate-register">
         <p>
           Noch keinen Account? <Link href="/auth/register">Registrieren</Link>
         </p>
       </div>
-    </div>
+    </>
   );
 }

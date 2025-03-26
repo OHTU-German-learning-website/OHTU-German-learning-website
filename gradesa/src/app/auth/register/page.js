@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRequest } from "@/shared/hooks/useRequest";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -52,11 +53,8 @@ export default function Register() {
   return (
     <>
       <h1 className="auth-title">Registrieren</h1>
-      <div className="messages">
-        {!!error && errorMessage()}
-        {submitted && successMessage()}
-      </div>
-
+      {!!error && errorMessage()}
+      {submitted && successMessage()}
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label className="form-label" htmlFor="username">
@@ -102,14 +100,15 @@ export default function Register() {
           />
         </div>
 
-        <button
+        <Button
+          className="form-button"
           onClick={handleSubmit}
           type="submit"
-          className="form-button"
-          style={{ marginBottom: "20px" }}
+          size="md"
+          width={"full"}
         >
           Registrieren
-        </button>
+        </Button>
       </form>
 
       <div className="navigate-login">

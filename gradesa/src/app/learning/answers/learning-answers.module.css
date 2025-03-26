@@ -54,7 +54,9 @@
   padding: var(--u-lg);
   border-radius: var(--radius-lg);
   border: 1px solid var(--bg6);
+  opacity: 0.7;
   background-color: var(--bg2);
+  color: var(--fg2);
   gap: var(--u-md);
   & span {
     font-size: var(--font-lg);
@@ -63,6 +65,11 @@
   & p {
     margin: 0;
   }
+}
+
+.learningAdviceHighlight {
+  border-color: var(--primary1);
+  opacity: 1 !important;
 }
 
 .learningAdvices {
