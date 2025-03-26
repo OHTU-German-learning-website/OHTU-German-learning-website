@@ -95,15 +95,19 @@ export const Area = memo(function Area() {
         );
 
         let updatedVisibleWords = [...remainingVisibleWords];
-        if (updatedAvailableWords.length > 0) {
-          const newWord =
-            updatedAvailableWords[
-              Math.floor(Math.random() * updatedAvailableWords.length)
-            ];
+
+        while (
+          updatedVisibleWords.length < 5 &&
+          updatedAvailableWords.length > 0
+        ) {
+          const newWordIndex = Math.floor(
+            Math.random() * updatedAvailableWords.length
+          );
+          const newWord = updatedAvailableWords.splice(newWordIndex, 1)[0]; // Remove from available and get the word
           if (
             !remainingVisibleWords.find((word) => word.name === newWord.name)
           ) {
-            updatedVisibleWords = [...remainingVisibleWords, newWord];
+            updatedVisibleWords.push(newWord);
           }
         }
 
