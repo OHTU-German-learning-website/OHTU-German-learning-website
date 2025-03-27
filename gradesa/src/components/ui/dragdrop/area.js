@@ -1,5 +1,5 @@
-import { memo, useCallback, useState, useEffect } from "react";
-import { ItemTypes } from "../../../app/grammar1/lessons/exercises/dragdrop/itemtypes.js";
+import { memo, useCallback, useState } from "react";
+import { ItemTypes } from "../../../app/grammar/exercises/dragdrop/itemtypes.js";
 import { WordBox } from "./wordbox.js";
 import { Dustbin } from "./dustbin.js";
 import { Button } from "@/components/ui/button";

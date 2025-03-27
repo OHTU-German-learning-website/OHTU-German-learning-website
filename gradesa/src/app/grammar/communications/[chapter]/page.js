@@ -13,7 +13,7 @@ export default function Chapters() {
 
   const Chapter = chapters.find((c) => c.id === chapter);
   if (!Chapter) {
-    router.replace("grammar1/communications");
+    router.replace("grammar/communications");
   }
 
   const previousChapter = chapters.find(
@@ -61,99 +61,99 @@ export const chapters = [
     id: "1",
     title: "1. Über die Vergangenheit sprechen",
     content: Chapter1,
-    link: "/grammar1/communications/1",
+    link: "/grammar/communications/1",
   },
   {
     id: "2",
     title: "2. Anleitungen formulieren",
     content: Chapter2,
-    link: "/grammar1/communications/2",
+    link: "/grammar/communications/2",
   },
   {
     id: "3",
     title: "3. Offizielle Mitteilungen (Nachrichten usw.) formulieren",
     content: Chapter3,
-    link: "/grammar1/communications/3",
+    link: "/grammar/communications/3",
   },
   {
     id: "4",
     title:
       "4. Höflich mit anderen Menschen umgehen (Sich vorstellen, Gäste empfangen und betreuen, Small Talk)",
     content: Chapter4,
-    link: "/grammar1/communications/4",
+    link: "/grammar/communications/4",
   },
   {
     id: "5",
     title: "5. Menschen beschreiben / Ich und meine Familie",
     content: Chapter5,
-    link: "/grammar1/communications/5",
+    link: "/grammar/communications/5",
   },
   {
     id: "6",
     title: "6. Über Hobbys und Freizeit sprechen",
     content: Chapter6,
-    link: "/grammar1/communications/6",
+    link: "/grammar/communications/6",
   },
   {
     id: "7",
     title: "7. Über Beruf und Arbeitsplatz sprechen",
     content: Chapter7,
-    link: "/grammar1/communications/7",
+    link: "/grammar/communications/7",
   },
   {
     id: "8",
     title: "8. Firmen und Produkte beschreiben",
     content: Chapter8,
-    link: "/grammar1/communications/8",
+    link: "/grammar/communications/8",
   },
   {
     id: "9",
     title: "9. Werbung machen",
     content: Chapter9,
-    link: "/grammar1/communications/9",
+    link: "/grammar/communications/9",
   },
   {
     id: "10",
     title: "10. Einkaufen privat und geschäftlich",
     content: Chapter10,
-    link: "/grammar1/communications/10",
+    link: "/grammar/communications/10",
   },
   {
     id: "11",
     title: "11. Räume beschreiben",
     content: Chapter11,
-    link: "/grammar1/communications/11",
+    link: "/grammar/communications/11",
   },
   {
     id: "12",
     title: "12. Über historische Ereignisse sprechen",
     content: Chapter12,
-    link: "/grammar1/communications/12",
+    link: "/grammar/communications/12",
   },
   {
     id: "13",
     title: "13. Pläne machen",
     content: Chapter13,
-    link: "/grammar1/communications/13",
+    link: "/grammar/communications/13",
   },
   {
     id: "14",
     title:
       "14. an Versammlungen und Geschäftstreffen teilnehmen und sie leiten",
     content: Chapter14,
-    link: "/grammar1/communications/14",
+    link: "/grammar/communications/14",
   },
   {
     id: "15",
     title: "15. Jemandem gratulieren",
     content: Chapter15,
-    link: "/grammar1/communications/15",
+    link: "/grammar/communications/15",
   },
   {
     id: "16",
     title: "16. Sich beschweren / etw. reklamieren",
     content: Chapter16,
-    link: "/grammar1/communications/16",
+    link: "/grammar/communications/16",
   },
 ];
 
