@@ -1,4 +1,4 @@
-import "../../lessons.css";
+import "../../themes/lessons.css";
 
 export default function DragdropLayout({ children }) {
   return (

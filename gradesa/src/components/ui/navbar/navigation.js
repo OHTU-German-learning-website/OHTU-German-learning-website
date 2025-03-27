@@ -1,8 +1,19 @@
+"use client";
 import Link from "next/link";
 import Image from "next/image";
 import "./navbar.css";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/authContext";
 
 function Navbar() {
+  const { isLoggedIn, logout } = useAuth();
+  const router = useRouter();
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    router.push("/auth/login");
+  };
+
   return (
     <nav className="navbar">
       <div className="nav-left">
@@ -24,9 +35,15 @@ function Navbar() {
       <div className="nav-right">
         <div className="nav-links"></div>
         <div className="nav-auth">
-          <button className="login-btn">
-            <Link href="/auth/login">Anmelden</Link>
-          </button>
+          {isLoggedIn ? (
+            <button onClick={logout} className="login-btn">
+              Abmeldung
+            </button>
+          ) : (
+            <button onClick={handleLogin} className="login-btn">
+              Anmeldung
+            </button>
+          )}
           <button className="signup-btn">
             <Link href="/auth/register">Registrieren</Link>
           </button>

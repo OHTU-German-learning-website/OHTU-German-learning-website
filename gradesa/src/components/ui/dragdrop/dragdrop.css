@@ -23,11 +23,11 @@
 }
 
 .success-message {
-    width: 50%;
+    width: 41.5%;
     background-color: var(--fg3);
     color: var(--secondary1);
     padding: var(--u-lg);
-    margin-left: auto;
+    margin-left: left;
     margin-right: auto;
     margin-bottom: var(--u-xl);
     border-radius: var(--radius-xs);
@@ -55,6 +55,5 @@
 .dropped-item {
   padding: var(--u-md);
   background-color: var(--fg3);
-  color: var(--secondary1);
   border-radius: var(--radius-sm);
 }
