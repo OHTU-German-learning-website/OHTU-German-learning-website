@@ -1,4 +1,4 @@
-import { memo, useCallback, useState } from "react";
+import { memo, useCallback, useState, useEffect } from "react";
 import { ItemTypes } from "../../../app/grammar/exercises/dragdrop/itemtypes.js";
 import { WordBox } from "./wordbox.js";
 import { Dustbin } from "./dustbin.js";
@@ -163,12 +163,14 @@ export const Area = memo(function Area() {
       <div
         style={{
           display: "flex",
-          justifyContent: "center",
+          justifyContent: "left",
           width: "100%",
           marginTop: "var(--u-xl)",
         }}
       >
-        <Button onClick={reset}>Erneut versuchen</Button>
+        <Button variant="primary" onClick={reset}>
+          Erneut versuchen
+        </Button>
       </div>
     </div>
   );
