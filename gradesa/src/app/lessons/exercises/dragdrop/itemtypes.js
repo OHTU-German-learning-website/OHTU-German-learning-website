@@ -5,7 +5,7 @@ export const ItemTypes = {
 };
 
 export const ItemColors = {
-  DER: "var(--primary2)",
-  DIE: "var(--tertiary2)",
-  DAS: "var(--green1)",
+  DER: "var(--masculine)",
+  DIE: "var(--feminine)",
+  DAS: "var(--neutral)",
 };

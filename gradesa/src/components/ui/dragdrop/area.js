@@ -58,20 +58,12 @@ export const Area = memo(function Area() {
       dustbin.droppedItems.every((item) => item.type === dustbin.accepts[0])
     );
 
-    console.log("Exercise complete check:", {
-      totalDroppedItems,
-      totalBoxes: allWords.length,
-      allBoxesPlaced,
-      allItemsCorrect,
-    });
-
     return allBoxesPlaced && allItemsCorrect;
   };
 
   const handleDrop = useCallback(
     (index, item) => {
       const { name, type } = item;
-      console.log("Handling drop:", { name, type, index });
 
       if (!isDropped(name)) {
         const updatedDroppedBoxNames = [...droppedBoxNames, name];
@@ -83,8 +75,6 @@ export const Area = memo(function Area() {
             { name, type },
           ],
         };
-
-        console.log("Updated dustbin:", updatedDustbins[index]);
 
         const updatedAvailableWords = availableWords.filter(
           (word) => word.name !== name
@@ -117,7 +107,6 @@ export const Area = memo(function Area() {
         setVisibleWords(updatedVisibleWords);
 
         const isComplete = checkExerciseComplete(updatedDustbins);
-        console.log("Setting exercise complete:", isComplete);
         setIsExerciseComplete(isComplete);
       }
     },

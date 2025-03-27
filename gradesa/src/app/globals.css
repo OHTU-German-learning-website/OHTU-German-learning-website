@@ -85,6 +85,10 @@
   --green8: hsl(120, 60%, 20%);
   --green9: hsl(120, 60%, 10%);
 
+  --masculine: hsl(240, 80%, 77%);
+  --feminine: hsl(359, 73%, 71%);
+  --neutral: hsl(112, 49%, 63%);
+
   /* font sizes */
   --font-xs: 8px;
   --font-sm: 12px;
@@ -206,7 +210,10 @@
     --green7: hsl(120, 40%, 85%);
     --green8: hsl(120, 40%, 90%);
     --green9: hsl(120, 40%, 95%);
-    
+   
+    --masculine: hsl(240, 80%, 22%);
+    --feminine: hsl(359, 84%, 37%);
+    --neutral: hsl(112, 100%, 16%);
   }
 }
 
