@@ -145,7 +145,6 @@ export default function ThemesPage() {
                 {/* The topics should link to the respective pages (WIP) */}
                 {topic.subtopics
                   .filter((_, j) => {
-                    console.log(grammar[i] || j < 3);
                     return grammar[i] || j < 3;
                   })
                   .map((subtopic, subIndex) => (
