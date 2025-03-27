@@ -1,4 +1,5 @@
 import { MailerSend, EmailParams, Sender, Recipient } from "mailersend";
+import { DB } from "../../../../backend/db";
 
 export async function POST(req) {
   try {
@@ -13,6 +14,12 @@ export async function POST(req) {
         }
       );
     }
+    const lastfeedback = await DB.pool(
+      `SELECT timestamp FROM feedbacks ORDER BY timestamp DESC LIMIT 1`
+    );
+
+    const now = new Date();
+    const lastFeedbackTime = lastFeedback.rows[0]?.timestamp;
 
     // Initialize MailerSend securely
     const mailersend = new MailerSend({
