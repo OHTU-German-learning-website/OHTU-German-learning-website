@@ -1,8 +1,9 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useRequest } from "@/shared/hooks/useRequest";
 import Link from "next/link";
+import { useAuth } from "@/context/authContext";
 import { Button } from "@/components/ui/button";
 
 export default function Login() {
@@ -12,6 +13,9 @@ export default function Login() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const request = useRequest();
+  const { setIsLoggedIn } = useAuth();
+  const searchParams = useSearchParams(); // Access query parameters
+  const redirectPath = searchParams.get("redirect") || "/";
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -35,7 +39,8 @@ export default function Login() {
       }
 
       // Login successful
-      router.push("/");
+      setIsLoggedIn(true);
+      router.push(redirectPath);
     } catch (error) {
       // Failed validation
       setError(error.message);
@@ -51,6 +56,8 @@ export default function Login() {
   return (
     <>
       <h1 className="auth-title">Anmeldung</h1>
+
+      <p>Zugriff auf weitere Inhalte durch Anmeldung</p>
 
       {errorMessage()}
 
