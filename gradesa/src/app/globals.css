@@ -180,7 +180,6 @@
     --secondary9: hsl(178, 60%, 95%);
     --tertiary10: hsl(113, 93%, 49%);
 
-
     --secondary1: hsl(178, 60%, 30%);
     --secondary2: hsl(178, 60%, 40%);
     --secondary3: hsl(178, 80%, 52%);
@@ -437,9 +436,9 @@ input {
   }
 }
 
-input[type="text"] {
+/*input[type="text"] {
   font-size: var(--font-lg);
   margin: 0.5rem;
   padding: var(--u-md);
   text-align: center;
-  }
+}*/

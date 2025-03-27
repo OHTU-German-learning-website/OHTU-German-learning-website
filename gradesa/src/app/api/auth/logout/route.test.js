@@ -4,7 +4,9 @@ import { POST } from "./route";
 import { deleteSession } from "@/backend/auth/session";
 
 vi.mock("@/backend/auth/session", () => ({
-  deleteSession: vi.fn().mockResolvedValue(undefined),
+  deleteSession: vi.fn().mockImplementation(() => {
+    return;
+  }),
 }));
 
 describe("POST /api/auth/logout", () => {
@@ -13,16 +15,13 @@ describe("POST /api/auth/logout", () => {
     vi.clearAllMocks();
   });
 
-  it("should delete session and redirect to login page", async () => {
+  it("should delete session", async () => {
     const response = await POST();
     const setCookieHeader = response.headers.get("Set-Cookie");
 
     expect(deleteSession).toHaveBeenCalled();
     expect(response).toBeInstanceOf(NextResponse);
-    expect(response.headers.get("Location")).toBe(
-      "http://localhost:3000/auth/login"
-    );
-    expect(response.status).toBe(307);
-    expect(setCookieHeader).toContain("session=; Max-Age=0");
+    expect(response.status).toBe(200);
+    expect(setCookieHeader).toBeNull();
   });
 });
