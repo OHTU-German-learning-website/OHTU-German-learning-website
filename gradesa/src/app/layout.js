@@ -3,6 +3,7 @@ import "./globals.css";
 import styles from "./page.module.css";
 import Navbar from "@/components/ui/navbar/navigation";
 import Sidebar from "@/components/ui/sidebar/sidebar";
+import { AuthProvider } from "@/context/authContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,13 +23,15 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
-        <Navbar />
-        <div className={styles.sidebarMain}>
-          <Sidebar />
-          <main className={styles.main}>{children}</main>
-        </div>
-      </body>
+      <AuthProvider>
+        <body>
+          <Navbar />
+          <div className={styles.sidebarMain}>
+            <Sidebar />
+            <main className={styles.main}>{children}</main>
+          </div>
+        </body>
+      </AuthProvider>
     </html>
   );
 }

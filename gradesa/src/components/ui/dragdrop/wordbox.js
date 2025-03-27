@@ -21,7 +21,7 @@ export const WordBox = memo(function WordBox({ name, type, isDropped }) {
       className="wordbox"
       data-testid="wordbox"
     >
-      {isDropped ? <s>{name}</s> : name}
+      {isDropped ? name : name}
     </div>
   );
 });

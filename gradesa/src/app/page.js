@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-export default function home() {
+export default function Home() {
   return (
     <>
       <div className="container">
@@ -38,7 +38,7 @@ export default function home() {
               Üben Sie alltägliche Gespräche und verbessern Sie Ihre
               Sprechfähigkeiten mit interaktiven Lektionen.
             </p>
-            <Link href="/grammar1">
+            <Link href="/grammar">
               <Button variant="outline" width="fit">
                 Grammatik lernen
               </Button>
