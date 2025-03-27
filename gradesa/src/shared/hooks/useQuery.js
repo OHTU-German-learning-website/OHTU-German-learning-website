@@ -113,7 +113,7 @@ const useQuery = (url, params, config) => {
       }
     } catch (error) {
       console.error(error);
-      setError(error.message);
+      setError(error.response.data);
     } finally {
       setIsLoading(false);
     }

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "../button";
 import { Container } from "../layout/container";
+import { Column } from "@/components/ui/layout/container";
 
 const WordSelectionExercise = ({
   title,
@@ -63,32 +64,25 @@ const WordSelectionExercise = ({
     if (selectedWords.includes(word)) {
       if (isSubmitted) {
         return targetWords.includes(word)
-          ? { backgroundColor: "#38a169", color: "#fff" } // green
-          : { backgroundColor: "#e53e3e", color: "#fff" }; // red
+          ? { backgroundColor: "var(--green3)" } // green
+          : { backgroundColor: "var(--red)" }; // red
       } else {
-        return { backgroundColor: "hsl(240, 40%, 92%)" }; // blue
+        return { backgroundColor: "var(--blue)" }; // blue
       }
     } else {
       if (isSubmitted && targetWords.includes(word)) {
         return {
-          backgroundColor: "#faf089",
-          border: "1px solid #d69e2e",
+          backgroundColor: "var(--yellow)",
+          border: "1px solid var(--yellow-border)",
         }; // yellow with border
       }
     }
   };
 
   return (
-    <div>
+    <Column gap="md">
       <h1>{title}</h1>
-
-      <br />
-
       <i>{`Wähle alle ${targetCategory} aus dem untenstehenden Text aus.`}</i>
-
-      <br />
-      <br />
-
       <Container>
         {allWords?.map((word, index) => (
           <Button
@@ -101,9 +95,6 @@ const WordSelectionExercise = ({
           </Button>
         ))}
       </Container>
-
-      <br />
-
       {feedback && (
         <>
           <div>{feedback}</div>
@@ -122,7 +113,7 @@ const WordSelectionExercise = ({
           </Button>
         )}
       </div>
-    </div>
+    </Column>
   );
 };
 
