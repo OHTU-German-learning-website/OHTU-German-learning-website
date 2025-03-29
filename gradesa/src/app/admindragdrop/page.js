@@ -2,18 +2,29 @@
 import styles from "../page.module.css";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { Dropdown } from "@/components/ui/dropdown";
 
 export default function DragdropAdminPage() {
   const [numberOfFields, setNumberOfFields] = useState(2);
   const [inputFields, setInputFields] = useState([]);
 
   useEffect(() => {
-    setInputFields(Array(numberOfFields).fill(""));
+    setInputFields(
+      Array(numberOfFields)
+        .fill("")
+        .map(() => ({
+          title: "",
+          content: "",
+        }))
+    );
   }, [numberOfFields]);
 
-  const handleInputChange = (index, event) => {
+  const handleInputChange = (index, field, value) => {
     const newInputFields = [...inputFields];
-    newInputFields[index] = value;
+    newInputFields[index] = {
+      ...newInputFields[index],
+      [field]: value,
+    };
     setInputFields(newInputFields);
   };
 
@@ -43,16 +54,27 @@ export default function DragdropAdminPage() {
             </select>
           </div>
 
-          {inputFields.map((value, index) => (
+          {inputFields.map((field, index) => (
             <div key={index} className="form-group">
-              <label htmlFor={`wordInput${index}`}></label>
               <input
                 type="text"
-                id={`wordInput${index}`}
-                value={value}
-                onChange={(e) => handleInputChange(index, e.target.value)}
+                id={`titleInput${index}`}
+                value={field.title}
+                onChange={(e) =>
+                  handleInputChange(index, "title", e.target.value)
+                }
                 className="form-input"
                 placeholder={`Enter title ${index + 1}`}
+              />
+              <input
+                type="text"
+                id={`contentInput${index}`}
+                value={field.content}
+                onChange={(e) =>
+                  handleInputChange(index, "content", e.target.value)
+                }
+                className="form-input"
+                placeholder={`Enter words`}
               />
             </div>
           ))}
