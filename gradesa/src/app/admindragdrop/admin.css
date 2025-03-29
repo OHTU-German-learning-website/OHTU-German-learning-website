@@ -1,0 +1,12 @@
+.admin-container {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    gap: 20px;
+}
+
+.admin-content {
+    flex: 1;
+    padding: 5px;
+    align-items: left;
+}
