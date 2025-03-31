@@ -1,13 +1,15 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { POST } from "./route";
 import { useTestRequest } from "@/backend/test/mock-request";
+import { checkSession } from "@/backend/auth/session";
+console.log("Mocked checkSession:", checkSession.mock);
 
 // Mock MailerSend
 vi.mock("mailersend", () => {
   return {
     MailerSend: vi.fn().mockImplementation(() => ({
       email: {
-        send: vi.fn().mockResolvedValue({ success: true }),
+        send: vi.fn().mockResolvedValue(Promise.resolve()),
       },
     })),
     EmailParams: vi.fn().mockImplementation(() => ({
@@ -25,6 +27,16 @@ vi.mock("mailersend", () => {
 
 describe("POST /api/talkback", () => {
   const { mockPost } = useTestRequest();
+
+  vi.mock("@/backend/auth/session", () => ({
+    checkSession: vi.fn().mockResolvedValue("mockUserId"),
+  }));
+
+  vi.mock("../../../backend/db", () => ({
+    DB: {
+      pool: vi.fn().mockResolvedValue({ rows: [] }), // No previous feedbacks
+    },
+  }));
 
   const sendFeedbackRequest = async (email, complaint) => {
     const request = mockPost("/api/talkback", { email, complaint });
