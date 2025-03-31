@@ -5,18 +5,23 @@ import { Button } from "@/components/ui/button";
 import { Dropdown } from "@/components/ui/dropdown";
 
 export default function DragdropAdminPage() {
-  const [numberOfFields, setNumberOfFields] = useState(2);
+  const [numberOfFields, setNumberOfFields] = useState(null);
   const [inputFields, setInputFields] = useState([]);
 
   useEffect(() => {
-    setInputFields(
-      Array(numberOfFields)
-        .fill("")
-        .map(() => ({
-          title: "",
-          content: "",
-        }))
-    );
+    if (numberOfFields) {
+      if (numberOfFields > inputFields.length) {
+        const additionalFields = Array(numberOfFields - inputFields.length)
+          .fill("")
+          .map(() => ({
+            title: "",
+            content: "",
+          }));
+        setInputFields([...inputFields, ...additionalFields]);
+      } else {
+        setInputFields(inputFields.slice(0, numberOfFields));
+      }
+    }
   }, [numberOfFields]);
 
   const handleInputChange = (index, field, value) => {
@@ -42,10 +47,11 @@ export default function DragdropAdminPage() {
             <label htmlFor="fieldCount">Number of boxes:</label>
             <select
               id="fieldCount"
-              value={numberOfFields}
+              value={numberOfFields || ""}
               onChange={(e) => setNumberOfFields(Number(e.target.value))}
               className="form-select"
             >
+              <option value="">Select the number of boxes</option>
               {[2, 3, 4, 5].map((num) => (
                 <option key={num} value={num}>
                   {num}
@@ -54,33 +60,34 @@ export default function DragdropAdminPage() {
             </select>
           </div>
 
-          {inputFields.map((field, index) => (
-            <div key={index} className="form-group">
-              <input
-                type="text"
-                id={`titleInput${index}`}
-                value={field.title}
-                onChange={(e) =>
-                  handleInputChange(index, "title", e.target.value)
-                }
-                className="form-input"
-                placeholder={`Enter title ${index + 1}`}
-              />
-              <input
-                type="text"
-                id={`contentInput${index}`}
-                value={field.content}
-                onChange={(e) =>
-                  handleInputChange(index, "content", e.target.value)
-                }
-                className="form-input"
-                placeholder={`Enter words`}
-              />
-            </div>
-          ))}
-          <Button type="submit" size="sm" variant="outline">
-            Create
-          </Button>
+          {numberOfFields &&
+            inputFields.map((field, index) => (
+              <div key={index} className="form-group">
+                <input
+                  type="text"
+                  value={field.title}
+                  onChange={(e) =>
+                    handleInputChange(index, "title", e.target.value)
+                  }
+                  className="form-input"
+                  placeholder={`Enter title ${index + 1}`}
+                />
+                <input
+                  type="text"
+                  value={field.content}
+                  onChange={(e) =>
+                    handleInputChange(index, "content", e.target.value)
+                  }
+                  className="form-input"
+                  placeholder={`Enter words`}
+                />
+              </div>
+            ))}
+          {numberOfFields && (
+            <Button type="submit" size="sm" variant="outline">
+              Create
+            </Button>
+          )}
         </form>
       </div>
     </div>
