@@ -19,10 +19,20 @@ export default function Feedback() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const data = await makeRequest("/talkback", {
-        email,
-        complaint,
+      const response = await fetch("/api/talkback", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, complaint }),
       });
+
+      const data = await response.json(); // Extract JSON response
+
+      if (!response.ok) {
+        throw new Error(data.message || "An unexpected error occurred.");
+      }
+
       setSubmitted(true);
       setEmail("");
       setComplaint("");

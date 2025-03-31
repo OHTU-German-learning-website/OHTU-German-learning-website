@@ -40,6 +40,7 @@ export async function POST(req) {
       const oneHourInSeconds = 3600; // 60 * 60 = 3600 seconds
 
       if (timeDiff < oneHourInSeconds) {
+        console.log("Please wait one hour before submitting another message");
         // User has sent a feedback within the last hour, rate limit applied
         return new Response(
           JSON.stringify({
@@ -54,6 +55,10 @@ export async function POST(req) {
         );
       }
     }
+    await DB.pool(
+      `INSERT INTO feedbacks (user_id, email, complaint, timestamp) VALUES ($1,$2,$3,$4)`,
+      [userId, email, complaint, now]
+    );
 
     // Initialize MailerSend securely
     const mailersend = new MailerSend({
