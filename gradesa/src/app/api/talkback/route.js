@@ -1,5 +1,6 @@
 import { MailerSend, EmailParams, Sender, Recipient } from "mailersend";
-import { DB } from "../../../../backend/db";
+import { DB } from "../../../backend/db";
+import { checkSession } from "@/backend/auth/session";
 
 export async function POST(req) {
   try {
@@ -14,12 +15,45 @@ export async function POST(req) {
         }
       );
     }
-    const lastfeedback = await DB.pool(
-      `SELECT timestamp FROM feedbacks ORDER BY timestamp DESC LIMIT 1`
+    const userId = await checkSession();
+
+    if (!userId) {
+      return new Response(
+        JSON.stringify({ message: "User not authenticated" }),
+        {
+          status: 401, // Unauthorized
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    const lastFeedback = await DB.pool(
+      `SELECT timestamp FROM feedbacks WHERE user_id = $1 ORDER BY timestamp DESC LIMIT 1`,
+      [userId]
     );
 
     const now = new Date();
     const lastFeedbackTime = lastFeedback.rows[0]?.timestamp;
+
+    if (lastFeedbackTime) {
+      const timeDiff = (now - new Date(lastFeedbackTime)) / 1000; // Convert ms to seconds
+      const oneHourInSeconds = 3600; // 60 * 60 = 3600 seconds
+
+      if (timeDiff < oneHourInSeconds) {
+        // User has sent a feedback within the last hour, rate limit applied
+        return new Response(
+          JSON.stringify({
+            message: `Please wait before submitting feedback again. You can try again in ${Math.floor(
+              oneHourInSeconds - timeDiff
+            )} seconds.`,
+          }),
+          {
+            status: 429, // Too Many Requests
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+      }
+    }
 
     // Initialize MailerSend securely
     const mailersend = new MailerSend({
