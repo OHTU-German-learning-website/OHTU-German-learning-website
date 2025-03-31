@@ -1,4 +1,5 @@
 import { axiosInstance } from "./useQuery";
+import { useCallback } from "react";
 
 const defaultConfig = {
   method: "POST",
@@ -16,22 +17,26 @@ export const useRequest = () => {
    * @param {Object} config - The config of the request.
    * @returns {Object} - The response from the server.
    */
-  return async (url, body, config) => {
-    try {
-      const response = await axiosInstance.request({
-        url,
-        data: body,
-        ...defaultConfig,
-        ...config,
-      });
+  const makeRequest = useCallback(
+    async (url, body, config) => {
+      try {
+        const response = await axiosInstance.request({
+          url,
+          data: body,
+          ...defaultConfig,
+          ...config,
+        });
 
-      return response;
-    } catch (error) {
-      if (error.response && error.response.data?.error) {
-        throw new Error(error.response.data.error);
-      } else {
-        throw new Error("An unexpected error occurred.");
+        return response;
+      } catch (error) {
+        if (error.response && error.response.data?.error) {
+          throw new Error(error.response.data.error);
+        } else {
+          throw new Error("An unexpected error occurred.");
+        }
       }
-    }
-  };
+    },
+    [axiosInstance]
+  );
+  return makeRequest;
 };

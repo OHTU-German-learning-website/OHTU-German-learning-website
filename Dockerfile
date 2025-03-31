@@ -42,7 +42,7 @@ RUN adduser -D nonroot && chown -R nonroot:nonroot /app/gradesa
 USER nonroot
 
 # Next.js needs to listen on 8080
-ENV PORT 8080
+ENV PORT=8080
 EXPOSE 8080
 
 
