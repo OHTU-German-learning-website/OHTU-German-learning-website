@@ -55,8 +55,8 @@ CREATE TABLE public.users (
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   updated_at timestamp with time zone NOT NULL DEFAULT now(),
   salt text NOT NULL,
+  username text NOT NULL DEFAULT ''::text,
   is_admin boolean DEFAULT false
-  username text NOT NULL DEFAULT ''::text
 );
 
 ALTER TABLE public.click_answers
