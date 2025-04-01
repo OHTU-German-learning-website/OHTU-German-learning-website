@@ -3,13 +3,12 @@ import Link from "next/link";
 import Image from "next/image";
 import "./navbar.css";
 import { useRouter } from "next/navigation";
-import { useUser } from "@/shared/user.context";
+import { useUser } from "@/context/user.context";
 import { Column, Row } from "../layout/container";
 
 function Navbar() {
   const { auth, logout } = useUser();
   const router = useRouter();
-  console.log(auth, "auth");
   const handleLogin = (e) => {
     e.preventDefault();
     router.push("/auth/login");

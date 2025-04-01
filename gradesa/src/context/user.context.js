@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { useRequest } from "./hooks/useRequest";
+import { useRequest } from "../shared/hooks/useRequest";
 export const userOptions = [
   { label: "Student", value: "user" },
   { label: "Lehrer", value: "admin" },
@@ -87,6 +87,11 @@ export function UserProvider({ children }) {
 // Custom hook to use the user context
 export function useUser() {
   return useContext(UserContext);
+}
+
+export function useIsLoggedIn() {
+  const { auth } = useUser();
+  return auth?.isLoggedIn ?? false;
 }
 
 export function useAdminGuard() {

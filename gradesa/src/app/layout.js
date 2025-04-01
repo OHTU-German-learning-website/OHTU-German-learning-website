@@ -3,7 +3,7 @@ import "./globals.css";
 import styles from "./page.module.css";
 import Navbar from "@/components/ui/navbar/navigation";
 import Sidebar from "@/components/ui/sidebar/sidebar";
-import { UserProvider } from "@/shared/user.context";
+import { UserProvider } from "@/context/user.context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

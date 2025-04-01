@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { chapters } from "@/app/resources/[chapter]/page";
 import { Column } from "../layout/container";
 import { Dropdown } from "../dropdown";
-import { useUser, userOptions } from "@/shared/user.context";
+import { useUser, userOptions } from "@/context/user.context";
 import { Button } from "../button";
 
 const Sidebar = () => {

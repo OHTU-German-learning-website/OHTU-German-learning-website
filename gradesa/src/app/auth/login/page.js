@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useRequest } from "@/shared/hooks/useRequest";
 import Link from "next/link";
-import { useUser } from "@/shared/user.context";
+import { useUser } from "@/context/user.context";
 import { Button } from "@/components/ui/button";
 
 export default function Login() {
