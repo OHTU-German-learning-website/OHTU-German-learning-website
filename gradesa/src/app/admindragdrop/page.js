@@ -14,6 +14,7 @@ export default function DragdropAdminPage() {
         const additionalFields = Array(numberOfFields - inputFields.length)
           .fill("")
           .map(() => ({
+            color: "",
             category: "",
             content: "",
           }));
@@ -63,6 +64,15 @@ export default function DragdropAdminPage() {
           {numberOfFields &&
             inputFields.map((field, index) => (
               <div key={index} className="form-group">
+                <label htmlFor={`color-${index}`}>Color:</label>
+                <select id={`color-${index}`} className="form-select">
+                  <option value="">Select color</option>
+                  {["red", "blue", "green", "yellow", "purple"].map((color) => (
+                    <option key={color} value={color}>
+                      {color}
+                    </option>
+                  ))}
+                </select>
                 <input
                   type="text"
                   value={field.category}
