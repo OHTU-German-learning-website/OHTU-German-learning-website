@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useRequest } from "../shared/hooks/useRequest";
+
 export const userOptions = [
   { label: "Student", value: "user" },
   { label: "Lehrer", value: "admin" },
@@ -23,8 +24,6 @@ const defaultUserState = {
 // Create the context
 const UserContext = createContext({
   user: defaultUserState,
-  setUser: () => {},
-  logout: () => {},
 });
 
 // Create a provider component
@@ -38,20 +37,27 @@ export function UserProvider({ children }) {
       try {
         const response = await makeRequest("/auth/session", undefined, {
           method: "GET",
+        }).catch((e) => {
+          // Allow 401s
+          if (e.status !== 401) {
+            throw e;
+          }
+          return e;
         });
         if (response.status === 200 && response.data) {
           const user = response.data.user;
-          setAuth({
+          setAuth((prev) => ({
+            ...prev,
             isLoggedIn: true,
-            actAs: defaultUserState.actAs,
             user: {
               id: user.id,
               username: user.username,
               email: user.email,
               is_admin: user.is_admin,
             },
-          });
+          }));
         } else {
+          console.debug("not logged in, resetting state");
           setAuth(defaultUserState);
         }
       } catch (error) {
@@ -66,12 +72,10 @@ export function UserProvider({ children }) {
   };
 
   // Logout function
-
   const logout = async () => {
-    const response = await fetch("/api/auth/logout", {
-      method: "POST",
-    });
+    const response = await makeRequest("/auth/logout");
     if (response.ok) {
+      console.debug("User logged out");
       setAuth(defaultUserState);
       window.location.reload();
     }
@@ -97,13 +101,13 @@ export function useIsLoggedIn() {
 export function useAdminGuard() {
   const router = useRouter();
   const { auth } = useUser();
-
   useEffect(() => {
     if (
       !auth.user.is_admin ||
       !auth.isLoggedIn ||
       auth.actAs.value !== "admin"
     ) {
+      console.debug("Not authorized to view admin page", auth);
       router.replace("/");
     }
   }, [auth, router]);

@@ -30,7 +30,8 @@ export const useRequest = () => {
         return response;
       } catch (error) {
         if (error.response && error.response.data?.error) {
-          throw new Error(error.response.data.error);
+          error.message = error.response.data?.error;
+          throw error;
         } else {
           throw new Error("An unexpected error occurred.");
         }
