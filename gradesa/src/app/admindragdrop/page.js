@@ -2,6 +2,7 @@
 import styles from "../page.module.css";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { Row } from "@/components/ui/layout/container";
 import { Dropdown } from "@/components/ui/dropdown";
 
 export default function DragdropAdminPage() {
@@ -60,39 +61,43 @@ export default function DragdropAdminPage() {
               ))}
             </select>
           </div>
-
-          {numberOfFields &&
-            inputFields.map((field, index) => (
-              <div key={index} className="form-group">
-                <label htmlFor={`color-${index}`}>Color:</label>
-                <select id={`color-${index}`} className="form-select">
-                  <option value="">Select color</option>
-                  {["red", "blue", "green", "yellow", "purple"].map((color) => (
-                    <option key={color} value={color}>
-                      {color}
-                    </option>
-                  ))}
-                </select>
-                <input
-                  type="text"
-                  value={field.category}
-                  onChange={(e) =>
-                    handleInputChange(index, "category", e.target.value)
-                  }
-                  className="form-input"
-                  placeholder={`Enter category ${index + 1}`}
-                />
-                <input
-                  type="text"
-                  value={field.content}
-                  onChange={(e) =>
-                    handleInputChange(index, "content", e.target.value)
-                  }
-                  className="form-input"
-                  placeholder={`Enter words`}
-                />
-              </div>
-            ))}
+          <Row gap="20px">
+            {numberOfFields &&
+              inputFields.map((field, index) => (
+                <div key={index} className="form-group">
+                  <Row gap="10px">
+                    <select id={`color-${index}`} className="form-select">
+                      <option value="">Select color</option>
+                      {["red", "blue", "green", "yellow", "purple"].map(
+                        (color) => (
+                          <option key={color} value={color}>
+                            {color}
+                          </option>
+                        )
+                      )}
+                    </select>
+                    <input
+                      type="text"
+                      value={field.category}
+                      onChange={(e) =>
+                        handleInputChange(index, "category", e.target.value)
+                      }
+                      className="form-input"
+                      placeholder={`Enter category ${index + 1}`}
+                    />
+                  </Row>
+                  <input
+                    type="text"
+                    value={field.content}
+                    onChange={(e) =>
+                      handleInputChange(index, "content", e.target.value)
+                    }
+                    className="form-input"
+                    placeholder={`Enter words`}
+                  />
+                </div>
+              ))}
+          </Row>
           {numberOfFields && (
             <Button type="submit" size="sm" variant="outline">
               Create
