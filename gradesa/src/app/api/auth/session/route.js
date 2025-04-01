@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { checkSession } from "@/backend/auth/session";
 
-export async function GET() {
-  const user = await checkSession();
+export async function GET(request) {
+  const user = await checkSession(request);
   if (user) {
     return NextResponse.json({ loggedIn: true, user });
   } else {

@@ -3,6 +3,7 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { getConfig, isTest } from "../../backend/config";
 import { AUTH_COOKIE_NAME } from "@/shared/const";
+import { TestFactory } from "../test/testfactory";
 
 const { sessionSecret, sessionTTL } = getConfig();
 const encodedKey = new TextEncoder().encode(sessionSecret);
@@ -55,7 +56,10 @@ export async function createSession(user) {
   });
 }
 
-export async function checkSession() {
+export async function checkSession(request) {
+  if (isTest) {
+    return request.testUser;
+  }
   const cookieStore = await cookies();
   const session = cookieStore.get(AUTH_COOKIE_NAME);
   if (session) {
