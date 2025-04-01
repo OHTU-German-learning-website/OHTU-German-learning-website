@@ -41,7 +41,7 @@ export async function POST(request) {
   }
 
   // Create a session with the userId
-  await createSession(user.id);
+  await createSession(user);
 
   return NextResponse.json({ message: "Login successful" });
 }

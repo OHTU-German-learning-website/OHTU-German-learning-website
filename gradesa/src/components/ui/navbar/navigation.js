@@ -3,12 +3,13 @@ import Link from "next/link";
 import Image from "next/image";
 import "./navbar.css";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/authContext";
+import { useUser } from "@/shared/user.context";
+import { Column, Row } from "../layout/container";
 
 function Navbar() {
-  const { isLoggedIn, logout } = useAuth();
+  const { auth, logout } = useUser();
   const router = useRouter();
-
+  console.log(auth, "auth");
   const handleLogin = (e) => {
     e.preventDefault();
     router.push("/auth/login");
@@ -35,18 +36,27 @@ function Navbar() {
       <div className="nav-right">
         <div className="nav-links"></div>
         <div className="nav-auth">
-          {isLoggedIn ? (
-            <button onClick={logout} className="login-btn">
-              Abmeldung
-            </button>
+          {auth.isLoggedIn ? (
+            <>
+              <Column justify="between" gap="xs">
+                <span className="logged-in-label">Eingeloggt als</span>
+                <span className="username">{auth.user.username}</span>
+              </Column>
+
+              <button onClick={logout} className="login-btn">
+                Abmeldung
+              </button>
+            </>
           ) : (
-            <button onClick={handleLogin} className="login-btn">
-              Anmeldung
-            </button>
+            <>
+              <button onClick={handleLogin} className="login-btn">
+                Anmeldung
+              </button>
+              <button className="signup-btn">
+                <Link href="/auth/register">Registrieren</Link>
+              </button>
+            </>
           )}
-          <button className="signup-btn">
-            <Link href="/auth/register">Registrieren</Link>
-          </button>
         </div>
       </div>
     </nav>

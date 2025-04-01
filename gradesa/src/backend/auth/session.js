@@ -26,9 +26,18 @@ export async function verifySession(session) {
   }
 }
 
-export async function createSession(userId) {
+export async function createSession(user) {
   const expiresAt = new Date(Date.now() + sessionTTL);
-  const session = await signPayload({ userId, expiresAt });
+  const payload = {
+    user: {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      is_admin: user.is_admin,
+    },
+    expiresAt: expiresAt,
+  };
+  const session = await signPayload(payload);
   // Testing with happy-dom complains that this isn't called within the request
   // scope, can't fix it now so just return when testing.
   // If you need to test this functionality, mock the cookieStore.set call.
@@ -52,7 +61,7 @@ export async function checkSession() {
   if (session) {
     const payload = await verifySession(session.value);
     if (payload) {
-      return payload.userId;
+      return payload.user;
     }
   }
   return null;

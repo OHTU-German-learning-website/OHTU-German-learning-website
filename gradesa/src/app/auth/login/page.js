@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useRequest } from "@/shared/hooks/useRequest";
 import Link from "next/link";
-import { useAuth } from "@/context/authContext";
+import { useUser } from "@/shared/user.context";
 import { Button } from "@/components/ui/button";
 
 export default function Login() {
@@ -13,7 +13,6 @@ export default function Login() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const request = useRequest();
-  const { setIsLoggedIn } = useAuth();
   const searchParams = useSearchParams(); // Access query parameters
   const redirectPath = searchParams.get("redirect") || "/";
 
@@ -39,7 +38,6 @@ export default function Login() {
       }
 
       // Login successful
-      setIsLoggedIn(true);
       router.push(redirectPath);
     } catch (error) {
       // Failed validation

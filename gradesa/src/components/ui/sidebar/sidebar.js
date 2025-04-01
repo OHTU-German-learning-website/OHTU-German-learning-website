@@ -24,13 +24,15 @@ const Sidebar = () => {
   return (
     <nav className={styles.sidebar}>
       <Column gap="xl">
-        <Dropdown
-          options={userOptions}
-          onSelect={handleActAsChange}
-          value={auth.actAs}
-        >
-          <Button variant="outline">{auth.actAs.label}</Button>
-        </Dropdown>
+        {auth.user.is_admin && (
+          <Dropdown
+            options={userOptions}
+            onSelect={handleActAsChange}
+            value={auth.actAs}
+          >
+            <Button variant="outline">{auth.actAs.label}</Button>
+          </Dropdown>
+        )}
         {renderSidebar()}
       </Column>
     </nav>
@@ -68,7 +70,6 @@ const adminSidebarLinks = [
 ];
 
 function AdminSideBar() {
-  const pathname = usePathname();
   return (
     <>
       <SidebarGroup
@@ -83,13 +84,13 @@ function AdminSideBar() {
 function SidebarGroup({ title, sublinks, topLink }) {
   const pathname = usePathname();
   const renderSublinks = () => {
-    return sublinks.map((sublink) => (
+    return sublinks.map((sublink, i) => (
       <Link
         className={[
           styles.sublink,
           pathname === sublink.link ? styles.active : "",
         ].join(" ")}
-        key={sublink.id}
+        key={i}
         href={sublink.link}
       >
         {sublink.linkLabel}

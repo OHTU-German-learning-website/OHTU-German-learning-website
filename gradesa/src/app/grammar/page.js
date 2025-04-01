@@ -18,7 +18,6 @@ export default function grammar() {
                   Kommunikationssituationen
                 </Link>
               </Button>
-
               <Button variant="outline" size="lg" width="fit">
                 <Link href="/grammar/themes">Themen der Grammatik</Link>
               </Button>

@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useRequest } from "./hooks/useRequest";
 export const userOptions = [
   { label: "Student", value: "user" },
@@ -31,20 +31,24 @@ const UserContext = createContext({
 export function UserProvider({ children }) {
   const [auth, setAuth] = useState(defaultUserState);
   const makeRequest = useRequest();
+  const pathname = usePathname();
   // Check if user is logged in on initial load
   useEffect(() => {
     async function checkUserSession() {
       try {
-        const response = await makeRequest("/auth/session");
+        const response = await makeRequest("/auth/session", undefined, {
+          method: "GET",
+        });
         if (response.status === 200 && response.data) {
+          const user = response.data.user;
           setAuth({
             isLoggedIn: true,
             actAs: defaultUserState.actAs,
             user: {
-              id: "1",
-              username: "Admin",
-              email: "admin@gradesa.com",
-              is_admin: true,
+              id: user.id,
+              username: user.username,
+              email: user.email,
+              is_admin: user.is_admin,
             },
           });
         } else {
@@ -55,19 +59,21 @@ export function UserProvider({ children }) {
       }
     }
     checkUserSession();
-  }, []);
+  }, [pathname]);
 
   const setActAs = (actAs) => {
     setAuth({ ...auth, actAs });
   };
 
   // Logout function
+
   const logout = async () => {
-    try {
-      // TODO: actual logout
+    const response = await fetch("/api/auth/logout", {
+      method: "POST",
+    });
+    if (response.ok) {
       setAuth(defaultUserState);
-    } catch (error) {
-      console.error("Logout failed:", error);
+      window.location.reload();
     }
   };
 
@@ -80,8 +86,7 @@ export function UserProvider({ children }) {
 
 // Custom hook to use the user context
 export function useUser() {
-  const { auth, logout, setActAs } = useContext(UserContext);
-  return { auth, logout, setActAs };
+  return useContext(UserContext);
 }
 
 export function useAdminGuard() {
@@ -89,7 +94,6 @@ export function useAdminGuard() {
   const { auth } = useUser();
 
   useEffect(() => {
-    console.log(auth);
     if (
       !auth.user.is_admin ||
       !auth.isLoggedIn ||
