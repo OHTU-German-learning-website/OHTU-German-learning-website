@@ -14,7 +14,7 @@ export default function DragdropAdminPage() {
         const additionalFields = Array(numberOfFields - inputFields.length)
           .fill("")
           .map(() => ({
-            title: "",
+            category: "",
             content: "",
           }));
         setInputFields([...inputFields, ...additionalFields]);
@@ -65,12 +65,12 @@ export default function DragdropAdminPage() {
               <div key={index} className="form-group">
                 <input
                   type="text"
-                  value={field.title}
+                  value={field.category}
                   onChange={(e) =>
-                    handleInputChange(index, "title", e.target.value)
+                    handleInputChange(index, "category", e.target.value)
                   }
                   className="form-input"
-                  placeholder={`Enter title ${index + 1}`}
+                  placeholder={`Enter category ${index + 1}`}
                 />
                 <input
                   type="text"
