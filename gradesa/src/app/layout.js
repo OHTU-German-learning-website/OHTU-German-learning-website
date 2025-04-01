@@ -4,6 +4,7 @@ import styles from "./page.module.css";
 import Navbar from "@/components/ui/navbar/navigation";
 import Sidebar from "@/components/ui/sidebar/sidebar";
 import { UserProvider } from "@/shared/user.context";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],

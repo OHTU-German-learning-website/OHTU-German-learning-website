@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-
+import { useRequest } from "./hooks/useRequest";
 export const userOptions = [
   { label: "Student", value: "user" },
   { label: "Lehrer", value: "admin" },
@@ -30,27 +30,30 @@ const UserContext = createContext({
 // Create a provider component
 export function UserProvider({ children }) {
   const [auth, setAuth] = useState(defaultUserState);
-
+  const makeRequest = useRequest();
   // Check if user is logged in on initial load
   useEffect(() => {
-    const checkUserSession = async () => {
+    async function checkUserSession() {
       try {
-        // TODO: actual check
-        setAuth({
-          isLoggedIn: true,
-          actAs: defaultUserState.actAs,
-          user: {
-            id: "1",
-            username: "Admin",
-            email: "admin@gradesa.com",
-            is_admin: true,
-          },
-        });
+        const response = await makeRequest("/auth/session");
+        if (response.status === 200 && response.data) {
+          setAuth({
+            isLoggedIn: true,
+            actAs: defaultUserState.actAs,
+            user: {
+              id: "1",
+              username: "Admin",
+              email: "admin@gradesa.com",
+              is_admin: true,
+            },
+          });
+        } else {
+          setAuth(defaultUserState);
+        }
       } catch (error) {
         console.error("Failed to fetch user session:", error);
       }
-    };
-
+    }
     checkUserSession();
   }, []);
 
