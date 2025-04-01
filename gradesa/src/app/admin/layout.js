@@ -1,11 +1,20 @@
 "use client";
 
 import styles from "./admin-layout.module.css";
-import { useAdminGuard } from "@/context/user.context";
+import { useIsAdmin } from "@/context/user.context";
 
 export default function AdminLayout({ children }) {
-  useAdminGuard();
+  const isAdmin = useIsAdmin();
 
-  // Only render children if user is logged in and acting as admin
-  return <div className={styles.adminLayout}>{children}</div>;
+  const renderAdminContent = () => {
+    switch (isAdmin) {
+      case true:
+        return children;
+      case false:
+        return <span>Unauthorized</span>;
+      default:
+        return <span>Loading...</span>;
+    }
+  };
+  return <div className={styles.adminLayout}>{renderAdminContent()}</div>;
 }

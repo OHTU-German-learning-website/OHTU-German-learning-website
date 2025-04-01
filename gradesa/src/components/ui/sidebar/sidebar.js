@@ -8,15 +8,19 @@ import { Column } from "../layout/container";
 import { Dropdown } from "../dropdown";
 import { useUser, userOptions } from "@/context/user.context";
 import { Button } from "../button";
-
+import { useEffect, useState } from "react";
+import { useIsMounted } from "@/shared/hooks/useIsMounted";
 const Sidebar = () => {
-  const { auth, setActAs } = useUser();
+  const { auth, setActAs, actAs } = useUser();
 
   const handleActAsChange = (actAs) => {
     setActAs(actAs);
   };
+
+  const isMounted = useIsMounted();
   const renderSidebar = () => {
-    if (auth.actAs.value === "admin") {
+    if (!isMounted) return null;
+    if (actAs.value === "admin") {
       return <AdminSideBar />;
     }
     return <StudentSideBar />;
@@ -28,9 +32,9 @@ const Sidebar = () => {
           <Dropdown
             options={userOptions}
             onSelect={handleActAsChange}
-            value={auth.actAs}
+            value={actAs}
           >
-            <Button variant="outline">{auth.actAs.label}</Button>
+            <Button variant="outline">{actAs.label}</Button>
           </Dropdown>
         )}
         {renderSidebar()}
@@ -66,18 +70,13 @@ const adminSidebarLinks = [
     title: "Übungen erstellen",
     linkLabel: "Übungen erstellen",
     link: "/admin/create-exercise",
+    id: "create-exercise",
   },
 ];
 
 function AdminSideBar() {
   return (
-    <>
-      <SidebarGroup
-        title="Admin"
-        sublinks={adminSidebarLinks}
-        topLink="/admin"
-      />
-    </>
+    <SidebarGroup title="Admin" sublinks={adminSidebarLinks} topLink="/admin" />
   );
 }
 
@@ -90,7 +89,7 @@ function SidebarGroup({ title, sublinks, topLink }) {
           styles.sublink,
           pathname === sublink.link ? styles.active : "",
         ].join(" ")}
-        key={i}
+        key={`${i}-${sublink.link}`}
         href={sublink.link}
       >
         {sublink.linkLabel}

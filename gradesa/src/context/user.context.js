@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useRequest } from "../shared/hooks/useRequest";
+import useLocalStorage from "@/shared/utils/useLocalStorage";
 
 export const userOptions = [
   { label: "Student", value: "user" },
@@ -12,7 +13,6 @@ export const userOptions = [
 // Define the default user state
 const defaultUserState = {
   isLoggedIn: false,
-  actAs: userOptions[0],
   user: {
     id: null,
     username: null,
@@ -24,6 +24,7 @@ const defaultUserState = {
 // Create the context
 const UserContext = createContext({
   user: defaultUserState,
+  actAs: userOptions[0],
 });
 
 // Create a provider component
@@ -31,6 +32,7 @@ export function UserProvider({ children }) {
   const [auth, setAuth] = useState(defaultUserState);
   const makeRequest = useRequest();
   const pathname = usePathname();
+  const [actAs, setActAs] = useLocalStorage("gradesa_act_as", userOptions[0]);
   // Check if user is logged in on initial load
   useEffect(() => {
     async function checkUserSession() {
@@ -67,10 +69,6 @@ export function UserProvider({ children }) {
     checkUserSession();
   }, [pathname]);
 
-  const setActAs = (actAs) => {
-    setAuth({ ...auth, actAs });
-  };
-
   // Logout function
   const logout = async () => {
     const response = await makeRequest("/auth/logout");
@@ -82,7 +80,7 @@ export function UserProvider({ children }) {
   };
 
   return (
-    <UserContext.Provider value={{ auth, logout, setActAs }}>
+    <UserContext.Provider value={{ auth, logout, setActAs, actAs }}>
       {children}
     </UserContext.Provider>
   );
@@ -98,17 +96,17 @@ export function useIsLoggedIn() {
   return auth?.isLoggedIn ?? false;
 }
 
-export function useAdminGuard() {
+export function useIsAdmin() {
   const router = useRouter();
-  const { auth } = useUser();
+  const pathname = usePathname();
+  const { auth, actAs } = useUser();
   useEffect(() => {
-    if (
-      !auth.user.is_admin ||
-      !auth.isLoggedIn ||
-      auth.actAs.value !== "admin"
-    ) {
+    if (!auth.user?.id) return;
+    if (!auth.user?.is_admin || !auth.isLoggedIn || actAs.value !== "admin") {
       console.debug("Not authorized to view admin page", auth);
       router.replace("/");
     }
-  }, [auth, router]);
+  }, [auth, router, pathname]);
+
+  return auth?.user?.id ? auth.user.is_admin : undefined;
 }
