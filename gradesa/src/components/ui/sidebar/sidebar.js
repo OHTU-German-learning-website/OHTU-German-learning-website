@@ -43,6 +43,9 @@ function StudentSideBar() {
   return (
     <>
       <SidebarGroup title="Lernen" sublinks={chapters} topLink="/resources" />
+      <Link className={styles.sidebarLink} href="/grammar/communications">
+        Kommunikations-situationen
+      </Link>
       <Link
         className={[
           styles.sidebarLink,

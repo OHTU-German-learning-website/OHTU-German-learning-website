@@ -55,6 +55,8 @@
 
 .baseButton.fit {
   width: fit-content;
+  background-color: var(--primary1);
+  color: var(--fg1);
 }
 
 .baseButton.primary {
@@ -109,4 +111,15 @@
     color: var(--primary6);
     border: 1px solid var(--primary9);
   }
+}
+
+.baseButton.click {
+    padding: 2px;
+    border: none;
+    background-color: transparent;
+    width: fit-content;
+
+    &:hover {
+        background-color: var(--bg2);
+    }
 }
