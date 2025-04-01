@@ -1,0 +1,77 @@
+.exercise-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--u-md);
+}
+
+.task-title {
+  font-size: var(--font-xl);
+  margin-bottom: 1.5rem;
+}
+
+.task-sentence {
+  font-size: var(--font-lg);
+  margin-bottom: 1.5rem;
+}
+
+.row {
+  display: flex;
+  gap: var(--u-xl);
+}
+
+.button {
+  font-weight: 600;
+}
+
+.error-message {
+  padding: var(--u-md);
+  background-color: var(--tertiary5);
+  font-size: var(--font-md);
+  color: var(--fg1);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--u-lg);
+  text-align: center;
+  margin-top: var(--u-lg);
+}
+
+.success-message {
+  padding: var(--u-md);
+  background-color: var(--tertiary10);
+  font-size: var(--font-md);
+  color: var(--fg9);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--u-lg);
+  text-align: center;
+  margin-top: var(--u-lg);
+}
+
+/* General dropdown styling */
+select {
+  padding: 0.5rem 1rem; /* Add padding */
+  border-radius: var(--radius-sm); /* Rounded corners */
+  border: 1px solid var(--fg3); /* Default border color */
+  font-size: var(--font-md);
+  background-color: var(--bg1); /* Default background color */
+  color: var(--fg1); /* Default text color */
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+/* Styling for locked (correct) dropdowns */
+select.correct {
+  background-color: var(
+    --tertiary10
+  ); /* Green background for correct answers */
+  border-color: var(--success-border); /* Optional: Green border */
+  color: var(--fg8); /* Optional: Green text color */
+}
+
+/* Styling for incorrect dropdowns (optional) */
+select.incorrect {
+  background-color: var(--tertiary5); /* Red background for incorrect answers */
+  border-color: var(--error-border); /* Optional: Red border */
+  color: var(--error-text); /* Optional: Red text color */
+}

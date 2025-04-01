@@ -3,6 +3,8 @@
 import { useState } from "react";
 import RenderText from "./textrender";
 import { Row } from "../layout/container";
+import "./multichoice.css";
+import { Button } from "@/components/ui/button";
 
 export default function MainUI() {
   const EXERCISE_DATA = {
@@ -100,9 +102,13 @@ export default function MainUI() {
         handleChange={handleChange}
       />
 
-      <Row gap="8px" align="center">
-        <button onClick={handleReset}>Zurücksetzen</button>
-        <button onClick={handleSubmit}>Überprüfen</button>
+      <Row className="row">
+        <Button className="button" onClick={handleReset}>
+          Zurücksetzen
+        </Button>
+        <Button className="button" onClick={handleSubmit}>
+          Überprüfen
+        </Button>
       </Row>
 
       {isSubmitted && allCorrect && (
