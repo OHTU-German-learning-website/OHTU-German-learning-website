@@ -1,7 +1,5 @@
 "use client";
 
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { LinkButton } from "@/components/ui/linkbutton";
 
 export default function Home() {
@@ -15,11 +13,9 @@ export default function Home() {
             einschließlich Artikel, Verbkonjugationen und grundlegender
             Satzstruktur.
           </p>
-          <Link href="/learning">
-            <Button variant="primary" size="lg" width="fit">
-              Entdecke deine Lernstrategien
-            </Button>
-          </Link>
+          <LinkButton href="/learning" variant="primary" size="lg">
+            Entdecke deine Lernstrategien
+          </LinkButton>
         </section>
 
         <div className="features">
