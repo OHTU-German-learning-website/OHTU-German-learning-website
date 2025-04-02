@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Column } from "@/components/ui/layout/container";
-import { Button } from "@/components/ui/button";
+import { LinkButton } from "@/components/ui/linkbutton";
 
 export const chapters = [
   {
@@ -225,9 +225,7 @@ export const chapters = [
 export default function Chapter() {
   return (
     <Column gap="md">
-      <Button variant="fit">
-        <Link href="/grammar/themes">Themen der Grammatik</Link>
-      </Button>
+      <LinkButton href="/grammar/themes">Themen der Grammatik</LinkButton>
       <h1>Grammatik in alphabetischer Reihenfolge</h1>
 
       {chapters.map((chapter) => (

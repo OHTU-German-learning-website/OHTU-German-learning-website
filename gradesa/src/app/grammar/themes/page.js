@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { LinkButton } from "@/components/ui/linkbutton";
 
 const initialGrammarTopics = [
   {
@@ -129,11 +128,9 @@ export default function ThemesPage() {
 
   return (
     <div className="themes-title">
-      <Button variant="fit">
-        <Link href="/grammar/alphabetical">
-          Grammatik in alphabetischer Reihenfolge
-        </Link>
-      </Button>
+      <LinkButton href="/grammar/alphabetical">
+        Grammatik in alphabetischer Reihenfolge
+      </LinkButton>
       <h1>Themen der Grammatik</h1>
 
       <div className="lessons-container">
