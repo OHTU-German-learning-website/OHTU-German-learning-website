@@ -6,46 +6,45 @@ import { Row } from "../layout/container";
 import "./multichoice.css";
 import { Button } from "@/components/ui/button";
 
-const EXERCISE_DATA = {
-  text: [
-    "Wenn",
-    "man",
-    "in",
-    "___",
-    "Land",
-    "Sachsen",
-    "kommt,",
-    "dann",
-    "kommt",
-    "man",
-    "entweder",
-    "mit",
-    "___",
-    "Bahn,",
-    "mit",
-    "___",
-    "Auto",
-    "oder",
-    "mit",
-    "___",
-    "Flugzeug.",
-  ],
-  options: [
-    ["das", "die", "der"], // Options for the first gap
-    ["der", "die", "das"], // Options for the second gap
-    ["dem", "den", "die"], // Options for the third gap
-    ["dem", "den", "die"], // Options for the fourth gap
-  ],
-  answers: ["das", "der", "dem", "dem"],
-};
+const EXERCISE_DATA = [
+  { type: "text", value: "Wenn man in" },
+  {
+    type: "multichoice",
+    value: "___",
+    options: ["das", "die", "der"],
+    correct_answer: "das",
+  },
+  { type: "text", value: "Land Sachsen kommt, dann kommt man entweder mit" },
+  {
+    type: "multichoice",
+    value: "___",
+    options: ["der", "die", "das"],
+    correct_answer: "der",
+  },
+  { type: "text", value: "Bahn, mit" },
+  {
+    type: "multichoice",
+    value: "___",
+    options: ["dem", "den", "die"],
+    correct_answer: "dem",
+  },
+  { type: "text", value: "Auto oder mit" },
+  {
+    type: "multichoice",
+    value: "___",
+    options: ["dem", "den", "die"],
+    correct_answer: "dem",
+  },
+  { type: "text", value: "Flugzeug." },
+];
 
 export default function MainUI() {
   const [userAnswers, setUserAnswers] = useState(
-    Array(EXERCISE_DATA.answers.length).fill("")
+    EXERCISE_DATA.map((item) => (item.type === "multichoice" ? "" : null))
   );
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [checkedAnswers, setCheckedAnswers] = useState(
-    Array(EXERCISE_DATA.answers.length).fill(false)
+    EXERCISE_DATA.map(() => false)
   );
   const [hasErrors, setHasErrors] = useState(false); // Unanswered or incorrect answers
 
@@ -64,11 +63,15 @@ export default function MainUI() {
 
   const handleSubmit = () => {
     const hasMissingAnswers = userAnswers.some((answer) => answer === "");
-    const newCheckedAnswers = userAnswers.map(
-      (answer, index) =>
-        answer.trim().toLowerCase() ===
-        EXERCISE_DATA.answers[index].toLowerCase()
-    );
+    const newCheckedAnswers = EXERCISE_DATA.map((item, index) => {
+      if (item.type === "multichoice") {
+        return (
+          userAnswers[index]?.trim().toLowerCase() ===
+          item.correct_answer.toLowerCase()
+        );
+      }
+      return true;
+    });
     const hasIncorrectAnswers = newCheckedAnswers.some(
       (isCorrect) => !isCorrect
     );
@@ -80,9 +83,11 @@ export default function MainUI() {
   };
 
   const handleReset = () => {
-    setUserAnswers(Array(EXERCISE_DATA.answers.length).fill(""));
+    setUserAnswers(
+      EXERCISE_DATA.map((item) => (item.type === "multichoice" ? "" : null))
+    );
     setIsSubmitted(false);
-    setCheckedAnswers(Array(EXERCISE_DATA.answers.length).fill(false));
+    setCheckedAnswers(EXERCISE_DATA.map(() => false));
     setHasErrors(false);
   };
 

@@ -5,52 +5,39 @@ export default function RenderText({
   checkedAnswers,
   handleChange: onAnswerChange,
 }) {
-  const { text, options } = exerciseData;
-
-  // Helper function to count gaps before a specific index
-  const countGapsBeforeIndex = (textArray, currentIndex) => {
-    return textArray.slice(0, currentIndex).filter((word) => word === "___")
-      .length;
-  };
-
-  const renderWord = (word, index) => {
-    if (word !== "___") {
-      return <span key={index}>{word} </span>;
+  const renderItem = (item, index) => {
+    if (item.type === "text") {
+      return <span key={index}>{item.value} </span>;
     }
 
-    const gapIndex = countGapsBeforeIndex(text, index);
+    if (item.type === "multichoice") {
+      const userAnswer = userAnswers[index];
+      const isCorrect = checkedAnswers[index];
+      const selectClassName = isSubmitted
+        ? isCorrect
+          ? "correct"
+          : "incorrect"
+        : "";
 
-    // Safety check to prevent out-of-bounds access to the options array
-    if (gapIndex < 0 || gapIndex >= options.length) {
-      console.error(`Invalid gap index: ${gapIndex}`);
-      return <span key={index}> [Error in gap] </span>;
+      return (
+        <select
+          key={index}
+          value={userAnswer}
+          onChange={(e) => onAnswerChange(index, e.target.value)}
+          disabled={isSubmitted && isCorrect}
+          className={selectClassName}
+        >
+          <option value="">Wähle...</option>
+          {item.options.map((option, i) => (
+            <option key={i} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+      );
     }
 
-    const userAnswer = userAnswers[gapIndex];
-    const isCorrect = checkedAnswers[gapIndex];
-    const selectClassName = isSubmitted
-      ? isCorrect
-        ? "correct"
-        : "incorrect"
-      : "";
-
-    return (
-      <select
-        key={index}
-        value={userAnswer}
-        onChange={(e) => onAnswerChange(gapIndex, e.target.value)}
-        disabled={isSubmitted && isCorrect}
-        className={selectClassName}
-      >
-        <option value="">Wähle...</option>
-        {options[gapIndex].map((option, i) => (
-          <option key={i} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-    );
+    return null; // Fallback for unsupported types
   };
-
-  return <p className="task-sentence">{text.map(renderWord)}</p>;
+  return <p className="task-sentence">{exerciseData.map(renderItem)}</p>;
 }
