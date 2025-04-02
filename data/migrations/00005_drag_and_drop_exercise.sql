@@ -111,6 +111,6 @@ CREATE TABLE dnd_to_exercises (
 
 CREATE TRIGGER updated_at
 BEFORE UPDATE
-ON public.click_to_exercises
+ON public.dnd_to_exercises
 FOR EACH ROW
 EXECUTE FUNCTION updated_at();
