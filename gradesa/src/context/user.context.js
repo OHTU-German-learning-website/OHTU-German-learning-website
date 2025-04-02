@@ -72,7 +72,7 @@ export function UserProvider({ children }) {
   // Logout function
   const logout = async () => {
     const response = await makeRequest("/auth/logout");
-    if (response.ok) {
+    if (response.status === 200) {
       console.debug("User logged out");
       setAuth(defaultUserState);
       window.location.reload();

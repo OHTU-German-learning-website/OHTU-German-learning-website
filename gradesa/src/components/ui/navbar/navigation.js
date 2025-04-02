@@ -2,17 +2,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import "./navbar.css";
-import { useRouter } from "next/navigation";
 import { useUser } from "@/context/user.context";
-import { Column, Row } from "../layout/container";
+import { Column } from "../layout/container";
 
 function Navbar() {
   const { auth, logout } = useUser();
-  const router = useRouter();
-  const handleLogin = (e) => {
-    e.preventDefault();
-    router.push("/auth/login");
-  };
 
   return (
     <nav className="navbar">
@@ -41,19 +35,18 @@ function Navbar() {
                 <span className="logged-in-label">Eingeloggt als</span>
                 <span className="username">{auth.user.username}</span>
               </Column>
-
               <button onClick={logout} className="login-btn">
                 Abmeldung
               </button>
             </>
           ) : (
             <>
-              <button onClick={handleLogin} className="login-btn">
-                Anmeldung
-              </button>
-              <button className="signup-btn">
-                <Link href="/auth/register">Registrieren</Link>
-              </button>
+              <Link href="/auth/login">
+                <button className="login-btn">Anmeldung</button>
+              </Link>
+              <Link href="/auth/register">
+                <button className="signup-btn">Registrieren</button>
+              </Link>
             </>
           )}
         </div>
