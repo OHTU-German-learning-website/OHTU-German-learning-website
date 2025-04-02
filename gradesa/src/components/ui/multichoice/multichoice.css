@@ -47,31 +47,28 @@
   margin-top: var(--u-lg);
 }
 
-/* General dropdown styling */
 select {
-  padding: 0.5rem 1rem; /* Add padding */
-  border-radius: var(--radius-sm); /* Rounded corners */
-  border: 1px solid var(--fg3); /* Default border color */
-  font-size: var(--font-md);
-  background-color: var(--bg1); /* Default background color */
-  color: var(--fg1); /* Default text color */
+  padding: 0.3rem;
+  margin: 0.2rem 0.5rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--fg3);
+  font-size: var(--font-lg);
+  background-color: var(--bg1);
+  color: var(--fg1);
+  text-align: center;
   transition:
     background-color 0.3s ease,
     border-color 0.3s ease;
 }
 
-/* Styling for locked (correct) dropdowns */
 select.correct {
-  background-color: var(
-    --tertiary10
-  ); /* Green background for correct answers */
-  border-color: var(--success-border); /* Optional: Green border */
-  color: var(--fg8); /* Optional: Green text color */
+  background-color: var(--tertiary10);
+  border-color: var(--fg8);
+  color: var(--fg8);
+  text-align: center;
 }
 
-/* Styling for incorrect dropdowns (optional) */
 select.incorrect {
-  background-color: var(--tertiary5); /* Red background for incorrect answers */
-  border-color: var(--error-border); /* Optional: Red border */
-  color: var(--error-text); /* Optional: Red text color */
+  background-color: var(--tertiary5);
+  text-align: center;
 }
