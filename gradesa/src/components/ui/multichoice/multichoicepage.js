@@ -38,7 +38,7 @@ const EXERCISE_DATA = [
   { type: "text", value: "Flugzeug." },
 ];
 
-export default function MainUI() {
+export default function MultichoicePage() {
   const [userAnswers, setUserAnswers] = useState(
     EXERCISE_DATA.map((item) => (item.type === "multichoice" ? "" : null))
   );
