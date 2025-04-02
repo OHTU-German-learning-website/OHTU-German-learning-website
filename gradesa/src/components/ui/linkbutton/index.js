@@ -7,10 +7,11 @@ export const LinkButton = ({
   children,
   variant = "outline",
   size = "md",
+  className,
 }) => {
   return (
     <Link href={href}>
-      <Button variant={variant} size={size} width="fit">
+      <Button variant={variant} size={size} width="fit" className={className}>
         {children}
       </Button>
     </Link>
