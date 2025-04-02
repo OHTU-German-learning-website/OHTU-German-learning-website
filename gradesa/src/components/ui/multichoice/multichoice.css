@@ -27,7 +27,7 @@
 
 .error-message {
   padding: var(--u-md);
-  background-color: var(--tertiary5);
+  background-color: var(--tertiary2);
   font-size: var(--font-md);
   color: var(--fg1);
   border-radius: var(--radius-sm);
@@ -69,6 +69,6 @@ select.correct {
 }
 
 select.incorrect {
-  background-color: var(--tertiary5);
+  background-color: var(--tertiary2);
   text-align: center;
 }

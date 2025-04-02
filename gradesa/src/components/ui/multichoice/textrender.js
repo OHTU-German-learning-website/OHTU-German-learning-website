@@ -7,6 +7,12 @@ export default function RenderText({
 }) {
   const { text, options } = exerciseData;
 
+  // Helper function to count gaps before a specific index
+  const countGapsBeforeIndex = (textArray, currentIndex) => {
+    return textArray.slice(0, currentIndex).filter((word) => word === "___")
+      .length;
+  };
+
   const renderWord = (word, index) => {
     if (word !== "___") {
       return <span key={index}>{word} </span>;
@@ -14,10 +20,10 @@ export default function RenderText({
 
     const gapIndex = countGapsBeforeIndex(text, index);
 
-    // Safety check to prevent undefined access
+    // Safety check to prevent out-of-bounds access to the options array
     if (gapIndex < 0 || gapIndex >= options.length) {
       console.error(`Invalid gap index: ${gapIndex}`);
-      return <span key={index}>Error in gap</span>;
+      return <span key={index}> [Error in gap] </span>;
     }
 
     const userAnswer = userAnswers[gapIndex];
@@ -44,12 +50,6 @@ export default function RenderText({
         ))}
       </select>
     );
-  };
-
-  // Helper function to count gaps before a specific index
-  const countGapsBeforeIndex = (textArray, currentIndex) => {
-    return textArray.slice(0, currentIndex).filter((word) => word === "___")
-      .length;
   };
 
   return <p className="task-sentence">{text.map(renderWord)}</p>;

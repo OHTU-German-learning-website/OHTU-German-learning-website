@@ -6,40 +6,40 @@ import { Row } from "../layout/container";
 import "./multichoice.css";
 import { Button } from "@/components/ui/button";
 
-export default function MainUI() {
-  const EXERCISE_DATA = {
-    text: [
-      "Wenn",
-      "man",
-      "in",
-      "___",
-      "Land",
-      "Sachsen",
-      "kommt,",
-      "dann",
-      "kommt",
-      "man",
-      "entweder",
-      "mit",
-      "___",
-      "Bahn,",
-      "mit",
-      "___",
-      "Auto",
-      "oder",
-      "mit",
-      "___",
-      "Flugzeug.",
-    ],
-    options: [
-      ["das", "die", "der"], // Options for the first gap
-      ["der", "die", "das"], // Options for the second gap
-      ["dem", "den", "die"], // Options for the third gap
-      ["dem", "den", "die"], // Options for the fourth gap
-    ],
-    answers: ["das", "der", "dem", "dem"],
-  };
+const EXERCISE_DATA = {
+  text: [
+    "Wenn",
+    "man",
+    "in",
+    "___",
+    "Land",
+    "Sachsen",
+    "kommt,",
+    "dann",
+    "kommt",
+    "man",
+    "entweder",
+    "mit",
+    "___",
+    "Bahn,",
+    "mit",
+    "___",
+    "Auto",
+    "oder",
+    "mit",
+    "___",
+    "Flugzeug.",
+  ],
+  options: [
+    ["das", "die", "der"], // Options for the first gap
+    ["der", "die", "das"], // Options for the second gap
+    ["dem", "den", "die"], // Options for the third gap
+    ["dem", "den", "die"], // Options for the fourth gap
+  ],
+  answers: ["das", "der", "dem", "dem"],
+};
 
+export default function MainUI() {
   const [userAnswers, setUserAnswers] = useState(
     Array(EXERCISE_DATA.answers.length).fill("")
   );
@@ -55,6 +55,7 @@ export default function MainUI() {
       newAnswers[index] = value;
       return newAnswers;
     });
+
     // Clear error state when user makes changes after submission
     if (isSubmitted) {
       setHasErrors(false);
@@ -71,13 +72,10 @@ export default function MainUI() {
     const hasIncorrectAnswers = newCheckedAnswers.some(
       (isCorrect) => !isCorrect
     );
+
     // Set error state if there are missing or incorrect answers
     setHasErrors(hasMissingAnswers || hasIncorrectAnswers);
     setCheckedAnswers(newCheckedAnswers);
-    // Clear incorrect answers
-    setUserAnswers((prev) =>
-      prev.map((answer, index) => (newCheckedAnswers[index] ? answer : ""))
-    );
     setIsSubmitted(true);
   };
 
@@ -88,6 +86,7 @@ export default function MainUI() {
     setHasErrors(false);
   };
 
+  // Check if all answers are correct
   const allCorrect = isSubmitted && checkedAnswers.every(Boolean);
 
   return (
