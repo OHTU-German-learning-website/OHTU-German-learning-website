@@ -85,6 +85,13 @@
   --green8: hsl(120, 60%, 20%);
   --green9: hsl(120, 60%, 10%);
 
+  /* indicator colors */
+  --green: hsl(120, 40%, 50%);
+  --blue : hsl(240, 40%, 92%);
+  --red : hsl(0, 69%, 56%);
+  --yellow : hsl(50, 86%, 74%);
+  --yellow-border: hsl(43, 65%, 51%);
+
   --masculine: hsl(240, 80%, 77%);
   --feminine: hsl(359, 73%, 71%);
   --neutral: hsl(112, 49%, 63%);
@@ -210,6 +217,8 @@
     --green8: hsl(120, 40%, 90%);
     --green9: hsl(120, 40%, 95%);
 
+    /* indicator colors */
+    --green: hsl(120, 40%, 50%);
     --blue : hsl(240, 40%, 92%);
     --red : hsl(0, 69%, 56%);
     --yellow : hsl(50, 86%, 74%);
@@ -441,6 +450,21 @@ input {
     border-color: var(--primary9);
   }
 }
+
+textarea {
+    width: 60%;
+    border: 1px solid var(--primary8);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-md);
+    background: var(--bg5);
+    padding: var(--u-md) var(--u-lg);
+    color: var(--fg1);
+    &:focus {
+      outline: none;
+      border-color: var(--primary9);
+  }
+}
+
 
 /*input[type="text"] {
   font-size: var(--font-lg);

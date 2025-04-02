@@ -8,22 +8,33 @@ const WordSelectionExercise = ({
   targetCategory,
   targetWords,
   allWords,
+  onSelectionChange,
+  isPreviewMode = false,
 }) => {
   const [selectedWords, setSelectedWords] = useState([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [feedback, setFeedback] = useState("");
 
   const handleWordClick = (word) => {
-    if (isSubmitted) return;
+    if (isSubmitted && !isPreviewMode) return;
 
+    let updatedSelectedWords;
     if (selectedWords.includes(word)) {
-      setSelectedWords(selectedWords.filter((w) => w !== word));
+      updatedSelectedWords = selectedWords.filter((w) => w !== word);
     } else {
-      setSelectedWords([...selectedWords, word]);
+      updatedSelectedWords = [...selectedWords, word];
+    }
+
+    setSelectedWords(updatedSelectedWords);
+
+    if (isPreviewMode && onSelectionChange) {
+      onSelectionChange(updatedSelectedWords);
     }
   };
 
   const checkAnswers = () => {
+    if (isPreviewMode) return;
+
     const correctAnswers = targetWords;
     const incorrectSelections = selectedWords.filter(
       (word) => !correctAnswers.includes(word)
@@ -62,15 +73,15 @@ const WordSelectionExercise = ({
 
   const textColor = (word) => {
     if (selectedWords.includes(word)) {
-      if (isSubmitted) {
+      if (isSubmitted && !isPreviewMode) {
         return targetWords.includes(word)
-          ? { backgroundColor: "var(--green3)" } // green
+          ? { backgroundColor: "var(--green)" } // green
           : { backgroundColor: "var(--red)" }; // red
       } else {
         return { backgroundColor: "var(--blue)" }; // blue
       }
     } else {
-      if (isSubmitted && targetWords.includes(word)) {
+      if (isSubmitted && targetWords.includes(word) && !isPreviewMode) {
         return {
           backgroundColor: "var(--yellow)",
           border: "1px solid var(--yellow-border)",
@@ -95,7 +106,7 @@ const WordSelectionExercise = ({
           </Button>
         ))}
       </Container>
-      {feedback && (
+      {feedback && !isPreviewMode && (
         <>
           <div>{feedback}</div>
           <br />
@@ -103,14 +114,16 @@ const WordSelectionExercise = ({
       )}
 
       <div>
-        {!isSubmitted ? (
+        {!isSubmitted && !isPreviewMode ? (
           <Button size="sm" onClick={checkAnswers}>
             Antworten überprüfen
           </Button>
         ) : (
-          <Button size="sm" onClick={resetExercise}>
-            Erneut versuchen
-          </Button>
+          !isPreviewMode && (
+            <Button size="sm" onClick={resetExercise}>
+              Erneut versuchen
+            </Button>
+          )
         )}
       </div>
     </Column>
