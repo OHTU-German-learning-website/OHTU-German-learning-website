@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { logger } from "../logging";
 
 export const withInputValidation = (schema, callback) => {
   return async (req, res) => {
@@ -8,10 +9,13 @@ export const withInputValidation = (schema, callback) => {
       req.body = validatedInput;
     } catch (error) {
       if (error instanceof z.ZodError) {
-        return NextResponse.json(
-          { error: humanReadableZodError(error) },
-          { status: 422 }
+        const errorMessage = humanReadableZodError(error);
+        logger.error(
+          `Input validation failed for ${req.url}: ${errorMessage}`,
+          error.errors,
+          req.body
         );
+        return NextResponse.json({ error: errorMessage }, { status: 422 });
       }
       throw error;
     }

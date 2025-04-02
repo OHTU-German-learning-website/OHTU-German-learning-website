@@ -1,0 +1,1 @@
+ALTER TABLE free_form_answer_feedbacks ADD COLUMN answer TEXT NOT NULL;

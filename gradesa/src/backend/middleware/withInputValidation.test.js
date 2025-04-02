@@ -61,7 +61,7 @@ describe("withInputValidation middleware", () => {
     const result2 = await middleware(req2, res);
     expect(result2.status).toBe(422);
     const json2 = await result2.json();
-    expect(json2.error).toContain("Name is requiredq");
+    expect(json2.error).toContain("Name is required");
 
     const req3 = { body: invalidData3 };
     const result3 = await middleware(req3, res);

@@ -442,9 +442,22 @@ input {
   }
 }
 
-/*input[type="text"] {
-  font-size: var(--font-lg);
-  margin: 0.5rem;
-  padding: var(--u-md);
-  text-align: center;
-}*/
+textarea {
+  border: 1px solid var(--primary8);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-md);
+  background: var(--bg5);
+  padding: var(--u-md) var(--u-lg);
+  color: var(--fg1);
+  &:focus {
+    outline: none;
+    border-color: var(--primary9);
+  }
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-sm);
+  font-size: var(--font-sm);
+}

@@ -173,7 +173,8 @@ CREATE TABLE public.free_form_answer_feedbacks (
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   updated_at timestamp with time zone NOT NULL DEFAULT now(),
   feedback text NOT NULL,
-  free_form_answer_id bigint NOT NULL
+  free_form_answer_id bigint NOT NULL,
+  answer text NOT NULL
 );
 
 CREATE TABLE public.free_form_answers (
