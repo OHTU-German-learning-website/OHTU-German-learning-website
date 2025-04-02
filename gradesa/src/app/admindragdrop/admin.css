@@ -35,9 +35,30 @@
     font-size: 1rem;
     width: 100%;
     max-width: 300px;
+    background-color: var(--bg2);
   }
 
   .form-input::placeholder {
     color: var(--fg7);
     font-style: italic;
+  }
+
+  .form-red {
+    background-color: var(--feminine);
+  }
+
+  .form-blue {
+    background-color: var(--masculine);
+  }
+
+  .form-green {
+    background-color: var(--neutral);
+  }
+
+  .form-yellow {
+    background-color: var(--yellow);
+  }
+
+  .form-purple {
+    background-color: var(--purple);
   }

@@ -1,9 +1,9 @@
 "use client";
 import styles from "../page.module.css";
+import "./admin.css";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Row } from "@/components/ui/layout/container";
-import { Dropdown } from "@/components/ui/dropdown";
 
 export default function DragdropAdminPage() {
   const [numberOfFields, setNumberOfFields] = useState(null);
@@ -70,7 +70,11 @@ export default function DragdropAdminPage() {
                       <option value="">Select color</option>
                       {["red", "blue", "green", "yellow", "purple"].map(
                         (color) => (
-                          <option key={color} value={color}>
+                          <option
+                            className={`form-${color}`}
+                            key={color}
+                            value={color}
+                          >
                             {color}
                           </option>
                         )
