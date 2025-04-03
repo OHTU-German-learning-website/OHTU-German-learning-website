@@ -70,55 +70,56 @@ export default function CreateExercise() {
 
   return (
     <div>
-      <h1>Create Word Selection Exercise</h1>
+      <h1>Wortauswahl-Übung erstellen</h1>
       {submitted ? (
         successMessage() // Show only the success message if submitted
       ) : !previewMode ? (
         <form onSubmit={handlePreview}>
           <Column gap="md">
             <Container className="exercise-click">
-              <label>Exercise Title</label>
+              <label>Übungstitel</label>
               <input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="E.g., Identifying Verbs"
+                placeholder="Z. B. Verben identifizieren"
                 required
               />
             </Container>
 
             <Container className="exercise-click">
-              <label>Target Category</label>
+              <label>Zielkategorie</label>
               <input
                 type="text"
                 value={targetCategory}
                 onChange={(e) => setTargetCategory(e.target.value)}
-                placeholder="E.g., verbs, nouns, adjectives, etc."
+                placeholder="Z. B. Verben, Substantive, Adjektive, etc."
                 required
               />
             </Container>
 
             <Container className="exercise-click">
-              <label>The whole text</label>
+              <label>Übungstext</label>
               <textarea
                 value={allWordsText}
                 onChange={(e) => setAllWordsText(e.target.value)}
-                placeholder="Enter all words separated by commas (e.g., run, jump, swim, table, happy, quickly)"
+                placeholder="Z. B. Ich mag laufen und schwimmen."
                 rows={4}
                 required
               />
             </Container>
           </Column>
           <Button size="sm" type="submit">
-            Select Target Words
+            Zielwörter auswählen
           </Button>
         </form>
       ) : (
         <div>
           <p>
-            Click on the words to select the correct ones ({targetCategory}).
+            Klicken Sie auf die Wörter, um die richtigen auszuwählen (
+            {targetCategory}).
           </p>
-          <h2>The exercise will look like this:</h2>
+          <h2>Die Übung wird so aussehen:</h2>
           <Container>
             <WordSelectionExercise
               title={title}
@@ -133,10 +134,10 @@ export default function CreateExercise() {
           </Container>
           <Container>
             <Button size="sm" variant="secondary" onClick={handleEditAgain}>
-              Edit Exercise
+              Übung bearbeiten
             </Button>
             <Button size="sm" onClick={handleSaveExercise}>
-              Save Exercise
+              Übung speichern
             </Button>
           </Container>
           {!!error && errorMessage()}
