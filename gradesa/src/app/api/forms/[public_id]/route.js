@@ -6,7 +6,6 @@ import { withAuth } from "@/backend/middleware/withAuth";
 export const GET = withAuth(async (request, { params }) => {
   const { public_id } = await params;
   const user = request.user;
-  console.log(user, "user");
   const user_id = user.id;
 
   const formRows = await DB.pool(
