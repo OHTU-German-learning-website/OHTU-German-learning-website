@@ -19,9 +19,7 @@ CREATE TABLE dnd_exercises(
     title TEXT NOT NULL,
     categories TEXT [] NOT NULL,
     draggable_words TEXT [] NOT NULL,
-    all_words TEXT [] NOT NULL,
-    UNIQUE (all_words, draggable_words),
-    UNIQUE (id, draggable_words)
+    UNIQUE (id, draggable_words),
 );
 
 CREATE TRIGGER updated_at
@@ -113,4 +111,6 @@ CREATE TRIGGER updated_at
 BEFORE UPDATE
 ON public.dnd_to_exercises
 FOR EACH ROW
-EXECUTE FUNCTION updated_at();
+EXECUTE FUNCTION updated_at();    categories TEXT [] NOT NULL,
+
+INSERT INTO dnd_categories (title, categories, draggable_words) VALUES ('TESTI', 'DER', 'HAUS');

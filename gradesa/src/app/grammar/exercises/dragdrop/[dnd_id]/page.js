@@ -41,8 +41,8 @@ export default function StudentExercisePage() {
             <h1>{exercise.title}</h1>
             <DndProvider backend={HTML5Backend}>
               <Area
-                initialDustbins={exercise.ItemTypes}
-                allWords={exercise.all_words}
+                initialDustbins={exercise.categories}
+                allWords={exercise.draggable_words}
               />
             </DndProvider>
           </div>
