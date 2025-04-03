@@ -4,7 +4,6 @@ import DragdropLayout from "./layout";
 import { Area } from "@/components/ui/dragdrop/area";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import "../../../globals.css";
 
 export default function Dragdrop({}) {
   return (

@@ -3,7 +3,7 @@ import { getConfig } from "@/backend/config";
 
 const requestWithUser = (user, ...params) => {
   const req = new NextRequest(...params);
-  req.user = user;
+  req.testUser = user;
   return req;
 };
 

@@ -15,14 +15,14 @@ describe("GET /api/auth/session", () => {
 
   it("should return loggedIn: true and userId when session is valid", async () => {
     const mockUserId = "12345";
-    checkSession.mockResolvedValue(mockUserId);
+    checkSession.mockResolvedValue({ id: mockUserId });
 
     const response = await GET();
     const result = await response.json();
 
     expect(checkSession).toHaveBeenCalled();
     expect(response).toBeInstanceOf(NextResponse);
-    expect(result).toEqual({ loggedIn: true, userId: mockUserId });
+    expect(result).toMatchObject({ loggedIn: true, user: { id: mockUserId } });
   });
 
   it("should return loggedIn: false when session is invalid", async () => {

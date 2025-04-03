@@ -38,7 +38,6 @@ export const layoutPropsRegistry = {
   pr: "paddingRight",
   m: "margin",
   br: "borderRadius",
-  m: "margin",
   mt: "marginTop",
   mb: "marginBottom",
   ml: "marginLeft",

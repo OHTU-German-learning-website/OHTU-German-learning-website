@@ -5,7 +5,7 @@ import Link from "next/link";
 import "./chapters.css";
 import layout from "@/shared/styles/layout.module.css";
 import { useParams, useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { LinkButton } from "@/components/ui/linkbutton";
 import Image from "next/image";
 
 export default function Chapters() {
@@ -35,21 +35,15 @@ export default function Chapters() {
       <Row justify="space-between" pb="xl">
         {!!previousChapter && (
           <Container mr="auto">
-            <Link href={previousChapter.link}>
-              <Button>Zurück</Button>
-            </Link>
+            <LinkButton href={previousChapter.link}>Zurück</LinkButton>
           </Container>
         )}
         {!!nextChapter ? (
           <Container ml="auto">
-            <Link href={nextChapter.link}>
-              <Button>Weiter</Button>
-            </Link>
+            <LinkButton href={nextChapter.link}>Weiter</LinkButton>
           </Container>
         ) : (
-          <Link href="/learning">
-            <Button>Starte den Test</Button>
-          </Link>
+          <LinkButton href="/learning">Starte den Test</LinkButton>
         )}
       </Row>
     </Column>
@@ -59,18 +53,21 @@ export default function Chapters() {
 export const chapters = [
   {
     id: "1",
+    linkLabel: "Kapitel 1",
     title: "1. Über das Lernen",
     content: Chapter1,
     link: "/resources/1",
   },
   {
     id: "2",
+    linkLabel: "Kapitel 2",
     title: "2. Die Arten des Wissens",
     content: Chapter2,
     link: "/resources/2",
   },
   {
     id: "3",
+    linkLabel: "Kapitel 3",
     title:
       "3. Was sind die Unterschiede zwischen Lernen im Klassenraum und allein lernen?",
     content: Chapter3,
@@ -78,12 +75,14 @@ export const chapters = [
   },
   {
     id: "4",
+    linkLabel: "Kapitel 4",
     title: "4. Was für ein Lerntyp bin ich?",
     content: Chapter4,
     link: "/resources/4",
   },
   {
     id: "5",
+    linkLabel: "Kapitel 5",
     title: "5.Freiwilliger Selbst-Test zu Lernstrategien",
     content: Chapter5,
     link: "/resources/5",
