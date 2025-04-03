@@ -5,7 +5,7 @@ import Link from "next/link";
 import "./chapters.css";
 import layout from "@/shared/styles/layout.module.css";
 import { useParams, useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { LinkButton } from "@/components/ui/linkbutton";
 import Image from "next/image";
 
 export default function Chapters() {
@@ -35,21 +35,15 @@ export default function Chapters() {
       <Row justify="space-between" pb="xl">
         {!!previousChapter && (
           <Container mr="auto">
-            <Link href={previousChapter.link}>
-              <Button>Zurück</Button>
-            </Link>
+            <LinkButton href={previousChapter.link}>Zurück</LinkButton>
           </Container>
         )}
         {!!nextChapter ? (
           <Container ml="auto">
-            <Link href={nextChapter.link}>
-              <Button>Weiter</Button>
-            </Link>
+            <LinkButton href={nextChapter.link}>Weiter</LinkButton>
           </Container>
         ) : (
-          <Link href="/learning">
-            <Button>Starte den Test</Button>
-          </Link>
+          <LinkButton href="/learning">Starte den Test</LinkButton>
         )}
       </Row>
     </Column>
