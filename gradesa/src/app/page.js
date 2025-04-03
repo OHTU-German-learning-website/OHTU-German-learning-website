@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { LinkButton } from "@/components/ui/linkbutton";
 
 export default function Home() {
   return (
@@ -14,22 +13,18 @@ export default function Home() {
             einschließlich Artikel, Verbkonjugationen und grundlegender
             Satzstruktur.
           </p>
-          <Link href="/learning">
-            <Button variant="primary" size="lg" width="fit">
-              Entdecke deine Lernstrategien
-            </Button>
-          </Link>
+          <LinkButton href="/learning" variant="primary" size="lg">
+            Entdecke deine Lernstrategien
+          </LinkButton>
         </section>
 
         <div className="features">
           <div className="feature-card">
             <h3>Lernplan</h3>
             <p>Finde die für dich passende Lernstrategie</p>
-            <Link href="/learning">
-              <Button variant="outline" width="fit">
-                Entdecke deine Lernstrategien
-              </Button>
-            </Link>
+            <LinkButton href="/learning">
+              Entdecke deine Lernstrategien
+            </LinkButton>
           </div>
 
           <div className="feature-card">
@@ -38,11 +33,7 @@ export default function Home() {
               Üben Sie alltägliche Gespräche und verbessern Sie Ihre
               Sprechfähigkeiten mit interaktiven Lektionen.
             </p>
-            <Link href="/grammar">
-              <Button variant="outline" width="fit">
-                Grammatik lernen
-              </Button>
-            </Link>
+            <LinkButton href="/grammar">Grammatik lernen</LinkButton>
           </div>
         </div>
       </div>

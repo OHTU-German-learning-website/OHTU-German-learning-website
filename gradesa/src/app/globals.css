@@ -9,6 +9,7 @@
 
   color-scheme: light;
   background: var(--site-bg);
+  color: var(--fg1);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -222,9 +223,9 @@
     --blue : hsl(240, 40%, 92%);
     --red : hsl(0, 69%, 56%);
     --yellow : hsl(50, 86%, 74%);
+
     --yellow-border: hsl(43, 65%, 51%);
 
-   
     --masculine: hsl(240, 80%, 22%);
     --feminine: hsl(359, 84%, 37%);
     --neutral: hsl(112, 100%, 16%);

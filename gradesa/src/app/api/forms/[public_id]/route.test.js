@@ -42,12 +42,13 @@ describe("forms", () => {
       `insert into user_question_answers (user_id, part_question_id, answer) values ($1, $2, $3)`,
       [user.id, formJson.parts[0].questions[0].id, 1]
     );
-    const result = await DB.pool(`SELECT * FROM user_question_answers`);
+    console.log(user.id, formJson.parts[0].questions[0].id, 1, "user.id");
 
     const formWithAnswers = await GET(
       mockGet("/api/forms/learning_type"),
       mockParams({ public_id: "learning_type" })
     );
+
     expect(formWithAnswers).toBeDefined();
     expect(formWithAnswers.status).toBe(200);
     const json = await formWithAnswers.json();
