@@ -86,6 +86,13 @@
   --green8: hsl(120, 60%, 20%);
   --green9: hsl(120, 60%, 10%);
 
+  /* indicator colors */
+  --green: hsl(120, 40%, 50%);
+  --blue: hsl(240, 40%, 92%);
+  --red: hsl(0, 69%, 56%);
+  --yellow: hsl(50, 86%, 74%);
+  --yellow-border: hsl(43, 65%, 51%);
+
   --masculine: hsl(240, 80%, 77%);
   --feminine: hsl(359, 73%, 71%);
   --neutral: hsl(112, 49%, 63%);
@@ -211,9 +218,12 @@
     --green8: hsl(120, 40%, 90%);
     --green9: hsl(120, 40%, 95%);
 
+    /* indicator colors */
+    --green: hsl(120, 40%, 50%);
     --blue: hsl(240, 40%, 92%);
     --red: hsl(0, 69%, 56%);
     --yellow: hsl(50, 86%, 74%);
+
     --yellow-border: hsl(43, 65%, 51%);
 
     --masculine: hsl(240, 80%, 22%);
