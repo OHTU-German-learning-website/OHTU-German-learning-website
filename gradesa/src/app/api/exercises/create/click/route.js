@@ -49,6 +49,5 @@ export async function POST(request) {
      VALUES ($1, $2, $3, $4) returning id`,
     [title, targetCategory, targetWords, allWords]
   );
-  console.log(id.rows[0].id);
   return Response.json({ id: id.rows[0].id }, { status: 201 });
 }
