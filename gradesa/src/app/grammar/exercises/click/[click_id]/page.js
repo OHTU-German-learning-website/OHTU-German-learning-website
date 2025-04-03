@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useParams, useRouter } from "next/navigation";
 import WordSelectionExercise from "@/components/ui/click/click.js";
 import { Button } from "@/components/ui/button";
