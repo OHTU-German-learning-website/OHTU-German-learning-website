@@ -79,6 +79,7 @@ export default function CreateExercise() {
             <Container className="exercise-click">
               <label>Übungstitel</label>
               <input
+                className="click-input"
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -90,6 +91,7 @@ export default function CreateExercise() {
             <Container className="exercise-click">
               <label>Zielkategorie</label>
               <input
+                className="click-input"
                 type="text"
                 value={targetCategory}
                 onChange={(e) => setTargetCategory(e.target.value)}
