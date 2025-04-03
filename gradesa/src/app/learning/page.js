@@ -23,6 +23,7 @@ export default function Learning() {
     FORM_LANGUAGE_OPTIONS[0]
   );
   const { data, refetch } = useQuery("/forms/learning_type");
+  console.log(data);
   const makeRequest = useRequest();
   const [isLoading, setIsLoading] = useState(false);
 
