@@ -3,14 +3,12 @@ import { withAuth } from "@/backend/middleware/withAuth";
 import { withInputValidation } from "@/backend/middleware/withInputValidation";
 import { DB } from "@/backend/db";
 
-const feedbackSchema = z.object({
-  feedback: z.string().min(1, { message: "Feedback is required" }),
-  answer: z.string().min(1, { message: "Feedback is required" }),
-});
-
 const answerSchema = z.object({
   answer: z.string().min(1, { message: "Answer is required" }),
-  feedbacks: z.array(feedbackSchema).optional(),
+  feedback: z.string().min(1, {
+    message: "Feedback is required",
+  }),
+  is_correct: z.boolean(),
 });
 
 const schema = z.object({

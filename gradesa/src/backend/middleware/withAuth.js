@@ -12,6 +12,7 @@ export function withAuth(callback, options = {}) {
     if (requireAdmin && !user?.is_admin) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
     request.user = user;
     return await callback(request, ...args);
   };
