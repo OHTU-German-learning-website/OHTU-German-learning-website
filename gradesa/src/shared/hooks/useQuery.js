@@ -144,7 +144,7 @@ const useQuery = (url, params, config) => {
     return () => {
       abortCtrl.abort();
     };
-  }, [url, memoizedQueryString, memoizedConfig, auth.user?.id]);
+  }, [url, memoizedQueryString, memoizedConfig, auth.user?.id, isMounted]);
 
   return { data, error, isLoading, refetch };
 };
