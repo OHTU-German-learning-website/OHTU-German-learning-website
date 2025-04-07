@@ -29,7 +29,8 @@ describe("POST /api/talkback", () => {
   const { mockPost } = useTestRequest();
 
   vi.mock("@/backend/auth/session", () => ({
-    checkSession: vi.fn().mockResolvedValue("mockUserId"),
+    //checkSession: vi.fn().mockResolvedValue("mockUserId"),
+    checkSession: vi.fn().mockResolvedValue({ id: "mockUserId" }),
   }));
 
   vi.mock("../../../backend/db", () => ({

@@ -15,7 +15,8 @@ export async function POST(req) {
         }
       );
     }
-    const userId = await checkSession();
+    const user = await checkSession();
+    const userId = user.id;
 
     if (!userId) {
       return new Response(
