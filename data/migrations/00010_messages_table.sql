@@ -1,7 +1,7 @@
 CREATE TABLE feedbacks (
   id SERIAL PRIMARY KEY,
   email VARCHAR(255) NOT NULL,
-  complaint TEXT NOT NULL,
+  message TEXT NOT NULL,
   user_id INT NOT NULL,
   timestamp TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );

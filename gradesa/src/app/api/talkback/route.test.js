@@ -39,17 +39,17 @@ describe("POST /api/talkback", () => {
     },
   }));
 
-  const sendFeedbackRequest = async (email, complaint) => {
-    const request = mockPost("/api/talkback", { email, complaint });
+  const sendFeedbackRequest = async (email, message) => {
+    const request = mockPost("/api/talkback", { email, message });
     const response = await POST(request);
     const result = await response.json();
     return { status: response.status, ...result };
   };
 
-  it("should return 400 if email or complaint is missing", async () => {
+  it("should return 400 if email or message is missing", async () => {
     const result = await sendFeedbackRequest("", "");
     expect(result.status).toBe(400);
-    expect(result.message).toBe("Email and complaint are required");
+    expect(result.message).toBe("Email and message are required");
   });
 
   it("should return 200 on successful email send", async () => {
@@ -57,7 +57,7 @@ describe("POST /api/talkback", () => {
 
     const result = await sendFeedbackRequest(
       "test@example.com",
-      "Test complaint"
+      "Test message"
     );
 
     expect(result.status).toBe(200);
@@ -81,7 +81,7 @@ describe("POST /api/talkback", () => {
 
     const result = await sendFeedbackRequest(
       "test@example.com",
-      "Test complaint"
+      "Test message"
     );
     expect(result.status).toBe(500);
     expect(result.message).toBe("Error processing feedback");
