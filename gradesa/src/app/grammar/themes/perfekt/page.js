@@ -18,20 +18,27 @@ export default function Perfekt() {
           <span className="italic">Tempusform</span> verwendet.
         </p>
         <p>
-          {/* "Hilsverb" should be in green, "Partizip" II should be in blue */}
+          {/* "Partizip" II should be in blue */}
           Das Perfekt setzt sich aus einem Hilfsverb (
           <span className="italic">haben</span> oder{" "}
           <span className="italic">sein</span> ) und dem Partizip II des
           eigentlichen Verbs, auch <span className="italic">Vollverb</span>{" "}
-          genannt, zusammen. Das Hilfsverb wird nach dem Subjekt des Satzes
-          konjugiert, das Partizip II ist immer gleich.
+          genannt, zusammen. Das <span className="green">Hilfsverb</span> wird
+          nach dem Subjekt des Satzes konjugiert, das{" "}
+          <span className="blue">Partizip II</span> ist immer gleich.
         </p>
-        <Container bg="var(--bg9)">
+        <Container bg="var(--bg7)">
           <p>Beispiele: </p>
 
-          {/* habe and ist should be in green, geredet and gekommen should be in blue */}
-          <p>ich habe geredet</p>
-          <p>er ist gekommen</p>
+          {/* geredet and gekommen should be in blue */}
+          <p>
+            ich <span className="green">habe</span>{" "}
+            <span className="blue">geredet</span>
+          </p>
+          <p>
+            er <span className="green">ist</span>{" "}
+            <span className="blue">gekommen</span>
+          </p>
         </Container>
         <p>
           <Link href="#">Hier</Link> kannst du lernen oder wiederholen, auch
