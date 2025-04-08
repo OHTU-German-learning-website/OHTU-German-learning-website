@@ -18,7 +18,6 @@ export default function Perfekt() {
           <span className="italic">Tempusform</span> verwendet.
         </p>
         <p>
-          {/* "Partizip" II should be in blue */}
           Das Perfekt setzt sich aus einem Hilfsverb (
           <span className="italic">haben</span> oder{" "}
           <span className="italic">sein</span> ) und dem Partizip II des
@@ -29,8 +28,6 @@ export default function Perfekt() {
         </p>
         <Container bg="var(--bg7)">
           <p>Beispiele: </p>
-
-          {/* geredet and gekommen should be in blue */}
           <p>
             ich <span className="green">habe</span>{" "}
             <span className="blue">geredet</span>
