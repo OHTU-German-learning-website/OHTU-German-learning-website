@@ -1,8 +1,6 @@
 import Link from "next/link";
-import { Inter } from "next/font/google";
 import { Container } from "@/components/ui/layout/container";
-
-const inter = Inter({ subsets: ["latin"], style: ["normal", "italic"] });
+import "../lessons.css";
 
 export default function Perfekt() {
   return (
@@ -15,51 +13,16 @@ export default function Perfekt() {
           meisten kommt in der gesprochenen Sprache das Perfekt vor. Das Perfekt
           ist eine sogenannte zusammengesetzte Zeitform. In der
           Sprachwissenschaft (Linguistik) wird statt des Begriffs{" "}
-          <span
-            className={`${inter.className}`}
-            style={{ fontStyle: "italic" }}
-          >
-            Zeitform
-          </span>{" "}
-          auch der Ausdruck{" "}
-          <span
-            className={`${inter.className}`}
-            style={{ fontStyle: "italic" }}
-          >
-            Tempus
-          </span>{" "}
-          oder{" "}
-          <span
-            className={`${inter.className}`}
-            style={{ fontStyle: "italic" }}
-          >
-            Tempusform
-          </span>{" "}
-          verwendet.
+          <span className="italic">Zeitform</span> auch der Ausdruck{" "}
+          <span className="italic">Tempus</span> oder{" "}
+          <span className="italic">Tempusform</span> verwendet.
         </p>
         <p>
           {/* "Hilsverb" should be in green, "Partizip" II should be in blue */}
           Das Perfekt setzt sich aus einem Hilfsverb (
-          <span
-            className={`${inter.className}`}
-            style={{ fontStyle: "italic" }}
-          >
-            haben
-          </span>{" "}
-          oder{" "}
-          <span
-            className={`${inter.className}`}
-            style={{ fontStyle: "italic" }}
-          >
-            sein
-          </span>{" "}
-          ) und dem Partizip II des eigentlichen Verbs, auch{" "}
-          <span
-            className={`${inter.className}`}
-            style={{ fontStyle: "italic" }}
-          >
-            Vollverb
-          </span>{" "}
+          <span className="italic">haben</span> oder{" "}
+          <span className="italic">sein</span> ) und dem Partizip II des
+          eigentlichen Verbs, auch <span className="italic">Vollverb</span>{" "}
           genannt, zusammen. Das Hilfsverb wird nach dem Subjekt des Satzes
           konjugiert, das Partizip II ist immer gleich.
         </p>
@@ -83,20 +46,8 @@ export default function Perfekt() {
         </p>
         <p>
           Im Folgenden lernst du, wann man das Hilfsverb{" "}
-          <span
-            className={`${inter.className}`}
-            style={{ fontStyle: "italic" }}
-          >
-            sein
-          </span>{" "}
-          benutzen muss und wann{" "}
-          <span
-            className={`${inter.className}`}
-            style={{ fontStyle: "italic" }}
-          >
-            haben
-          </span>{" "}
-          .
+          <span className="italic">sein</span> benutzen muss und wann{" "}
+          <span className="italic">haben</span> .
         </p>
         <p>
           <Link href="#">Hier</Link> sind einige Übungen, wo du das Perfekt
