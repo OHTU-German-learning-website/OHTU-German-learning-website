@@ -1,5 +1,4 @@
 import { ArrowRightIcon } from "@radix-ui/react-icons";
-import Link from "next/link";
 import { Container, Row } from "@/components/ui/layout/container";
 import "../lessons.css";
 
@@ -357,6 +356,77 @@ export default function Partizip() {
           </span>
           !
         </p>
+        <p>
+          Das Partizip II wird aber ansonsten genauso gebildet wie sonst auch.
+        </p>
+        <Container bg="var(--bg7)">
+          <p>Beispiele:</p>
+          <p>
+            <span className="italic">
+              heben – ge<strong>hoben</strong>; beheben – be
+              <strong>hoben</strong> <br />
+              gehen – ge<strong>gangen</strong>; begehen – be
+              <strong>gangen</strong> <br />
+              arbeiten – <strong>gearbeitet</strong>; verarbeiten – ver
+              <strong>arbeitet</strong> <br />
+              kennen – <strong>gekannt</strong>; erkennen - er
+              <strong>kannt</strong>
+            </span>
+          </p>
+        </Container>
+        <h2>
+          Weitere Verben mit Partizipien ohne{" "}
+          <span className="italic">
+            <strong>-ge-</strong>
+          </span>
+        </h2>
+        <p>
+          Verben mit der Endung <span className="italic">-ieren</span> haben im
+          Partizip II ebenfalls{" "}
+          <span className="underline">
+            kein{" "}
+            <span className="italic">
+              <strong>ge</strong>
+            </span>
+          </span>
+          . Das sind Verben, die aus anderen Sprachen kommen, also Fremdwörter.
+          Man kennt den Wortstamm häufig aus anderen Sprachen. Das Partizip II
+          hat die Endung <strong>-t</strong>.
+        </p>
+        <Container bg="var(--bg7)">
+          <p>Beispiele:</p>
+          <p>
+            <span className="italic">
+              fotografieren – <strong>fotografiert</strong> <br />
+              modernisieren – <strong>modernisiert</strong> <br />
+              studieren – <strong>studiert</strong> <br />
+              polieren - <strong>poliert</strong>
+            </span>
+          </p>
+        </Container>
+        <p>
+          Wenn es ein Präfix gibt, wird das Partizip II gebildet wie sonst auch.
+          Es kommt aber auch hier{" "}
+          <span className="underline">
+            kein{" "}
+            <span className="italic">
+              <strong>ge</strong>
+            </span>
+          </span>{" "}
+          zwischen Präfix und Wortstamm.
+        </p>
+        <Container bg="var(--bg7)">
+          <p>Beispiele:</p>
+          <p>
+            <span className="italic">
+              ausprobieren – <strong>ausprobiert</strong> <br />
+              hyperventilieren – <strong>hyperventiliert</strong> <br />
+              entlangspazieren – <strong>entlangspaziert</strong> <br />
+              entmagnetisieren - <strong>entmagnetisiert</strong>
+            </span>
+          </p>
+        </Container>
+        <Container bg="var(--red)">Übung 6 medium (crosswords)</Container>
       </div>
     </>
   );
