@@ -1,5 +1,8 @@
 import Link from "next/link";
+import { Inter } from "next/font/google";
 import { Container } from "@/components/ui/layout/container";
+
+const inter = Inter({ subsets: ["latin"], style: ["normal", "italic"] });
 
 export default function Perfekt() {
   return (
@@ -11,15 +14,54 @@ export default function Perfekt() {
           das Perfekt oder das Präteritum, seltener das Plusquamperfekt. Aber am
           meisten kommt in der gesprochenen Sprache das Perfekt vor. Das Perfekt
           ist eine sogenannte zusammengesetzte Zeitform. In der
-          Sprachwissenschaft (Linguistik) wird statt des Begriffs Zeitform auch
-          der Ausdruck Tempus oder Tempusform verwendet
+          Sprachwissenschaft (Linguistik) wird statt des Begriffs{" "}
+          <span
+            className={`${inter.className}`}
+            style={{ fontStyle: "italic" }}
+          >
+            Zeitform
+          </span>{" "}
+          auch der Ausdruck{" "}
+          <span
+            className={`${inter.className}`}
+            style={{ fontStyle: "italic" }}
+          >
+            Tempus
+          </span>{" "}
+          oder{" "}
+          <span
+            className={`${inter.className}`}
+            style={{ fontStyle: "italic" }}
+          >
+            Tempusform
+          </span>{" "}
+          verwendet.
         </p>
         <p>
-          {/* Hilsverb should be in green, Partizip II should be in blue */}
-          Das Perfekt setzt sich aus einem Hilfsverb (haben oder sein) und dem
-          Partizip II des eigentlichen Verbs, auch Vollverb genannt, zusammen.
-          Das Hilfsverb wird nach dem Subjekt des Satzes konjugiert, das
-          Partizip II ist immer gleich.
+          {/* "Hilsverb" should be in green, "Partizip" II should be in blue */}
+          Das Perfekt setzt sich aus einem Hilfsverb (
+          <span
+            className={`${inter.className}`}
+            style={{ fontStyle: "italic" }}
+          >
+            haben
+          </span>{" "}
+          oder{" "}
+          <span
+            className={`${inter.className}`}
+            style={{ fontStyle: "italic" }}
+          >
+            sein
+          </span>{" "}
+          ) und dem Partizip II des eigentlichen Verbs, auch{" "}
+          <span
+            className={`${inter.className}`}
+            style={{ fontStyle: "italic" }}
+          >
+            Vollverb
+          </span>{" "}
+          genannt, zusammen. Das Hilfsverb wird nach dem Subjekt des Satzes
+          konjugiert, das Partizip II ist immer gleich.
         </p>
         <Container bg="var(--bg9)">
           <p>Beispiele: </p>
@@ -29,14 +71,36 @@ export default function Perfekt() {
           <p>er ist gekommen</p>
         </Container>
         <p>
-          <Link>Hier</Link> kannst du lernen oder wiederholen, auch üben, wie
-          die Hilfsverben im Deutschen konjugiert werden. (no page yet)
+          <Link href="#">Hier</Link> kannst du lernen oder wiederholen, auch
+          üben, wie die Hilfsverben im Deutschen konjugiert werden. (no page
+          yet)
         </p>
         <p>
           <Link href="/grammar/themes/partizip_ii">Hier</Link> findest du die
           Regeln zur Bildung des Partizip II. Das ist eine wichtige Form, denn
           im Deutschen wird auch das Plusquamperfekt und das Passiv damit
           gebildet.
+        </p>
+        <p>
+          Im Folgenden lernst du, wann man das Hilfsverb{" "}
+          <span
+            className={`${inter.className}`}
+            style={{ fontStyle: "italic" }}
+          >
+            sein
+          </span>{" "}
+          benutzen muss und wann{" "}
+          <span
+            className={`${inter.className}`}
+            style={{ fontStyle: "italic" }}
+          >
+            haben
+          </span>{" "}
+          .
+        </p>
+        <p>
+          <Link href="#">Hier</Link> sind einige Übungen, wo du das Perfekt
+          trainieren kannst. Am besten gehst du sie der Reihe nach durch.
         </p>
       </div>
     </>
