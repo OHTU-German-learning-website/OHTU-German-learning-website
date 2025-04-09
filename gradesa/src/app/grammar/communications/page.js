@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { chapters } from "./[chapter]/page";
+import { chapters } from "./[chapter]/chapters";
 import Link from "next/link";
 import { Column } from "@/components/ui/layout/container";
 
