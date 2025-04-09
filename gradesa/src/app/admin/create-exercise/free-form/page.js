@@ -78,19 +78,14 @@ export default function CreateFreeFormExercise() {
       }
     } catch (e) {
       console.error("Submission error:", e);
-
-      // Set general error
       if (e.response?.data?.error) {
         setGeneralError(e.response.data.error);
       } else {
         setGeneralError("Ein Fehler ist aufgetreten");
       }
 
-      // Handle validation errors with simplified format
       if (e.response?.status === 422) {
         try {
-          // Initialize error structure to match input structure
-
           const zodErrors = e.response?.data?.zodError;
 
           const newErrors = zodErrorToFormErrors(zodErrors, formErrors);
