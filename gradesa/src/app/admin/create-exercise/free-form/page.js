@@ -2,11 +2,15 @@
 import { Button } from "@/components/ui/button";
 import { Column, Row } from "@/components/ui/layout/container";
 import { useState } from "react";
+import { useRequest } from "@/shared/hooks/useRequest";
+import { useRouter } from "next/navigation";
 
 export default function CreateFreeFormExercise() {
   const [question, setQuestion] = useState("");
   const [answers, setAnswers] = useState([]);
-
+  const [errors, setErrors] = useState([]);
+  const makeRequest = useRequest();
+  const router = useRouter();
   const handleQuestionChange = (e) => {
     const val = e.target.value;
     setQuestion(val);
@@ -17,19 +21,35 @@ export default function CreateFreeFormExercise() {
       prev.map((ans, i) => (i !== index ? ans : { ...ans, [key]: value }))
     );
 
-  const handleAddAnswer = () => {
+  const handleAddAnswer = (is_correct = true) => {
     setAnswers((prev) => [
       ...prev,
       {
         answer: "",
-        feedbacks: [],
+        feedback: "",
+        is_correct,
       },
     ]);
   };
 
   const handleRemoveAnswer = (i) => {
-    console.log("removing", i);
     setAnswers((prev) => prev.filter((_, j) => i !== j));
+  };
+
+  const handleSubmit = async () => {
+    try {
+      setErrors([]);
+      const res = await makeRequest("/admin/exercises/free-form", {
+        method: "POST",
+        body: { question, answers },
+      });
+
+      if (res.status === 200) {
+        router.push("/admin/exercises");
+      }
+    } catch (e) {
+      setErrors((prev) => [...prev, e.response.data.error]);
+    }
   };
 
   return (
@@ -41,6 +61,7 @@ export default function CreateFreeFormExercise() {
         If you'd like to give feedback to the student on possible incorrect
         answers, you can do so by adding feedbacks.
       </p>
+      {errors.length > 0 && <p className="error">{errors.join(", ")}</p>}
       <label>
         Question
         <textarea value={question} onChange={handleQuestionChange} />
@@ -52,6 +73,11 @@ export default function CreateFreeFormExercise() {
           onAddAnswer={handleAddAnswer}
           onAnswersChange={handleAnswersChange}
         />
+        <Row justify={"end"} mt={"xl"} mb={"xl"}>
+          <Button variant="primary" onClick={handleSubmit}>
+            Submit
+          </Button>
+        </Row>
       </Column>
     </Column>
   );
@@ -71,119 +97,41 @@ function Answers({ answers, onAnswersChange, onAddAnswer, onRemoveAnswer }) {
   return (
     <Column gap="xl">
       {renderAnswers()}
-      <Button onClick={onAddAnswer}>Add answer</Button>
+      <Row gap="md">
+        <Button onClick={() => onAddAnswer(true)}>Add valid answer</Button>
+        <Button onClick={() => onAddAnswer(false)}>Add incorrect answer</Button>
+      </Row>
     </Column>
   );
 }
 
 function AnswerItem({ answer, onAnswerChange, onRemoveAnswer }) {
-  const handleFeedbacksChange = (key, value, index) =>
-    onAnswerChange(
-      "feedbacks",
-      answer.feedbacks.map((fb, i) =>
-        i !== index ? fb : { ...fb, [key]: value }
-      )
-    );
-
-  const handleAddFeedback = () => {
-    onAnswerChange("feedbacks", [
-      ...answer.feedbacks,
-      {
-        answer: "",
-        feedback: "",
-      },
-    ]);
-  };
-
-  const handleRemoveFeedback = (i) => {
-    onAnswerChange(
-      "feedbacks",
-      answer.feedbacks.filter((_, j) => i !== j)
-    );
-  };
-
   const handleValidAnswerChange = (e) => {
     const val = e.target.value;
     onAnswerChange("answer", val);
   };
 
-  return (
-    <Column gap="lg" b="2px solid var(--primary6)" p="md" r="md">
-      <label>
-        <Row gap={"md"} justify={"space-between"}>
-          <span>Valid answer</span>
-          <Button size="sm" onClick={onRemoveAnswer}>
-            Remove answer
-          </Button>
-        </Row>
-        <textarea value={answer.answer} onChange={handleValidAnswerChange} />
-      </label>
-      <Column mt="lg">
-        <span>Feedbacks</span>
-        <Feedbacks
-          feedbacks={answer.feedbacks}
-          onAddFeedback={handleAddFeedback}
-          onRemoveFeedback={handleRemoveFeedback}
-          onFeedbackChange={handleFeedbacksChange}
-        />
-      </Column>
-    </Column>
-  );
-}
-
-function Feedbacks({
-  feedbacks,
-  onFeedbacksChange,
-  onAddFeedback,
-  onRemoveFeedback,
-}) {
-  const renderFeedbacks = () =>
-    feedbacks?.map((fb, i) => (
-      <FeedbackItem
-        feedback={fb}
-        key={i}
-        onRemoveFeedback={() => onRemoveFeedback(i)}
-        onFeedbackChange={(key, val) => onFeedbacksChange(key, val, i)}
-      />
-    ));
-
-  return (
-    <Column gap="md">
-      {renderFeedbacks()}
-      <Button onClick={onAddFeedback}>Add feedback</Button>
-    </Column>
-  );
-}
-
-function FeedbackItem({ feedback, onFeedbackChange, onRemoveFeedback }) {
-  const handleTriggerAnswerChange = (e) => {
-    const val = e.target.value;
-    onFeedbackChange("answer", val);
-  };
-
   const handleFeedbackChange = (e) => {
     const val = e.target.value;
-    onFeedbackChange("feedback", val);
+    onAnswerChange("feedback", val);
   };
 
   return (
-    <Row gap="xl" w="100%" align="end">
+    <Column gap="lg" b="2px solid var(--primary6)" p="md" r="md">
+      <Row justify={"space-between"}>
+        <span>{answer.is_correct ? "Valid answer" : "Incorrect answer"}</span>
+        <Button size="sm" onClick={onRemoveAnswer}>
+          Remove
+        </Button>
+      </Row>
       <label>
-        Trigger answer
-        <textarea
-          value={feedback.answer}
-          onChange={handleTriggerAnswerChange}
-        />
+        <span>Trigger answer</span>
+        <textarea value={answer.answer} onChange={handleValidAnswerChange} />
       </label>
       <label>
         Feedback
-        <textarea value={feedback.feedback} onChange={handleFeedbackChange} />
+        <textarea value={answer.feedback} onChange={handleFeedbackChange} />
       </label>
-      <Column align="end" ml={"auto"}>
-        <Button size="sm" onClick={onRemoveFeedback}>
-          Remove
-        </Button>
-      </Column>
-    </Row>
+    </Column>
   );
 }

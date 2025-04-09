@@ -471,3 +471,7 @@ label {
   gap: var(--u-sm);
   font-size: var(--font-sm);
 }
+
+.error {
+  color: var(--red);
+}
