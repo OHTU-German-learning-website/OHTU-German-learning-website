@@ -86,6 +86,8 @@
   --green8: hsl(120, 60%, 20%);
   --green9: hsl(120, 60%, 10%);
 
+  --blue1: hsl(240, 80%, 46%);
+
   /* indicator colors */
   --green: hsl(120, 40%, 50%);
   --blue : hsl(240, 40%, 92%);
@@ -218,6 +220,8 @@
     --green7: hsl(120, 40%, 85%);
     --green8: hsl(120, 40%, 90%);
     --green9: hsl(120, 40%, 95%);
+
+    --blue1: hsl(224, 91%, 65%);
 
     /* indicator colors */
     --green: hsl(120, 40%, 50%);
@@ -468,10 +472,10 @@ textarea {
   }
 }
 
+.italic {
+  font-style: italic;
+}
 
-/*input[type="text"] {
-  font-size: var(--font-lg);
-  margin: 0.5rem;
-  padding: var(--u-md);
-  text-align: center;
-}*/
+.underline {
+  text-decoration: underline;
+}
