@@ -98,10 +98,10 @@ function Answers({ answers, onAnswersChange, onAddAnswer, onRemoveAnswer }) {
     <Column gap="xl">
       {renderAnswers()}
       <Row gap="md">
-        <Button onClick={() => onAddAnswer(true)}>
+        <Button width={"fit"} onClick={() => onAddAnswer(true)}>
           Richtige Antwort hinzufügen
         </Button>
-        <Button onClick={() => onAddAnswer(false)}>
+        <Button width={"fit"} onClick={() => onAddAnswer(false)}>
           Falsche Antwort hinzufügen
         </Button>
       </Row>
