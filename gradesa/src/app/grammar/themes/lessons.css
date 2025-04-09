@@ -79,3 +79,15 @@
   font-weight: bold;
   color: var(--fg2);
 }
+
+.green {
+  color: var(--green);
+}
+
+.blue {
+  color: var(--blue1);
+}
+
+.red {
+  color: var(--red);
+}

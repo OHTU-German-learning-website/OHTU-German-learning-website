@@ -58,6 +58,12 @@ export default function useLocalStorage(key, initialValue) {
     }
   };
 
+  const clearValue = () => {
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem(key);
+    }
+  };
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       try {
@@ -70,5 +76,5 @@ export default function useLocalStorage(key, initialValue) {
     }
   }, [key, initialValue]);
 
-  return [storedValue, setValue];
+  return [storedValue, setValue, clearValue];
 }

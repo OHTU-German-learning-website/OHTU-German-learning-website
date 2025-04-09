@@ -125,7 +125,7 @@ CREATE SEQUENCE public.feedbacks_id_seq;
 CREATE TABLE public.feedbacks (
   id integer PRIMARY KEY NOT NULL DEFAULT nextval('feedbacks_id_seq'::regclass),
   email character varying(255) NOT NULL,
-  complaint text NOT NULL,
+  message text NOT NULL,
   user_id integer NOT NULL,
   timestamp timestamp with time zone DEFAULT CURRENT_TIMESTAMP
 );
