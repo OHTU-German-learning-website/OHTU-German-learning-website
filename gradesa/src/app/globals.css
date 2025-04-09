@@ -466,10 +466,10 @@ textarea {
   }
 }
 
+.italic {
+  font-style: italic;
+}
 
-/*input[type="text"] {
-  font-size: var(--font-lg);
-  margin: 0.5rem;
-  padding: var(--u-md);
-  text-align: center;
-}*/
+.underline {
+  text-decoration: underline;
+}
