@@ -5,11 +5,8 @@ import { logger } from "../logging";
 export const withInputValidation = (schema, callback) => {
   return async (req, res) => {
     const request = await req.json();
-    const bodyData = request.body;
+    const bodyData = request.body ? request.body : request;
     try {
-      // Note this is a bit silly, idk how nextjs wants
-      // us to do route specific middleware but this works.
-
       // Validate with Zod schema
       const validatedInput = schema.parse(bodyData);
 

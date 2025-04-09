@@ -61,7 +61,7 @@ export default function CreateFreeFormExercise() {
         If you'd like to give feedback to the student on possible incorrect
         answers, you can do so by adding feedbacks.
       </p>
-      {errors.length > 0 && <p className="error">{errors.join(", ")}</p>}
+      {errors?.length > 0 && <p className="error">{errors.join(", ")}</p>}
       <label>
         Question
         <textarea value={question} onChange={handleQuestionChange} />

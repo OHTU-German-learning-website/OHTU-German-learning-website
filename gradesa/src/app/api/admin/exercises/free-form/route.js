@@ -8,7 +8,16 @@ export const POST = withAuth(
   withInputValidation(freeFormExerciseSchema, async (req) => {
     const body = await req.json();
     const { question, answers } = body;
-    await DB.transaction(async (tx) => {
+    const hasValidAnswers = answers.some((answer) => answer.is_correct);
+
+    if (!hasValidAnswers) {
+      return NextResponse.json(
+        { error: "At least one answer must be correct" },
+        { status: 422 }
+      );
+    }
+
+    const exerciseId = await DB.transaction(async (tx) => {
       const exercise = await tx.query(`
         INSERT INTO exercises DEFAULT VALUES RETURNING id
       `);
@@ -41,7 +50,7 @@ export const POST = withAuth(
 
       return exerciseId;
     });
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, exercise_id: exerciseId });
   }),
   {
     requireAdmin: true,
