@@ -1,4 +1,5 @@
 import { Column } from "@/components/ui/layout/container";
+import Link from "next/link";
 
 export const chapters = [
   {
@@ -105,7 +106,9 @@ function Chapter1() {
   return (
     <Column className="chapter-content">
       <ul>
-        <li>Perfekt</li>
+        <li>
+          <Link href="/grammar/themes/perfekt">Perfekt</Link>
+        </li>
         <li>Präteritum</li>
         <li>Plusquamperfekt</li>
         <li>Saltzklammer</li>
@@ -281,7 +284,9 @@ function Chapter15() {
       <ul>
         <li>Komparation der Adjektive</li>
         <li>Anrede (du/Sie)</li>
-        <li>Perfekt / Präteritum</li>
+        <li>
+          <Link href="/grammar/themes/perfekt">Perfekt</Link> / Präteritum
+        </li>
       </ul>
     </Column>
   );
