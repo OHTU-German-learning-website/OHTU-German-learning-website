@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 
 export default function Feedback() {
   const [email, setEmail] = useState("");
-  const [complaint, setComplaint] = useState("");
+  const [message, setmessage] = useState("");
 
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
@@ -24,7 +24,7 @@ export default function Feedback() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, complaint }),
+        body: JSON.stringify({ email, message }),
       });
 
       const data = await response.json(); // Extract JSON response
@@ -35,7 +35,7 @@ export default function Feedback() {
 
       setSubmitted(true);
       setEmail("");
-      setComplaint("");
+      setmessage("");
 
       setTimeout(() => {
         router.push("/talkback");
@@ -85,16 +85,16 @@ export default function Feedback() {
         </div>
 
         <div className="form-group">
-          <label className="form-label" htmlFor="complaint">
+          <label className="form-label" htmlFor="message">
             Feedback/talkback
           </label>
           <textarea
             className="form-input"
-            type="complaint"
-            id="complaint"
-            name="complaint"
-            value={complaint}
-            onChange={(e) => setComplaint(e.target.value)}
+            type="message"
+            id="message"
+            name="message"
+            value={message}
+            onChange={(e) => setmessage(e.target.value)}
             required
           />
         </div>

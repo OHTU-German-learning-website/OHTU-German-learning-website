@@ -80,20 +80,12 @@
   color: var(--fg2);
 }
 
-.italic {
-  font-style: italic;
-}
-
-.underline {
-  text-decoration: underline;
-}
-
 .green {
   color: var(--green);
 }
 
 .blue {
-  color: var(--secondary6);
+  color: var(--blue1);
 }
 
 .red {

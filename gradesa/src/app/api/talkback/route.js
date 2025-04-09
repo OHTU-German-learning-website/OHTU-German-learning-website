@@ -4,18 +4,19 @@ import { checkSession } from "@/backend/auth/session";
 
 export async function POST(req) {
   try {
-    const { email, complaint } = await req.json();
+    const { email, message } = await req.json();
 
-    if (!email || !complaint) {
+    if (!email || !message) {
       return new Response(
-        JSON.stringify({ message: "Email and complaint are required" }),
+        JSON.stringify({ message: "Email and message are required" }),
         {
           status: 400,
           headers: { "Content-Type": "application/json" },
         }
       );
     }
-    const userId = await checkSession();
+    const user = await checkSession();
+    const userId = user.id;
 
     if (!userId) {
       return new Response(
@@ -56,8 +57,8 @@ export async function POST(req) {
       }
     }
     await DB.pool(
-      `INSERT INTO feedbacks (user_id, email, complaint, timestamp) VALUES ($1,$2,$3,$4)`,
-      [userId, email, complaint, now]
+      `INSERT INTO feedbacks (user_id, email, message, timestamp) VALUES ($1,$2,$3,$4)`,
+      [userId, email, message, now]
     );
 
     // Initialize MailerSend securely
@@ -80,10 +81,8 @@ export async function POST(req) {
       .setTo(recipients)
       .setReplyTo(sentFrom)
       .setSubject("New Feedback Received")
-      .setHtml(
-        `<p>New feedback from: ${email}</p><p>Complaint: ${complaint}</p>`
-      )
-      .setText(`New feedback from: ${email}\nComplaint: ${complaint}`);
+      .setHtml(`<p>New feedback from: ${email}</p><p>message: ${message}</p>`)
+      .setText(`New feedback from: ${email}\nmessage: ${message}`);
 
     // Send the email
     await mailersend.email.send(emailParams);
