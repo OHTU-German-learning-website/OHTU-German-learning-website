@@ -56,22 +56,10 @@ export default function CreateFreeFormExercise() {
         is_correct,
       },
     ]);
-
-    // Add empty error slot for new answer
-    setFormErrors((prev) => ({
-      ...prev,
-      answers: [...prev.answers, { answer: "", feedback: "" }],
-    }));
   };
 
   const handleRemoveAnswer = (i) => {
     setAnswers((prev) => prev.filter((_, j) => i !== j));
-
-    // Remove errors for this answer
-    setFormErrors((prev) => {
-      const newAnswerErrors = prev.answers.filter((_, j) => j !== i);
-      return { ...prev, answers: newAnswerErrors };
-    });
   };
 
   const handleSubmit = async () => {
