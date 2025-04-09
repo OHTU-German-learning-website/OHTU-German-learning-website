@@ -33,7 +33,7 @@ export const POST = withAuth(
       );
       const freeFormExerciseId = freeFormExercise.rows[0].id;
       for (const answer of answers) {
-        const insertedAnswer = await tx.query(
+        await tx.query(
           `
         INSERT INTO free_form_answers (free_form_exercise_id, answer, is_correct, feedback)
         VALUES ($1, $2, $3, $4)

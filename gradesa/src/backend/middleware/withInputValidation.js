@@ -25,13 +25,16 @@ export const withInputValidation = (schema, callback) => {
       req = newRequest;
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const errorMessage = humanReadableZodError(error);
+        const { humanReadableError, debugError } = humanReadableZodError(error);
         logger.error(
-          `Input validation failed for ${req.url}: ${errorMessage}`,
+          `Input validation failed for ${req.url}: ${debugError}`,
           error.errors
         );
         logger.debug(error.errors, bodyData);
-        return NextResponse.json({ error: errorMessage }, { status: 422 });
+        return NextResponse.json(
+          { error: humanReadableError, zodError: error.errors },
+          { status: 422 }
+        );
       }
       return NextResponse.json(
         { error: "Something went wrong" },
@@ -47,10 +50,15 @@ const humanReadableZodError = (error) => {
   if (!(error instanceof z.ZodError)) {
     return error.toString();
   }
-  return error.errors
-    .map(({ path, message }) => {
-      const fieldPath = path.length ? path.join(".") : "input";
-      return `${fieldPath}: ${message}`;
+  const humanReadableError = error.errors
+    .map(({ message }) => {
+      return message;
     })
-    .join("; ");
+    .join(", ");
+
+  const debugError = error.errors.map(({ path, message }) => {
+    const fieldPath = path.length ? path.join(".") : "input";
+    return `${fieldPath}: ${message}`;
+  });
+  return { humanReadableError, debugError };
 };

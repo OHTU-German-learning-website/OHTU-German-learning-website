@@ -54,16 +54,16 @@ export default function CreateFreeFormExercise() {
 
   return (
     <Column gap="md">
-      <h2>Create free form exercise</h2>
+      <h2>Freitextübung erstellen</h2>
       <p>
-        To create a new free form exercise, add a question, give it some
-        possible correct answers. <br />
-        If you'd like to give feedback to the student on possible incorrect
-        answers, you can do so by adding feedbacks.
+        Um eine neue Freitextübung zu erstellen, fügen Sie eine Frage hinzu und
+        geben Sie einige mögliche richtige Antworten an. <br />
+        Wenn Sie den Schülern Feedback zu möglichen falschen Antworten geben
+        möchten, können Sie dies tun, indem Sie Rückmeldungen hinzufügen.
       </p>
       {errors?.length > 0 && <p className="error">{errors.join(", ")}</p>}
       <label>
-        Question
+        Frage
         <textarea value={question} onChange={handleQuestionChange} />
       </label>
       <Column mt="xl">
@@ -75,7 +75,7 @@ export default function CreateFreeFormExercise() {
         />
         <Row justify={"end"} mt={"xl"} mb={"xl"}>
           <Button variant="primary" onClick={handleSubmit}>
-            Submit
+            Absenden
           </Button>
         </Row>
       </Column>
@@ -98,8 +98,12 @@ function Answers({ answers, onAnswersChange, onAddAnswer, onRemoveAnswer }) {
     <Column gap="xl">
       {renderAnswers()}
       <Row gap="md">
-        <Button onClick={() => onAddAnswer(true)}>Add valid answer</Button>
-        <Button onClick={() => onAddAnswer(false)}>Add incorrect answer</Button>
+        <Button onClick={() => onAddAnswer(true)}>
+          Richtige Antwort hinzufügen
+        </Button>
+        <Button onClick={() => onAddAnswer(false)}>
+          Falsche Antwort hinzufügen
+        </Button>
       </Row>
     </Column>
   );
@@ -119,13 +123,15 @@ function AnswerItem({ answer, onAnswerChange, onRemoveAnswer }) {
   return (
     <Column gap="lg" b="2px solid var(--primary6)" p="md" r="md">
       <Row justify={"space-between"}>
-        <span>{answer.is_correct ? "Valid answer" : "Incorrect answer"}</span>
+        <span>
+          {answer.is_correct ? "Richtige Antwort" : "Falsche Antwort"}
+        </span>
         <Button size="sm" onClick={onRemoveAnswer}>
-          Remove
+          Entfernen
         </Button>
       </Row>
       <label>
-        <span>Trigger answer</span>
+        <span>Auslösende Antwort</span>
         <textarea value={answer.answer} onChange={handleValidAnswerChange} />
       </label>
       <label>
