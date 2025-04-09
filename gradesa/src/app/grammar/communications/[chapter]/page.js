@@ -54,7 +54,7 @@ export default function Chapters() {
 export const chapters = [
   {
     id: "1",
-    title: "1. Über die Vergangenheit sprechen",
+    title: "1. Über Vergangenes sprechen",
     content: Chapter1,
     link: "/grammar/communications/1",
   },
