@@ -18,12 +18,6 @@ export async function middleware(request) {
     loginUrl.searchParams.set("redirect", pathname); // Add the original path as a query parameter
     return NextResponse.redirect(loginUrl);
   }
-
-  // Redirect logged-in users trying to access the restricted paths
-  if (hasCookie && unauthRequired.includes(pathname)) {
-    return NextResponse.redirect(new URL("/", request.url));
-  }
-
   // Otherwise, allow the request to proceed and prevent caching of the response
   const response = NextResponse.next();
   response.headers.set("Cache-Control", "no-store, max-age=0, must-revalidate");

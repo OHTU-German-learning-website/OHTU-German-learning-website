@@ -32,8 +32,15 @@ export function UserProvider({ children }) {
   const [auth, setAuth] = useState(defaultUserState);
   const makeRequest = useRequest();
   const pathname = usePathname();
-  const [actAs, setActAs] = useLocalStorage("gradesa_act_as", userOptions[0]);
+  const [actAs, setActAs, clearActAs] = useLocalStorage(
+    "gradesa_act_as",
+    userOptions[0]
+  );
   // Check if user is logged in on initial load
+  const resetAuthState = () => {
+    setAuth(defaultUserState);
+    clearActAs();
+  };
   useEffect(() => {
     async function checkUserSession() {
       try {
@@ -60,7 +67,7 @@ export function UserProvider({ children }) {
           }));
         } else {
           console.debug("not logged in, resetting state");
-          setAuth(defaultUserState);
+          resetAuthState();
         }
       } catch (error) {
         console.error("Failed to fetch user session:", error);
@@ -74,7 +81,7 @@ export function UserProvider({ children }) {
     const response = await makeRequest("/auth/logout");
     if (response.status === 200) {
       console.debug("User logged out");
-      setAuth(defaultUserState);
+      resetAuthState();
       window.location.reload();
     }
   };
@@ -95,6 +102,14 @@ export function useIsLoggedIn() {
   const { auth } = useUser();
   return auth?.isLoggedIn ?? false;
 }
+
+export const useLoggedOutGuard = () => {
+  const { auth } = useUser();
+  const router = useRouter();
+  useEffect(() => {
+    if (auth?.isLoggedIn) router.replace("/");
+  }, [auth, router]);
+};
 
 export function useIsAdmin() {
   const router = useRouter();
