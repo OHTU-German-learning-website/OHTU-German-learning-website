@@ -4,6 +4,16 @@ import { WordBox } from "./wordbox.js";
 import { Dustbin } from "./dustbin.js";
 import { Button } from "@/components/ui/button";
 
+// const Area = ({
+//   initialDustbins,
+//   allWords
+// }) => {
+//   const [dustbins, setDustbins] = useState(initialDustbins);
+//   const [droppedBoxNames, setDroppedBoxNames] = useState([]);
+//   const [isExerciseComplete, setIsExerciseComplete] = useState(false);
+//   const [availableWords, setAvailableWords] = useState([...allWords]);
+//   const [visibleWords, setVisibleWords] = useState([]);
+
 export const Area = memo(function Area() {
   const initialDustbins = [
     { accepts: [ItemTypes.DER], droppedItems: [] },
@@ -175,3 +185,5 @@ export const Area = memo(function Area() {
     </div>
   );
 });
+
+export default Area;
