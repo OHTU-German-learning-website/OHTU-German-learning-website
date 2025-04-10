@@ -86,6 +86,7 @@ function create() {
       user: readString("DB_USER"),
       password: readString("DB_PASSWORD"),
       database: readString("DB_NAME"),
+      ssl: isProduction,
     },
   };
 
