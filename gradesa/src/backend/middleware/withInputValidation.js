@@ -21,6 +21,7 @@ export const withInputValidation = (schema, callback) => {
         mode: req.mode,
         redirect: req.redirect,
       });
+      newRequest.user = req.user;
 
       req = newRequest;
     } catch (error) {
