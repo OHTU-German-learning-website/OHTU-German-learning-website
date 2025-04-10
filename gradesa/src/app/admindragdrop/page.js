@@ -73,17 +73,73 @@ export default function DragdropAdminPage() {
                   <Row gap="md">
                     <Dropdown
                       options={[
-                        { label: "Red", value: "red" },
-                        { label: "Blue", value: "blue" },
-                        { label: "Green", value: "green" },
-                        { label: "Yellow", value: "yellow" },
-                        { label: "Purple", value: "purple" },
+                        {
+                          label: "Red",
+                          value: "red",
+                          style: {
+                            backgroundColor: "var(--red)",
+                            width: "100%",
+                            padding: "var(--u-xs)",
+                            borderRadius: "var(--radius-sm)",
+                          },
+                        },
+                        {
+                          label: "Blue",
+                          value: "blue",
+                          style: {
+                            backgroundColor: "var(--blue1)",
+                            width: "100%",
+                            padding: "var(--u-xs)",
+                            borderRadius: "var(--radius-sm)",
+                          },
+                        },
+                        {
+                          label: "Green",
+                          value: "green",
+                          style: {
+                            backgroundColor: "var(--green)",
+                            width: "100%",
+                            padding: "var(--u-xs)",
+                            borderRadius: "var(--radius-sm)",
+                          },
+                        },
+                        {
+                          label: "Yellow",
+                          value: "yellow",
+                          style: {
+                            backgroundColor: "var(--yellow)",
+                            width: "100%",
+                            padding: "var(--u-xs)",
+                            borderRadius: "var(--radius-sm)",
+                          },
+                        },
+                        {
+                          label: "Purple",
+                          value: "purple",
+                          style: {
+                            backgroundColor: "var(--purple)",
+                            width: "100%",
+                            padding: "var(--u-xs)",
+                            borderRadius: "var(--radius-sm)",
+                          },
+                        },
                       ]}
                       onSelect={(selectedOption) =>
                         handleInputChange(index, "color", selectedOption.value)
                       }
                     >
-                      <Button size="sm" variant="outline">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        style={
+                          field.color
+                            ? {
+                                backgroundColor: `var(--${field.color})`,
+                                transition: "background-color 0.2s",
+                              }
+                            : {}
+                        }
+                      >
                         {field.color || "Select color"}
                       </Button>
                     </Dropdown>
