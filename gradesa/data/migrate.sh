@@ -19,6 +19,13 @@ DB_URL="postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}"
 pgmigrate migrate -d "$DB_URL" -m migrations
 echo "Migrating done"
 
+# Check if --skip-schema-gen flag is provided
+if [[ "$*" == *--skip-schema-gen* ]]; then
+  echo "Skipping schema generation"
+  exit 0
+fi
+
+
 # We generate the schema file to make sure that the schema is up to date
 # The github workflow will check for uncommitted changes and fail if there is 
 # a difference between the schema file and the actual schema in the database

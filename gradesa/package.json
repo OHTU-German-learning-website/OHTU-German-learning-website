@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "sh ./data/migrate.sh && next start",
+    "start": "sh ./data/migrate.sh --skip-schema-gen && next start",
     "lint": "next lint",
     "test": "vitest --disable-console-intercept "
   },
