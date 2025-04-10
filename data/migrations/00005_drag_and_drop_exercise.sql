@@ -2,7 +2,8 @@
 CREATE TABLE exercises (
     id BIGSERIAL PRIMARY KEY,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    created_by BIGINT NOT NULL REFERENCES users(id)
 );
 
 CREATE TRIGGER updated_at
@@ -15,6 +16,7 @@ CREATE TABLE dnd_exercises (
     id BIGSERIAL PRIMARY KEY,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    created_by BIGINT NOT NULL REFERENCES users(id),
     exercise_id BIGINT NOT NULL REFERENCES exercises(id),
     title TEXT NOT NULL
 );
