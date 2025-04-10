@@ -73,7 +73,7 @@ FOR EACH ROW
 EXECUTE FUNCTION updated_at();
 
 -- Table holding the user's answers
-CREATE TABLE user_answers (
+CREATE TABLE dnd_user_answer (
     id BIGSERIAL PRIMARY KEY,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -84,6 +84,6 @@ CREATE TABLE user_answers (
 );
 
 CREATE TRIGGER updated_at
-BEFORE UPDATE ON public.user_answers
+BEFORE UPDATE ON public.dnd_user_answer
 FOR EACH ROW
 EXECUTE FUNCTION updated_at();
