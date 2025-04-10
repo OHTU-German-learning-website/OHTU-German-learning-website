@@ -56,10 +56,6 @@ function create() {
     }
     return val ?? "";
   }
-  // Unused-vars
-  // function readStringOptional(key, defaultValue) {
-  //   return getFromEnv(key) ?? defaultValue;
-  // }
 
   function readInt(key) {
     const val = getFromEnv(key);
