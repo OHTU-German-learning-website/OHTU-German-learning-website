@@ -3,14 +3,14 @@ import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import styles from "../../../../page.module.css";
 import DragdropLayout from "../../layout";
-import { Area } from "@/components/ui/dragdrop/area";
+import { MemoizedArea as Area } from "@/components/ui/dragdrop/area";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import "../../../../globals.css";
-import { Button } from "@/components/ui/button";
 import useQuery from "@/shared/hooks/useQuery";
+import { LinkButton } from "@/components/ui/linkbutton";
 
-export default function StudentExercisePage() {
+export default function Dragdrop({}) {
   const params = useParams();
   const router = useRouter();
   const { dnd_id } = params;
@@ -40,10 +40,7 @@ export default function StudentExercisePage() {
           <div className="exercise-container">
             <h1>{exercise.title}</h1>
             <DndProvider backend={HTML5Backend}>
-              <Area
-                initialDustbins={exercise.categories}
-                allWords={exercise.draggable_words}
-              />
+              <Area exerciseID={params.id} />
             </DndProvider>
           </div>
         </div>
@@ -51,13 +48,9 @@ export default function StudentExercisePage() {
 
       <br />
       <div>
-        <Button
-          size="sm"
-          variant="secondary"
-          onClick={() => router.push("/grammar/themes")}
-        >
+        <LinkButton size="sm" variant="secondary" href="/grammar/exercises">
           Zurück zum Dashboard
-        </Button>
+        </LinkButton>
       </div>
     </div>
   );
