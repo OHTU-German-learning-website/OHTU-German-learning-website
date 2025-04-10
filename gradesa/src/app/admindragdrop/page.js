@@ -61,11 +61,11 @@ export default function DragdropAdminPage() {
               ))}
             </select>
           </div>
-          <Row gap="20px">
+          <Row gap="md">
             {numberOfFields &&
               inputFields.map((field, index) => (
                 <div key={index} className="form-group">
-                  <Row gap="10px">
+                  <Row gap="md">
                     <select id={`color-${index}`} className="form-select">
                       <option value="">Select color</option>
                       {["red", "blue", "green", "yellow", "purple"].map(
