@@ -143,20 +143,6 @@ export default function DragdropAdminPage() {
                         {field.color || "Select color"}
                       </Button>
                     </Dropdown>
-                    {/* <select id={`color-${index}`} className="form-select">
-                      <option value="">Select color</option>
-                      {["red", "blue", "green", "yellow", "purple"].map(
-                        (color) => (
-                          <option
-                            className={`form-${color}`}
-                            key={color}
-                            value={color}
-                          >
-                            {color}
-                          </option>
-                        )
-                      )}
-                    </select> */}
                     <input
                       type="text"
                       value={field.category}
