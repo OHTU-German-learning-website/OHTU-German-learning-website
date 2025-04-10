@@ -2,6 +2,7 @@
 import styles from "../page.module.css";
 import "./admin.css";
 import { useState, useEffect } from "react";
+import { Dropdown } from "@/components/ui/dropdown";
 import { Button } from "@/components/ui/button";
 import { Row } from "@/components/ui/layout/container";
 
@@ -47,26 +48,46 @@ export default function DragdropAdminPage() {
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="fieldCount">Number of boxes:</label>
-            <select
-              id="fieldCount"
-              value={numberOfFields || ""}
-              onChange={(e) => setNumberOfFields(Number(e.target.value))}
-              className="form-select"
+            <Dropdown
+              options={[
+                { label: "2", value: "2" },
+                { label: "3", value: "3" },
+                { label: "4", value: "4" },
+                { label: "5", value: "5" },
+              ]}
+              onSelect={(selectedOption) =>
+                setNumberOfFields(Number(selectedOption.value))
+              }
             >
-              <option value="">Select the number of boxes</option>
-              {[2, 3, 4, 5].map((num) => (
-                <option key={num} value={num}>
-                  {num}
-                </option>
-              ))}
-            </select>
+              <Button size="md" variant="outline" width="fit">
+                {numberOfFields
+                  ? `Selected: ${numberOfFields}`
+                  : "Select number of boxes"}
+              </Button>
+            </Dropdown>
           </div>
           <Row gap="md">
             {numberOfFields &&
               inputFields.map((field, index) => (
                 <div key={index} className="form-group">
                   <Row gap="md">
-                    <select id={`color-${index}`} className="form-select">
+                    <Dropdown
+                      options={[
+                        { label: "Red", value: "red" },
+                        { label: "Blue", value: "blue" },
+                        { label: "Green", value: "green" },
+                        { label: "Yellow", value: "yellow" },
+                        { label: "Purple", value: "purple" },
+                      ]}
+                      onSelect={(selectedOption) =>
+                        handleInputChange(index, "color", selectedOption.value)
+                      }
+                    >
+                      <Button size="sm" variant="outline">
+                        {field.color || "Select color"}
+                      </Button>
+                    </Dropdown>
+                    {/* <select id={`color-${index}`} className="form-select">
                       <option value="">Select color</option>
                       {["red", "blue", "green", "yellow", "purple"].map(
                         (color) => (
@@ -79,7 +100,7 @@ export default function DragdropAdminPage() {
                           </option>
                         )
                       )}
-                    </select>
+                    </select> */}
                     <input
                       type="text"
                       value={field.category}
