@@ -4,10 +4,8 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { useIsMounted } from "./useIsMounted";
 import { useUser } from "@/context/user.context";
 
-const baseUrl =
-  process.env.NEXT_ENV === "production"
-    ? "https://tbd.com"
-    : "http://localhost:3000";
+const baseUrl = process.env.NEXT_ENV === "production" ? "" : "";
+
 export const axiosInstance = axios.create({
   baseURL: `${baseUrl}/api`,
 });
