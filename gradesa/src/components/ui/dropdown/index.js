@@ -9,6 +9,7 @@ const optionSchema = z.array(
     label: z.string(),
     value: z.string(),
     disabled: z.boolean().optional(),
+    style: z.record(z.string(), z.string()).optional(),
   })
 );
 
@@ -36,6 +37,7 @@ export const Dropdown = ({
         key={option.value}
         className={styles.item}
         onClick={() => handleSelect(option)}
+        style={option.style}
       >
         {option.label}
       </_DropdownMenu.Item>
