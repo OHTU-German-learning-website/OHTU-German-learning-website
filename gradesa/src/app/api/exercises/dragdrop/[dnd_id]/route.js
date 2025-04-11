@@ -10,7 +10,11 @@ export async function GET(request, { params }) {
   try {
     // Fetch exercise details
     const exercise = await DB.pool(
-      "SELECT * FROM dnd_exercises WHERE id = $1",
+      `
+      SELECT dnd.id, dnd.title, dnd.created_at
+      FROM dnd_exercises dnd
+      WHERE dnd.id = $1
+    `,
       [dnd_id]
     );
 
@@ -49,6 +53,7 @@ export async function GET(request, { params }) {
 
     return Response.json({
       exercise: exercise.rows[0],
+      title: exercise.rows[0].title,
       categories: categories.rows,
       words: words.rows,
     });

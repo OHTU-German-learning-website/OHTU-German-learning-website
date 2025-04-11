@@ -16,11 +16,17 @@ const Area = ({ exerciseID }) => {
 
   useEffect(() => {
     const fetchExerciseData = async () => {
+      if (!exerciseID) return;
+
       try {
         const response = await fetch(`/api/exercises/dragdrop/${exerciseID}`);
         if (!response.ok) throw new Error("Fehler beim Laden der Übung.");
 
         const data = await response.json();
+
+        if (!data.categories || !data.words) {
+          throw new Error("Unvollständige Übungsdaten");
+        }
 
         const initialDustbins = data.categories.map((category) => ({
           accepts: [category.category],

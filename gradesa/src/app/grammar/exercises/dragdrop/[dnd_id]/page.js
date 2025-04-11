@@ -29,7 +29,7 @@ export default function Dragdrop({}) {
     return <div>{error.message}</div>;
   }
 
-  if (!exercise) {
+  if (!exercise || !exercise.title) {
     return <div>Übung wird geladen...</div>;
   }
 
@@ -40,7 +40,7 @@ export default function Dragdrop({}) {
           <div className="exercise-container">
             <h1>{exercise.title}</h1>
             <DndProvider backend={HTML5Backend}>
-              <Area exerciseID={params.id} />
+              <Area exerciseID={dnd_id} />
             </DndProvider>
           </div>
         </div>
