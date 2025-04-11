@@ -49,9 +49,9 @@ const Area = ({ exerciseID }) => {
     fetchExerciseData();
   }, [exerciseID]);
 
-  const getRandomUnusedWords = (count, wordList = availableWords) => {
-    if (wordList.length === 0) return [];
-    const shuffled = [...wordList].sort(() => Math.random() - 0.5);
+  const getRandomUnusedWords = (count, wordList) => {
+    if (!wordList || wordList.length === 0) return [];
+    const shuffled = [...wordList].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, Math.min(count, shuffled.length));
   };
 
@@ -78,52 +78,82 @@ const Area = ({ exerciseID }) => {
     (index, item) => {
       const { name, type } = item;
 
-      if (!isDropped(name)) {
-        const updatedDroppedBoxNames = [...droppedBoxNames, name];
-        const updatedDustbins = [...dustbins];
-        updatedDustbins[index] = {
-          ...updatedDustbins[index],
-          droppedItems: [
-            ...updatedDustbins[index].droppedItems,
-            { name, type },
-          ],
-        };
+      if (droppedBoxNames.includes(name)) return;
 
-        const updatedAvailableWords = availableWords.filter(
-          (word) => word.name !== name
-        );
-
-        const remainingVisibleWords = visibleWords.filter(
-          (word) => word.name !== name
-        );
-
-        let updatedVisibleWords = [...remainingVisibleWords];
-
-        while (
-          updatedVisibleWords.length < 5 &&
-          updatedAvailableWords.length > 0
-        ) {
-          const newWordIndex = Math.floor(
-            Math.random() * updatedAvailableWords.length
-          );
-          const newWord = updatedAvailableWords[newWordIndex]; // Remove from available and get the word
-          if (
-            !remainingVisibleWords.find((word) => word.name === newWord.name)
-          ) {
-            updatedVisibleWords.push(newWord);
-          }
+      const updatedDustbins = dustbins.map((bin, binIndex) => {
+        if (binIndex === index) {
+          return {
+            ...bin,
+            droppedItems: [...bin.droppedItems, { name, type }],
+          };
         }
+        return bin;
+      });
 
-        setDroppedBoxNames(updatedDroppedBoxNames);
-        setDustbins(updatedDustbins);
-        setAvailableWords(updatedAvailableWords);
-        setVisibleWords(updatedVisibleWords);
+      const updatedAvailableWords = availableWords.filter(
+        (word) => word.name !== name
+      );
 
-        const isComplete = checkExerciseComplete(updatedDustbins);
-        setIsExerciseComplete(isComplete);
+      const remainingVisibleWords = visibleWords.filter(
+        (word) => word.name !== name
+      );
+
+      let newWords = [];
+      const wordsNeeded = 5 - remainingVisibleWords.length;
+
+      if (wordsNeeded > 0) {
+        const unusedWords = updatedAvailableWords.filter(
+          (word) =>
+            !remainingVisibleWords.some((visible) => visible.name === word.name)
+        );
+        newWords = getRandomUnusedWords(wordsNeeded, unusedWords);
       }
+
+      // if (!isDropped(name)) {
+      //   const updatedDroppedBoxNames = [...droppedBoxNames, name];
+      //   const updatedDustbins = [...dustbins];
+      //   updatedDustbins[index] = {
+      //     ...updatedDustbins[index],
+      //     droppedItems: [
+      //       ...updatedDustbins[index].droppedItems,
+      //       { name, type },
+      //     ],
+      //   };
+
+      //   const updatedAvailableWords = availableWords.filter(
+      //     (word) => word.name !== name
+      //   );
+
+      //   const remainingVisibleWords = visibleWords.filter(
+      //     (word) => word.name !== name
+      //   );
+
+      //   let updatedVisibleWords = [...remainingVisibleWords];
+
+      //   while (
+      //     updatedVisibleWords.length < 5 &&
+      //     updatedAvailableWords.length > 0
+      //   ) {
+      //     const newWordIndex = Math.floor(
+      //       Math.random() * updatedAvailableWords.length
+      //     );
+      //     const newWord = updatedAvailableWords[newWordIndex]; // Remove from available and get the word
+      //     if (
+      //       !remainingVisibleWords.find((word) => word.name === newWord.name)
+      //     ) {
+      //       updatedVisibleWords.push(newWord);
+      //     }
+      //   }
+
+      setDroppedBoxNames([...droppedBoxNames, name]);
+      setDustbins(updatedDustbins);
+      setAvailableWords(updatedAvailableWords);
+      setVisibleWords([...remainingVisibleWords, ...newWords]);
+
+      const isComplete = checkExerciseComplete(updatedDustbins);
+      setIsExerciseComplete(isComplete);
     },
-    [droppedBoxNames, dustbins, availableWords, visibleWords, allWords]
+    [droppedBoxNames, dustbins, availableWords, visibleWords]
   );
 
   const reset = () => {
