@@ -109,42 +109,6 @@ const Area = ({ exerciseID }) => {
         newWords = getRandomUnusedWords(wordsNeeded, unusedWords);
       }
 
-      // if (!isDropped(name)) {
-      //   const updatedDroppedBoxNames = [...droppedBoxNames, name];
-      //   const updatedDustbins = [...dustbins];
-      //   updatedDustbins[index] = {
-      //     ...updatedDustbins[index],
-      //     droppedItems: [
-      //       ...updatedDustbins[index].droppedItems,
-      //       { name, type },
-      //     ],
-      //   };
-
-      //   const updatedAvailableWords = availableWords.filter(
-      //     (word) => word.name !== name
-      //   );
-
-      //   const remainingVisibleWords = visibleWords.filter(
-      //     (word) => word.name !== name
-      //   );
-
-      //   let updatedVisibleWords = [...remainingVisibleWords];
-
-      //   while (
-      //     updatedVisibleWords.length < 5 &&
-      //     updatedAvailableWords.length > 0
-      //   ) {
-      //     const newWordIndex = Math.floor(
-      //       Math.random() * updatedAvailableWords.length
-      //     );
-      //     const newWord = updatedAvailableWords[newWordIndex]; // Remove from available and get the word
-      //     if (
-      //       !remainingVisibleWords.find((word) => word.name === newWord.name)
-      //     ) {
-      //       updatedVisibleWords.push(newWord);
-      //     }
-      //   }
-
       setDroppedBoxNames([...droppedBoxNames, name]);
       setDustbins(updatedDustbins);
       setAvailableWords(updatedAvailableWords);

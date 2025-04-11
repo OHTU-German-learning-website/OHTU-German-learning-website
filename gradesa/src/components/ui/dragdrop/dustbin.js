@@ -22,12 +22,7 @@ export const Dustbin = memo(function Dustbin({
       canDrop: monitor.canDrop(),
     }),
   });
-  //   drop: onDrop,
-  //   collect: (monitor) => ({
-  //     isOver: monitor.isOver(),
-  //     canDrop: monitor.canDrop(),
-  //   }),
-  // });
+
   const isActive = isOver && canDrop;
   let backgroundColor = "var(--bg5)";
   if (isActive) {
@@ -50,7 +45,7 @@ export const Dustbin = memo(function Dustbin({
             <div
               key={`${item.name}-${index}`}
               className="dropped-item"
-              style={{ color: ItemColors[accept[0]] }}
+              style={{ color: `var(--${color})` }}
             >
               {item.name}
             </div>
