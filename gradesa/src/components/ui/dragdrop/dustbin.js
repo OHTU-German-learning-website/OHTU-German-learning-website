@@ -1,6 +1,5 @@
 import { memo } from "react";
 import { useDrop } from "react-dnd";
-import { ItemColors } from "@/app/grammar/exercises/dragdrop/itemtypes";
 import { dustbin } from "./dragdrop.css";
 
 export const Dustbin = memo(function Dustbin({
