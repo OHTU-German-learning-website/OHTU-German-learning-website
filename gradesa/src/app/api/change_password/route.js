@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getUserFromSession } from "@/lib/auth"; // Adjust according to your auth system
-import { hashPassword, verifyPassword } from "@/lib/password"; // Use bcrypt helpers
+import { getUserFromSession } from "@/lib/auth";
+import { hashPassword, verifyPassword } from "@/lib/password";
 
 import { DB } from "../../../backend/db";
 import { useState } from "react";

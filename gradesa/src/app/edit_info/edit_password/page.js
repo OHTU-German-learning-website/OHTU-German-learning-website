@@ -6,6 +6,8 @@ import { Container } from "@/components/ui/layout/container";
 import { Button } from "@/components/ui/button";
 
 export default function EditPassword() {
+  const [user, setUser] = useState(null);
+
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
