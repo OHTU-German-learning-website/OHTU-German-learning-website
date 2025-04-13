@@ -13,7 +13,7 @@ export async function POST(req) {
   }
 
   const result = await DB.pool(
-    `SELECT id, password_hash FROM users WHERE id = $1`,
+    `SELECT id, password_hash, salt FROM users WHERE id = $1`,
     [user.id]
   );
 
@@ -25,7 +25,12 @@ export async function POST(req) {
     });
   }
 
-  const isValid = await verifyPassword(currentPassword, dbUser.password_hash);
+  const isValid = await verifyPassword(
+    currentPassword,
+    dbUser.salt,
+    dbUser.password_hash
+  );
+
   if (!isValid) {
     return new Response(
       JSON.stringify({ message: "Incorrect current password" }),
@@ -33,12 +38,12 @@ export async function POST(req) {
     );
   }
 
-  const hashedPassword = await hashPassword(newPassword);
+  const { salt, hashedPassword } = await hashPassword(newPassword);
 
-  await DB.pool(`UPDATE users SET password = $1, salt = $2 WHERE id = $3`, [
-    hashedPassword,
-    user.id,
-  ]);
+  await DB.pool(
+    `UPDATE users SET password_hash = $1, salt = $2 WHERE id = $3`,
+    [hashedPassword, salt, user.id]
+  );
 
   return new Response(JSON.stringify({ message: "Password updated" }), {
     status: 200,
