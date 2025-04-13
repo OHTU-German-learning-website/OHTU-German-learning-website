@@ -1,53 +1,44 @@
-"use client";
-
-import { useState, useEffect } from "react";
-import { getUserFromSession } from "@/lib/auth";
-import { hashPassword, verifyPassword } from "@/lib/password";
-
-import { DB } from "../../../backend/db";
-import { useState } from "react";
+import { hashPassword, verifyPassword } from "@/backend/auth/hash";
+import { DB } from "@/backend/db";
+import { checkSession } from "@/backend/auth/session";
 
 export async function POST(req) {
   const { currentPassword, newPassword } = await req.json();
-  const [user, setUser] = useState(null);
-  useEffect(() => {
-    const getUser = async () => {
-      const res = await fetch("/api/edit_info");
 
-      if (res.status === 401) {
-        router.replace("/auth/login");
-        return;
-      }
-
-      const data = await res.json();
-      setUser(data.user);
-    };
-
-    getUser();
-  }, [router]);
-
-  if (user == null) {
+  const user = await checkSession();
+  if (!user) {
     return new Response(JSON.stringify({ message: "Unauthorized" }), {
       status: 401,
     });
   }
 
-  const isValid = await verifyPassword(currentPassword, user.password);
+  const result = await DB.pool(
+    `SELECT id, password_hash FROM users WHERE id = $1`,
+    [user.id]
+  );
+
+  const dbUser = result.rows[0];
+
+  if (!dbUser || !dbUser.password_hash) {
+    return new Response(JSON.stringify({ message: "Invalid user data" }), {
+      status: 500,
+    });
+  }
+
+  const isValid = await verifyPassword(currentPassword, dbUser.password_hash);
   if (!isValid) {
     return new Response(
       JSON.stringify({ message: "Incorrect current password" }),
-      {
-        status: 400,
-      }
+      { status: 400 }
     );
   }
 
-  const hashed = await hashPassword(newPassword);
+  const hashedPassword = await hashPassword(newPassword);
 
-  await DB.user.update({
-    where: { id: user.id },
-    data: { password: hashed },
-  });
+  await DB.pool(`UPDATE users SET password = $1, salt = $2 WHERE id = $3`, [
+    hashedPassword,
+    user.id,
+  ]);
 
   return new Response(JSON.stringify({ message: "Password updated" }), {
     status: 200,
