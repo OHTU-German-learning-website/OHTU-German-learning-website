@@ -19,7 +19,6 @@ export const PUT = withAuth(async (request, { params }) => {
     logger.error(`Form not found: ${public_id}, ${part_id}, ${question_id}`);
     return NextResponse.json({ error: "Form not found" }, { status: 404 });
   }
-  const form_id = valid_form.rows[0].id;
 
   const { answer } = await request.json();
   const user_id = user.id;
