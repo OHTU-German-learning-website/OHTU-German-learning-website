@@ -30,7 +30,7 @@ export default function FreeformFeedback() {
     <Container mt="xl">
       <Container textAlign="center" mb="md">
         <Button variant="outline" onClick={toggleFeedback}>
-          {showAllFeedback ? "Hide Feedback" : "Show All Feedback"}
+          {showAllFeedback ? "Hide Feedback" : "Show correct answers"}
         </Button>
       </Container>
 
@@ -57,7 +57,7 @@ export default function FreeformFeedback() {
 
               {feedback.userAnswers && feedback.userAnswers.length > 0 ? (
                 <Container mt="md">
-                  <h3>Your Answers</h3>
+                  <h3>Your Answer</h3>
                   {feedback.userAnswers.map((answer, index) => (
                     <Container
                       key={index}

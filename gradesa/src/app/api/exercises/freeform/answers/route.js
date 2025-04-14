@@ -12,6 +12,10 @@ export function normalizeText(text) {
     .trim();
 }
 
+const positionWeight = 0.3;
+const sequenceWeight = 0.3;
+const jaccardWeight = 0.3;
+
 export function calculateSimilarity(str1, str2) {
   const normalized1 = normalizeText(str1);
   const normalized2 = normalizeText(str2);
@@ -35,9 +39,9 @@ export function calculateSimilarity(str1, str2) {
   const positionSimilarity = calculatePositionSimilarity(words1, words2);
 
   return (
-    0.3 * jaccardSimilarity +
-    0.4 * sequenceSimilarity +
-    0.3 * positionSimilarity
+    jaccardWeight * jaccardSimilarity +
+    sequenceWeight * sequenceSimilarity +
+    positionWeight * positionSimilarity
   );
 }
 

@@ -2,7 +2,9 @@
 import { useState } from "react";
 import LessonsLayout from "./layout";
 import Link from "next/link";
-
+import { Column, Row } from "@/components/ui/layout/container";
+import "./exercises.css";
+import { Button } from "@/components/ui/button";
 const exerciseTypes = [
   {
     title: "Free Form Exercises",
@@ -25,38 +27,50 @@ export default function ExercisePage({}) {
 
   return (
     <LessonsLayout>
-      <div className="lessons-container">
-        <h1 className="text-2xl font-bold mb-6">Exercise Types</h1>
+      <Column>
+        <h1>Exercise Types</h1>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-10">
+        <Column gap="md">
           {exerciseTypes.map((type, index) => (
-            <Link
-              key={index}
-              href={type.link}
-              className="block p-6 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow"
-            >
-              <div className="text-3xl mb-3">{type.image}</div>
-              <h2 className="text-xl font-semibold mb-2">{type.title}</h2>
-              <p className="text-gray-600">{type.description}</p>
+            <Link href={type.link} key={index}>
+              <Row
+                className="exercise-type-card"
+                align="center"
+                p="lg"
+                mb="md"
+                br="md"
+                bg="var(--bg2)"
+                transition="all 0.3s ease"
+              >
+                <Row pl="xl" className="exercise-icon">
+                  {type.image}
+                </Row>
+                <Column align="start" justify="center">
+                  <h4 className="exercise-title">{type.title}</h4>
+                  <span className="exercise-description">
+                    {type.description}
+                  </span>
+                </Column>
+              </Row>
             </Link>
           ))}
-        </div>
+        </Column>
 
         <h1>Grammatik 1</h1>
-        <div className="flex-parent-element">
-          <ul className="exercise-list">
-            {initialGrammarTopics[0].exercises.map((exercise, exIndex) => (
-              <li key={`exercise-${exIndex}`}>
-                <Link href={`/lessons/exercises`}>
-                  <button className="exercise-link">{exercise}</button>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
+        <Column gap="md">
+          {initialGrammarTopics[0].exercises.map((exercise, exIndex) => (
+            <Row key={`exercise-${exIndex}`}>
+              <Link href={`/lessons/exercises`}>
+                <button className="exercise-link">{exercise}</button>
+              </Link>
+            </Row>
+          ))}
+        </Column>
+      </Column>
       <Link href="/lessons">
-        <button className="back-button">Zurück zu den Übungen</button>
+        <Button width="fit" size="lg">
+          Zurück zu den Übungen
+        </Button>
       </Link>
     </LessonsLayout>
   );
