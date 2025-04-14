@@ -70,9 +70,6 @@ const useQuery = (url, params, config) => {
       throw new Error("Failed to fetch data");
     }
   };
-  useEffect(() => {
-    console.log("data", data);
-  }, [memoizedConfig]);
 
   const retryWithBackoff = async (url, queryString, config, abortCtrl) => {
     // Reset attempt and backoff on each call

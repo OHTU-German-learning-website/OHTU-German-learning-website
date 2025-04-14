@@ -1,5 +1,3 @@
-/* Exercise Types Container */
-
 /* Exercise Type Card */
 .exercise-type-card {
   border: 1px solid var(--bg4);
@@ -21,18 +19,6 @@
   font-size: 0.9rem;
 }
 
-/* Exercise List */
-.exercise-list {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  padding-left: 2rem;
-}
-
-.exercise-list li {
-  margin-bottom: 0.5rem;
-}
-
 .exercise-link {
   display: block;
   padding: 0.75rem 1rem;
@@ -47,25 +33,4 @@
 .exercise-link:hover {
   background-color: var(--bg3);
   transform: translateY(-2px);
-}
-
-/* Layout */
-.flex-parent-element {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-/* Back Button */
-.back-button {
-  margin-top: 2rem;
-  padding: 0.5rem 1rem;
-  background-color: var(--bg3);
-  border: 1px solid var(--bg5);
-  border-radius: 0.25rem;
-  transition: all 0.2s ease;
-}
-
-.back-button:hover {
-  background-color: var(--bg4);
 }

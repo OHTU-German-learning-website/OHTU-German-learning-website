@@ -6,7 +6,6 @@ export const GET = withAuth(async (request, { params }) => {
   try {
     const { exercise_id } = params;
 
-    // First verify that the exercise exists
     const { rows: exerciseRows } = await DB.pool(
       `SELECT id FROM free_form_exercises WHERE id = $1`,
       [exercise_id]
@@ -19,7 +18,6 @@ export const GET = withAuth(async (request, { params }) => {
       );
     }
 
-    // Get all possible answers and feedback for this exercise
     const { rows: answerRows } = await DB.pool(
       `SELECT 
         id, 
@@ -32,7 +30,6 @@ export const GET = withAuth(async (request, { params }) => {
       [exercise_id]
     );
 
-    // Get user's answer history for this exercise if available
     const userId = request.user.id;
     const { rows: userAnswerRows } = await DB.pool(
       `SELECT 

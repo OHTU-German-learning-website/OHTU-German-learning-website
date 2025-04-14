@@ -6,7 +6,8 @@ export const GET = withAuth(async (request, { params }) => {
   try {
     const { exercise_id } = await params;
 
-    const query = `
+    const { rows } = await DB.pool(
+      `
       SELECT 
         ffe.id,
         ffe.question,
@@ -15,9 +16,9 @@ export const GET = withAuth(async (request, { params }) => {
         free_form_exercises ffe
       WHERE 
         ffe.id = $1
-    `;
-
-    const { rows } = await DB.pool(query, [exercise_id]);
+    `,
+      [exercise_id]
+    );
 
     if (rows.length === 0) {
       return NextResponse.json(
