@@ -4,30 +4,23 @@ import { withAuth } from "@/backend/middleware/withAuth";
 import { withInputValidation } from "@/backend/middleware/withInputValidation";
 import { z } from "zod";
 
-// Helper function to normalize text for comparison
-// This function removes punctuation and extra spaces from the text
-// and converts the text to lowercase
-function normalizeText(text) {
+export function normalizeText(text) {
   return text
     .toLowerCase()
-    .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
+    .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 }
 
-// Calculate similarity between two strings, taking word order into account
-function calculateSimilarity(str1, str2) {
+export function calculateSimilarity(str1, str2) {
   const normalized1 = normalizeText(str1);
   const normalized2 = normalizeText(str2);
 
-  // If exact match after normalization
   if (normalized1 === normalized2) return 1.0;
 
-  // Split into words
   const words1 = normalized1.split(" ");
   const words2 = normalized2.split(" ");
 
-  // Calculate Jaccard similarity (word overlap regardless of order)
   const uniqueWords = new Set([...words1, ...words2]);
   let matchingWords = 0;
   for (const word of words1) {
@@ -35,16 +28,12 @@ function calculateSimilarity(str1, str2) {
   }
   const jaccardSimilarity = matchingWords / uniqueWords.size;
 
-  // Calculate longest common subsequence (takes order into account)
   const lcsLength = findLongestCommonSubsequence(words1, words2);
   const maxLength = Math.max(words1.length, words2.length);
   const sequenceSimilarity = maxLength > 0 ? lcsLength / maxLength : 0;
 
-  // Calculate word position similarity (penalizes words in wrong positions)
   const positionSimilarity = calculatePositionSimilarity(words1, words2);
 
-  // Weighted combination of different similarity metrics
-  // Order is more important, so we weight sequence and position similarity higher
   return (
     0.3 * jaccardSimilarity +
     0.4 * sequenceSimilarity +
@@ -52,17 +41,14 @@ function calculateSimilarity(str1, str2) {
   );
 }
 
-// Find the length of longest common subsequence (preserves order)
-function findLongestCommonSubsequence(sequence1, sequence2) {
+export function findLongestCommonSubsequence(sequence1, sequence2) {
   const m = sequence1.length;
   const n = sequence2.length;
 
-  // Create a table to store the lengths of longest common subsequence
   const dp = Array(m + 1)
     .fill()
     .map(() => Array(n + 1).fill(0));
 
-  // Build the dp table
   for (let i = 1; i <= m; i++) {
     for (let j = 1; j <= n; j++) {
       if (sequence1[i - 1] === sequence2[j - 1]) {
@@ -73,30 +59,23 @@ function findLongestCommonSubsequence(sequence1, sequence2) {
     }
   }
 
-  // Return the length of longest common subsequence
   return dp[m][n];
 }
 
-// Calculate similarity based on word positions
-function calculatePositionSimilarity(words1, words2) {
+export function calculatePositionSimilarity(words1, words2) {
   let positionMatchScore = 0;
   const maxLength = Math.max(words1.length, words2.length);
 
-  if (maxLength === 0) return 1.0; // Both empty
+  if (maxLength === 0) return 1.0;
 
-  // For each word in the first sequence
   for (let i = 0; i < words1.length; i++) {
     const word = words1[i];
     const posInSeq2 = words2.indexOf(word);
 
-    // If word exists in second sequence
     if (posInSeq2 !== -1) {
-      // Calculate position difference and normalize
       const posDiff = Math.abs(i - posInSeq2);
       const maxPossibleDiff = maxLength - 1;
 
-      // Words in the same position get full score
-      // Words further apart get lower scores
       const wordPositionScore =
         maxPossibleDiff > 0 ? 1 - posDiff / maxPossibleDiff : 1;
 
@@ -104,17 +83,13 @@ function calculatePositionSimilarity(words1, words2) {
     }
   }
 
-  // Normalize by the number of words in the first sequence
   return words1.length > 0 ? positionMatchScore / words1.length : 0;
 }
 
-// Generate detailed comparison between student answer and correct answer
-function generateComparisonDetails(studentAnswer, correctAnswer) {
-  // Create arrays of words from both answers (keeping original casing)
+export function generateComparisonDetails(studentAnswer, correctAnswer) {
   const studentWords = studentAnswer.trim().split(/\s+/);
   const correctWords = correctAnswer.trim().split(/\s+/);
 
-  // Normalized versions for matching
   const normalizedStudentWords = studentAnswer
     .trim()
     .toLowerCase()
@@ -124,18 +99,13 @@ function generateComparisonDetails(studentAnswer, correctAnswer) {
     .toLowerCase()
     .split(/\s+/);
 
-  // Track exact matches, position errors, and completely wrong words
   const studentWordStatus = studentWords.map((word, index) => {
     const normalizedWord = normalizedStudentWords[index];
 
-    // Check if this word exists in the correct answer
     const matchIndex = normalizedCorrectWords.indexOf(normalizedWord);
 
     if (matchIndex !== -1) {
-      // Word exists in correct answer
-      // Check if it's in the right position
       if (matchIndex === index) {
-        // Correct word in correct position
         return {
           word,
           status: "match",
@@ -143,7 +113,6 @@ function generateComparisonDetails(studentAnswer, correctAnswer) {
           position: "correct",
         };
       } else {
-        // Correct word in wrong position
         return {
           word,
           status: "match",
@@ -153,13 +122,11 @@ function generateComparisonDetails(studentAnswer, correctAnswer) {
         };
       }
     } else {
-      // Find the most similar word in correct answer (if any)
       let bestMatch = null;
       let highestSimilarity = 0;
 
       for (let i = 0; i < normalizedCorrectWords.length; i++) {
         const correctWord = normalizedCorrectWords[i];
-        // Simple character overlap similarity
         const similarity = calculateWordSimilarity(normalizedWord, correctWord);
 
         if (similarity > 0.7 && similarity > highestSimilarity) {
