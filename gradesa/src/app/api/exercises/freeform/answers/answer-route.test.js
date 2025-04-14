@@ -75,7 +75,7 @@ describe("freeform answers", () => {
     const response = await POST(
       mockPost("/api/exercises/freeform/answers", {
         freeFormExerciseId: exerciseId,
-        answer: "This is the correct anser", // Typo in "answer"
+        answer: "This is the correct answer word",
       })
     );
 
