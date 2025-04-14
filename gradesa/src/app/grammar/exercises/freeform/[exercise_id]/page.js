@@ -8,8 +8,8 @@ import { Container, Column, Row } from "@/components/ui/layout/container";
 import useQuery from "@/shared/hooks/useQuery";
 import { useRequest } from "@/shared/hooks/useRequest";
 import FreeformFeedback from "./feedback";
+import { LinkButton } from "@/components/ui/linkbutton";
 
-// Add these styles to the top of the file
 const styles = {
   errorWord: {
     color: "var(--tertiary2)",
@@ -35,13 +35,13 @@ const styles = {
   },
 };
 
-// Updated AnswerComparison component
+// Aktualisierte AnswerComparison-Komponente
 const AnswerComparison = ({ comparisonDetails }) => {
   if (!comparisonDetails) return null;
 
   return (
     <Container mt="md" mb="md">
-      <h3>Your Answer:</h3>
+      <h3>Deine Antwort:</h3>
       <Container p="sm" bg="var(--bg2)" br="md">
         {comparisonDetails.studentWords.map((word, index) => {
           let wordStyle;
@@ -51,10 +51,10 @@ const AnswerComparison = ({ comparisonDetails }) => {
             wordStyle = styles.errorWord;
           } else if (word.status === "similar") {
             wordStyle = styles.similarWord;
-            title = `Did you mean: ${word.suggestion}`;
+            title = `Meintest du: ${word.suggestion}`;
           } else if (word.status === "match" && word.position === "wrong") {
             wordStyle = styles.wrongPosition;
-            title = `This word should be in position ${word.correctPosition + 1}`;
+            title = `Dieses Wort sollte an Position ${word.correctPosition + 1} stehen`;
           } else {
             wordStyle = styles.matchWord;
           }
@@ -69,13 +69,13 @@ const AnswerComparison = ({ comparisonDetails }) => {
 
       {comparisonDetails.missingWords.length > 0 && (
         <Container mt="sm">
-          <h4>Missing Words:</h4>
+          <h4>Fehlende Wörter:</h4>
           <Container p="sm" bg="var(--bg2)" br="md">
             {comparisonDetails.missingWords.map((word, index) => (
               <span
                 key={index}
                 style={styles.missingWord}
-                title={`This word should be at position ${word.position + 1}`}
+                title={`Dieses Wort sollte an Position ${word.position + 1} stehen`}
               >
                 {word.word}
               </span>
@@ -85,7 +85,7 @@ const AnswerComparison = ({ comparisonDetails }) => {
       )}
 
       <Container mt="sm">
-        <h4>Correct Answer:</h4>
+        <h4>Richtige Antwort:</h4>
         <Container p="sm" bg="var(--bg2)" br="md">
           {comparisonDetails.missingWords
             .concat(
@@ -109,19 +109,19 @@ const AnswerComparison = ({ comparisonDetails }) => {
 
       <Container mt="sm" fontSize="sm">
         <div>
-          <span style={styles.errorWord}>Red/strikethrough</span>: Incorrect
-          words
+          <span style={styles.errorWord}>Rot/durchgestrichen</span>: Falsche
+          Wörter
         </div>
         <div>
-          <span style={styles.similarWord}>Yellow/underlined</span>: Almost
-          correct words
+          <span style={styles.similarWord}>Gelb/unterstrichen</span>: Fast
+          richtige Wörter
         </div>
         <div>
-          <span style={styles.wrongPosition}>Blue/wavy underline</span>: Correct
-          word in wrong position
+          <span style={styles.wrongPosition}>Blau/wellig unterstrichen</span>:
+          Richtiges Wort an falscher Position
         </div>
         <div>
-          <span style={styles.missingWord}>Green</span>: Missing words
+          <span style={styles.missingWord}>Grün</span>: Fehlende Wörter
         </div>
       </Container>
     </Container>
@@ -161,7 +161,7 @@ export default function FreeFormExercisePage() {
   if (isLoading) {
     return (
       <Container display="flex" justify="center" align="center" h="200px">
-        Loading...
+        Lädt...
       </Container>
     );
   }
@@ -169,34 +169,27 @@ export default function FreeFormExercisePage() {
   if (error) {
     return (
       <Container p="md" bg="var(--tertiary1)" mb="md" br="md">
-        Error: {error}
+        Fehler: {error}
         <Container mt="md">
-          <Link href="/grammar/exercises">Back to exercises</Link>
+          <Link href="/grammar/exercises">Zurück zu den Übungen</Link>
         </Container>
       </Container>
     );
   }
 
   if (!exercise) {
-    return (
-      <Container p="md" bg="var(--yellow)" mb="md" br="md">
-        Exercise not found.
-        <Container mt="md">
-          <Link href="/grammar/exercises">Back to exercises</Link>
-        </Container>
-      </Container>
-    );
+    return null;
   }
 
   return (
     <Container maxW="800px" m="0 auto" p="md">
       <Container mb="lg">
-        <h1>Free Form Exercise</h1>
+        <h1>Freie Übung</h1>
       </Container>
 
       <Container mb="xl" p="md" bg="var(--bg2)" br="md">
         <Container mb="sm">
-          <h2>Question:</h2>
+          <h2>Frage:</h2>
         </Container>
         <Container>
           <p>{exercise.question}</p>
@@ -207,20 +200,20 @@ export default function FreeFormExercisePage() {
         <Column gap="lg">
           <Container>
             <label>
-              Your Answer:
+              Deine Antwort:
               <textarea
                 id="answer"
                 rows="4"
                 className="w-full p-2 mt-1 border rounded"
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
-                placeholder="Type your answer here..."
+                placeholder="Gib deine Antwort hier ein..."
                 required
               />
             </label>
           </Container>
           <Button type="submit" variant="secondary">
-            Submit Answer
+            Antwort abschicken
           </Button>
         </Column>
       </form>
@@ -235,11 +228,11 @@ export default function FreeFormExercisePage() {
           bg={feedback.is_correct ? "var(--green1)" : "var(--tertiary1)"}
         >
           <Column>
-            <span>Teacher's Feedback:</span>
+            <span>Feedback des Lehrers:</span>
             {feedback.feedback}
           </Column>
           <Container mb="sm" fontWeight="600">
-            {feedback.is_correct ? "Correct!" : "Incorrect"}
+            {feedback.is_correct ? "Richtig!" : "Falsch"}
           </Container>
         </Row>
       )}
@@ -250,9 +243,14 @@ export default function FreeFormExercisePage() {
 
       <FreeformFeedback />
 
-      <Container mt="xl">
-        <Link href="/grammar/exercises">Back to exercises</Link>
-      </Container>
+      <Row gap="md" mt="xl" justify="space-between">
+        <LinkButton href="/grammar/exercises">Zurück zu den Übungen</LinkButton>
+        {feedback?.is_correct && (
+          <LinkButton variant="secondary" href="/grammar/exercises/freeform">
+            Nächste Übung
+          </LinkButton>
+        )}
+      </Row>
     </Container>
   );
 }

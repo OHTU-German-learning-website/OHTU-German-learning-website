@@ -7,8 +7,8 @@ import "./exercises.css";
 import { Button } from "@/components/ui/button";
 const exerciseTypes = [
   {
-    title: "Free Form Exercises",
-    description: "Practice with open-ended questions",
+    title: "Freie Übungen",
+    description: "Üben mit offenen Fragen",
     link: "/grammar/exercises/freeform",
     image: "📝",
   },
@@ -28,7 +28,7 @@ export default function ExercisePage({}) {
   return (
     <LessonsLayout>
       <Column>
-        <h1>Exercise Types</h1>
+        <h1>Übungstypen</h1>
 
         <Column gap="md">
           {exerciseTypes.map((type, index) => (

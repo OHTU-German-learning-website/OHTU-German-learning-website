@@ -12,7 +12,7 @@ export default function FreeFormExercisesPage() {
   if (isLoading) {
     return (
       <Container display="flex" justify="center" align="center" h="200px">
-        Loading...
+        Lädt...
       </Container>
     );
   }
@@ -20,7 +20,7 @@ export default function FreeFormExercisesPage() {
   if (error) {
     return (
       <Container p="md" bg="var(--tertiary1)" mb="md" br="md">
-        Error: {error.message}
+        Fehler: {error.message}
       </Container>
     );
   }
@@ -29,13 +29,13 @@ export default function FreeFormExercisesPage() {
     return (
       <Container maxW="800px" m="0 auto" p="md">
         <Container mb="lg">
-          <h1>Free Form Exercises</h1>
+          <h1>Freie Übungen</h1>
         </Container>
         <Container color="var(--fg4)">
-          No exercises available at the moment.
+          Zurzeit sind keine Übungen verfügbar.
         </Container>
         <Container mt="lg">
-          <Link href="/grammar/exercises">Back to all exercises</Link>
+          <Link href="/grammar/exercises">Zurück zu allen Übungen</Link>
         </Container>
       </Container>
     );
@@ -44,7 +44,7 @@ export default function FreeFormExercisesPage() {
   return (
     <Container maxW="800px" m="0 auto" p="md">
       <Container mb="lg">
-        <h1>Free Form Exercises</h1>
+        <h1>Freie Übungen</h1>
       </Container>
 
       <Container
@@ -86,7 +86,7 @@ export default function FreeFormExercisesPage() {
                   : exercise.question}
               </Container>
               <Container fontSize="sm" color="var(--fg5)">
-                Created: {new Date(exercise.created_at).toLocaleDateString()}
+                Erstellt: {new Date(exercise.created_at).toLocaleDateString()}
               </Container>
             </Container>
           </Link>
@@ -94,7 +94,7 @@ export default function FreeFormExercisesPage() {
       </Container>
 
       <Container mt="lg">
-        <Link href="/grammar/exercises">Back to all exercises</Link>
+        <Link href="/grammar/exercises">Zurück zu allen Übungen</Link>
       </Container>
     </Container>
   );
