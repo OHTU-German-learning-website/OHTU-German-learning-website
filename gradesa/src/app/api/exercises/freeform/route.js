@@ -3,7 +3,7 @@ import { DB } from "@/backend/db";
 
 export async function GET() {
   try {
-    const query = `
+    const { rows } = await DB.pool(`
       SELECT 
         ffe.id,
         ffe.question,
@@ -15,9 +15,7 @@ export async function GET() {
         exercises e ON ffe.exercise_id = e.id
       ORDER BY 
         e.created_at DESC
-    `;
-
-    const { rows } = await DB.pool(query);
+    `);
 
     return NextResponse.json(rows);
   } catch (error) {

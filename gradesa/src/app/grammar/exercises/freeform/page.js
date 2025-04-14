@@ -1,22 +1,13 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { Container, Row, Column } from "@/components/ui/layout/container";
-import { useQuery } from "@tanstack/react-query";
-import { useRequest } from "@/context/request.context";
-
+import { useRequest } from "@/shared/hooks/useRequest";
+import useQuery from "@/shared/hooks/useQuery";
 export default function FreeFormExercisesPage() {
   const makeRequest = useRequest();
 
-  const {
-    data: exercises,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["freeform-exercises"],
-    queryFn: () => makeRequest("/api/exercises/freeform"),
-  });
+  const { data: exercises, isLoading, error } = useQuery("/exercises/freeform");
 
   if (isLoading) {
     return (

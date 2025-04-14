@@ -1,0 +1,26 @@
+.error-word {
+  color: var(--tertiary2);
+  text-decoration: line-through;
+  margin-right: 4px;
+}
+
+.similar-word {
+  color: var(--yellow);
+  text-decoration: underline;
+  margin-right: 4px;
+}
+
+.match-word {
+  margin-right: 4px;
+}
+
+.missing-word {
+  color: var(--green1);
+  margin-right: 4px;
+}
+
+.wrong-position {
+  color: var(--blue);
+  text-decoration: underline wavy;
+  margin-right: 4px;
+}
