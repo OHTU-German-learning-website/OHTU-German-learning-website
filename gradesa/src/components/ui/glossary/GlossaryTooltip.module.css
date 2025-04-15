@@ -4,7 +4,7 @@
 }
 
 .glossaryWord {
-  text-decoration: underline dotted var(--primary);
+  text-decoration: underline dotted var(--primary8);
   cursor: pointer;
   color: inherit;
 }
