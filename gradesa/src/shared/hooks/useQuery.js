@@ -1,6 +1,6 @@
 import axios from "axios";
 import { stringify } from "qs";
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, memo } from "react";
 import { useIsMounted } from "./useIsMounted";
 import { useUser } from "@/context/user.context";
 
@@ -42,14 +42,14 @@ const useQuery = (url, params, config) => {
   const memoizedConfig = useMemo(() => {
     if (!config) return defaultConfig;
     return { ...defaultConfig, ...config };
-  }, [config]);
+  }, [JSON.stringify(config)]);
 
   const currentAttemptRef = useRef(0);
   const currentBackoffRef = useRef(memoizedConfig.refetchBackoff);
 
   const memoizedQueryString = useMemo(() => {
     return params ? objectToQueryString(params) : null;
-  }, [params]);
+  }, [JSON.stringify(params ?? {})]);
 
   const makeGetRequest = async (url, queryString, abortCtrl) => {
     if (!isMounted) {
