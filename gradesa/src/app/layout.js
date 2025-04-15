@@ -4,6 +4,7 @@ import styles from "./page.module.css";
 import Navbar from "@/components/ui/navbar/navigation";
 import Sidebar from "@/components/ui/sidebar/sidebar";
 import { UserProvider } from "@/context/user.context";
+import { GlossaryProvider } from "@/context/glossary.context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,12 +25,15 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
+        <div id="tooltip-portal" />
         <UserProvider>
-          <Navbar />
-          <div className={styles.sidebarMain}>
-            <Sidebar />
-            <main className={styles.main}>{children}</main>
-          </div>
+          <GlossaryProvider>
+            <Navbar />
+            <div className={styles.sidebarMain}>
+              <Sidebar />
+              <main className={styles.main}>{children}</main>
+            </div>
+          </GlossaryProvider>
         </UserProvider>
       </body>
     </html>

@@ -75,6 +75,12 @@ const adminSidebarLinks = [
     link: "/admin/create-exercise",
     id: "create-exercise",
   },
+  {
+    title: "Glossareinträge",
+    linkLabel: "Glossareinträge verwalten",
+    link: "/admin/glossary",
+    id: "glossary",
+  },
 ];
 
 function AdminSideBar() {

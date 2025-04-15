@@ -1,13 +1,9 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import { Container, Column, Row } from "@/components/ui/layout/container";
-import { useRouter } from "next/navigation";
 import useQuery from "@/shared/hooks/useQuery";
 import "./glossary.css";
 import { LinkButton } from "@/components/ui/linkbutton";
-
 export default function GlossaryList() {
-  const router = useRouter();
   const { data: entries, error, isLoading } = useQuery("/admin/glossary");
 
   if (isLoading) {
