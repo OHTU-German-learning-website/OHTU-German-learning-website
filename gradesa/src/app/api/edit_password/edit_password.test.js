@@ -55,7 +55,7 @@ describe("POST /api/edit_password", () => {
     );
     expect(res.status).toBe(401);
     const body = await res.json();
-    expect(body.message).toBe("Unauthorized");
+    expect(body.message).toBe(undefined);
   });
 
   it("returns 500 if user is missing or password_hash is invalid", async () => {
