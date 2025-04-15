@@ -56,10 +56,6 @@ function create() {
     }
     return val ?? "";
   }
-  // Unused-vars
-  // function readStringOptional(key, defaultValue) {
-  //   return getFromEnv(key) ?? defaultValue;
-  // }
 
   function readInt(key) {
     const val = getFromEnv(key);
@@ -86,6 +82,7 @@ function create() {
       user: readString("DB_USER"),
       password: readString("DB_PASSWORD"),
       database: readString("DB_NAME"),
+      ssl: isProduction,
     },
   };
 

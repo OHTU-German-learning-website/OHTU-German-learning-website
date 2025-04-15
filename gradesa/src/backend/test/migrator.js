@@ -79,7 +79,7 @@ export class Migrator {
 
   get migrationsDir() {
     return path
-      .join(__dirname, "../../../../data", "migrations")
+      .join(__dirname, "../../../data", "migrations")
       .replace("dist/", "");
   }
 }

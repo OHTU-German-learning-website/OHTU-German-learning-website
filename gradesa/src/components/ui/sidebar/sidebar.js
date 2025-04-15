@@ -61,6 +61,9 @@ function StudentSideBar() {
       >
         Vokabeln
       </Link>
+      <Link className={styles.sidebarLink} href="/edit_info">
+        Profil
+      </Link>
     </>
   );
 }
