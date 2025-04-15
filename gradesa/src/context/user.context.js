@@ -115,6 +115,7 @@ export function useIsAdmin() {
   const router = useRouter();
   const pathname = usePathname();
   const { auth, actAs } = useUser();
+
   useEffect(() => {
     if (!auth.user?.id) return;
     if (!auth.user?.is_admin || !auth.isLoggedIn || actAs.value !== "admin") {
