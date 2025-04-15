@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "vitest --disable-console-intercept "
+    "test": "vitest --disable-console-intercept ",
+    "db:migrate": "sh ./data/migrate.sh"
   },
   "dependencies": {
     "@faker-js/faker": "^9.4.0",
