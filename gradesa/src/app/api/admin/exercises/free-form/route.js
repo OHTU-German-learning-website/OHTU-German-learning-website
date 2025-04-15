@@ -19,7 +19,7 @@ export const POST = withAuth(
 
     const exerciseId = await DB.transaction(async (tx) => {
       const exercise = await tx.query(`
-        INSERT INTO exercises DEFAULT VALUES RETURNING id
+        INSERT INTO exercises (created_at, updated_at, category) VALUES (NOW(), NOW(), 'freeform') RETURNING id
       `);
 
       const exerciseId = exercise.rows[0].id;
