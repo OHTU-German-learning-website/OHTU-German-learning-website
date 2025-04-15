@@ -1,52 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import RenderText from "./textrender";
 import { Row } from "../layout/container";
 import "./multichoice.css";
 import { Button } from "@/components/ui/button";
+import useQuery from "@/shared/hooks/useQuery";
 
-const EXERCISE_DATA = [
-  { type: "text", value: "Wenn man in" },
-  {
-    type: "multichoice",
-    value: "___",
-    options: ["das", "die", "der"],
-    correct_answer: "das",
-  },
-  { type: "text", value: "Land Sachsen kommt, dann kommt man entweder mit" },
-  {
-    type: "multichoice",
-    value: "___",
-    options: ["der", "die", "das"],
-    correct_answer: "der",
-  },
-  { type: "text", value: "Bahn, mit" },
-  {
-    type: "multichoice",
-    value: "___",
-    options: ["dem", "den", "die"],
-    correct_answer: "dem",
-  },
-  { type: "text", value: "Auto oder mit" },
-  {
-    type: "multichoice",
-    value: "___",
-    options: ["dem", "den", "die"],
-    correct_answer: "dem",
-  },
-  { type: "text", value: "Flugzeug." },
-];
+export default function MultichoicePage({ exerciseId }) {
+  // Fetch exercise data using the useQuery hook
+  const {
+    data: exerciseData,
+    isLoading,
+    error,
+  } = useQuery(`/exercises/multichoice/${exerciseId}`);
 
-export default function MultichoicePage() {
-  const [userAnswers, setUserAnswers] = useState(
-    EXERCISE_DATA.map((item) => (item.type === "multichoice" ? "" : null))
-  );
+  const [userAnswers, setUserAnswers] = useState([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [checkedAnswers, setCheckedAnswers] = useState(
-    EXERCISE_DATA.map(() => false)
-  );
+  const [checkedAnswers, setCheckedAnswers] = useState([]);
   const [hasErrors, setHasErrors] = useState(false); // Unanswered or incorrect answers
+
+  // Update state when exerciseData is loaded
+  useEffect(() => {
+    if (exerciseData) {
+      setUserAnswers(
+        exerciseData.content.map((item) =>
+          item.content_type === "multichoice" ? "" : null
+        )
+      );
+      setCheckedAnswers(exerciseData.content.map(() => false));
+    }
+  }, [exerciseData]);
 
   const handleChange = (index, value) => {
     setUserAnswers((prev) => {
@@ -63,8 +47,8 @@ export default function MultichoicePage() {
 
   const handleSubmit = () => {
     const hasMissingAnswers = userAnswers.some((answer) => answer === "");
-    const newCheckedAnswers = EXERCISE_DATA.map((item, index) => {
-      if (item.type === "multichoice") {
+    const newCheckedAnswers = exerciseData.content.map((item, index) => {
+      if (item.content_type === "multichoice") {
         return (
           userAnswers[index]?.trim().toLowerCase() ===
           item.correct_answer.toLowerCase()
@@ -72,8 +56,10 @@ export default function MultichoicePage() {
       }
       return true;
     });
+
     const hasIncorrectAnswers = newCheckedAnswers.some(
-      (isCorrect) => !isCorrect
+      (isCorrect, index) =>
+        exerciseData.content[index].content_type === "multichoice" && !isCorrect
     );
 
     // Set error state if there are missing or incorrect answers
@@ -84,22 +70,28 @@ export default function MultichoicePage() {
 
   const handleReset = () => {
     setUserAnswers(
-      EXERCISE_DATA.map((item) => (item.type === "multichoice" ? "" : null))
+      exerciseData.content.map((item) =>
+        item.content_type === "multichoice" ? "" : null
+      )
     );
     setIsSubmitted(false);
-    setCheckedAnswers(EXERCISE_DATA.map(() => false));
+    setCheckedAnswers(exerciseData.content.map(() => false));
     setHasErrors(false);
   };
+
+  if (isLoading) return <div>Laden...</div>;
+  if (error) return <div>Fehler: {error}</div>;
+  if (!exerciseData) return <div>Keine Übungsdaten verfügbar.</div>; // Handle null data
 
   // Check if all answers are correct
   const allCorrect = isSubmitted && checkedAnswers.every(Boolean);
 
   return (
     <div className="exercise-container">
-      <h2 className="task-title">Wähle die richtigen Wörter aus</h2>
+      <h2 className="task-title">{exerciseData.title}</h2>
 
       <RenderText
-        exerciseData={EXERCISE_DATA}
+        exerciseData={exerciseData.content}
         userAnswers={userAnswers}
         isSubmitted={isSubmitted}
         checkedAnswers={checkedAnswers}

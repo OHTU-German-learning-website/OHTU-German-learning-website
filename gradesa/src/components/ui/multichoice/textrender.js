@@ -6,12 +6,12 @@ export default function RenderText({
   handleChange: onAnswerChange,
 }) {
   const renderItem = (item, index) => {
-    if (item.type === "text") {
-      return <span key={index}>{item.value} </span>;
+    if (item.content_type === "text") {
+      return <span key={index}>{item.content_value} </span>;
     }
 
-    if (item.type === "multichoice") {
-      const userAnswer = userAnswers[index];
+    if (item.content_type === "multichoice") {
+      const userAnswer = userAnswers[index] || ""; // Default to empty string
       const isCorrect = checkedAnswers[index];
       const selectClassName = isSubmitted
         ? isCorrect
@@ -24,7 +24,7 @@ export default function RenderText({
           key={index}
           value={userAnswer}
           onChange={(e) => onAnswerChange(index, e.target.value)}
-          disabled={isSubmitted && isCorrect}
+          disabled={isSubmitted && isCorrect} // Lock only correct dropdowns
           className={selectClassName}
         >
           <option value="">Wähle...</option>
