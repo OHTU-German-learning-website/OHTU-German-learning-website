@@ -1,15 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { POST } from "@/app/api/edit_password/route";
+import { useTestDatabase } from "@/backend/test/testdb";
 
 vi.mock("@/backend/auth/hash", () => ({
   verifyPassword: vi.fn(),
   hashPassword: vi.fn(),
-}));
-
-vi.mock("@/backend/db", () => ({
-  DB: {
-    pool: vi.fn(),
-  },
 }));
 
 vi.mock("@/backend/auth/session", () => ({
@@ -24,9 +19,32 @@ const mockRequest = (data) => ({
   json: () => Promise.resolve(data),
 });
 
+const createTestUser = async ({
+  id,
+  email = `user${id}@test.com`,
+  password_hash = "mock_hash",
+  salt = "mock_salt",
+}) => {
+  const db = await DB.get();
+  await db.query(
+    `
+    INSERT INTO users (id, email, password_hash, salt)
+    VALUES ($1, $2, $3, $4)
+    `,
+    [id, email, password_hash, salt]
+  );
+};
+
 describe("POST /api/edit_password", () => {
+  useTestDatabase();
+
   beforeEach(() => {
     vi.resetAllMocks();
+  });
+
+  afterEach(async () => {
+    const db = await DB.get();
+    await db.query("DELETE FROM users WHERE email LIKE $1", ["user%"]);
   });
 
   it("returns 401 if user is not authenticated", async () => {
@@ -40,12 +58,12 @@ describe("POST /api/edit_password", () => {
     expect(body.message).toBe("Unauthorized");
   });
 
-  it("returns 500 if user is missing or password_hash is null", async () => {
-    checkSession.mockResolvedValue({ id: 1 });
+  it("returns 500 if user is missing or password_hash is invalid", async () => {
+    const userId = 1;
 
-    DB.pool.mockResolvedValue({
-      rows: [{ id: 1, password_hash: null, salt: null }],
-    });
+    await createTestUser({ id: userId, password_hash: "", salt: "" });
+
+    checkSession.mockResolvedValue({ id: userId });
 
     const res = await POST(
       mockRequest({ currentPassword: "123", newPassword: "456" })
@@ -56,12 +74,14 @@ describe("POST /api/edit_password", () => {
   });
 
   it("returns 400 if current password is incorrect", async () => {
-    checkSession.mockResolvedValue({ id: 1 });
-
-    DB.pool.mockResolvedValue({
-      rows: [{ id: 1, password_hash: "stored_hash", salt: "stored_salt" }],
+    const userId = 2;
+    await createTestUser({
+      id: userId,
+      password_hash: "stored_hash",
+      salt: "stored_salt",
     });
 
+    checkSession.mockResolvedValue({ id: userId });
     verifyPassword.mockResolvedValue(false);
 
     const res = await POST(
@@ -73,20 +93,14 @@ describe("POST /api/edit_password", () => {
   });
 
   it("updates password and returns 200 on success", async () => {
-    checkSession.mockResolvedValue({ id: 1 });
-
-    DB.pool.mockImplementation((query, params) => {
-      if (query.startsWith("SELECT")) {
-        return Promise.resolve({
-          rows: [{ id: 1, password_hash: "stored_hash", salt: "stored_salt" }],
-        });
-      }
-      if (query.startsWith("UPDATE")) {
-        expect(params).toEqual(["new_hashed", "new_salt", 1]);
-        return Promise.resolve();
-      }
+    const userId = 3;
+    await createTestUser({
+      id: userId,
+      password_hash: "stored_hash",
+      salt: "stored_salt",
     });
 
+    checkSession.mockResolvedValue({ id: userId });
     verifyPassword.mockResolvedValue(true);
     hashPassword.mockResolvedValue({
       salt: "new_salt",
@@ -99,5 +113,15 @@ describe("POST /api/edit_password", () => {
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.message).toBe("Password updated");
+
+    const db = await DB.get();
+    const result = await db.query(
+      `SELECT password_hash, salt FROM users WHERE id = $1`,
+      [userId]
+    );
+    expect(result.rows[0]).toEqual({
+      password_hash: "new_hashed",
+      salt: "new_salt",
+    });
   });
 });
