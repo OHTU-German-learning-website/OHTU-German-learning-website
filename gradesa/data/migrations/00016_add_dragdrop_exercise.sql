@@ -1,20 +1,34 @@
--- First create a new exercise
-INSERT INTO exercises (created_by) 
-VALUES (1)  -- Replace with an actual user ID
-RETURNING id;
+-- First create a test user if it doesn't exist
+WITH test_user AS (
+  INSERT INTO users (email, password_hash, is_admin, salt) 
+  VALUES ('test@example.com', '$2b$10$xXNxLQv0VZyNnDhLxQ7pZOkLrD4nLxZOU.NPz6BCYGgIJYYUHYXOW', true, '')
+  ON CONFLICT (email) DO UPDATE 
+  SET email = EXCLUDED.email
+  RETURNING id
+),
+
+-- Create a new exercise
+new_exercise AS (
+  INSERT INTO exercises (created_by)
+  SELECT id FROM test_user
+  RETURNING id
+),
 
 -- Create the drag and drop exercise
-WITH exercise_id AS (
-  SELECT id FROM exercises ORDER BY id DESC LIMIT 1
+new_dnd AS (
+  INSERT INTO dnd_exercises (created_by, exercise_id, title)
+  SELECT 
+    u.id,
+    e.id,
+    'Artikel: Der, Die, Das'
+  FROM new_exercise e
+  CROSS JOIN test_user u
+  RETURNING id
 )
-INSERT INTO dnd_exercises (created_by, exercise_id, title)
-VALUES (1, (SELECT id FROM exercise_id), 'Artikel: Der, Die, Das')
-RETURNING id;
-
 -- Insert categories
 INSERT INTO dnd_categories (category, color) 
 VALUES 
-  ('DER', 'blue'),
+  ('DER', 'blue1'),
   ('DIE', 'red'),
   ('DAS', 'green')
 ON CONFLICT DO NOTHING;
