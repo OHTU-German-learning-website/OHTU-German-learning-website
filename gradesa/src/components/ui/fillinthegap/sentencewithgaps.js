@@ -13,25 +13,30 @@ export default function SentenceWithGaps({
           const answerIndex = sentenceTemplate
             .slice(0, index)
             .filter((w) => w === "___").length;
+
           const userAnswer = userAnswers[answerIndex];
           const correctAnswer = correctAnswers[answerIndex];
+          const isCorrect = checkedAnswers[answerIndex];
 
-          if (isSubmitted && checkedAnswers[answerIndex]) {
+          if (isSubmitted && isCorrect) {
             return (
               <span key={index} className="correct">
                 {correctAnswer}{" "}
               </span>
             );
-          } else {
-            return (
-              <input
-                key={index}
-                type="text"
-                value={userAnswer}
-                onChange={(e) => handleChange(answerIndex, e.target.value)}
-              />
-            );
           }
+
+          return (
+            <input
+              key={index}
+              type="text"
+              value={userAnswer || ""}
+              onChange={(e) => handleChange(answerIndex, e.target.value)}
+              className={
+                isSubmitted && !isCorrect && userAnswer ? "incorrect" : ""
+              }
+            />
+          );
         } else {
           return <span key={index}>{word} </span>;
         }
