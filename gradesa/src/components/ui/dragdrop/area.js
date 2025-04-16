@@ -15,7 +15,9 @@ const Area = ({ exerciseID }) => {
   const [initialDustbins, setInitialDustbins] = useState([]);
 
   useEffect(() => {
-    const fetchExerciseData = async () => {
+    let isMounted = true;
+
+    async function fetchExerciseData() {
       if (!exerciseID) return;
 
       try {
@@ -28,25 +30,33 @@ const Area = ({ exerciseID }) => {
           throw new Error("Unvollständige Übungsdaten");
         }
 
-        const initialDustbins = data.categories.map((category) => ({
-          accepts: [category.category],
-          droppedItems: [],
-          color: category.color,
-        }));
+        if (isMounted) {
+          const initialDustbins = data.categories.map((category) => ({
+            accepts: [category.category],
+            droppedItems: [],
+            color: category.color,
+          }));
 
-        setInitialDustbins(initialDustbins);
-        setDustbins(initialDustbins);
-        setAllWords(data.words);
-        setAvailableWords(data.words);
-        setVisibleWords(getRandomUnusedWords(5, data.words));
-        setIsLoading(false);
+          setInitialDustbins(initialDustbins);
+          setDustbins(initialDustbins);
+          setAllWords(data.words);
+          setAvailableWords(data.words);
+          setVisibleWords(getRandomUnusedWords(5, data.words));
+          setIsLoading(false);
+        }
       } catch (err) {
-        setError(err.message);
-        setIsLoading(false);
+        if (isMounted) {
+          setError(err.message);
+          setIsLoading(false);
+        }
       }
-    };
+    }
 
     fetchExerciseData();
+
+    return () => {
+      isMounted = false;
+    };
   }, [exerciseID]);
 
   const getRandomUnusedWords = (count, wordList) => {

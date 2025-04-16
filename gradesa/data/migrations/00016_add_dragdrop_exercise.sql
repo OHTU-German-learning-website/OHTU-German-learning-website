@@ -2,8 +2,7 @@
 WITH test_user AS (
   INSERT INTO users (email, password_hash, is_admin, salt) 
   VALUES ('test@example.com', '$2b$10$xXNxLQv0VZyNnDhLxQ7pZOkLrD4nLxZOU.NPz6BCYGgIJYYUHYXOW', true, '')
-  ON CONFLICT (email) DO UPDATE 
-  SET email = EXCLUDED.email
+  ON CONFLICT DO NOTHING
   RETURNING id
 ),
 

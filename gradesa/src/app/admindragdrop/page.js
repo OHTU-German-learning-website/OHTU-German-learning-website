@@ -38,7 +38,7 @@ export default function DragdropAdminPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Submitted text:", inputFields);
+    console.debug("Submitted text:", inputFields);
   };
 
   return (
