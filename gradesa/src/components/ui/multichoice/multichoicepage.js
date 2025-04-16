@@ -81,7 +81,7 @@ export default function MultichoicePage({ exerciseId }) {
 
   if (isLoading) return <div>Laden...</div>;
   if (error) return <div>Fehler: {error}</div>;
-  if (!exerciseData) return <div>Keine Übungsdaten verfügbar.</div>; // Handle null data
+  if (!exerciseData) return null;
 
   // Check if all answers are correct
   const allCorrect = isSubmitted && checkedAnswers.every(Boolean);
