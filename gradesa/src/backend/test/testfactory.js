@@ -57,7 +57,9 @@ const user = modelFactory("users", () => ({
   salt: faker.string.alphanumeric(16),
 }));
 
-const exercise = modelFactory("exercises", () => ({}));
+const exercise = modelFactory("exercises", () => ({
+  category: "freeform",
+}));
 
 const freeFormExercise = modelFactory(
   "free_form_exercises",
