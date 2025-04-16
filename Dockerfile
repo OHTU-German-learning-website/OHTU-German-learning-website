@@ -18,12 +18,18 @@ ENV SESSION_SECRET=secret \
 
     DB_NAME=postgres
 
+RUN apk update && \
+    apk add --no-cache wget && \
+    wget https://github.com/peterldowns/pgmigrate/releases/download/v0.0.6%2Bcommit.4f90829/pgmigrate-linux-amd64 -O /usr/local/bin/pgmigrate && \
+    chmod +x /usr/local/bin/pgmigrate
+
+RUN apk add --no-cache postgresql-client
 
 # Copy package files from gradesa
 COPY gradesa/package*.json ./
 
 # Install ALL dependencies (including dev) for build
-RUN npm ci
+RUN npm i
 
 # Copy app files including .env.production
 COPY gradesa/ .

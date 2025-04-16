@@ -1,0 +1,30 @@
+.glossary-card {
+  background-color: var(--bg3);
+  padding: var(--u-md);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--bg6);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s ease;
+}
+
+.glossary-card:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.glossary-word {
+  color: var(--primary);
+  font-weight: bold;
+  font-size: 1.25rem;
+}
+
+.glossary-definition {
+  color: var(--text);
+  margin-bottom: var(--u-md);
+}
+
+.glossary-meta {
+  font-size: 0.75rem;
+  color: var(--text6);
+  border-top: 1px solid var(--bg6);
+  padding-top: 0.5rem;
+}

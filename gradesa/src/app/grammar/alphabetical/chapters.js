@@ -156,8 +156,8 @@ export const chapters = [
   },
   {
     id: "32",
-    title: "PQ",
-    link: "/grammar/themes/pq",
+    title: "Plusquamperfekt",
+    link: "/grammar/themes/plusquamperfekt",
   },
   {
     id: "33",

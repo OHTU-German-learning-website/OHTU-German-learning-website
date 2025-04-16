@@ -9,9 +9,10 @@ export function withAuth(callback, options = {}) {
     if (!user && requireAuth) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    if (requireAdmin && !user.is_admin) {
+    if (requireAdmin && !user?.is_admin) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
     request.user = user;
     return await callback(request, ...args);
   };
