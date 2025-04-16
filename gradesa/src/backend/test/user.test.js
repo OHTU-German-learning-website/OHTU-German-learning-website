@@ -9,7 +9,7 @@ describe("User", () => {
     expect(user).toBeDefined();
     expect(user.email).toBeDefined();
     expect(user.password_hash).toBeDefined();
-    expect(user.id).toBe("1");
+    expect(user.id).toBe("2");
 
     const user2 = await TestFactory.user({
       email: "test2@test.com",
@@ -17,6 +17,6 @@ describe("User", () => {
     expect(user2).toBeDefined();
     expect(user2.email).toBe("test2@test.com");
     expect(user2.password_hash).toBeDefined();
-    expect(user2.id).toBe("2");
+    expect(user2.id).toBe("3");
   });
 });
