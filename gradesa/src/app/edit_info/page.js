@@ -38,7 +38,7 @@ export default function EditInfo() {
       <h1 className={styles.header}>Deine Profile </h1>
 
       <h4>Benutzernam: {user.username}</h4>
-      <LinkButton href="/edit/password">Change Password</LinkButton>
+      <LinkButton href="/edit_info/edit_password">Change Password</LinkButton>
       <h4>Deine Email: {user.email}</h4>
       <LinkButton href="/edit/email">Change email</LinkButton>
 
