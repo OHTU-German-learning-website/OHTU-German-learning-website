@@ -28,7 +28,6 @@ export async function GET(request, { params }) {
       "SELECT id FROM free_form_exercises WHERE exercise_id = $1",
       [exercise_id]
     );
-    console.log(free_form_id);
     return Response.redirect(
       new URL(`/grammar/exercises/freeform/${free_form_id.rows[0].id}`, baseUrl)
     );
