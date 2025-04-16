@@ -3,6 +3,7 @@ import { Container, Column, Row } from "@/components/ui/layout/container";
 import useQuery from "@/shared/hooks/useQuery";
 import "./glossary.css";
 import { LinkButton } from "@/components/ui/linkbutton";
+
 export default function GlossaryList() {
   const { data: entries, error, isLoading } = useQuery("/admin/glossary");
 
