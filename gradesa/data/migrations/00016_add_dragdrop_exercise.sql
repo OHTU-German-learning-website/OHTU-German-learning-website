@@ -8,8 +8,8 @@ WITH test_user AS (
 
 -- Create a new exercise
 new_exercise AS (
-  INSERT INTO exercises (created_by)
-  SELECT id FROM test_user
+  INSERT INTO exercises (created_by, category)
+  SELECT id, 'dnd' FROM test_user
   RETURNING id
 ),
 
