@@ -30,10 +30,7 @@ export async function GET(request, { params }) {
     );
     console.log(free_form_id);
     return Response.redirect(
-      new URL(
-        `/grammar/exercises/free-form/${free_form_id.rows[0].id}`,
-        baseUrl
-      )
+      new URL(`/grammar/exercises/freeform/${free_form_id.rows[0].id}`, baseUrl)
     );
   }
 }
