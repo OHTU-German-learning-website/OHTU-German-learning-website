@@ -1,4 +1,3 @@
-import { z } from "zod";
 import { withAuth } from "@/backend/middleware/withAuth";
 import { withInputValidation } from "@/backend/middleware/withInputValidation";
 import { DB } from "@/backend/db";
@@ -19,7 +18,7 @@ export const POST = withAuth(
 
     const exerciseId = await DB.transaction(async (tx) => {
       const exercise = await tx.query(`
-        INSERT INTO exercises DEFAULT VALUES RETURNING id
+        INSERT INTO exercises (created_at, updated_at, category) VALUES (NOW(), NOW(), 'freeform') RETURNING id
       `);
 
       const exerciseId = exercise.rows[0].id;
