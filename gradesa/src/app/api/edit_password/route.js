@@ -16,9 +16,7 @@ export const POST = withAuth(
     const dbUser = result.rows[0];
 
     if (!dbUser || !dbUser.password_hash) {
-      return new Response(JSON.stringify({ message: "Invalid user data" }), {
-        status: 500,
-      });
+      return Response.json({ message: "Invalid user data" }, { status: 500 });
     }
 
     const isValid = await verifyPassword(
@@ -28,9 +26,9 @@ export const POST = withAuth(
     );
 
     if (!isValid) {
-      return new Response(
-        JSON.stringify({ message: "Incorrect current password" }),
-        { status: 400 }
+      return Response.json(
+        { message: "Incorrect current password" },
+        { status: 403 }
       );
     }
 
@@ -41,9 +39,7 @@ export const POST = withAuth(
       [hashedPassword, salt, user.id]
     );
 
-    return new Response(JSON.stringify({ message: "Password updated" }), {
-      status: 200,
-    });
+    return Response.json({ message: "Password updated" }, { status: 200 });
   },
   { requireAuth: true }
 );
