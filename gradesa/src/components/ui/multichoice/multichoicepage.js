@@ -89,6 +89,7 @@ export default function MultichoicePage({ exerciseId }) {
   return (
     <div className="exercise-container">
       <h2 className="task-title">{exerciseData.title}</h2>
+      <p className="task-description">{exerciseData.exercise_description}</p>
 
       <RenderText
         exerciseData={exerciseData.content}
