@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Container, Column } from "@/components/ui/layout/container";
+import { GlossaryParagraph } from "@/components/ui/glossary/GlossaryText";
 import "../../themes/lessons.css";
 
 export const chapters = [
@@ -120,12 +121,12 @@ function Chapter1() {
         Vergangenheit liegen.
       </h2>
       <h3>Wie geht das?</h3>
-      <p>
+      <GlossaryParagraph>
         Sieh dir die drei Textbeispiele an, die über das letzte Wochenende
         erzählen. Schau dir besonders die <strong>Verbformen</strong> an.
-      </p>
+      </GlossaryParagraph>
       <p>1.</p>
-      <p>
+      <GlossaryParagraph>
         Letztes Wochenende <strong>habe</strong>ich viel{" "}
         <strong>unternommen</strong>. Am Samstagmorgen <strong>bin</strong> ich
         früh <strong>aufgestanden</strong> und <strong>habe</strong> zuerst
@@ -139,8 +140,8 @@ function Chapter1() {
         <strong>geschaut</strong>. Abends <strong>habe</strong> ich mit meiner
         Familie <strong>gekocht</strong> und wir <strong>haben</strong>{" "}
         gemeinsam <strong>gegessen</strong>.
-      </p>
-      <p>
+      </GlossaryParagraph>
+      <GlossaryParagraph>
         Sonntag <strong>habe</strong> ich lange <strong>geschlafen</strong> und{" "}
         <strong>bin</strong> erst gegen Mittag <strong>aufgestanden</strong>.
         Ich <strong>habe</strong> ein paar Besorgungen <strong>gemacht</strong>{" "}
@@ -148,9 +149,9 @@ function Chapter1() {
         <strong>sind</strong> wir in einen Klub <strong>gefahren</strong> und{" "}
         <strong>haben getanzt</strong>. Insgesamt <strong>war</strong> es ein
         schönes und erholsames Wochenende.
-      </p>
+      </GlossaryParagraph>
       <p>2.</p>
-      <p>
+      <GlossaryParagraph>
         Letztes Wochenende <strong>war</strong> abwechslungsreich und
         entspannend. Am Samstag
         <strong>wachte</strong> ich früh <strong>auf</strong> und{" "}
@@ -158,22 +159,22 @@ function Chapter1() {
         ich einige Einkäufe und <strong>traf</strong> mich mit Freunden im Café.
         Wir <strong>plauderten</strong> lange und <strong>genossen</strong> den
         sonnigen Tag.
-      </p>
-      <p>
+      </GlossaryParagraph>
+      <GlossaryParagraph>
         Am Abend <strong>schaute</strong> ich einen Film und{" "}
         <strong>ließ</strong> den Tag gemütlich ausklingen. Am Sonntag{" "}
         <strong>schlief</strong> ich <strong>aus</strong> und{" "}
         <strong>machte</strong> einen langen Spaziergang im Park. Die frische
         Luft <strong>tat</strong> gut. Nachmittags <strong>backte</strong> ich
         einen Kuchen und <strong>las</strong> ein Buch.
-      </p>
-      <p>
+      </GlossaryParagraph>
+      <GlossaryParagraph>
         Am Abend <strong>bereitete</strong> ich mich auf die neue Woche{" "}
         <strong>vor</strong> und <strong>entspannte</strong> mich mit Musik. Es{" "}
         <strong>war</strong> ein gelungenes Wochenende.
-      </p>
+      </GlossaryParagraph>
       <p>3.</p>
-      <p>
+      <GlossaryParagraph>
         Letztes Wochenende <strong>war</strong> erholsam und schön. Am Samstag{" "}
         <strong>wachte</strong> ich früh <strong>auf</strong>, weil ich am Abend
         zuvor früh schlafen <strong>gegangen war</strong>. Nach dem Frühstück{" "}
@@ -181,8 +182,8 @@ function Chapter1() {
         Freitag <strong>vergessen</strong>, einige Dinge zu besorgen. Am
         Nachmittag <strong>traf</strong> ich mich mit Freunden im Park. Wir{" "}
         <strong>redeten</strong> über vieles und <strong>lachten</strong> viel.
-      </p>
-      <p>
+      </GlossaryParagraph>
+      <GlossaryParagraph>
         Am Sonntag <strong>schlief</strong> ich lange, weil ich die ganze Woche
         viel <strong>gearbeitet hatte</strong>. Nach dem Mittagessen{" "}
         <strong>machte</strong> ich einen Spaziergang. Die Sonne{" "}
@@ -190,7 +191,7 @@ function Chapter1() {
         Abend <strong>las</strong> ich ein Buch, das ich schon lange{" "}
         <strong>angefangen hatte</strong>. Es <strong>war</strong> ein
         wunderbares Wochenende.
-      </p>
+      </GlossaryParagraph>
       <Container bg="var(--red)">Übung 1 medium</Container>
       <h3>Was muss ich wissen und können?</h3>
       <p></p>
