@@ -7,6 +7,13 @@ import "./multichoice.css";
 import { Button } from "@/components/ui/button";
 import useQuery from "@/shared/hooks/useQuery";
 
+function shuffleOptions(array) {
+  return array
+    .map((value) => ({ value, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ value }) => value);
+}
+
 export default function MultichoicePage({ exerciseId }) {
   // Fetch exercise data using the useQuery hook
   const {
@@ -19,16 +26,33 @@ export default function MultichoicePage({ exerciseId }) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [checkedAnswers, setCheckedAnswers] = useState([]);
   const [hasErrors, setHasErrors] = useState(false); // Unanswered or incorrect answers
+  const [shuffledExerciseData, setShuffledExerciseData] = useState(null);
 
   // Update state when exerciseData is loaded
   useEffect(() => {
     if (exerciseData) {
+      // Shuffle options for each multichoice item
+      const shuffledData = {
+        ...exerciseData,
+        content: exerciseData.content.map((item) => {
+          if (item.content_type === "multichoice") {
+            return {
+              ...item,
+              options: shuffleOptions(item.options), // Shuffle options
+            };
+          }
+          return item;
+        }),
+      };
+      setShuffledExerciseData(shuffledData);
+
+      // Initialize user answers and checked answers
       setUserAnswers(
-        exerciseData.content.map((item) =>
+        shuffledData.content.map((item) =>
           item.content_type === "multichoice" ? "" : null
         )
       );
-      setCheckedAnswers(exerciseData.content.map(() => false));
+      setCheckedAnswers(shuffledData.content.map(() => false));
     }
   }, [exerciseData]);
 
@@ -47,19 +71,22 @@ export default function MultichoicePage({ exerciseId }) {
 
   const handleSubmit = () => {
     const hasMissingAnswers = userAnswers.some((answer) => answer === "");
-    const newCheckedAnswers = exerciseData.content.map((item, index) => {
-      if (item.content_type === "multichoice") {
-        return (
-          userAnswers[index]?.trim().toLowerCase() ===
-          item.correct_answer.toLowerCase()
-        );
+    const newCheckedAnswers = shuffledExerciseData.content.map(
+      (item, index) => {
+        if (item.content_type === "multichoice") {
+          return (
+            userAnswers[index]?.trim().toLowerCase() ===
+            item.correct_answer.toLowerCase()
+          );
+        }
+        return true;
       }
-      return true;
-    });
+    );
 
     const hasIncorrectAnswers = newCheckedAnswers.some(
       (isCorrect, index) =>
-        exerciseData.content[index].content_type === "multichoice" && !isCorrect
+        shuffledExerciseData.content[index].content_type === "multichoice" &&
+        !isCorrect
     );
 
     // Set error state if there are missing or incorrect answers
@@ -70,29 +97,31 @@ export default function MultichoicePage({ exerciseId }) {
 
   const handleReset = () => {
     setUserAnswers(
-      exerciseData.content.map((item) =>
+      shuffledExerciseData.content.map((item) =>
         item.content_type === "multichoice" ? "" : null
       )
     );
     setIsSubmitted(false);
-    setCheckedAnswers(exerciseData.content.map(() => false));
+    setCheckedAnswers(shuffledExerciseData.content.map(() => false));
     setHasErrors(false);
   };
 
   if (isLoading) return <div>Laden...</div>;
   if (error) return <div>Fehler: {error}</div>;
-  if (!exerciseData) return null;
+  if (!shuffledExerciseData) return null;
 
   // Check if all answers are correct
   const allCorrect = isSubmitted && checkedAnswers.every(Boolean);
 
   return (
     <div className="exercise-container">
-      <h2 className="task-title">{exerciseData.title}</h2>
-      <p className="task-description">{exerciseData.exercise_description}</p>
+      <h2 className="task-title">{shuffledExerciseData.title}</h2>
+      <p className="task-description">
+        {shuffledExerciseData.exercise_description}
+      </p>
 
       <RenderText
-        exerciseData={exerciseData.content}
+        exerciseData={shuffledExerciseData.content}
         userAnswers={userAnswers}
         isSubmitted={isSubmitted}
         checkedAnswers={checkedAnswers}
