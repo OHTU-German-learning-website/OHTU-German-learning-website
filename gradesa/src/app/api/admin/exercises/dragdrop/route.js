@@ -4,74 +4,78 @@ export async function POST(request) {
   try {
     const { fields } = await request.json();
 
-    if (!fields || !Array.isArray(fields)) {
-      return Response.json(
-        { success: false, error: "Invalid input data" },
-        { status: 400 }
-      );
+    if (!fields || !Array.isArray(fields) || fields.length === 0) {
+      return Response.json({ error: "No fields provided" }, { status: 400 });
     }
 
-    // Start a transaction
-    const result = await DB.pool(`
-      WITH new_exercise AS (
-        INSERT INTO exercises DEFAULT VALUES
-        RETURNING id
-      ),
-      new_dnd AS (
-        INSERT INTO dnd_exercises (exercise_id, title)
-        SELECT id, 'Artikel Übung'
-        FROM new_exercise
-        RETURNING id
-      )
-      SELECT id FROM new_dnd;
-    `);
+    const created_by = 1;
+    const exerciseCategory = "dnd";
+    const title = "New Dragdrop Exercise";
 
-    const dndId = result.rows[0].id;
+    // 1. Insert into exercises
+    const exRes = await DB.pool(
+      `INSERT INTO exercises (created_by, category)
+       VALUES ($1, $2)
+       RETURNING id`,
+      [created_by, exerciseCategory]
+    );
+    const exercise_id = exRes.rows[0].id;
 
-    // Insert categories and words
+    // 2. Insert into dnd_exercises
+    const dndRes = await DB.pool(
+      `INSERT INTO dnd_exercises (created_by, exercise_id, title)
+       VALUES ($1, $2, $3)
+       RETURNING id`,
+      [created_by, exercise_id, title]
+    );
+    const dnd_id = dndRes.rows[0].id;
+    // Process fields
     for (const field of fields) {
       // Insert category
-      const categoryResult = await DB.pool(
+      const catRes = await DB.pool(
         `INSERT INTO dnd_categories (category, color)
-         VALUES ($1, $2)
-         ON CONFLICT (category) DO UPDATE
-         SET color = EXCLUDED.color
-         RETURNING id`,
+     VALUES ($1, $2)
+     ON CONFLICT (category, color) DO NOTHING
+     RETURNING id`,
         [field.category, field.color]
       );
 
-      const categoryId = categoryResult.rows[0].id;
+      const category_id =
+        catRes.rows[0]?.id ||
+        (
+          await DB.pool(
+            `SELECT id FROM dnd_categories WHERE category = $1 AND color = $2`,
+            [field.category, field.color]
+          )
+        ).rows[0].id;
 
-      // Split words and insert them
-      const words = field.content.split(",").map((w) => w.trim());
-
+      // Insert words
+      const words = field.content.split(",").map((word) => word.trim());
       for (const word of words) {
-        const wordResult = await DB.pool(
+        const wordRes = await DB.pool(
           `INSERT INTO draggable_words (word)
-           VALUES ($1)
-           ON CONFLICT (word) DO UPDATE
-           SET word = EXCLUDED.word
-           RETURNING id`,
+       VALUES ($1)
+       ON CONFLICT (word) DO NOTHING
+       RETURNING id`,
           [word]
         );
 
-        const wordId = wordResult.rows[0].id;
+        const word_id = wordRes.rows[0]?.id;
 
-        // Create mapping
+        // Insert mapping
         await DB.pool(
-          `INSERT INTO word_category_mappings 
-           (word_id, category_id, exercise_id)
-           VALUES ($1, $2, $3)`,
-          [wordId, categoryId, dndId]
+          `INSERT INTO word_category_mappings (word_id, category_id, exercise_id)
+       VALUES ($1, $2, $3)`,
+          [word_id, category_id, dnd_id]
         );
       }
     }
 
-    return Response.json({ success: true, id: dndId });
-  } catch (error) {
-    console.error("Error creating exercise:", error);
+    return Response.json({ success: true });
+  } catch (err) {
+    console.error("Error creating dragdrop exercise:", err);
     return Response.json(
-      { success: false, error: "Fehler beim Erstellen der Übung." },
+      { error: "Fehler beim Erstellen der Übung." },
       { status: 500 }
     );
   }

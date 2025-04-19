@@ -1,16 +1,20 @@
 "use client";
-import styles from "../page.module.css";
+import styles from "../../../page.module.css";
 import "./admin.css";
 import { useState, useEffect } from "react";
 import { Dropdown } from "@/components/ui/dropdown";
 import { Button } from "@/components/ui/button";
 import { Row } from "@/components/ui/layout/container";
 import { useRequest } from "@/shared/hooks/useRequest";
+import { useRouter } from "next/navigation";
 
 export default function DragdropAdminPage() {
   const [numberOfFields, setNumberOfFields] = useState(null);
   const [inputFields, setInputFields] = useState([]);
-  const { request, isLoading, error } = useRequest();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [generalError, setGeneralError] = useState("");
+  const makeRequest = useRequest();
+  const router = useRouter();
 
   useEffect(() => {
     if (numberOfFields) {
@@ -38,29 +42,29 @@ export default function DragdropAdminPage() {
     setInputFields(newInputFields);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (
-      !inputFields.every(
-        (field) => field.color && field.category && field.content
-      )
-    ) {
-      alert("Bitte füllen Sie alle Felder aus.");
-      return;
-    }
+  const handleSubmit = async () => {
     try {
-      const response = await request("/api/exercise/dragdrop/create", {
+      setIsSubmitting(true);
+      setGeneralError("");
+
+      const res = await makeRequest("/admin/exercises/dragdrop", {
         method: "POST",
         body: { fields: inputFields },
       });
-      if (response.success) {
-        alert("Übung erfolgreich erstellt!");
-        setNumberOfFields(null);
-        setInputFields([]);
+
+      if (res.status === 200) {
+        router.push("/admin/exercises");
       }
-    } catch (err) {
-      console.error("Error:", err);
-      alert("Fehler beim Erstellen der Übung");
+    } catch (e) {
+      console.error("Error creating dragdrop exercise:", e);
+
+      if (e.response?.data?.error) {
+        setGeneralError(e.response.data.error);
+      } else {
+        setGeneralError("Ein Fehler ist aufgetreten");
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -68,6 +72,11 @@ export default function DragdropAdminPage() {
     <div className={styles.page}>
       <div className="admin-container">
         <h1>Create a Drag and Drop Exercise</h1>
+        {generalError && (
+          <p className="error" role="alert">
+            {generalError}
+          </p>
+        )}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="fieldCount">Number of boxes:</label>
@@ -189,8 +198,13 @@ export default function DragdropAdminPage() {
               ))}
           </Row>
           {numberOfFields && (
-            <Button type="submit" size="sm" variant="outline">
-              Create
+            <Button
+              type="submit"
+              size="sm"
+              variant="outline"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Wird erstellt..." : "Create"}
             </Button>
           )}
         </form>
