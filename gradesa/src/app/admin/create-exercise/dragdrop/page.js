@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Row } from "@/components/ui/layout/container";
 import { useRequest } from "@/shared/hooks/useRequest";
 import { useRouter } from "next/navigation";
+import PreviewDragDrop from "@/components/ui/dragdrop/dragdrop_preview";
 
 export default function DragdropAdminPage() {
   const [numberOfFields, setNumberOfFields] = useState(null);
@@ -14,6 +15,7 @@ export default function DragdropAdminPage() {
   const [title, setTitle] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [generalError, setGeneralError] = useState("");
+  const [showPreview, setShowPreview] = useState(false);
   const makeRequest = useRequest();
   const router = useRouter();
 
@@ -81,6 +83,10 @@ export default function DragdropAdminPage() {
     }
   };
 
+  const handlePreview = () => {
+    setShowPreview(true);
+  };
+
   return (
     <div className={styles.page}>
       <div className="admin-container">
@@ -89,6 +95,19 @@ export default function DragdropAdminPage() {
           <p className="error" role="alert">
             {generalError}
           </p>
+        )}
+        {showPreview && (
+          <div className="preview-modal">
+            <PreviewDragDrop title={title} fields={inputFields} />
+            <Button
+              type="button"
+              size="sm"
+              variant="secondary"
+              onClick={() => setShowPreview(false)}
+            >
+              Close Preview
+            </Button>
+          </div>
         )}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
@@ -221,7 +240,39 @@ export default function DragdropAdminPage() {
                 </div>
               ))}
           </Row>
-          <Button
+          <div className="button-group">
+            <Button
+              type="submit"
+              size="sm"
+              variant="outline"
+              disabled={
+                isSubmitting ||
+                !title.trim() ||
+                !numberOfFields ||
+                inputFields.some(
+                  (field) => !field.color || !field.category || !field.content
+                )
+              }
+            >
+              {isSubmitting ? "Wird erstellt..." : "Create"}
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              variant="secondary"
+              onClick={handlePreview}
+              disabled={
+                !title.trim() ||
+                !numberOfFields ||
+                inputFields.some(
+                  (field) => !field.color || !field.category || !field.content
+                )
+              }
+            >
+              Preview
+            </Button>
+          </div>
+          {/* <Button
             type="submit"
             size="sm"
             variant="outline"
@@ -235,7 +286,7 @@ export default function DragdropAdminPage() {
             }
           >
             {isSubmitting ? "Wird erstellt..." : "Create"}
-          </Button>
+          </Button> */}
         </form>
       </div>
     </div>
