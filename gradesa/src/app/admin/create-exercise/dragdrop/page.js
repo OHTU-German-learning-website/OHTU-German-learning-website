@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 export default function DragdropAdminPage() {
   const [numberOfFields, setNumberOfFields] = useState(null);
   const [inputFields, setInputFields] = useState([]);
+  const [title, setTitle] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [generalError, setGeneralError] = useState("");
   const makeRequest = useRequest();
@@ -49,7 +50,8 @@ export default function DragdropAdminPage() {
 
       const res = await makeRequest("/admin/exercises/dragdrop", {
         method: "POST",
-        body: { fields: inputFields },
+        title: title.trim(),
+        body: inputFields,
       });
 
       if (res.status === 200) {
@@ -62,6 +64,17 @@ export default function DragdropAdminPage() {
         setGeneralError(e.response.data.error);
       } else {
         setGeneralError("Ein Fehler ist aufgetreten");
+      }
+      if (e.response?.status === 422) {
+        try {
+          const zodErrors = e.response?.data?.zodError;
+
+          const newErrors = zodErrorToFormErrors(zodErrors, formErrors);
+
+          setFormErrors(newErrors);
+        } catch (parseError) {
+          console.error("Error parsing validation results:", parseError);
+        }
       }
     } finally {
       setIsSubmitting(false);
@@ -78,6 +91,17 @@ export default function DragdropAdminPage() {
           </p>
         )}
         <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="title">Title:</label>
+            <input
+              type="text"
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="form-input"
+              placeholder="Enter title"
+            />
+          </div>
           <div className="form-group">
             <label htmlFor="fieldCount">Number of boxes:</label>
             <Dropdown
