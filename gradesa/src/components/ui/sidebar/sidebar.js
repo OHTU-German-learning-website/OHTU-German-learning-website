@@ -52,15 +52,6 @@ function StudentSideBar() {
       <Link className={styles.sidebarLink} href="/grammar/communications">
         Kommunikations-situationen
       </Link>
-      <Link
-        className={[
-          styles.sidebarLink,
-          pathname === "/vocabulary" ? styles.active : "",
-        ].join(" ")}
-        href="/vocabulary"
-      >
-        Vokabeln
-      </Link>
       <Link className={styles.sidebarLink} href="/edit_info">
         Profil
       </Link>
@@ -74,6 +65,12 @@ const adminSidebarLinks = [
     linkLabel: "Übungen erstellen",
     link: "/admin/create-exercise",
     id: "create-exercise",
+  },
+  {
+    title: "Glossareinträge",
+    linkLabel: "Glossareinträge verwalten",
+    link: "/admin/glossary",
+    id: "glossary",
   },
 ];
 

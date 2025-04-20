@@ -23,6 +23,8 @@ RUN apk update && \
     wget https://github.com/peterldowns/pgmigrate/releases/download/v0.0.6%2Bcommit.4f90829/pgmigrate-linux-amd64 -O /usr/local/bin/pgmigrate && \
     chmod +x /usr/local/bin/pgmigrate
 
+RUN apk add --no-cache postgresql-client
+
 # Copy package files from gradesa
 COPY gradesa/package*.json ./
 

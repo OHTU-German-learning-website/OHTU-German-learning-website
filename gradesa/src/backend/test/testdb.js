@@ -3,6 +3,7 @@ import { Migrator } from "./migrator";
 import { beforeEach, afterEach, afterAll } from "vitest";
 import { DB } from "../db";
 import { Pool } from "pg";
+import { vi } from "vitest";
 import { createHash, randomBytes } from "crypto";
 import { logger } from "../logging";
 const TestUser = "pgtdbuser";
@@ -19,6 +20,7 @@ export function useTestDatabase({
   // It's important we run each test in a new database
   // This ensures that each test is isolated from the others
   beforeEach(async () => {
+    // Clear any mocks before each test to ensure clean state
     try {
       // Init new DB
       baseDB = new Pool({
