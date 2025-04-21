@@ -27,6 +27,7 @@ export default function MultichoicePage({ exerciseId }) {
   const [checkedAnswers, setCheckedAnswers] = useState([]);
   const [hasErrors, setHasErrors] = useState(false); // Unanswered or incorrect answers
   const [shuffledExerciseData, setShuffledExerciseData] = useState(null);
+  const [dropdownSubmittedStates, setDropdownSubmittedStates] = useState([]);
 
   // Update state when exerciseData is loaded
   useEffect(() => {
@@ -38,7 +39,7 @@ export default function MultichoicePage({ exerciseId }) {
           if (item.content_type === "multichoice") {
             return {
               ...item,
-              options: shuffleOptions(item.options), // Shuffle options
+              options: shuffleOptions(item.options),
             };
           }
           return item;
@@ -63,10 +64,12 @@ export default function MultichoicePage({ exerciseId }) {
       return newAnswers;
     });
 
-    // Clear error state when user makes changes after submission
-    if (isSubmitted) {
-      setHasErrors(false);
-    }
+    // Reset the isSubmitted state for the specific dropdown
+    setDropdownSubmittedStates((prev) => {
+      const newStates = [...prev];
+      newStates[index] = false; // Reset only the dropdown user interacts with
+      return newStates;
+    });
   };
 
   const handleSubmit = () => {
@@ -93,6 +96,9 @@ export default function MultichoicePage({ exerciseId }) {
     setHasErrors(hasMissingAnswers || hasIncorrectAnswers);
     setCheckedAnswers(newCheckedAnswers);
     setIsSubmitted(true);
+
+    // Mark all dropdowns as submitted
+    setDropdownSubmittedStates(newCheckedAnswers.map(() => true));
   };
 
   const handleReset = () => {
@@ -104,6 +110,7 @@ export default function MultichoicePage({ exerciseId }) {
     setIsSubmitted(false);
     setCheckedAnswers(shuffledExerciseData.content.map(() => false));
     setHasErrors(false);
+    setDropdownSubmittedStates(shuffledExerciseData.content.map(() => false));
   };
 
   if (isLoading) return <div>Laden...</div>;
@@ -124,6 +131,7 @@ export default function MultichoicePage({ exerciseId }) {
         exerciseData={shuffledExerciseData.content}
         userAnswers={userAnswers}
         isSubmitted={isSubmitted}
+        dropdownSubmittedStates={dropdownSubmittedStates}
         checkedAnswers={checkedAnswers}
         handleChange={handleChange}
       />

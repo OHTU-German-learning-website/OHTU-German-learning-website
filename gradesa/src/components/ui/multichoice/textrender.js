@@ -2,6 +2,7 @@ export default function RenderText({
   exerciseData,
   userAnswers,
   isSubmitted,
+  dropdownSubmittedStates,
   checkedAnswers,
   handleChange: onAnswerChange,
 }) {
@@ -11,19 +12,22 @@ export default function RenderText({
     }
 
     if (item.content_type === "multichoice") {
-      const userAnswer = userAnswers[index] || ""; // Default to empty string
+      const userAnswer = userAnswers[index] || "";
       const isCorrect = checkedAnswers[index];
-      const selectClassName = isSubmitted
-        ? isCorrect
-          ? "correct"
-          : "incorrect"
-        : "";
+      const selectClassName =
+        dropdownSubmittedStates[index] && userAnswer !== "" // Use dropdown-specific state
+          ? isCorrect
+            ? "correct"
+            : "incorrect"
+          : ""; // No class during user selection
 
       return (
         <select
           key={index}
           value={userAnswer}
-          onChange={(e) => onAnswerChange(index, e.target.value)}
+          onChange={(e) => {
+            onAnswerChange(index, e.target.value);
+          }}
           disabled={isSubmitted && isCorrect} // Lock only correct dropdowns
           className={selectClassName}
         >
