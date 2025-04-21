@@ -24,7 +24,7 @@
   width: 100%;
   padding-left: 0;
   padding-top: 20px;
-  color: blue;
+  color: var(--blue1);
 }
 
 .flex-child-element {
