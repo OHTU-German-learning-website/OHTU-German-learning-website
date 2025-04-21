@@ -1,36 +1,98 @@
 .exercises-container {
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
+  margin-top: var(--u-xl);
+  margin-bottom: var(--u-xl);
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: var(--u-xl);
 }
 
 .exercise-card {
-  border: 1px solid #e2e8f0;
-  border-radius: 0.5rem;
+  border: 1px solid var(--bg4);
+  border-radius: var(--radius-md);
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   overflow: hidden;
+  padding: var(--u-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .loading-message {
-  padding: 1rem;
-  background-color: #f3f4f6;
-  border-radius: 0.375rem;
+  padding: var(--u-lg);
+  background-color: var(--bg3);
+  border-radius: var(--radius-md);
 }
 
 .error-message {
-  padding: 1rem;
-  background-color: #fee2e2;
-  border-radius: 0.375rem;
+  padding: var(--u-lg);
+  background-color: var(--tertiary2);
+  border-radius: var(--radius-md);
+  margin-top: var(--u-md);
 }
 
 .empty-message {
-  padding: 1rem;
-  background-color: #f3f4f6;
-  border-radius: 0.375rem;
+  padding: var(--u-lg);
+  background-color: var(--bg3);
+  border-radius: var(--radius-md);
 }
 
 .unknown-exercise {
-  padding: 1rem;
+  padding: var(--u-lg);
+}
+
+.anchor-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.admin-controls {
+  margin-top: var(--u-xl);
+  border: 1px solid var(--bg4);
+  border-radius: var(--radius-md);
+  padding: var(--u-lg);
+  background-color: var(--bg2);
+}
+
+.admin-controls form {
+  display: flex;
+  gap: var(--u-md);
+}
+
+.link-input {
+  flex: 1;
+  padding: var(--u-md);
+  border: 1px solid var(--bg4);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-sm);
+}
+
+.link-button {
+  padding: var(--u-md) var(--u-lg);
+  background-color: var(--primary8);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-sm);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.link-button:hover {
+  background-color: var(--primary9);
+}
+
+.unlink-button {
+  padding: var(--u-sm) var(--u-md);
+  background-color: var(--red);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-xs);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.unlink-button:hover {
+  background-color: var(--tertiary6);
 }
