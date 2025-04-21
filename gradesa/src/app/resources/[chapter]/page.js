@@ -10,6 +10,7 @@ import {
   GlossaryParagraph,
   GlossaryListItem,
 } from "@/components/ui/glossary/GlossaryText";
+import Anchor from "@/components/ui/anchor/Anchor";
 
 export default function Chapters() {
   const { chapter } = useParams();
@@ -188,6 +189,7 @@ function Chapter2() {
         Informationen zu suchen und sehen, in welchem Verhältnis sie zu den
         anderen Dingen stehen. Dabei helfen auch folgende Wissenstipps:
       </GlossaryParagraph>
+      <Anchor id="chapter-2-1" />
       <ul>
         <GlossaryListItem>
           Häufiges Wiederholen und Üben der Themen – eine Übung kann mehrmals

@@ -1,0 +1,36 @@
+.exercises-container {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.exercise-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.loading-message {
+  padding: 1rem;
+  background-color: #f3f4f6;
+  border-radius: 0.375rem;
+}
+
+.error-message {
+  padding: 1rem;
+  background-color: #fee2e2;
+  border-radius: 0.375rem;
+}
+
+.empty-message {
+  padding: 1rem;
+  background-color: #f3f4f6;
+  border-radius: 0.375rem;
+}
+
+.unknown-exercise {
+  padding: 1rem;
+}
