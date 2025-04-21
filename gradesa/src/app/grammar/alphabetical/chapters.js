@@ -87,12 +87,12 @@ export const chapters = [
   {
     id: "18",
     title: "Konjunktiv I Bildung",
-    link: "/grammar/themes/konjunktiv-i-bildung",
+    link: "/grammar/themes/konjunktiv_i",
   },
   {
     id: "19",
     title: "Konjunktiv II Bildung",
-    link: "/grammar/themes/konjunktiv-ii-bildung",
+    link: "/grammar/themes/konjunktiv_ii",
   },
   {
     id: "20",
@@ -122,7 +122,7 @@ export const chapters = [
   {
     id: "25",
     title: "Modalverben und subjektive Modalität",
-    link: "/grammar/themes/modalverben",
+    link: "/grammar/themes/modalverben-und-subjektive-modalitat",
   },
   {
     id: "26",
