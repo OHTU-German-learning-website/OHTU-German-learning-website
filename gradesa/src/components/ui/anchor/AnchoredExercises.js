@@ -76,8 +76,7 @@ export default function AnchoredExercises({ id }) {
     }
   };
 
-  if (isLoading)
-    return <div className="loading-message">Loading exercises...</div>;
+  if (isLoading) return null;
 
   if (fetchError)
     return <div className="error-message">Failed to load exercises</div>;
@@ -85,7 +84,6 @@ export default function AnchoredExercises({ id }) {
   if (!exercises || exercises.length === 0) {
     return (
       <div className="anchor-container">
-        <div className="empty-message">No exercises found for this anchor</div>
         {isAdmin && (
           <div className="admin-controls">
             <form onSubmit={handleLink}>
