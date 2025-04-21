@@ -3,6 +3,7 @@ import { DB } from "@/backend/db";
 import { withAuth } from "@/backend/middleware/withAuth";
 import { withInputValidation } from "@/backend/middleware/withInputValidation";
 import { z } from "zod";
+import { logger } from "@/backend/logging";
 
 const linkSchema = z.object({
   anchorId: z.string().min(1, "Anchor ID is required"),
@@ -52,7 +53,7 @@ async function handler(request) {
 
     return NextResponse.json(result);
   } catch (error) {
-    console.error("Error linking exercise to anchor:", error);
+    logger.error("Error linking exercise to anchor:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

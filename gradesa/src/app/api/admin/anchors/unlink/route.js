@@ -3,8 +3,8 @@ import { DB } from "@/backend/db";
 import { withAuth } from "@/backend/middleware/withAuth";
 import { withInputValidation } from "@/backend/middleware/withInputValidation";
 import { z } from "zod";
+import { logger } from "@/backend/logging";
 
-// Define validation schema
 const unlinkSchema = z.object({
   anchorId: z.string().min(1, "Anchor ID is required"),
   exerciseId: z
@@ -17,7 +17,6 @@ async function handler(request) {
   try {
     const { anchorId, exerciseId } = await request.json();
 
-    // Get the anchor database ID
     const anchorResult = await DB.pool(
       "SELECT id FROM anchors WHERE anchor_id = $1",
       [anchorId]
@@ -44,7 +43,7 @@ async function handler(request) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error unlinking exercise from anchor:", error);
+    logger.error("Error unlinking exercise from anchor:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
