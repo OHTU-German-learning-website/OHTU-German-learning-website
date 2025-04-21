@@ -67,13 +67,10 @@ describe("unlink", () => {
 
   it("should return 404 for non-existent link", async () => {
     const admin = await TestFactory.user({ is_admin: true });
-    console.log("admin", admin);
     const { mockPost } = useTestRequest(admin);
 
-    // Create a test exercise
     const exercise = await TestFactory.exercise();
 
-    // Create a test anchor but don't link it
     const anchor = await TestFactory.anchor({ anchor_id: "unlinked-anchor" });
 
     const unlinkInput = {
@@ -95,7 +92,6 @@ describe("unlink", () => {
     const { mockPost } = useTestRequest(admin);
 
     const invalidInput = {
-      // Missing exerciseId
       anchor_id: "test-anchor",
     };
 
