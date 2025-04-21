@@ -7,9 +7,8 @@ import { useUser } from "@/context/user.context";
 import "@/styles/anchoredExercises.css";
 
 export default function AnchoredExercises({ id }) {
-  const { auth, actAs } = useUser();
-  const isAdmin =
-    auth.isLoggedIn && auth.user.is_admin && actAs.value === "admin";
+  const { auth } = useUser();
+  const isAdmin = auth.user?.is_admin;
   const [linkUrl, setLinkUrl] = useState("");
   const [error, setError] = useState(null);
   const makeRequest = useRequest();
@@ -18,13 +17,13 @@ export default function AnchoredExercises({ id }) {
     data: exercises,
     isLoading,
     error: fetchError,
-    mutate,
+    refetch,
   } = useQuery(`/anchors/${id}`);
 
   const handleUnlink = async (exerciseId) => {
     try {
       const response = await makeRequest(
-        "/api/admin/anchors/unlink",
+        "/admin/anchors/unlink",
         {
           anchor_id: id,
           exercise_id: exerciseId,
@@ -33,7 +32,7 @@ export default function AnchoredExercises({ id }) {
       );
 
       if (response.status === 200) {
-        mutate();
+        refetch();
       } else {
         setError("Failed to unlink exercise");
       }
@@ -57,7 +56,7 @@ export default function AnchoredExercises({ id }) {
       const exerciseId = parseInt(match[1], 10);
 
       const response = await makeRequest(
-        "/api/admin/anchors/link",
+        "/admin/anchors/link",
         {
           anchor_id: id,
           exercise_id: exerciseId,
@@ -67,7 +66,7 @@ export default function AnchoredExercises({ id }) {
 
       if (response.status === 200) {
         setLinkUrl("");
-        mutate();
+        refetch();
       } else {
         setError(response.data?.error || "Failed to link exercise");
       }
