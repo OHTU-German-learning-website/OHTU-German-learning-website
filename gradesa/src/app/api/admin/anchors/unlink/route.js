@@ -6,8 +6,8 @@ import { z } from "zod";
 import { logger } from "@/backend/logging";
 
 const unlinkSchema = z.object({
-  anchorId: z.string().min(1, "Anchor ID is required"),
-  exerciseId: z
+  anchor_id: z.string().min(1, "Anchor ID is required"),
+  exercise_id: z
     .number()
     .int()
     .positive("Exercise ID must be a positive integer"),
@@ -15,11 +15,11 @@ const unlinkSchema = z.object({
 
 async function handler(request) {
   try {
-    const { anchorId, exerciseId } = await request.json();
+    const { anchor_id, exercise_id } = await request.json();
 
     const anchorResult = await DB.pool(
       "SELECT id FROM anchors WHERE anchor_id = $1",
-      [anchorId]
+      [anchor_id]
     );
 
     if (anchorResult.rows.length === 0) {
@@ -31,7 +31,7 @@ async function handler(request) {
     // Remove the link between the exercise and the anchor
     const deleteResult = await DB.pool(
       "DELETE FROM exercise_anchors WHERE exercise_id = $1 AND anchor_id = $2",
-      [exerciseId, anchor.id]
+      [exercise_id, anchor.id]
     );
 
     if (deleteResult.rowCount === 0) {

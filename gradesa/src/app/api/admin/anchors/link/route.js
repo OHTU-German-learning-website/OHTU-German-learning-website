@@ -6,8 +6,8 @@ import { z } from "zod";
 import { logger } from "@/backend/logging";
 
 const linkSchema = z.object({
-  anchorId: z.string().min(1, "Anchor ID is required"),
-  exerciseId: z
+  anchor_id: z.string().min(1, "Anchor ID is required"),
+  exercise_id: z
     .number()
     .int()
     .positive("Exercise ID must be a positive integer"),
@@ -16,13 +16,13 @@ const linkSchema = z.object({
 
 async function handler(request) {
   try {
-    const { anchorId, exerciseId, position } = await request.json();
+    const { anchor_id, exercise_id, position } = await request.json();
 
     const result = await DB.transaction(async (client) => {
       let anchorDbId;
       const existingAnchorResult = await client.query(
         "SELECT id FROM anchors WHERE anchor_id = $1",
-        [anchorId]
+        [anchor_id]
       );
 
       if (existingAnchorResult.rows.length > 0) {
@@ -30,7 +30,7 @@ async function handler(request) {
       } else {
         const newAnchorResult = await client.query(
           "INSERT INTO anchors (anchor_id) VALUES ($1) RETURNING id",
-          [anchorId]
+          [anchor_id]
         );
 
         if (newAnchorResult.rows.length === 0) {
@@ -45,7 +45,7 @@ async function handler(request) {
          VALUES ($1, $2, $3)
          ON CONFLICT (exercise_id, anchor_id) 
          DO UPDATE SET position = $3`,
-        [exerciseId, anchorDbId, position || 0]
+        [exercise_id, anchorDbId, position || 0]
       );
 
       return { success: true };

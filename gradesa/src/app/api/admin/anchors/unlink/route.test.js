@@ -25,8 +25,8 @@ describe("unlink", () => {
     });
 
     const unlinkInput = {
-      anchorId: "test-unlink-anchor",
-      exerciseId: Number(exercise.id),
+      anchor_id: "test-unlink-anchor",
+      exercise_id: Number(exercise.id),
     };
 
     const response = await POST(
@@ -52,8 +52,8 @@ describe("unlink", () => {
     const exercise = await TestFactory.exercise();
 
     const unlinkInput = {
-      anchorId: "non-existent-anchor",
-      exerciseId: Number(exercise.id),
+      anchor_id: "non-existent-anchor",
+      exercise_id: Number(exercise.id),
     };
 
     const response = await POST(
@@ -77,8 +77,8 @@ describe("unlink", () => {
     const anchor = await TestFactory.anchor({ anchor_id: "unlinked-anchor" });
 
     const unlinkInput = {
-      anchorId: "unlinked-anchor",
-      exerciseId: Number(exercise.id),
+      anchor_id: "unlinked-anchor",
+      exercise_id: Number(exercise.id),
     };
 
     const response = await POST(
@@ -96,7 +96,7 @@ describe("unlink", () => {
 
     const invalidInput = {
       // Missing exerciseId
-      anchorId: "test-anchor",
+      anchor_id: "test-anchor",
     };
 
     const response = await POST(
@@ -113,8 +113,8 @@ describe("unlink", () => {
     const { mockPost } = useTestRequest(regularUser);
 
     const validInput = {
-      anchorId: "test-anchor",
-      exerciseId: 123,
+      anchor_id: "test-anchor",
+      exercise_id: 123,
     };
 
     const response = await POST(

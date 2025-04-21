@@ -15,8 +15,8 @@ describe("POST /api/admin/anchors/link", () => {
     const exercise = await TestFactory.exercise();
 
     const validInput = {
-      anchorId: "test-anchor-id",
-      exerciseId: Number(exercise.id),
+      anchor_id: "test-anchor-id",
+      exercise_id: Number(exercise.id),
       position: 1,
     };
 
@@ -30,7 +30,7 @@ describe("POST /api/admin/anchors/link", () => {
 
     const anchorResult = await DB.pool(
       "SELECT * FROM anchors WHERE anchor_id = $1",
-      [validInput.anchorId]
+      [validInput.anchor_id]
     );
     expect(anchorResult.rows.length).toBe(1);
 
@@ -51,8 +51,8 @@ describe("POST /api/admin/anchors/link", () => {
     const anchor = await TestFactory.anchor({ anchor_id: "existing-anchor" });
 
     const validInput = {
-      anchorId: "existing-anchor",
-      exerciseId: Number(exercise.id),
+      anchor_id: "existing-anchor",
+      exercise_id: Number(exercise.id),
       position: 2,
     };
 
@@ -87,8 +87,8 @@ describe("POST /api/admin/anchors/link", () => {
     });
 
     const updateInput = {
-      anchorId: "update-anchor",
-      exerciseId: Number(exercise.id),
+      anchor_id: "update-anchor",
+      exercise_id: Number(exercise.id),
       position: 3,
     };
 
@@ -113,7 +113,7 @@ describe("POST /api/admin/anchors/link", () => {
     const { mockPost } = useTestRequest(admin);
 
     const invalidInput = {
-      exerciseId: 123,
+      exercise_id: 123,
     };
 
     const response = await POST(
@@ -130,8 +130,8 @@ describe("POST /api/admin/anchors/link", () => {
     const { mockPost } = useTestRequest(regularUser);
 
     const validInput = {
-      anchorId: "test-anchor",
-      exerciseId: 123,
+      anchor_id: "test-anchor",
+      exercise_id: 123,
     };
 
     const response = await POST(
