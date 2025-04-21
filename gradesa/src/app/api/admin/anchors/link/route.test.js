@@ -108,6 +108,24 @@ describe("POST /api/admin/anchors/link", () => {
     expect(linkResult.rows[0].position).toBe(updateInput.position);
   });
 
+  it("should return 404 for non-existent exercise", async () => {
+    const admin = await TestFactory.user({ is_admin: true });
+    const { mockPost } = useTestRequest(admin);
+
+    const invalidInput = {
+      anchor_id: "test-anchor",
+      exercise_id: 999999,
+    };
+
+    const response = await POST(
+      mockPost("/api/admin/anchors/link", invalidInput)
+    );
+
+    expect(response.status).toBe(404);
+    const json = await response.json();
+    expect(json.error).toBe("Exercise not found");
+  });
+
   it("should return 422 for invalid input", async () => {
     const admin = await TestFactory.user({ is_admin: true });
     const { mockPost } = useTestRequest(admin);
