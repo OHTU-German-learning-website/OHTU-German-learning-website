@@ -277,13 +277,14 @@ export default function ThemesPage() {
                   ))}
               </ul>
               <div className="show-list">
-                {/* This button should not be visible if there are 3 or less subtopics */}
-                <button
-                  className="show-more-link"
-                  onClick={(e) => toggleShowMore(e, i)}
-                >
-                  {grammar[i] ? "weniger anzeigen" : "mehr anzeigen"}{" "}
-                </button>
+                {topic.subtopics.length > 3 && (
+                  <button
+                    className="show-more-link"
+                    onClick={(e) => toggleShowMore(e, i)}
+                  >
+                    {grammar[i] ? "weniger anzeigen" : "mehr anzeigen"}{" "}
+                  </button>
+                )}
               </div>
             </div>
           </div>
