@@ -2,7 +2,11 @@ import { DB } from "@/backend/db";
 
 export async function POST(request) {
   try {
-    const { fields } = await request.json();
+    const body = await request.json();
+    const { title, fields } = body; // do not use JSON.parse here, it gives another error
+    console.log("Received Body:", body); // Debugging, this is correct
+    console.log("Received title:", title); // Debugging, gives undefined
+    console.log("Received fields:", fields); // Debugging, gives undefined
 
     if (!fields || !Array.isArray(fields) || fields.length === 0) {
       return Response.json({ error: "No fields provided" }, { status: 400 });
@@ -10,7 +14,7 @@ export async function POST(request) {
 
     const created_by = 1;
     const exerciseCategory = "dnd";
-    const title = "New Dragdrop Exercise";
+    // const title = "New Dragdrop Exercise";
 
     // 1. Insert into exercises
     const exRes = await DB.pool(
@@ -34,9 +38,9 @@ export async function POST(request) {
       // Insert category
       const catRes = await DB.pool(
         `INSERT INTO dnd_categories (category, color)
-     VALUES ($1, $2)
-     ON CONFLICT (category, color) DO NOTHING
-     RETURNING id`,
+        VALUES ($1, $2)
+        ON CONFLICT (category, color) DO NOTHING
+        RETURNING id`,
         [field.category, field.color]
       );
 
@@ -54,9 +58,9 @@ export async function POST(request) {
       for (const word of words) {
         const wordRes = await DB.pool(
           `INSERT INTO draggable_words (word)
-       VALUES ($1)
-       ON CONFLICT (word) DO NOTHING
-       RETURNING id`,
+          VALUES ($1)
+          ON CONFLICT (word) DO NOTHING
+          RETURNING id`,
           [word]
         );
 
@@ -65,7 +69,7 @@ export async function POST(request) {
         // Insert mapping
         await DB.pool(
           `INSERT INTO word_category_mappings (word_id, category_id, exercise_id)
-       VALUES ($1, $2, $3)`,
+          VALUES ($1, $2, $3)`,
           [word_id, category_id, dnd_id]
         );
       }

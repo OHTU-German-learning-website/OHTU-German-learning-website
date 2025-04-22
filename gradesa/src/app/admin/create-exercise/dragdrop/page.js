@@ -52,8 +52,13 @@ export default function DragdropAdminPage() {
 
       const res = await makeRequest("/admin/exercises/dragdrop", {
         method: "POST",
-        title: title.trim(),
-        body: inputFields,
+        headers: {
+          "Content-Type": "application/json", // Ensure the content type is set
+        },
+        body: {
+          title: title,
+          fields: JSON.stringify(inputFields),
+        },
       });
 
       if (res.status === 200) {
@@ -245,6 +250,7 @@ export default function DragdropAdminPage() {
               type="submit"
               size="sm"
               variant="outline"
+              onClick={handleSubmit}
               disabled={
                 isSubmitting ||
                 !title.trim() ||
