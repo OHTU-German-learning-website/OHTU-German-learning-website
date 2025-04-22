@@ -2,11 +2,10 @@ import { DB } from "@/backend/db";
 
 export async function POST(request) {
   try {
-    const body = await request.json();
-    const { title, fields } = body; // do not use JSON.parse here, it gives another error
-    console.log("Received Body:", body); // Debugging, this is correct
-    console.log("Received title:", title); // Debugging, gives undefined
-    console.log("Received fields:", fields); // Debugging, gives undefined
+    const rawBody = await request.json();
+    const body = rawBody.body;
+    const title = body.title;
+    const fields = body.fields;
 
     if (!fields || !Array.isArray(fields) || fields.length === 0) {
       return Response.json({ error: "No fields provided" }, { status: 400 });
@@ -14,7 +13,6 @@ export async function POST(request) {
 
     const created_by = 1;
     const exerciseCategory = "dnd";
-    // const title = "New Dragdrop Exercise";
 
     // 1. Insert into exercises
     const exRes = await DB.pool(

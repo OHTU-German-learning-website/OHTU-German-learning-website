@@ -57,7 +57,7 @@ export default function DragdropAdminPage() {
         },
         body: {
           title: title,
-          fields: JSON.stringify(inputFields),
+          fields: inputFields,
         },
       });
 
