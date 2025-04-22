@@ -56,7 +56,7 @@ export default function DragdropAdminPage() {
           "Content-Type": "application/json", // Ensure the content type is set
         },
         body: {
-          title: title,
+          title: title.trim(),
           fields: inputFields,
         },
       });
