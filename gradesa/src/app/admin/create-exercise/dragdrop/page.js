@@ -278,21 +278,6 @@ export default function DragdropAdminPage() {
               Preview
             </Button>
           </div>
-          {/* <Button
-            type="submit"
-            size="sm"
-            variant="outline"
-            disabled={
-              isSubmitting ||
-              !title.trim() ||
-              !numberOfFields ||
-              inputFields.some(
-                (field) => !field.color || !field.category || !field.content
-              )
-            }
-          >
-            {isSubmitting ? "Wird erstellt..." : "Create"}
-          </Button> */}
         </form>
       </div>
     </div>
