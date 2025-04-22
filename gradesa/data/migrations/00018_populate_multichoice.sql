@@ -4,7 +4,7 @@ DECLARE
   new_exercise_id bigint;
   new_multichoice_exercise_id bigint;
 BEGIN
-  INSERT INTO exercises DEFAULT VALUES
+  INSERT INTO exercises (category) VALUES ('multichoice')
   RETURNING id INTO new_exercise_id;
 
   INSERT INTO multichoice_exercises (exercise_id, title, exercise_description)
