@@ -40,7 +40,7 @@ export default function EditInfo() {
       <h4>Benutzernam: {user.username}</h4>
       <LinkButton href="/edit_info/edit_password">Change Password</LinkButton>
       <h4>Deine Email: {user.email}</h4>
-      <LinkButton href="/edit/email">Change email</LinkButton>
+      <LinkButton href="/edit_info/edit_email">Change email</LinkButton>
 
       <Grid columns="2" gap="4"></Grid>
     </Container>
