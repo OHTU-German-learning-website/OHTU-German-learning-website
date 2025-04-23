@@ -55,7 +55,9 @@ const WordSelectionExercise = ({
     if (score === 100) {
       feedbackMessage =
         "Perfekt! Du hast alle " + targetCategory + " korrekt identifiziert!";
-    } else if (score >= 70) {
+    } else if (score >= 90) {
+      feedbackMessage = "Fast Perfekt! Punktzahl: " + score + "%";
+    } else if (score >= 50) {
       feedbackMessage = "Gut gemacht! Punktzahl: " + score + "%";
     } else {
       feedbackMessage = "Weiter üben! Punktzahl: " + score + "%";
@@ -115,7 +117,7 @@ const WordSelectionExercise = ({
 
       <div>
         {!isSubmitted && !isPreviewMode ? (
-          <Button size="sm" onClick={checkAnswers}>
+          <Button size="sm" width="fit" onClick={checkAnswers}>
             Antworten überprüfen
           </Button>
         ) : (

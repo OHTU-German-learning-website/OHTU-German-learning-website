@@ -41,8 +41,9 @@ export default function StudentExercisePage() {
       <div>
         <Button
           size="sm"
+          width="fit"
           variant="secondary"
-          onClick={() => router.push("/grammar/themes")}
+          onClick={() => router.push("/grammar/exercises/click")}
         >
           Zurück zum Dashboard
         </Button>
