@@ -13,27 +13,20 @@ describe("click_exercises API", () => {
     const { mockGet } = useTestRequest(user);
 
     // Insert test exercises into the database
-    const exercise1 = await DB.pool(
-      `INSERT INTO click_exercises (title, category, target_words, all_words, created_at, updated_at)
-       VALUES ($1, $2, $3, $4, NOW(), NOW()) RETURNING id`,
-      [
-        "Verben identifizieren",
-        "Verben",
-        ["laufen", "springen"],
-        ["Die", "Kinder", "laufen", "springen"],
-      ]
-    );
 
-    const exercise2 = await DB.pool(
-      `INSERT INTO click_exercises (title, category, target_words, all_words, created_at, updated_at)
-       VALUES ($1, $2, $3, $4, NOW(), NOW()) RETURNING id`,
-      [
-        "Adjektive erkennen",
-        "Adjektive",
-        ["schnell", "langsam"],
-        ["Der", "Hund", "ist", "schnell", "und", "langsam"],
-      ]
-    );
+    const click_exercise1 = await TestFactory.clickExercise({
+      title: "Verben identifizieren",
+      category: "Verben",
+      target_words: ["laufen", "springen", "schwimmen"],
+      all_words: ["Die", "Kinder", "laufen", "springen", "schwimmen"],
+    });
+
+    const click_exercise2 = await TestFactory.clickExercise({
+      title: "Adjektive erkennen",
+      category: "Adjektive",
+      target_words: ["schnell", "langsam"],
+      all_words: ["Der", "Hund", "ist", "schnell", "und", "langsam"],
+    });
 
     const response = await GET(mockGet("/api/exercises/click"));
 
@@ -58,8 +51,14 @@ describe("click_exercises API", () => {
 
     expect(json[1].title).toBe("Verben identifizieren");
     expect(json[1].category).toBe("Verben");
-    expect(json[1].target_words).toEqual(["laufen", "springen"]);
-    expect(json[1].all_words).toEqual(["Die", "Kinder", "laufen", "springen"]);
+    expect(json[1].target_words).toEqual(["laufen", "springen", "schwimmen"]);
+    expect(json[1].all_words).toEqual([
+      "Die",
+      "Kinder",
+      "laufen",
+      "springen",
+      "schwimmen",
+    ]);
   });
 
   it("should return an empty array if no click exercises exist", async () => {
