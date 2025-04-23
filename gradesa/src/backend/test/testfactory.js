@@ -1,9 +1,8 @@
 import { isTest } from "../config";
-import { faker } from "@faker-js/faker";
+import { fa, faker } from "@faker-js/faker";
 import { createHash } from "node:crypto";
 import { DB } from "../db";
-import crypto from "crypto";
-import { hashPassword } from "../auth/hash";
+import { title } from "node:process";
 
 /**
  * @description Factory function to create a model for a given table.
@@ -16,7 +15,7 @@ function modelFactory(tableName, base, insertLinked) {
     if (!isTest) {
       throw new Error("This function is only available in test mode");
     }
-    const baseValues = typeof base === "function" ? await base() : base;
+    const baseValues = typeof base === "function" ? base() : base;
     const model = { ...baseValues, ...mod };
 
     if (insertLinked !== undefined) {
@@ -50,16 +49,14 @@ function modelFactory(tableName, base, insertLinked) {
 
 faker.seed(123);
 
-const user = modelFactory("users", async () => {
-  const salt = crypto.randomBytes(16).toString("hex");
-  const { hashedPassword } = await hashPassword("correct", salt);
-  return {
-    username: faker.internet.username().trim(),
-    email: faker.internet.email().toLowerCase().trim(),
-    password_hash: hashedPassword,
-    salt: salt,
-  };
-});
+const user = modelFactory("users", () => ({
+  username: faker.internet.username().trim(),
+  email: faker.internet.email().toLowerCase().trim(),
+  password_hash: createHash("sha256")
+    .update(faker.internet.password())
+    .digest("hex"),
+  salt: faker.string.alphanumeric(16),
+}));
 
 const exercise = modelFactory("exercises", () => ({
   category: "freeform",
@@ -94,9 +91,21 @@ const freeFormAnswer = modelFactory(
   }
 );
 
+const clickExercise = modelFactory(
+  "click_exercises",
+  {
+    title: faker.lorem.sentence(),
+    category: faker.lorem.word(),
+    target_words: [faker.lorem.word(), faker.lorem.word()],
+    all_words: [faker.lorem.word(), faker.lorem.word()],
+  },
+  async (base) => {}
+);
+
 export const TestFactory = {
   user,
   exercise,
   freeFormExercise,
   freeFormAnswer,
+  clickExercise,
 };
