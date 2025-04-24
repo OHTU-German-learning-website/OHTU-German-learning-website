@@ -12,34 +12,46 @@ describe("create dnd_exercises API", () => {
     const admin = await TestFactory.user({ is_admin: true });
     const { mockPost } = useTestRequest(admin);
 
+    const testData = {
+      title: "Substantiv",
+      fields: [
+        { color: "red", category: "die", content: "Zeit, Schule" },
+        { color: "blue", category: "der", content: "Elefant" },
+        { color: "green", category: "das", content: "Auto" },
+      ],
+    };
+
     const response = await POST(
-      mockPost("api/admin/create-exercise/dragdrop", {
-        title: "Substantiv",
-        fields: [
-          { color: "red", category: "die", content: "Zeit, Schule" },
-          { color: "blue", category: "der", content: "Elefant" },
-          { color: "green", category: "das", content: "Auto" },
-        ],
-      })
+      mockPost("api/admin/create-exercise/dragdrop", testData)
     );
 
     expect(response.status).toBe(200);
-
     const json = await response.json();
-    expect(json).toBeDefined();
+    expect(json.exerciseId).toBeDefined();
 
-    const mainExercise = await DB.pool(
-      `SELECT * FROM dnd_exercises WHERE id = $1`,
-      [json.exerciseId]
-    );
-    expect(mainExercise.rows.length).toBe(1);
+    // Check main exercises table first
+    const exercise = await DB.pool(`SELECT * FROM exercises WHERE id = $1`, [
+      json.exerciseId,
+    ]);
+    expect(exercise.rows.length).toBe(1);
+    expect(exercise.rows[0].category).toBe("dnd");
 
+    // Then check dnd_exercises table
     const dndExercise = await DB.pool(
-      `SELECT * FROM dnd_exercises WHERE id = $1`,
+      `SELECT * FROM dnd_exercises WHERE exercise_id = $1`,
       [json.exerciseId]
     );
     expect(dndExercise.rows.length).toBe(1);
     expect(dndExercise.rows[0].title).toBe("Substantiv");
-    expect(dndExercise.rows[0].fields).toHaveLength(2);
+
+    // Check words
+    const words = await DB.pool(
+      `SELECT w.word 
+       FROM draggable_words w
+       JOIN word_category_mappings m ON w.id = m.word_id
+       WHERE m.exercise_id = $1`,
+      [json.exerciseId]
+    );
+    expect(words.rows.length).toBe(4); // Zeit, Schule, Elefant, Auto
   });
 });

@@ -58,7 +58,7 @@ export async function POST(request) {
         const wordRes = await DB.pool(
           `INSERT INTO draggable_words (word)
           VALUES ($1)
-          ON CONFLICT (word) DO NOTHING
+          ON CONFLICT (word) DO UPDATE SET word = EXCLUDED.word
           RETURNING id`,
           [word]
         );
@@ -74,7 +74,7 @@ export async function POST(request) {
       }
     }
 
-    return Response.json({ success: true });
+    return Response.json({ success: true, exerciseId: exercise_id });
   } catch (err) {
     console.error("Error creating dragdrop exercise:", err);
     return Response.json(
