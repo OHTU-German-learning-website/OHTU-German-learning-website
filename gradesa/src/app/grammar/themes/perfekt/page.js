@@ -188,8 +188,29 @@ export default function Perfekt() {
             <span className="blue">gefahren</span>. <br />
             Bis nach Hamburg <span className="red">sind</span> wir{" "}
             <span className="blue">geflogen</span>, danach{" "}
-            <span className="red">sind</span> wir mit dem Zug weitergefahren.
+            <span className="red">sind</span> wir mit dem Zug{" "}
+            <span className="blue">weitergefahren</span>.
           </p>
+          <p>
+            Gestern Abend <span className="red">bin</span> ich sehr spät{" "}
+            <span className="blue">eingeschlafen</span>, trotzdem{" "}
+            <span className="red">bin</span> ich heute schon um sechs Uhr{" "}
+            <span className="blue">aufgestanden</span>.
+          </p>
+          <p>
+            In diesem Jahr regnet es zu wenig, alle Blumen im Garten{" "}
+            <span className="red">sind</span> leider schon{" "}
+            <span className="blue">verwelkt</span>. <br />
+            Beethoven <span className="red">ist</span> im Jahre 1827{" "}
+            <span className="blue">gestorben</span>.
+          </p>
+        </Container>
+        <p>
+          <Link href="#">Hier</Link> sind einige Übungen, wo du das Perfekt
+          trainieren kannst. Am besten gehst du sie der Reihe nach durch.
+        </p>
+        <Container bg="var(--green)">
+          <p>Übung 1.</p>
         </Container>
       </div>
     </>
