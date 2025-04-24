@@ -12,7 +12,7 @@ export default function CreateExercise() {
       <LinkButton href="/admin/create-exercise/free-form">Free form</LinkButton>
       <LinkButton href="/admin/create-exercise/click">Klick Übung</LinkButton>
       <LinkButton href="/admin/create-exercise/dragdrop">
-        Drag and drop
+        Drag und drop
       </LinkButton>
     </Column>
   );

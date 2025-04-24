@@ -93,7 +93,7 @@ export default function DragdropAdminPage() {
   return (
     <div className={styles.page}>
       <div className="admin-container">
-        <h1>Create a Drag and Drop Exercise</h1>
+        <h1>Eine Drag-und-Drop-Übung erstellen</h1>
         {generalError && (
           <p className="error" role="alert">
             {generalError}
@@ -108,24 +108,24 @@ export default function DragdropAdminPage() {
               variant="secondary"
               onClick={() => setShowPreview(false)}
             >
-              Close Preview
+              Vorschau schließen
             </Button>
           </div>
         )}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="title">Title:</label>
+            <label htmlFor="title">Titel:</label>
             <input
               type="text"
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="form-input"
-              placeholder="Enter title"
+              placeholder="Titel eingeben"
             />
           </div>
           <div className="form-group">
-            <label htmlFor="fieldCount">Number of boxes:</label>
+            <label htmlFor="fieldCount">Anzahl der Felder</label>
             <Dropdown
               options={[
                 { label: "2", value: "2" },
@@ -139,8 +139,8 @@ export default function DragdropAdminPage() {
             >
               <Button size="md" variant="outline" width="fit">
                 {numberOfFields
-                  ? `Selected: ${numberOfFields}`
-                  : "Select number of boxes"}
+                  ? `Ausgewählte Anzahl: ${numberOfFields}`
+                  : "Anzahl der Felder"}
               </Button>
             </Dropdown>
           </div>
@@ -203,7 +203,7 @@ export default function DragdropAdminPage() {
                         },
                       ]}
                       onSelect={(selectedOption) =>
-                        handleInputChange(index, "color", selectedOption.value)
+                        handleInputChange(index, "Farbe", selectedOption.value)
                       }
                     >
                       <Button
@@ -228,7 +228,7 @@ export default function DragdropAdminPage() {
                         handleInputChange(index, "category", e.target.value)
                       }
                       className="form-input"
-                      placeholder={`Enter category ${index + 1}`}
+                      placeholder={`Kategorie ${index + 1} eingeben`}
                     />
                   </Row>
                   <input
@@ -238,7 +238,7 @@ export default function DragdropAdminPage() {
                       handleInputChange(index, "content", e.target.value)
                     }
                     className="form-input"
-                    placeholder={`Enter words`}
+                    placeholder={`Wörter eingeben`}
                   />
                 </div>
               ))}
@@ -258,7 +258,7 @@ export default function DragdropAdminPage() {
                 )
               }
             >
-              {isSubmitting ? "Wird erstellt..." : "Create"}
+              {isSubmitting ? "Wird erstellt..." : "Erstellen"}
             </Button>
             <Button
               type="button"
@@ -273,7 +273,7 @@ export default function DragdropAdminPage() {
                 )
               }
             >
-              Preview
+              Vorschau
             </Button>
             <Button
               type="button"
