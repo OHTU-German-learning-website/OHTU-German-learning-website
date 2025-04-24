@@ -91,6 +91,49 @@ const freeFormAnswer = modelFactory(
   }
 );
 
+const multichoiceExercise = modelFactory(
+  "multichoice_exercises",
+  {
+    title: faker.lorem.words(3),
+    exercise_description: faker.lorem.sentence(),
+  },
+  async (base) => {
+    if (!base.exercise_id) {
+      const exercise = await TestFactory.exercise({ category: "multichoice" });
+      base.exercise_id = exercise.id;
+    }
+  }
+);
+
+const multichoiceContent = modelFactory(
+  "multichoice_content",
+  {
+    content_type: "multichoice",
+    content_value: "___",
+    content_order: 1,
+    correct_answer: "correct answer",
+  },
+  async (base) => {
+    if (!base.multichoice_exercise_id) {
+      const multichoiceExercise = await TestFactory.multichoiceExercise();
+      base.multichoice_exercise_id = multichoiceExercise.id;
+    }
+  }
+);
+
+const multichoiceOption = modelFactory(
+  "multichoice_options",
+  {
+    option_value: faker.lorem.word(),
+  },
+  async (base) => {
+    if (!base.multichoice_content_id) {
+      const multichoiceContent = await TestFactory.multichoiceContent();
+      base.multichoice_content_id = multichoiceContent.id;
+    }
+  }
+);
+
 const clickExercise = modelFactory(
   "click_exercises",
   {
@@ -107,5 +150,8 @@ export const TestFactory = {
   exercise,
   freeFormExercise,
   freeFormAnswer,
+  multichoiceExercise,
+  multichoiceContent,
+  multichoiceOption,
   clickExercise,
 };
