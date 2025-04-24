@@ -132,7 +132,7 @@ const multichoiceOption = modelFactory(
       base.multichoice_content_id = multichoiceContent.id;
     }
   }
-};
+);
 
 const clickExercise = modelFactory(
   "click_exercises",
