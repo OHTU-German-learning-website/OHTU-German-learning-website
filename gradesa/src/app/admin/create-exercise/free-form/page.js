@@ -101,7 +101,7 @@ export default function CreateFreeFormExercise() {
   };
 
   const handleCancel = () => {
-    router.push("/admin/exercises");
+    router.push("/admin/create-exercise");
   };
 
   return (
