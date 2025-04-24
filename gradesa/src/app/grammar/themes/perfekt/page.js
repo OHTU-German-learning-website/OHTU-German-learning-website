@@ -30,11 +30,16 @@ export default function Perfekt() {
           <p>Beispiele: </p>
           <p>
             ich <span className="green">habe</span>{" "}
-            <span className="blue">geredet</span>
-          </p>
-          <p>
+            <span className="blue">geredet</span> <br />
             er <span className="green">ist</span>{" "}
-            <span className="blue">gekommen</span>
+            <span className="blue">gekommen</span> <br />
+            Peter <span className="green">hat</span> das Auto in die Garage{" "}
+            <span className="blue">gefahren</span>. <br />
+            Irene <span className="green">hat</span> ihren Hund in den Urlaub{" "}
+            <span className="blue">mitgenommen</span>. <br />
+            Peter repariert die Maschine, nachdem er sie{" "}
+            <span className="blue">gereinigt</span>{" "}
+            <span className="green">hat</span>.
           </p>
         </Container>
         <p>
@@ -53,10 +58,8 @@ export default function Perfekt() {
           <span className="italic">sein</span> benutzen muss und wann{" "}
           <span className="italic">haben</span> .
         </p>
-        <p>
-          <Link href="#">Hier</Link> sind einige Übungen, wo du das Perfekt
-          trainieren kannst. Am besten gehst du sie der Reihe nach durch.
-        </p>
+        <h2>Perfekt mit "haben"</h2>
+        <h3>1. Transitive Verben</h3>
       </div>
     </>
   );
