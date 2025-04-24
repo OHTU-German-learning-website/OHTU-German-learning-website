@@ -98,7 +98,7 @@ export async function POST(req) {
     console.error("Error processing feedback:", error);
     return new Response(
       JSON.stringify({
-        message: "Error processing feedback",
+        message: "Error processing feedback, check if you are signed in",
         error: error.message,
       }),
       {
