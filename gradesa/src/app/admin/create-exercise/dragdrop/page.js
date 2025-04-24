@@ -171,7 +171,7 @@ export default function DragdropAdminPage() {
                           label: "Blue",
                           value: "blue",
                           style: {
-                            backgroundColor: "var(--blue1)",
+                            backgroundColor: "var(--blue)",
                             width: "100%",
                             padding: "var(--u-xs)",
                             borderRadius: "var(--radius-sm)",
