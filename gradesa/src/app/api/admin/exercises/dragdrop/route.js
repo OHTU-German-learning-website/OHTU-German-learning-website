@@ -4,6 +4,7 @@ export async function POST(request) {
   try {
     const rawBody = await request.json();
     const body = rawBody.body;
+    console.log(body, rawBody);
     const title = body.title;
     const fields = body.fields;
 
