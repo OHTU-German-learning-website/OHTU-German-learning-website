@@ -7,6 +7,8 @@ import layout from "@/shared/styles/layout.module.css";
 import { useRequest } from "@/shared/hooks/useRequest";
 import useLocalStorage from "@/shared/utils/useLocalStorage";
 import { LearningForm } from "@/components/ui/learning-form";
+import { Row } from "@/components/ui/layout/container";
+
 export const FORM_LANGUAGE_OPTIONS = [
   {
     label: "English",
@@ -25,7 +27,7 @@ export default function Learning() {
   const { data, refetch } = useQuery("/forms/learning_type");
   const makeRequest = useRequest();
   const [isLoading, setIsLoading] = useState(false);
-
+  const [error, setError] = useState(null);
   const submitAnswer = async (form, part, question, answer) => {
     try {
       setIsLoading(true);
@@ -40,15 +42,19 @@ export default function Learning() {
       return response;
     } catch (error) {
       console.error(error);
+      setError(error.message);
     } finally {
       setIsLoading(false);
     }
   };
   return (
     <div className={layout.view}>
-      <Dropdown options={FORM_LANGUAGE_OPTIONS} onSelect={setLanguage}>
-        <Button>{language.label}</Button>
-      </Dropdown>
+      <Row justify="space-between">
+        <Dropdown options={FORM_LANGUAGE_OPTIONS} onSelect={setLanguage}>
+          <Button>{language.label}</Button>
+        </Dropdown>
+        {error && <span className="error">{error}</span>}
+      </Row>
       {data && (
         <LearningForm
           form={data}
