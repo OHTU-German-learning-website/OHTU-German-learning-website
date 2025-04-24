@@ -62,7 +62,7 @@ export default function DragdropAdminPage() {
       });
 
       if (res.status === 200) {
-        router.push("/admin/exercises");
+        router.push("/admin/create-exercise");
       }
     } catch (e) {
       console.error("Error creating dragdrop exercise:", e);
@@ -90,6 +90,10 @@ export default function DragdropAdminPage() {
 
   const handlePreview = () => {
     setShowPreview(true);
+  };
+
+  const handleCancel = () => {
+    router.push("/admin/create-exercise");
   };
 
   return (
@@ -276,6 +280,14 @@ export default function DragdropAdminPage() {
               }
             >
               Preview
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              variant="tertiary"
+              onClick={handleCancel}
+            >
+              Abbrechen
             </Button>
           </div>
         </form>
