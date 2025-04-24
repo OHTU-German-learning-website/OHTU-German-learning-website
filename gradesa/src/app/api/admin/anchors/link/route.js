@@ -11,47 +11,59 @@ const linkSchema = z.object({
     .number()
     .int()
     .positive("Exercise ID must be a positive integer"),
-  position: z.number().int().default(0).optional(),
+  position: z.number().int().optional().default(0),
 });
 
 async function handler(request) {
   try {
     const { anchor_id, exercise_id, position } = await request.json();
 
-    const result = await DB.transaction(async (client) => {
-      let anchorDbId;
-      const existingAnchorResult = await client.query(
-        "SELECT id FROM anchors WHERE anchor_id = $1",
+    const exerciseResult = await DB.pool(
+      "SELECT id FROM exercises WHERE id = $1",
+      [exercise_id]
+    );
+
+    if (exerciseResult.rows.length === 0) {
+      return NextResponse.json(
+        { error: "Exercise not found" },
+        { status: 404 }
+      );
+    }
+
+    let anchorResult = await DB.pool(
+      "SELECT id FROM anchors WHERE anchor_id = $1",
+      [anchor_id]
+    );
+
+    let anchorId;
+    if (anchorResult.rows.length === 0) {
+      const newAnchorResult = await DB.pool(
+        "INSERT INTO anchors (anchor_id) VALUES ($1) RETURNING id",
         [anchor_id]
       );
+      anchorId = newAnchorResult.rows[0].id;
+    } else {
+      anchorId = anchorResult.rows[0].id;
+    }
 
-      if (existingAnchorResult.rows.length > 0) {
-        anchorDbId = existingAnchorResult.rows[0].id;
-      } else {
-        const newAnchorResult = await client.query(
-          "INSERT INTO anchors (anchor_id) VALUES ($1) RETURNING id",
-          [anchor_id]
-        );
+    const linkResult = await DB.pool(
+      "SELECT id FROM exercise_anchors WHERE exercise_id = $1 AND anchor_id = $2",
+      [exercise_id, anchorId]
+    );
 
-        if (newAnchorResult.rows.length === 0) {
-          throw new Error("Failed to create anchor");
-        }
-
-        anchorDbId = newAnchorResult.rows[0].id;
-      }
-
-      await client.query(
-        `INSERT INTO exercise_anchors (exercise_id, anchor_id, position)
-         VALUES ($1, $2, $3)
-         ON CONFLICT (exercise_id, anchor_id) 
-         DO UPDATE SET position = $3`,
-        [exercise_id, anchorDbId, position || 0]
+    if (linkResult.rows.length > 0) {
+      await DB.pool(
+        "UPDATE exercise_anchors SET position = $1 WHERE exercise_id = $2 AND anchor_id = $3",
+        [position, exercise_id, anchorId]
       );
+    } else {
+      await DB.pool(
+        "INSERT INTO exercise_anchors (exercise_id, anchor_id, position) VALUES ($1, $2, $3)",
+        [exercise_id, anchorId, position]
+      );
+    }
 
-      return { success: true };
-    });
-
-    return NextResponse.json(result);
+    return NextResponse.json({ success: true });
   } catch (error) {
     logger.error("Error linking exercise to anchor:", error);
     return NextResponse.json(
