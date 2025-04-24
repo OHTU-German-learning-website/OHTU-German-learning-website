@@ -1,14 +1,11 @@
 import axios from "axios";
 import { stringify } from "qs";
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, memo } from "react";
 import { useIsMounted } from "./useIsMounted";
+import { useUser } from "@/context/user.context";
 
-const baseUrl =
-  process.env.NEXT_ENV === "production"
-    ? "https://tbd.com"
-    : "http://localhost:3000";
 export const axiosInstance = axios.create({
-  baseURL: `${baseUrl}/api`,
+  baseURL: `/api`,
 });
 
 /**
@@ -39,20 +36,20 @@ const useQuery = (url, params, config) => {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-
+  const { auth } = useUser();
   const isMounted = useIsMounted();
 
   const memoizedConfig = useMemo(() => {
     if (!config) return defaultConfig;
     return { ...defaultConfig, ...config };
-  }, [config]);
+  }, [JSON.stringify(config)]);
 
   const currentAttemptRef = useRef(0);
   const currentBackoffRef = useRef(memoizedConfig.refetchBackoff);
 
   const memoizedQueryString = useMemo(() => {
     return params ? objectToQueryString(params) : null;
-  }, [params]);
+  }, [JSON.stringify(params ?? {})]);
 
   const makeGetRequest = async (url, queryString, abortCtrl) => {
     if (!isMounted) {
@@ -143,7 +140,7 @@ const useQuery = (url, params, config) => {
     return () => {
       abortCtrl.abort();
     };
-  }, [url, memoizedQueryString, memoizedConfig]);
+  }, [url, memoizedQueryString, memoizedConfig, auth.user?.id, isMounted]);
 
   return { data, error, isLoading, refetch };
 };

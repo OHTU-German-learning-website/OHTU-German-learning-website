@@ -1,17 +1,27 @@
 import { memo } from "react";
 import { useDrop } from "react-dnd";
-import { ItemColors } from "@/app/grammar/exercises/dragdrop/itemtypes";
 import { dustbin } from "./dragdrop.css";
 
-export const Dustbin = memo(function Dustbin({ accept, droppedItems, onDrop }) {
+export const Dustbin = memo(function Dustbin({
+  accept,
+  droppedItems,
+  color,
+  onDrop,
+}) {
   const [{ isOver, canDrop }, drop] = useDrop({
     accept,
-    drop: onDrop,
+    drop: (item) => {
+      if (onDrop) {
+        onDrop(item);
+        return undefined;
+      }
+    },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
     }),
   });
+
   const isActive = isOver && canDrop;
   let backgroundColor = "var(--bg5)";
   if (isActive) {
@@ -34,7 +44,7 @@ export const Dustbin = memo(function Dustbin({ accept, droppedItems, onDrop }) {
             <div
               key={`${item.name}-${index}`}
               className="dropped-item"
-              style={{ color: ItemColors[accept[0]] }}
+              style={{ color: `var(--${color})` }}
             >
               {item.name}
             </div>

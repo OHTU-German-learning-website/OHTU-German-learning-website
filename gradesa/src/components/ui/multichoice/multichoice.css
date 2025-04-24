@@ -1,0 +1,74 @@
+.exercise-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--u-md);
+}
+
+.task-title {
+  font-size: var(--font-xl);
+  margin-bottom: 1.5rem;
+}
+
+.task-sentence {
+  font-size: var(--font-lg);
+  margin-bottom: 1.5rem;
+}
+
+.row {
+  display: flex;
+  gap: var(--u-xl);
+}
+
+.button {
+  font-weight: 600;
+}
+
+.error-message {
+  padding: var(--u-md);
+  background-color: var(--tertiary2);
+  font-size: var(--font-md);
+  color: var(--fg1);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--u-lg);
+  text-align: center;
+  margin-top: var(--u-lg);
+}
+
+.success-message {
+  padding: var(--u-md);
+  background-color: var(--tertiary10);
+  font-size: var(--font-md);
+  color: var(--fg9);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--u-lg);
+  text-align: center;
+  margin-top: var(--u-lg);
+}
+
+select {
+  padding: 0.3rem;
+  margin: 0.2rem 0.5rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--fg3);
+  font-size: var(--font-lg);
+  background-color: var(--bg1);
+  color: var(--fg1);
+  text-align: center;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+select.correct {
+  background-color: var(--tertiary10);
+  border-color: var(--fg8);
+  color: var(--fg8);
+  text-align: center;
+}
+
+select.incorrect {
+  background-color: var(--tertiary2);
+  text-align: center;
+}

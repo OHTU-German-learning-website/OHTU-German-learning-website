@@ -3,6 +3,7 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { getConfig, isTest } from "../../backend/config";
 import { AUTH_COOKIE_NAME } from "@/shared/const";
+import { TestFactory } from "../test/testfactory";
 
 const { sessionSecret, sessionTTL } = getConfig();
 const encodedKey = new TextEncoder().encode(sessionSecret);
@@ -26,9 +27,18 @@ export async function verifySession(session) {
   }
 }
 
-export async function createSession(userId) {
+export async function createSession(user) {
   const expiresAt = new Date(Date.now() + sessionTTL);
-  const session = await signPayload({ userId, expiresAt });
+  const payload = {
+    user: {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      is_admin: user.is_admin,
+    },
+    expiresAt: expiresAt,
+  };
+  const session = await signPayload(payload);
   // Testing with happy-dom complains that this isn't called within the request
   // scope, can't fix it now so just return when testing.
   // If you need to test this functionality, mock the cookieStore.set call.
@@ -46,13 +56,16 @@ export async function createSession(userId) {
   });
 }
 
-export async function checkSession() {
+export async function checkSession(request) {
+  if (isTest) {
+    return request.testUser;
+  }
   const cookieStore = await cookies();
   const session = cookieStore.get(AUTH_COOKIE_NAME);
   if (session) {
     const payload = await verifySession(session.value);
     if (payload) {
-      return payload.userId;
+      return payload.user;
     }
   }
   return null;

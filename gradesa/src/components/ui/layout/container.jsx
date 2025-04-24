@@ -38,7 +38,6 @@ export const layoutPropsRegistry = {
   pr: "paddingRight",
   m: "margin",
   br: "borderRadius",
-  m: "margin",
   mt: "marginTop",
   mb: "marginBottom",
   ml: "marginLeft",
@@ -121,7 +120,7 @@ export const Container = memo(({ children, className, ...props }) => {
             propValue.forEach((value, i) => {
               if (i === 0) return;
               // aggregate media queries
-              const query = `@media(min-width: ${breakpointsValues[i - 1]})`;
+              const query = `@media(minWidth: ${breakpointsValues[i - 1]})`;
               mediaQueries[query] = {
                 ...mediaQueries[query],
                 [cssProp]: getValue(cssProp, value),
@@ -140,7 +139,7 @@ export const Container = memo(({ children, className, ...props }) => {
               } else if (key in breakpoints) {
                 // aggregate media queries
                 const bpValue = breakpoints[key];
-                const query = `@media(min-width: ${bpValue})`;
+                const query = `@media(minWidth: ${bpValue})`;
                 mediaQueries[query] = {
                   ...mediaQueries[query],
                   [cssProp]: getValue(cssProp, value),

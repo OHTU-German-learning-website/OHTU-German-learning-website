@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 
 /**
  * @description This hook is used to check if the component is mounted.
@@ -6,12 +6,12 @@ import { useEffect, useRef } from "react";
  * @returns {boolean} - True if the component is mounted, false otherwise.
  */
 export const useIsMounted = () => {
-  const isMounted = useRef(true);
+  const [mounted, setMounted] = useState(false);
   useEffect(() => {
-    isMounted.current = true;
+    setMounted(true);
     return () => {
-      isMounted.current = false;
+      setMounted(false);
     };
   }, []);
-  return isMounted.current;
+  return mounted;
 };

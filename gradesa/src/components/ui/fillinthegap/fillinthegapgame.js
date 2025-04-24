@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import SentenceWithGaps from "./sentencewithgaps";
 import { Row } from "../layout/container";
+import { Button } from "@radix-ui/themes";
 import "./fillinthegap.css";
 
 export default function FillInTheGapGame() {
@@ -25,7 +26,6 @@ export default function FillInTheGapGame() {
         return;
       }
       const data = await response.json();
-      console.log("Abgerufene Aufgabe:", data);
 
       setExercise(data);
       setUserAnswers(Array(data.correct_answers.length).fill(""));
@@ -66,7 +66,6 @@ export default function FillInTheGapGame() {
         return;
       }
       const data = await response.json();
-      console.log("Abgerufene nächste Aufgabe:", data);
 
       setExercise(data);
       setUserAnswers(Array(data.correct_answers.length).fill(""));
@@ -108,7 +107,11 @@ export default function FillInTheGapGame() {
   if (!exercise) {
     return (
       <div className="game-container">
-        {feedback ? <h2>{feedback}</h2> : <div>Aufgabe wird geladen...</div>}
+        {feedback ? (
+          <h2>{feedback}</h2>
+        ) : (
+          <div>Es gibt noch keine Aufgaben</div>
+        )}
       </div>
     );
   }
@@ -117,7 +120,6 @@ export default function FillInTheGapGame() {
     <div className="game-container">
       <h2 className="task-title">Fülle die Lücken aus</h2>
       {feedback && <div className="wunderbar">{feedback}</div>}{" "}
-      {/* Näytetään palaute */}
       <SentenceWithGaps
         sentenceTemplate={exercise.sentence_template}
         userAnswers={userAnswers}
@@ -131,10 +133,10 @@ export default function FillInTheGapGame() {
         }}
       />
       <Row gap="8px" align="center">
-        <button onClick={handleReset}>Zurücksetzen</button>
-        <button onClick={handleSubmit}>Überprüfen</button>
+        <Button onClick={handleReset}>Zurücksetzen</Button>
+        <Button onClick={handleSubmit}>Überprüfen</Button>
         {feedback === "Wunderbar!" && (
-          <button onClick={handleNextExercise}>Nächste Aufgabe</button>
+          <Button onClick={handleNextExercise}>Nächste Aufgabe</Button>
         )}
       </Row>
     </div>
