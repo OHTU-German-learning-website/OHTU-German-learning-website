@@ -1,7 +1,8 @@
 import { isTest } from "../config";
-import { faker } from "@faker-js/faker";
+import { fa, faker } from "@faker-js/faker";
 import { createHash } from "node:crypto";
 import { DB } from "../db";
+import { title } from "node:process";
 
 /**
  * @description Factory function to create a model for a given table.
@@ -90,9 +91,21 @@ const freeFormAnswer = modelFactory(
   }
 );
 
+const clickExercise = modelFactory(
+  "click_exercises",
+  {
+    title: faker.lorem.sentence(),
+    category: faker.lorem.word(),
+    target_words: [faker.lorem.word(), faker.lorem.word()],
+    all_words: [faker.lorem.word(), faker.lorem.word()],
+  },
+  async (base) => {}
+);
+
 export const TestFactory = {
   user,
   exercise,
   freeFormExercise,
   freeFormAnswer,
+  clickExercise,
 };

@@ -12,6 +12,12 @@ const exerciseTypes = [
     link: "/grammar/exercises/freeform",
     image: "📝",
   },
+  {
+    title: "Klick-Übungen",
+    description: "Üben mit Klick-Interaktionen",
+    link: "/grammar/exercises/click",
+    image: "🖱️",
+  },
   // Add other exercise types here
 ];
 

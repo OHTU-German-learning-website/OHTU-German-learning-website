@@ -4,7 +4,6 @@ import { useTestRequest } from "@/backend/test/mock-request";
 import { checkSession } from "@/backend/auth/session";
 console.log("Mocked checkSession:", checkSession.mock);
 
-// Mock MailerSend
 vi.mock("mailersend", () => {
   return {
     MailerSend: vi.fn().mockImplementation(() => ({
@@ -53,7 +52,7 @@ describe("POST /api/talkback", () => {
   });
 
   it("should return 200 on successful email send", async () => {
-    const mailersend = await import("mailersend"); // Import the mocked module
+    const mailersend = await import("mailersend");
 
     const result = await sendFeedbackRequest(
       "test@example.com",
@@ -63,15 +62,13 @@ describe("POST /api/talkback", () => {
     expect(result.status).toBe(200);
     expect(result.message).toBe("Feedback received and email sent");
 
-    // Ensure MailerSend's send method was called
-    expect(mailersend.MailerSend).toHaveBeenCalled(); // Check if MailerSend was instantiated
+    expect(mailersend.MailerSend).toHaveBeenCalled();
     expect(
       mailersend.MailerSend.mock.results[0].value.email.send
     ).toHaveBeenCalled(); // Check if send() was called
   });
 
   it("should return 500 if MailerSend throws an error", async () => {
-    // Force MailerSend to fail
     const mailersend = await import("mailersend");
     mailersend.MailerSend.mockImplementationOnce(() => ({
       email: {
@@ -84,10 +81,11 @@ describe("POST /api/talkback", () => {
       "Test message"
     );
     expect(result.status).toBe(500);
-    expect(result.message).toBe("Error processing feedback");
+    expect(result.message).toBe(
+      "Error processing feedback, check if you are signed in"
+    );
     expect(result.error).toBe("MailerSend failure");
 
-    // Ensure send() was attempted
     expect(mailersend.MailerSend).toHaveBeenCalled();
     expect(
       mailersend.MailerSend.mock.results[0].value.email.send

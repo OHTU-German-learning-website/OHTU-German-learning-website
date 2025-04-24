@@ -1,5 +1,5 @@
 "use client";
-import "../auth/auth.css";
+import ".//page.css";
 import { useIsLoggedIn } from "@/context/user.context";
 
 export default function AuthLayout({ children }) {
