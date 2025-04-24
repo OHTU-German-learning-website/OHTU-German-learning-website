@@ -21,16 +21,7 @@ const exerciseTypes = [
   // Add other exercise types here
 ];
 
-const initialGrammarTopics = [
-  {
-    title: "Grammatik 1",
-    exercises: ["Übung 1", "Übung 2", "Übung 3", "Übung 4", "Übung 5"],
-  },
-];
-
 export default function ExercisePage({}) {
-  const [grammar, setgrammar] = useState(initialGrammarTopics.map(() => false));
-
   return (
     <LessonsLayout>
       <Column>
@@ -61,23 +52,7 @@ export default function ExercisePage({}) {
             </Link>
           ))}
         </Column>
-
-        <h1>Grammatik 1</h1>
-        <Column gap="md">
-          {initialGrammarTopics[0].exercises.map((exercise, exIndex) => (
-            <Row key={`exercise-${exIndex}`}>
-              <Link href={`/lessons/exercises`}>
-                <button className="exercise-link">{exercise}</button>
-              </Link>
-            </Row>
-          ))}
-        </Column>
       </Column>
-      <Link href="/lessons">
-        <Button width="fit" size="lg">
-          Zurück zu den Übungen
-        </Button>
-      </Link>
     </LessonsLayout>
   );
 }
