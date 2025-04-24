@@ -52,9 +52,6 @@ function StudentSideBar() {
       <Link className={styles.sidebarLink} href="/grammar/communications">
         Kommunikations-situationen
       </Link>
-      <Link className={styles.sidebarLink} href="/edit_info">
-        Profil
-      </Link>
       <Link className={styles.sidebarLink} href="/talkback">
         Rückmeldekanal-Feedback channel
       </Link>
