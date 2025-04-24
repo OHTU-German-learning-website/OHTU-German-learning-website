@@ -51,14 +51,8 @@ export default function DragdropAdminPage() {
       setGeneralError("");
 
       const res = await makeRequest("/admin/exercises/dragdrop", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json", // Ensure the content type is set
-        },
-        body: {
-          title: title.trim(),
-          fields: inputFields,
-        },
+        title: title.trim(),
+        fields: inputFields,
       });
 
       if (res.status === 200) {

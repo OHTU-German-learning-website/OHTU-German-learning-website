@@ -3,7 +3,8 @@ import { DB } from "@/backend/db";
 export async function POST(request) {
   try {
     const rawBody = await request.json();
-    const body = rawBody.body;
+    const body = rawBody.body ?? rawBody;
+    console.log(body, rawBody);
     const title = body.title;
     const fields = body.fields;
 
