@@ -1,10 +1,9 @@
 "use client";
-import { useState } from "react";
 import LessonsLayout from "./layout";
 import Link from "next/link";
 import { Column, Row } from "@/components/ui/layout/container";
 import "./exercises.css";
-import { Button } from "@/components/ui/button";
+
 const exerciseTypes = [
   {
     title: "Freie Übungen",
