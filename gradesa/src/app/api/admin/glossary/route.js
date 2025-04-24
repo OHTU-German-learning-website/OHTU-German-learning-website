@@ -44,3 +44,33 @@ export const GET = withAuth(
     requireAuth: true,
   }
 );
+
+export const DELETE = withAuth(
+  async (req) => {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "Glossary entry ID is required" },
+        { status: 400 }
+      );
+    }
+
+    try {
+      await DB.pool(`DELETE FROM glossary_entries WHERE id = $1`, [id]);
+
+      return NextResponse.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting glossary entry:", error);
+      return NextResponse.json(
+        { error: "Failed to delete glossary entry" },
+        { status: 500 }
+      );
+    }
+  },
+  {
+    requireAdmin: true,
+    requireAuth: true,
+  }
+);

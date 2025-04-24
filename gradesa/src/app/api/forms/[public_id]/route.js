@@ -3,13 +3,14 @@ import { DB } from "@/backend/db";
 import { NextResponse } from "next/server";
 import { withAuth } from "@/backend/middleware/withAuth";
 
-export const GET = withAuth(async (request, { params }) => {
-  const { public_id } = await params;
-  const user = request.user;
-  const user_id = user.id;
+export const GET = withAuth(
+  async (request, { params }) => {
+    const { public_id } = await params;
+    const user = request.user;
+    const user_id = user?.id ?? -1;
 
-  const formRows = await DB.pool(
-    `
+    const formRows = await DB.pool(
+      `
 WITH questions AS
          (SELECT pq.id, pq.title_en, pq.title_de, pq.form_part_id, COALESCE(uqa.answer, 0) as answer
           FROM part_questions pq
@@ -55,11 +56,15 @@ WITH questions AS
 SELECT *
 FROM forms;
   `,
-    [user_id, public_id]
-  );
-  if (!formRows.rows.length) {
-    return NextResponse.json({ error: "Form not found" }, { status: 404 });
+      [user_id, public_id]
+    );
+    if (!formRows.rows.length) {
+      return NextResponse.json({ error: "Form not found" }, { status: 404 });
+    }
+    const form = formRows.rows[0];
+    return NextResponse.json(form);
+  },
+  {
+    requireAuth: false,
   }
-  const form = formRows.rows[0];
-  return NextResponse.json(form);
-});
+);

@@ -11,6 +11,13 @@
   margin-bottom: 1.5rem;
 }
 
+.task-description {
+  font-size: var(--font-lg);
+  color: var(--fg7);
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
 .task-sentence {
   font-size: var(--font-lg);
   margin-bottom: 1.5rem;
