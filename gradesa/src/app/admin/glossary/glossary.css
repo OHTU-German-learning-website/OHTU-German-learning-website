@@ -3,28 +3,32 @@
   padding: var(--u-md);
   border-radius: var(--radius-md);
   border: 1px solid var(--bg6);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .glossary-card:hover {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .glossary-word {
-  color: var(--primary);
-  font-weight: bold;
-  font-size: 1.25rem;
+  color: var(--fg1);
+  margin: 0;
+  font-size: 1.2rem;
 }
 
 .glossary-definition {
-  color: var(--text);
-  margin-bottom: var(--u-md);
+  color: var(--fg2);
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
 }
 
 .glossary-meta {
-  font-size: 0.75rem;
-  color: var(--text6);
-  border-top: 1px solid var(--bg6);
-  padding-top: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--fg3);
+  margin-top: 0.5rem;
+  width: 100%;
 }
