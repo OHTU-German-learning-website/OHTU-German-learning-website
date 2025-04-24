@@ -99,7 +99,7 @@ export default function DragdropAdminPage() {
   return (
     <div className={styles.page}>
       <div className="admin-container">
-        <h1>Eine Drag-and-Drop-Übung erstellen</h1>
+        <h1>Create a Drag and Drop Exercise</h1>
         {generalError && (
           <p className="error" role="alert">
             {generalError}
@@ -114,24 +114,24 @@ export default function DragdropAdminPage() {
               variant="secondary"
               onClick={() => setShowPreview(false)}
             >
-              Vorschau schließen
+              Close Preview
             </Button>
           </div>
         )}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="title">Titel:</label>
+            <label htmlFor="title">Title:</label>
             <input
               type="text"
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="form-input"
-              placeholder="Titel eingeben"
+              placeholder="Enter title"
             />
           </div>
           <div className="form-group">
-            <label htmlFor="fieldCount">Anzahl der Felder</label>
+            <label htmlFor="fieldCount">Number of boxes:</label>
             <Dropdown
               options={[
                 { label: "2", value: "2" },
@@ -145,8 +145,8 @@ export default function DragdropAdminPage() {
             >
               <Button size="md" variant="outline" width="fit">
                 {numberOfFields
-                  ? `Ausgewählte Anzahl: ${numberOfFields}`
-                  : "Anzahl der Felder"}
+                  ? `Selected: ${numberOfFields}`
+                  : "Select number of boxes"}
               </Button>
             </Dropdown>
           </div>
@@ -158,7 +158,7 @@ export default function DragdropAdminPage() {
                     <Dropdown
                       options={[
                         {
-                          label: "Rot",
+                          label: "Red",
                           value: "red",
                           style: {
                             backgroundColor: "var(--red)",
@@ -168,7 +168,7 @@ export default function DragdropAdminPage() {
                           },
                         },
                         {
-                          label: "Blau",
+                          label: "Blue",
                           value: "blue",
                           style: {
                             backgroundColor: "var(--blue)",
@@ -178,7 +178,7 @@ export default function DragdropAdminPage() {
                           },
                         },
                         {
-                          label: "Grün",
+                          label: "Green",
                           value: "green",
                           style: {
                             backgroundColor: "var(--green)",
@@ -188,7 +188,7 @@ export default function DragdropAdminPage() {
                           },
                         },
                         {
-                          label: "Gelb",
+                          label: "Yellow",
                           value: "yellow",
                           style: {
                             backgroundColor: "var(--yellow)",
@@ -198,7 +198,7 @@ export default function DragdropAdminPage() {
                           },
                         },
                         {
-                          label: "Lila",
+                          label: "Purple",
                           value: "purple",
                           style: {
                             backgroundColor: "var(--purple)",
@@ -224,7 +224,7 @@ export default function DragdropAdminPage() {
                             : {}
                         }
                       >
-                        {field.color || "Farbe"}
+                        {field.color || "Select color"}
                       </Button>
                     </Dropdown>
                     <input
@@ -234,7 +234,7 @@ export default function DragdropAdminPage() {
                         handleInputChange(index, "category", e.target.value)
                       }
                       className="form-input"
-                      placeholder={`Kategorie ${index + 1} eingeben`}
+                      placeholder={`Enter category ${index + 1}`}
                     />
                   </Row>
                   <input
@@ -244,7 +244,7 @@ export default function DragdropAdminPage() {
                       handleInputChange(index, "content", e.target.value)
                     }
                     className="form-input"
-                    placeholder={`Wörter eingeben`}
+                    placeholder={`Enter words`}
                   />
                 </div>
               ))}
@@ -264,7 +264,7 @@ export default function DragdropAdminPage() {
                 )
               }
             >
-              {isSubmitting ? "Wird erstellt..." : "Erstellen"}
+              {isSubmitting ? "Wird erstellt..." : "Create"}
             </Button>
             <Button
               type="button"
@@ -279,7 +279,7 @@ export default function DragdropAdminPage() {
                 )
               }
             >
-              Vorschau
+              Preview
             </Button>
             <Button
               type="button"

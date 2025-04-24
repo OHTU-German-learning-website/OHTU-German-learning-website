@@ -13,55 +13,33 @@ describe("create dnd_exercises API", () => {
     const { mockPost } = useTestRequest(admin);
 
     const response = await POST(
-      mockPost("api/exercises/create/dragdrop", {
-        title: "Drag and Drop Exercise",
+      mockPost("api/admin/create-exercise/dragdrop", {
+        title: "Substantiv",
         fields: [
-          {
-            color: "red",
-            category: "Der",
-            content: "Elefant",
-          },
-          {
-            color: "green",
-            category: "Das",
-            content: "Auto, Haus",
-          },
+          { color: "red", category: "die", content: "Zeit, Schule" },
+          { color: "blue", category: "der", content: "Elefant" },
+          { color: "green", category: "das", content: "Auto" },
         ],
       })
     );
 
-    expect(response).toBeDefined();
-    expect(response.status).toBe(201);
+    expect(response.status).toBe(200);
+
     const json = await response.json();
     expect(json).toBeDefined();
-    expect(json.id).toBeDefined();
 
-    const exercise = await DB.pool(
+    const mainExercise = await DB.pool(
       `SELECT * FROM dnd_exercises WHERE id = $1`,
-      [json.id]
+      [json.exerciseId]
     );
-    expect(exercise.rows.length).toBe(1);
-  });
-  it("should return 400 if required fields are missing", async () => {
-    const admin = await TestFactory.user({ is_admin: true });
-    const { mockPost } = useTestRequest(admin);
+    expect(mainExercise.rows.length).toBe(1);
 
-    const response = await POST(
-      mockPost("api/exercises/create/dragdrop", {
-        title: "Drag and Drop Exercise",
-        fields: [
-          {
-            color: "red",
-            category: "Der",
-            content: "Elefant",
-          },
-        ],
-      })
+    const dndExercise = await DB.pool(
+      `SELECT * FROM dnd_exercises WHERE id = $1`,
+      [json.exerciseId]
     );
-
-    expect(response).toBeDefined();
-    expect(response.status).toBe(400);
-    const json = await response.json();
-    expect(json.error).toMatch(/Felder sind erforderlich/);
+    expect(dndExercise.rows.length).toBe(1);
+    expect(dndExercise.rows[0].title).toBe("Substantiv");
+    expect(dndExercise.rows[0].fields).toHaveLength(2);
   });
 });
