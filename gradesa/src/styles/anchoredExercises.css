@@ -89,7 +89,7 @@
   color: white;
   border: none;
   border-radius: var(--radius-sm);
-  font-size: var(--font-sm);
+  font-size: var(--font-xs);
   cursor: pointer;
   transition: background-color 0.2s;
 }
