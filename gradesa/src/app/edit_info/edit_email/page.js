@@ -66,12 +66,6 @@ export default function EditEmail() {
     <Container>
       <h1 className="text-2xl font-bold mb-4">Change Email</h1>
 
-      {user && (
-        <pre className="mb-4 p-2 bg-gray-100 rounded text-sm overflow-x-auto">
-          {JSON.stringify(user, null, 2)}
-        </pre>
-      )}
-
       <form onSubmit={handleSubmit} className="space-y-4 max-w-md">
         <div>
           <label className="block mb-1">Current Email</label>
