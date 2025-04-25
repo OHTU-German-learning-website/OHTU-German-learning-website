@@ -18,6 +18,12 @@ const exerciseTypes = [
     link: "/grammar/exercises/click",
     image: "🖱️",
   },
+  {
+    title: "Multiple-Choice-Übungen",
+    description: "Üben mit Multiple-Choice-Fragen",
+    link: "/grammar/exercises/multichoice",
+    image: "📋",
+  },
   // Add other exercise types here
 ];
 

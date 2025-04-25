@@ -49,7 +49,7 @@ export default function MultichoiceExercisesPage() {
   return (
     <Container maxW="800px" m="0 auto" p="md">
       <Container mb="lg">
-        <h1>Multichoice Übungen</h1>
+        <h1>Multiple-Choice-Übungen</h1>
       </Container>
 
       <Container
@@ -64,8 +64,8 @@ export default function MultichoiceExercisesPage() {
       >
         {exercises.map((exercise) => (
           <Link
-            key={exercise.id}
-            href={`/grammar/exercises/multichoice/${exercise.id}`}
+            key={exercise.multichoice_exercise_id}
+            href={`/grammar/exercises/multichoice/${exercise.multichoice_exercise_id}`}
           >
             <Container
               p="md"
