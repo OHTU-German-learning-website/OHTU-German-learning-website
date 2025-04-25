@@ -101,7 +101,7 @@ describe("unlink", () => {
 
     expect(response.status).toBe(422);
     const json = await response.json();
-    expect(json.error).toContain("Required");
+    expect(json.error).toContain("Exercise ID must be a positive integer");
   });
 
   it("should return 401 for non-admin user", async () => {
