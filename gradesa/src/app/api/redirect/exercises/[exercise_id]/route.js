@@ -32,4 +32,7 @@ export async function GET(request, { params }) {
       new URL(`/grammar/exercises/freeform/${free_form_id.rows[0].id}`, baseUrl)
     );
   }
+  if (!category.rows[0].category) {
+    return Response.redirect(new URL(`/grammar/exercise`, baseUrl));
+  }
 }
