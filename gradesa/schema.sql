@@ -48,7 +48,7 @@ CREATE TABLE public.click_exercises (
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   updated_at timestamp with time zone NOT NULL DEFAULT now(),
   title text NOT NULL,
-  category text NOT NULL,
+  category text,
   target_words text[] NOT NULL,
   all_words text[] NOT NULL
 );
