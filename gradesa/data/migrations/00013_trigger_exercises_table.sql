@@ -1,4 +1,4 @@
-ALTER TABLE exercises ADD COLUMN category TEXT NOT NULL;
+ALTER TABLE exercises ADD COLUMN category TEXT NOT NULL DEFAULT 'freeform';
 
 CREATE OR REPLACE FUNCTION insert_into_exercises()
 RETURNS TRIGGER AS $$
