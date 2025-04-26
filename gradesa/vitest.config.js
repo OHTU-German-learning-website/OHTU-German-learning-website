@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [react()],
   test: {
     environment: "happy-dom",
+    exclude: ["playwright/e2e/**/*", "node_modules/**/*"],
   },
   resolve: {
     alias: {

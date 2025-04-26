@@ -1,3 +1,7 @@
 node_modules
 .DS_Store
 .cursorignore
+
+e2e/screenshots/*
+e2e/test-results/*
+e2e/playwright-report/*
