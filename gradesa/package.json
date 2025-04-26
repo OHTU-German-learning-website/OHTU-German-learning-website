@@ -8,7 +8,10 @@
     "build": "next build",
     "start": "sh ./data/migrate.sh --skip-schema-gen && next start",
     "lint": "next lint",
-    "test": "vitest --disable-console-intercept "
+    "test": "vitest --disable-console-intercept ",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:debug": "playwright test --debug"
   },
   "dependencies": {
     "@faker-js/faker": "^9.4.0",
@@ -31,6 +34,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@playwright/test": "^1.52.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.2.0",
     "@vitejs/plugin-react": "^4.3.4",
