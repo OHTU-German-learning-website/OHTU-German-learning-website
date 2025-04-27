@@ -60,8 +60,60 @@ function StudentSideBar() {
         Rückmeldekanal-Feedback channel
       </Link>
       <Dropdown
-        options={[{ label: "Glossar", value: "/glossary" }]}
+        options={[
+          { label: "Glossar", value: "#" },
+          { label: "DeepL", value: "https://www.deepl.com/de/translator" },
+          {
+            label: "Google Translator",
+            value: "https://translate.google.com/",
+          },
+          { label: "ChatGPT", value: "https://chatgpt.com/ " },
+          { label: "Google Gemini", value: "https://gemini.google.com" },
+          {
+            label: "Wortschatz Uni Leipzig",
+            value: "https://wortschatz.uni-leipzig.de/de",
+          },
+          {
+            label: "Digitales Wörterbuch der Deutschen Sprache",
+            value: "https://www.dwds.de/",
+          },
+          {
+            label: "Institut für Deutsche Sprache",
+            value: "https://www.ids-mannheim.de/",
+          },
+          {
+            label: "Gesellschaft für Deutsche Sprache",
+            value: "https://gfds.de/",
+          },
+          { label: "Grammis", value: "https://grammis.ids-mannheim.de/" },
+          {
+            label: "Progr@mm",
+            value: "https://grammis.ids-mannheim.de/progr@mm",
+          },
+          {
+            label: "Hamburger Fernhochschule",
+            value:
+              "https://www.hfh-fernstudium.de/blog/welcher-lerntyp-bist-du",
+          },
+          {
+            label: "IQLingua",
+            value:
+              "https://www.iq-lingua.de/typ-checks/welcher-lerntyp-bin-ich/#c42954",
+          },
+          {
+            label: "Geolino",
+            value:
+              "https://www.geo.de/geolino/mensch/5849-rtkl-lernen-welcher-lerntyp-bist-du",
+          },
+          {
+            label: "Kapiert.de",
+            value: "https://www.kapiert.de/lerntypentest/",
+          },
+        ]}
         trigger="click"
+        onSelect={(option) => {
+          window.location.href = option.value;
+        }}
       >
         <Button variant="outline">Links</Button>
       </Dropdown>
