@@ -18,6 +18,9 @@ export default function grammar() {
               <LinkButton href="/grammar/themes" size="lg">
                 Themen der Grammatik
               </LinkButton>
+              <LinkButton href="/grammar/exercises" size="lg">
+                Übungen
+              </LinkButton>
             </Container>
           </Grid>
         </main>

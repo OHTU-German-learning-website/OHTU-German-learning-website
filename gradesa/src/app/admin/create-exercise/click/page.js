@@ -32,7 +32,7 @@ export default function CreateExercise() {
 
   const handleSaveExercise = async () => {
     try {
-      const response = await makeRequest("/exercises/create/click", {
+      const response = await makeRequest("/admin/exercises/click", {
         title,
         targetCategory,
         targetWords: selectedWords,
@@ -103,6 +103,7 @@ export default function CreateExercise() {
             <Container className="exercise-click">
               <label>Übungstext</label>
               <textarea
+                className="click-input"
                 value={allWordsText}
                 onChange={(e) => setAllWordsText(e.target.value)}
                 placeholder="Z. B. Ich mag laufen und schwimmen."
@@ -111,7 +112,7 @@ export default function CreateExercise() {
               />
             </Container>
           </Column>
-          <Button size="sm" type="submit">
+          <Button size="md" type="submit">
             Zielwörter auswählen
           </Button>
         </form>

@@ -4,9 +4,11 @@ import Image from "next/image";
 import "./navbar.css";
 import { useUser } from "@/context/user.context";
 import { Column } from "../layout/container";
+import { useRouter } from "next/navigation";
 
 function Navbar() {
   const { auth, logout } = useUser();
+  const router = useRouter();
 
   return (
     <nav className="navbar">
@@ -35,6 +37,12 @@ function Navbar() {
                 <span className="logged-in-label">Eingeloggt als</span>
                 <span className="username">{auth.user.username}</span>
               </Column>
+              <button
+                onClick={() => router.push("/edit_info")}
+                className="login-btn"
+              >
+                Profil
+              </button>
               <button onClick={logout} className="login-btn">
                 Abmeldung
               </button>

@@ -117,6 +117,18 @@
   }
 }
 
+.baseButton.danger {
+  background-color: var(--error);
+  color: white;
+  border: 1px solid var(--error);
+
+  &:hover {
+    background-color: var(--bg1);
+    color: var(--error);
+    border: 1px solid var(--error);
+  }
+}
+
 .baseButton.click {
   padding: 2px;
   border: none;
