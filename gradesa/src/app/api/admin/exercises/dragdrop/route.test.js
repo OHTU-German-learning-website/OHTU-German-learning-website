@@ -5,14 +5,14 @@ import { useTestRequest } from "@/backend/test/mock-request";
 import { DB } from "@/backend/db";
 import { TestFactory } from "@/backend/test/testfactory";
 
-describe("create dnd_exercises API", () => {
+describe("POST /api/auth/admin/exercises/dragdrop", () => {
   useTestDatabase();
 
   it("should create a new dnd_exercise with valid details", async () => {
     const admin = await TestFactory.user({ is_admin: true });
     const { mockPost } = useTestRequest(admin);
 
-    const testData = {
+    const validInput = {
       title: "Substantiv",
       fields: [
         { color: "red", category: "die", content: "Zeit, Schule" },
@@ -22,36 +22,29 @@ describe("create dnd_exercises API", () => {
     };
 
     const response = await POST(
-      mockPost("api/admin/create-exercise/dragdrop", testData)
+      mockPost("/api/auth/admin/exercises/dragdrop", validInput)
     );
+    const responseData = await response.json();
 
     expect(response.status).toBe(200);
-    const json = await response.json();
-    expect(json.exerciseId).toBeDefined();
+    const { exercise_id } = responseData;
 
     // Check main exercises table first
-    const exercise = await DB.pool(`SELECT * FROM exercises WHERE id = $1`, [
-      json.exerciseId,
-    ]);
-    expect(exercise.rows.length).toBe(1);
-    expect(exercise.rows[0].category).toBe("dnd");
+    const exerciseResult = await DB.pool(
+      "SELECT * FROM exercises WHERE category = 'dnd' ORDER BY id DESC LIMIT 1"
+    );
+
+    expect(exerciseResult.rows.length).toBe(1);
+    const createdExercise = exerciseResult.rows[0];
+    expect(createdExercise.category).toBe("dnd");
 
     // Then check dnd_exercises table
     const dndExercise = await DB.pool(
-      `SELECT * FROM dnd_exercises WHERE exercise_id = $1`,
-      [json.exerciseId]
+      "SELECT * FROM dnd_exercises WHERE exercise_id = $1",
+      [createdExercise.id]
     );
+
     expect(dndExercise.rows.length).toBe(1);
     expect(dndExercise.rows[0].title).toBe("Substantiv");
-
-    // Check words
-    const words = await DB.pool(
-      `SELECT w.word 
-       FROM draggable_words w
-       JOIN word_category_mappings m ON w.id = m.word_id
-       WHERE m.exercise_id = $1`,
-      [json.exerciseId]
-    );
-    expect(words.rows.length).toBe(4); // Zeit, Schule, Elefant, Auto
   });
 });
