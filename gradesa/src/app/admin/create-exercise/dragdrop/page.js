@@ -152,7 +152,7 @@ export default function DragdropAdminPage() {
                     <Dropdown
                       options={[
                         {
-                          label: "Red",
+                          label: "Rot",
                           value: "red",
                           style: {
                             backgroundColor: "var(--red)",
@@ -162,7 +162,7 @@ export default function DragdropAdminPage() {
                           },
                         },
                         {
-                          label: "Blue",
+                          label: "Blau",
                           value: "blue",
                           style: {
                             backgroundColor: "var(--blue)",
@@ -172,7 +172,7 @@ export default function DragdropAdminPage() {
                           },
                         },
                         {
-                          label: "Green",
+                          label: "Grün",
                           value: "green",
                           style: {
                             backgroundColor: "var(--green)",
@@ -182,7 +182,7 @@ export default function DragdropAdminPage() {
                           },
                         },
                         {
-                          label: "Yellow",
+                          label: "Gelb",
                           value: "yellow",
                           style: {
                             backgroundColor: "var(--yellow)",
@@ -192,7 +192,7 @@ export default function DragdropAdminPage() {
                           },
                         },
                         {
-                          label: "Purple",
+                          label: "Lila",
                           value: "purple",
                           style: {
                             backgroundColor: "var(--purple)",
@@ -203,7 +203,7 @@ export default function DragdropAdminPage() {
                         },
                       ]}
                       onSelect={(selectedOption) =>
-                        handleInputChange(index, "Farbe", selectedOption.value)
+                        handleInputChange(index, "color", selectedOption.value)
                       }
                     >
                       <Button
@@ -218,7 +218,7 @@ export default function DragdropAdminPage() {
                             : {}
                         }
                       >
-                        {field.color || "Select color"}
+                        {field.color || "Farbe"}
                       </Button>
                     </Dropdown>
                     <input
