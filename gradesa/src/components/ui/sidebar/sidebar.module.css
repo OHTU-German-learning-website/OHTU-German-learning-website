@@ -10,6 +10,10 @@
 .sidebar {
   width: 240px;
   height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-color: var(--bg2) var(--bg3);
+  scrollbar-width: thin;
   z-index: var(--z-10);
   flex-shrink: 0;
   padding: 36px 24px;
