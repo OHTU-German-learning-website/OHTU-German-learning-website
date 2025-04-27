@@ -5,7 +5,7 @@ export default function Custom404() {
     <div>
       <h2>
         <Image src="/favicon.ico" alt="der Elefant" width={64} height={64} />
-        404 - Page Not Found
+        404 - Seite nicht gefunden
       </h2>
     </div>
   );
