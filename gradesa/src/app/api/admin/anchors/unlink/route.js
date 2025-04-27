@@ -8,9 +8,14 @@ import { logger } from "@/backend/logging";
 const unlinkSchema = z.object({
   anchor_id: z.string().min(1, "Anchor ID is required"),
   exercise_id: z
-    .number()
-    .int()
-    .positive("Exercise ID must be a positive integer"),
+    .union([z.string(), z.number()], {
+      message: "Exercise ID must be a positive integer",
+    })
+    .transform((val) => (typeof val === "string" ? parseInt(val, 10) : val))
+    .refine(
+      (val) => Number.isInteger(val) && val > 0,
+      "Exercise ID must be a positive integer"
+    ),
 });
 
 async function handler(request) {

@@ -113,7 +113,7 @@ export default function MultichoicePage({ exerciseId }) {
     setDropdownSubmittedStates(shuffledExerciseData.content.map(() => false));
   };
 
-  if (isLoading) return <div>Laden...</div>;
+  if (isLoading) return <div>Lädt...</div>;
   if (error) return <div>Fehler: {error}</div>;
   if (!shuffledExerciseData) return null;
 
