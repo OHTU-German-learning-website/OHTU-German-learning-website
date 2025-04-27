@@ -48,13 +48,23 @@ function StudentSideBar() {
 
   return (
     <>
-      <SidebarGroup title="Lernen" sublinks={chapters} topLink="/resources" />
+      <SidebarGroup
+        title="Richtig Online Lernen"
+        sublinks={chapters}
+        topLink="/resources"
+      />
       <Link className={styles.sidebarLink} href="/grammar/communications">
         Kommunikations-situationen
       </Link>
       <Link className={styles.sidebarLink} href="/talkback">
         Rückmeldekanal-Feedback channel
       </Link>
+      <Dropdown
+        options={[{ label: "Glossar", value: "/glossary" }]}
+        trigger="click"
+      >
+        <Button variant="outline">Links</Button>
+      </Dropdown>
     </>
   );
 }
