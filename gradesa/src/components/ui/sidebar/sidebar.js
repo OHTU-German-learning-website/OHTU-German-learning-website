@@ -59,18 +59,16 @@ function StudentSideBar() {
       <Link className={styles.sidebarLink} href="/talkback">
         Rückmeldekanal-Feedback channel
       </Link>
-      <SidebarGroup title="Links" sublinks={extraLinks} topLink="#" />
+      <SidebarGroup
+        title="Links zu anderen Webseiten"
+        sublinks={extraLinks}
+        topLink="#"
+      />
     </>
   );
 }
 
 const extraLinks = [
-  {
-    title: "Glossar",
-    linkLabel: "Glossar",
-    link: "/glossary",
-    id: "glossary",
-  },
   {
     title: "DeepL",
     linkLabel: "DeepL",
