@@ -24,7 +24,6 @@ export default function StudentExercisePage() {
   const handleSaveAnswers = async (selectedWords, targetWords) => {
     try {
       await makeRequest(`/exercises/click/${click_id}/answers`, {
-        user_id: 1, // Replace with actual user ID
         selected_words: selectedWords,
         target_words: targetWords,
       });
