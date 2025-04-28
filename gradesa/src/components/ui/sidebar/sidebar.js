@@ -189,8 +189,6 @@ function SidebarGroup({ title, sublinks, topLink }) {
         ].join(" ")}
         key={`${i}-${sublink.link}`}
         href={sublink.link}
-        target="_blank"
-        rel="noopener noreferrer"
       >
         {sublink.linkLabel}
       </Link>
@@ -205,8 +203,6 @@ function SidebarGroup({ title, sublinks, topLink }) {
           styles.sidebarLink,
           pathname === topLink ? styles.active : "",
         ].join(" ")}
-        target="_blank"
-        rel="noopener noreferrer"
       >
         {title}
       </Link>
