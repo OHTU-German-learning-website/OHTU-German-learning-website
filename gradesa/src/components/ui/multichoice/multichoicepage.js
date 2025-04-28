@@ -1,52 +1,61 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import RenderText from "./textrender";
 import { Row } from "../layout/container";
 import "./multichoice.css";
 import { Button } from "@/components/ui/button";
+import useQuery from "@/shared/hooks/useQuery";
 
-const EXERCISE_DATA = [
-  { type: "text", value: "Wenn man in" },
-  {
-    type: "multichoice",
-    value: "___",
-    options: ["das", "die", "der"],
-    correct_answer: "das",
-  },
-  { type: "text", value: "Land Sachsen kommt, dann kommt man entweder mit" },
-  {
-    type: "multichoice",
-    value: "___",
-    options: ["der", "die", "das"],
-    correct_answer: "der",
-  },
-  { type: "text", value: "Bahn, mit" },
-  {
-    type: "multichoice",
-    value: "___",
-    options: ["dem", "den", "die"],
-    correct_answer: "dem",
-  },
-  { type: "text", value: "Auto oder mit" },
-  {
-    type: "multichoice",
-    value: "___",
-    options: ["dem", "den", "die"],
-    correct_answer: "dem",
-  },
-  { type: "text", value: "Flugzeug." },
-];
+function shuffleOptions(array) {
+  return array
+    .map((value) => ({ value, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ value }) => value);
+}
 
-export default function MultichoicePage() {
-  const [userAnswers, setUserAnswers] = useState(
-    EXERCISE_DATA.map((item) => (item.type === "multichoice" ? "" : null))
-  );
+export default function MultichoicePage({ exerciseId }) {
+  // Fetch exercise data using the useQuery hook
+  const {
+    data: exerciseData,
+    isLoading,
+    error,
+  } = useQuery(`/exercises/multichoice/${exerciseId}`);
+
+  const [userAnswers, setUserAnswers] = useState([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [checkedAnswers, setCheckedAnswers] = useState(
-    EXERCISE_DATA.map(() => false)
-  );
+  const [checkedAnswers, setCheckedAnswers] = useState([]);
   const [hasErrors, setHasErrors] = useState(false); // Unanswered or incorrect answers
+  const [shuffledExerciseData, setShuffledExerciseData] = useState(null);
+  const [dropdownSubmittedStates, setDropdownSubmittedStates] = useState([]);
+
+  // Update state when exerciseData is loaded
+  useEffect(() => {
+    if (exerciseData) {
+      // Shuffle options for each multichoice item
+      const shuffledData = {
+        ...exerciseData,
+        content: exerciseData.content.map((item) => {
+          if (item.content_type === "multichoice") {
+            return {
+              ...item,
+              options: shuffleOptions(item.options),
+            };
+          }
+          return item;
+        }),
+      };
+      setShuffledExerciseData(shuffledData);
+
+      // Initialize user answers and checked answers
+      setUserAnswers(
+        shuffledData.content.map((item) =>
+          item.content_type === "multichoice" ? "" : null
+        )
+      );
+      setCheckedAnswers(shuffledData.content.map(() => false));
+    }
+  }, [exerciseData]);
 
   const handleChange = (index, value) => {
     setUserAnswers((prev) => {
@@ -55,53 +64,74 @@ export default function MultichoicePage() {
       return newAnswers;
     });
 
-    // Clear error state when user makes changes after submission
-    if (isSubmitted) {
-      setHasErrors(false);
-    }
+    // Reset the isSubmitted state for the specific dropdown
+    setDropdownSubmittedStates((prev) => {
+      const newStates = [...prev];
+      newStates[index] = false; // Reset only the dropdown user interacts with
+      return newStates;
+    });
   };
 
   const handleSubmit = () => {
     const hasMissingAnswers = userAnswers.some((answer) => answer === "");
-    const newCheckedAnswers = EXERCISE_DATA.map((item, index) => {
-      if (item.type === "multichoice") {
-        return (
-          userAnswers[index]?.trim().toLowerCase() ===
-          item.correct_answer.toLowerCase()
-        );
+    const newCheckedAnswers = shuffledExerciseData.content.map(
+      (item, index) => {
+        if (item.content_type === "multichoice") {
+          return (
+            userAnswers[index]?.trim().toLowerCase() ===
+            item.correct_answer.toLowerCase()
+          );
+        }
+        return true;
       }
-      return true;
-    });
+    );
+
     const hasIncorrectAnswers = newCheckedAnswers.some(
-      (isCorrect) => !isCorrect
+      (isCorrect, index) =>
+        shuffledExerciseData.content[index].content_type === "multichoice" &&
+        !isCorrect
     );
 
     // Set error state if there are missing or incorrect answers
     setHasErrors(hasMissingAnswers || hasIncorrectAnswers);
     setCheckedAnswers(newCheckedAnswers);
     setIsSubmitted(true);
+
+    // Mark all dropdowns as submitted
+    setDropdownSubmittedStates(newCheckedAnswers.map(() => true));
   };
 
   const handleReset = () => {
     setUserAnswers(
-      EXERCISE_DATA.map((item) => (item.type === "multichoice" ? "" : null))
+      shuffledExerciseData.content.map((item) =>
+        item.content_type === "multichoice" ? "" : null
+      )
     );
     setIsSubmitted(false);
-    setCheckedAnswers(EXERCISE_DATA.map(() => false));
+    setCheckedAnswers(shuffledExerciseData.content.map(() => false));
     setHasErrors(false);
+    setDropdownSubmittedStates(shuffledExerciseData.content.map(() => false));
   };
+
+  if (isLoading) return <div>Lädt...</div>;
+  if (error) return <div>Fehler: {error}</div>;
+  if (!shuffledExerciseData) return null;
 
   // Check if all answers are correct
   const allCorrect = isSubmitted && checkedAnswers.every(Boolean);
 
   return (
     <div className="exercise-container">
-      <h2 className="task-title">Wähle die richtigen Wörter aus</h2>
+      <h2 className="task-title">{shuffledExerciseData.title}</h2>
+      <p className="task-description">
+        {shuffledExerciseData.exercise_description}
+      </p>
 
       <RenderText
-        exerciseData={EXERCISE_DATA}
+        exerciseData={shuffledExerciseData.content}
         userAnswers={userAnswers}
         isSubmitted={isSubmitted}
+        dropdownSubmittedStates={dropdownSubmittedStates}
         checkedAnswers={checkedAnswers}
         handleChange={handleChange}
       />

@@ -1,19 +1,22 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { chapters } from "./[chapter]/chapters";
 import Link from "next/link";
-import { Column } from "@/components/ui/layout/container";
+import "@/app/grammar/themes/lessons.css";
 
 export default function Chapter() {
   return (
-    <Column gap="md">
+    <div className="themes-title">
       <h1>Kommunikationssituationen</h1>
-      {chapters.map((chapter) => (
-        <Link key={chapter.id} href={chapter.link}>
-          {chapter.title}
-        </Link>
-      ))}
-    </Column>
+      <div className="lessons-container">
+        {chapters.map((chapter) => (
+          <div className="flex-parent-element" key={chapter.id}>
+            <div className="flex-child-element">
+              <Link href={chapter.link}>{chapter.title}</Link>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
