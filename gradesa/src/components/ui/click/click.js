@@ -9,11 +9,12 @@ const WordSelectionExercise = ({
   targetWords,
   allWords,
   onSelectionChange,
+  onSubmit, // Callback to handle submission
   isPreviewMode = false,
+  isSubmitted, // Submission state passed from parent
+  feedback, // Feedback passed from parent
 }) => {
   const [selectedWords, setSelectedWords] = useState([]);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [feedback, setFeedback] = useState("");
 
   const handleWordClick = (word) => {
     if (isSubmitted && !isPreviewMode) return;
@@ -63,14 +64,12 @@ const WordSelectionExercise = ({
       feedbackMessage = "Weiter üben! Punktzahl: " + score + "%";
     }
 
-    setFeedback(feedbackMessage);
-    setIsSubmitted(true);
+    // Call the onSubmit callback with the selected words, score, and feedback
+    onSubmit(selectedWords, score, feedbackMessage);
   };
 
   const resetExercise = () => {
     setSelectedWords([]);
-    setIsSubmitted(false);
-    setFeedback("");
   };
 
   const textColor = (word) => {
