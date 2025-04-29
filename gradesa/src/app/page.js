@@ -7,21 +7,17 @@ export default function Home() {
     <>
       <div className="container">
         <section className="hero">
-          <h1>Deutsch lerner</h1>
+          <h1>Gradesa 2.0</h1>
           <p>
-            Beherrschen Sie die Grundlagen der deutschen Grammatik,
-            einschließlich Artikel, Verbkonjugationen und grundlegender
-            Satzstruktur.
+            Grammatik Deutsch selbständig und Lerne und übe die deutsche
+            Grammatik mit kommunikativen Situationen!
           </p>
-          <LinkButton href="/learning" variant="primary" size="lg">
-            Entdecke deine Lernstrategien
-          </LinkButton>
         </section>
 
         <div className="features">
           <div className="feature-card">
             <h3>Lernplan</h3>
-            <p>Finde die für dich passende Lernstrategie</p>
+            <p>Wie lernst du online am besten?</p>
             <LinkButton href="/learning">
               Entdecke deine Lernstrategien
             </LinkButton>
@@ -29,10 +25,7 @@ export default function Home() {
 
           <div className="feature-card">
             <h3>Grammatik</h3>
-            <p>
-              Üben Sie alltägliche Gespräche und verbessern Sie Ihre
-              Sprechfähigkeiten mit interaktiven Lektionen.
-            </p>
+            <p>Selbständig Grammatik lernen mit kommunikativen Situationen!</p>
             <LinkButton href="/grammar/communications" size="md">
               Kommunikationssituationen
             </LinkButton>
