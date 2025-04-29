@@ -5,7 +5,7 @@ export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
     const exerciseId = searchParams.get("exerciseId");
-    console.log("Haetaan tehtävää ID:llä:", exerciseId);
+    console.log("Bewerbung mit Ausweis:", exerciseId);
 
     const query = exerciseId
       ? `SELECT id AS exercise_id, sentence_template, correct_answers
@@ -19,19 +19,19 @@ export async function GET(request) {
     const params = exerciseId ? [exerciseId] : [];
     const result = await DB.pool(query, params);
 
-    console.log("Kyselyn tulos:", result.rows);
+    console.log("Abfrageergebnis:", result.rows);
 
     if (result.rowCount === 0) {
       return NextResponse.json(
-        { error: "Tehtävää ei löytynyt" },
+        { error: "Aufgabe nicht gefunden" },
         { status: 404 }
       );
     }
 
     return NextResponse.json(result.rows[0]);
   } catch (error) {
-    console.error("Virhe haettaessa tehtävää:", error);
-    return NextResponse.json({ error: "Tietokantavirhe" }, { status: 500 });
+    console.error("Fehler beim Abrufen der Aufgabe:", error);
+    return NextResponse.json({ error: "Datenbankfehler" }, { status: 500 });
   }
 }
 
@@ -40,7 +40,7 @@ export async function POST(request) {
     const { sentence_template, correct_answers } = await request.json();
 
     if (!sentence_template || !correct_answers) {
-      return NextResponse.json({ error: "Puuttuvia tietoja" }, { status: 400 });
+      return NextResponse.json({ error: "Fehlende Daten" }, { status: 400 });
     }
 
     await DB.pool(
@@ -49,9 +49,9 @@ export async function POST(request) {
       [sentence_template, correct_answers]
     );
 
-    return NextResponse.json({ message: "Tehtävä tallennettu onnistuneesti" });
+    return NextResponse.json({ message: "Aufgabe erfolgreich gespeichert" });
   } catch (error) {
-    console.error("Virhe tallennettaessa tehtävää:", error);
-    return NextResponse.json({ error: "Tietokantavirhe" }, { status: 500 });
+    console.error("Fehler beim Speichern der Aufgabe:", error);
+    return NextResponse.json({ error: "Datenbankfehler" }, { status: 500 });
   }
 }
