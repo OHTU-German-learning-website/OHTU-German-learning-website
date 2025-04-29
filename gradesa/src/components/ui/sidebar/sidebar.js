@@ -48,16 +48,112 @@ function StudentSideBar() {
 
   return (
     <>
-      <SidebarGroup title="Lernen" sublinks={chapters} topLink="/resources" />
+      <SidebarGroup
+        title="Richtig Online Lernen"
+        sublinks={chapters}
+        topLink="/resources"
+      />
       <Link className={styles.sidebarLink} href="/grammar/communications">
         Kommunikations-situationen
       </Link>
       <Link className={styles.sidebarLink} href="/talkback">
         Rückmeldekanal-Feedback channel
       </Link>
+      <SidebarGroup
+        title="Links zu anderen Webseiten"
+        sublinks={extraLinks}
+        topLink="#"
+      />
     </>
   );
 }
+
+const extraLinks = [
+  {
+    title: "DeepL",
+    linkLabel: "DeepL",
+    link: "https://www.deepl.com/de/translator",
+    id: "deepl",
+  },
+  {
+    title: "Google Translator",
+    linkLabel: "Google Translator",
+    link: "https://translate.google.com/",
+    id: "google-translator",
+  },
+  {
+    title: "ChatGPT",
+    linkLabel: "ChatGPT",
+    link: "https://chatgpt.com/",
+    id: "chatgpt",
+  },
+  {
+    title: "Google Gemini",
+    linkLabel: "Google Gemini",
+    link: "https://gemini.google.com",
+    id: "google-gemini",
+  },
+  {
+    title: "Wortschatz Uni Leipzig",
+    linkLabel: "Wortschatz Uni Leipzig",
+    link: "https://wortschatz.uni-leipzig.de/de",
+    id: "wortschatz-uni-leipzig",
+  },
+  {
+    title: "Digitales Wörterbuch der Deutschen Sprache",
+    linkLabel: "Digitales Wörterbuch der Deutschen Sprache",
+    link: "https://www.dwds.de/",
+    id: "digitales-woerterbuch-der-deutschen-sprache",
+  },
+  {
+    title: "Institut für Deutsche Sprache",
+    linkLabel: "Institut für Deutsche Sprache",
+    link: "https://www.ids-mannheim.de/",
+    id: "institut-fuer-deutsche-sprache",
+  },
+  {
+    title: "Gesellschaft für Deutsche Sprache",
+    linkLabel: "Gesellschaft für Deutsche Sprache",
+    link: "https://gfds.de/",
+    id: "gesellschaft-fuer-deutsche-sprache",
+  },
+  {
+    title: "Grammis",
+    linkLabel: "Grammis",
+    link: "https://grammis.ids-mannheim.de/",
+    id: "grammis",
+  },
+  {
+    title: "Progr@mm",
+    linkLabel: "Progr@mm",
+    link: "https://grammis.ids-mannheim.de/progr@mm",
+    id: "progr@mm",
+  },
+  {
+    title: "Hamburger Fernhochschule",
+    linkLabel: "Hamburger Fernhochschule",
+    link: "https://www.hfh-fernstudium.de/blog/welcher-lerntyp-bist-du",
+    id: "hamburger-fernhochschule",
+  },
+  {
+    title: "IQLingua",
+    linkLabel: "IQLingua",
+    link: "https://www.iq-lingua.de/typ-checks/welcher-lerntyp-bin-ich/#c42954",
+    id: "iq-lingua",
+  },
+  {
+    title: "Geolino",
+    linkLabel: "Geolino",
+    link: "https://www.geo.de/geolino/mensch/5849-rtkl-lernen-welcher-lerntyp-bist-du",
+    id: "geolino",
+  },
+  {
+    title: "Kapiert.de",
+    linkLabel: "Kapiert.de",
+    link: "https://www.kapiert.de/lerntypentest/",
+    id: "kapiert-de",
+  },
+];
 
 const adminSidebarLinks = [
   {

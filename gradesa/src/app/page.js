@@ -33,7 +33,15 @@ export default function Home() {
               Üben Sie alltägliche Gespräche und verbessern Sie Ihre
               Sprechfähigkeiten mit interaktiven Lektionen.
             </p>
-            <LinkButton href="/grammar">Grammatik lernen</LinkButton>
+            <LinkButton href="/grammar/communications" size="md">
+              Kommunikationssituationen
+            </LinkButton>
+            <LinkButton href="/grammar/themes" size="md">
+              Themen der Grammatik
+            </LinkButton>
+            <LinkButton href="/grammar/exercises" size="md">
+              Übungen
+            </LinkButton>
           </div>
         </div>
       </div>
