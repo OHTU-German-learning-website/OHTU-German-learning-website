@@ -124,9 +124,9 @@ const initialGrammarTopics = [
   {
     title: "Das Verb",
     subtopics: [
+      { name: "die Tempora", link: "/grammar/themes/tempora" },
       { name: "das Perfekt", link: "/grammar/themes/perfekt" },
       { name: "Partizip II", link: "/grammar/themes/partizip_ii" },
-      { name: "die Tempora", link: "/grammar/themes/tempora" },
       { name: "das Präsens", link: "/grammar/themes/prasens" },
       { name: "das Präteritum", link: "/grammar/themes/prateritum" },
       { name: "das Plusquamperfekt", link: "/grammar/themes/plusquamperfekt" },
