@@ -15,6 +15,9 @@ export default function CreateExercise() {
       <Link href="/admin/create-exercise/click">
         <Button>Klick-Übung</Button>
       </Link>
+      <Link href="/admin/create-exercise/fillinthegap">
+        <Button>Lückentext-Übung</Button>
+      </Link>
     </Column>
   );
 }
