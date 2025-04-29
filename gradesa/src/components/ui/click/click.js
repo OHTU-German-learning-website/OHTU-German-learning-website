@@ -2,19 +2,23 @@ import React, { useState } from "react";
 import { Button } from "../button";
 import { Container } from "../layout/container";
 import { Column } from "@/components/ui/layout/container";
+import "./click.css";
 
 const WordSelectionExercise = ({
   title,
   targetCategory,
   targetWords,
   allWords,
+  previousAnswers, // New prop for previous answers
   onSelectionChange,
   onSubmit, // Callback to handle submission
   isPreviewMode = false,
-  isSubmitted, // Submission state passed from parent
+  isSubmitted, // Submission state passed from paren
+  setIsSubmitted, // Function to set submission state
   feedback, // Feedback passed from parent
 }) => {
   const [selectedWords, setSelectedWords] = useState([]);
+  const [message, setMessage] = useState("");
 
   const handleWordClick = (word) => {
     if (isSubmitted && !isPreviewMode) return;
@@ -70,6 +74,16 @@ const WordSelectionExercise = ({
 
   const resetExercise = () => {
     setSelectedWords([]);
+    setIsSubmitted(false); // Reset the submission state
+    setMessage(""); // Clear the message when resetting
+  };
+
+  const restorePreviousAnswers = () => {
+    if (previousAnswers.length === 0) {
+      setMessage("Keine vorherigen Antworten vorhanden."); // Set the message
+      return;
+    }
+    setSelectedWords(previousAnswers); // Restore previous answers
   };
 
   const textColor = (word) => {
@@ -88,6 +102,9 @@ const WordSelectionExercise = ({
           border: "1px solid var(--yellow-border)",
         }; // yellow with border
       }
+    }
+    if (word === "message") {
+      return { backgroundColor: "var(--blue)" }; // blue for message
     }
   };
 
@@ -114,6 +131,10 @@ const WordSelectionExercise = ({
         </>
       )}
 
+      <Container className="message">
+        {message && <div style={textColor("message")}>{message}</div>}
+      </Container>
+
       <div>
         {!isSubmitted && !isPreviewMode ? (
           <Button size="sm" width="fit" onClick={checkAnswers}>
@@ -125,6 +146,14 @@ const WordSelectionExercise = ({
               Erneut versuchen
             </Button>
           )
+        )}
+      </div>
+
+      <div>
+        {!isPreviewMode && (
+          <Button size="sm" width="fit" onClick={restorePreviousAnswers}>
+            Vorherige Antworten ansehen/bearbeiten
+          </Button>
         )}
       </div>
     </Column>

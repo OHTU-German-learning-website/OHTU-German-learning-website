@@ -7,9 +7,12 @@ export const POST = withAuth(async (request, { params }) => {
   const user_id = request.user.id;
 
   if (!click_id || !user_id || !selected_words || !target_words) {
-    return new Response(JSON.stringify({ error: "Missing required fields." }), {
-      status: 400,
-    });
+    return new Response(
+      JSON.stringify({ error: "Fehlende erforderliche Felder." }),
+      {
+        status: 400,
+      }
+    );
   }
 
   try {
@@ -25,14 +28,13 @@ export const POST = withAuth(async (request, { params }) => {
     );
 
     return new Response(
-      JSON.stringify({ message: "Answers saved successfully." }),
+      JSON.stringify({ message: "Antworten erfolgreich gespeichert." }),
       {
         status: 201,
       }
     );
   } catch (error) {
-    console.error("Error saving click exercise answers:", error);
-    return new Response(JSON.stringify({ error: "Internal server error." }), {
+    return new Response(JSON.stringify({ error: "Interner Serverfehler." }), {
       status: 500,
     });
   }

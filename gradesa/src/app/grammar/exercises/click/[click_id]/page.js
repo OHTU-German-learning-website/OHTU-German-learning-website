@@ -13,7 +13,7 @@ export default function StudentExercisePage() {
   const makeRequest = useRequest();
 
   const {
-    data: exercise,
+    data: data,
     error,
     isLoading,
   } = useQuery(`/exercises/click/${click_id}`);
@@ -21,13 +21,14 @@ export default function StudentExercisePage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [feedback, setFeedback] = useState("");
 
+  const exercise = data?.exercise || null;
+
   const handleSaveAnswers = async (selectedWords, targetWords) => {
     try {
       await makeRequest(`/exercises/click/${click_id}/answers`, {
         selected_words: selectedWords,
         target_words: targetWords,
       });
-      console.log("Answers saved successfully!");
     } catch (error) {
       console.error("Error saving answers:", error);
     }
@@ -60,9 +61,11 @@ export default function StudentExercisePage() {
         targetCategory={exercise.category}
         targetWords={exercise.target_words}
         allWords={exercise.all_words}
+        previousAnswers={data.userAnswers?.answer || []}
         isPreviewMode={false}
         onSubmit={handleSubmit} // Pass the submit handler as a prop
         isSubmitted={isSubmitted} // Pass submission state as a prop
+        setIsSubmitted={setIsSubmitted} // Function to set submission state
         feedback={feedback} // Pass feedback as a prop
       />
 
