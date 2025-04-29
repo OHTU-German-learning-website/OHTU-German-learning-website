@@ -57,7 +57,7 @@ function StudentSideBar() {
         Kommunikations-situationen
       </Link>
       <Link className={styles.sidebarLink} href="/talkback">
-        Rückmeldekanal-Feedback channel
+        Rückmeldekanal-Feedback geben
       </Link>
       <SidebarGroup
         title="Links zu anderen Webseiten"
