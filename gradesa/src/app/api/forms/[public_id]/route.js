@@ -7,15 +7,15 @@ export const GET = withAuth(
   async (request, { params }) => {
     const { public_id } = await params;
     const user = request.user;
-    const user_id = user?.id ?? -1;
-
+    const user_id = user?.id;
+    const answerer_id = user_id ?? request.headers.get("x-session-id");
     const formRows = await DB.pool(
       `
 WITH questions AS
          (SELECT pq.id, pq.title_en, pq.title_de, pq.form_part_id, COALESCE(uqa.answer, 0) as answer
           FROM part_questions pq
                   LEFT JOIN user_question_answers uqa 
-                  ON pq.id = uqa.part_question_id AND uqa.user_id = $1
+                  ON pq.id = uqa.part_question_id AND uqa.answerer_id = $1
                   ),
      parts as
          (SELECT fp.id,
@@ -56,7 +56,7 @@ WITH questions AS
 SELECT *
 FROM forms;
   `,
-      [user_id, public_id]
+      [answerer_id, public_id]
     );
     if (!formRows.rows.length) {
       return NextResponse.json({ error: "Form not found" }, { status: 404 });

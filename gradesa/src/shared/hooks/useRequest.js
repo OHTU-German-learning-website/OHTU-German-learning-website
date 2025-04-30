@@ -1,6 +1,6 @@
 import { axiosInstance } from "./useQuery";
 import { useCallback } from "react";
-
+import { useSessionId } from "./useSessionId";
 const defaultConfig = {
   method: "POST",
   headers: {
@@ -17,6 +17,7 @@ export const useRequest = () => {
    * @param {Object} config - The config of the request.
    * @returns {Object} - The response from the server.
    */
+  const sessionId = useSessionId();
   const makeRequest = useCallback(
     async (url, body, config) => {
       try {
@@ -25,6 +26,11 @@ export const useRequest = () => {
           data: body,
           ...defaultConfig,
           ...config,
+          headers: {
+            ...defaultConfig.headers,
+            ...(config?.headers || {}),
+            "X-Session-Id": sessionId,
+          },
         });
 
         return response;
@@ -37,7 +43,7 @@ export const useRequest = () => {
         }
       }
     },
-    [axiosInstance]
+    [axiosInstance, sessionId]
   );
   return makeRequest;
 };

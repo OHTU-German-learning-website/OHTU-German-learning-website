@@ -24,25 +24,25 @@ export function LearningForm({ form, language, onSubmitAnswer }) {
 
   return (
     <div className={styles.learningForm}>
-      <h1 className={styles.learningFormHeader}>
-        {getLanguageTitle(form, language)}
-      </h1>
-      <p className={styles.learningFormDescription}>
-        {getLanguageDescription(form, language)}
-      </p>
       <div className={styles.learningFormContainer}>
+        <h1 className={styles.learningFormHeader}>
+          {getLanguageTitle(form, language)}
+        </h1>
+        <p className={styles.learningFormDescription}>
+          {getLanguageDescription(form, language)}
+        </p>
         <FormStep
           part={form.parts[selectedPartIdx]}
           language={language}
           onSubmitAnswer={submitAnswer}
         />
-        <StepSelector
-          form={form}
-          onSelect={setSelectedPartIdx}
-          currentPart={form.parts[selectedPartIdx]}
-          language={language}
-        />
       </div>
+      <StepSelector
+        form={form}
+        onSelect={setSelectedPartIdx}
+        currentPart={form.parts[selectedPartIdx]}
+        language={language}
+      />
     </div>
   );
 }

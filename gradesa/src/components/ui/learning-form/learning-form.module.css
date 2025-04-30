@@ -24,9 +24,8 @@
 
 .learningFormContainer {
   display: flex;
-  overflow: hidden;
+  overflow: auto;
   flex-grow: 1;
-  justify-content: space-between;
   flex-direction: column;
   gap: var(--u-md);
 }
@@ -66,7 +65,6 @@
 
 .stepContainer {
   display: flex;
-  overflow: hidden;
   flex-direction: column;
   gap: var(--u-md);
 }

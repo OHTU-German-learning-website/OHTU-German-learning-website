@@ -3,7 +3,7 @@ import { stringify } from "qs";
 import { useState, useEffect, useRef, useMemo, memo } from "react";
 import { useIsMounted } from "./useIsMounted";
 import { useUser } from "@/context/user.context";
-
+import { useSessionId } from "./useSessionId";
 export const axiosInstance = axios.create({
   baseURL: `/api`,
 });
@@ -35,6 +35,7 @@ const defaultConfig = {
 const useQuery = (url, params, config) => {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
+  const sessionId = useSessionId();
   const [isLoading, setIsLoading] = useState(false);
   const { auth } = useUser();
   const isMounted = useIsMounted();
@@ -59,6 +60,9 @@ const useQuery = (url, params, config) => {
     const fullUrl = queryString ? `${url}?${queryString}` : url;
     const response = await axiosInstance.get(fullUrl, {
       signal: abortCtrl.signal,
+      headers: {
+        "x-session-id": sessionId,
+      },
     });
     if (isMounted && !!response.data) {
       setData(response.data);

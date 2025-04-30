@@ -6,13 +6,10 @@ import { withAuth } from "@/backend/middleware/withAuth";
 export const PUT = withAuth(
   async (request, { params }) => {
     const { public_id, part_id, question_id } = await params;
-    if (!request.user) {
-      return NextResponse.json(
-        { error: "You need to be logged in to submit an answer" },
-        { status: 403 }
-      );
-    }
-    const user = request.user;
+
+    const session_id = request.headers.get("x-session-id");
+    const user_id = request.user?.id;
+    const answerer_id = user_id ?? session_id;
 
     const valid_form = await DB.pool(
       `SELECT f.id FROM forms f
@@ -28,17 +25,16 @@ export const PUT = withAuth(
     }
 
     const { answer } = await request.json();
-    const user_id = user.id;
     logger.info(`Submitting answer: ${user_id}, ${question_id}, ${answer}`);
     await DB.pool(
       `
-INSERT INTO user_question_answers (user_id, part_question_id, answer)
-VALUES ($1, $2, $3)
+INSERT INTO user_question_answers (user_id, part_question_id, answer, answerer_id)
+VALUES ($1, $2, $3, $4)
 ON CONFLICT (user_id, part_question_id) DO UPDATE
 SET answer = $3
 RETURNING *
 `,
-      [user_id, question_id, answer]
+      [user_id, question_id, answer, answerer_id]
     );
 
     return NextResponse.json({ success: true });
