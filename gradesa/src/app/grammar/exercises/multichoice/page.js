@@ -1,13 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { Container } from "@/components/ui/layout/container";
-import { useRequest } from "@/shared/hooks/useRequest";
+import { Container, Column, Row } from "@/components/ui/layout/container";
 import useQuery from "@/shared/hooks/useQuery";
+import { ExerciseLinkButton } from "@/components/ui/button/exercise-link-button";
 
 export default function MultichoiceExercisesPage() {
-  const makeRequest = useRequest();
-
   const {
     data: exercises,
     isLoading,
@@ -67,10 +65,12 @@ export default function MultichoiceExercisesPage() {
             key={exercise.multichoice_exercise_id}
             href={`/grammar/exercises/multichoice/${exercise.multichoice_exercise_id}`}
           >
-            <Container
+            <Row
               p="md"
               b={`1px solid var(--bg6)`}
               br="md"
+              justify="space-between"
+              align="center"
               boxShadow="0 1px 2px 0 rgba(0, 0, 0, 0.05)"
               _hover={{
                 boxShadow:
@@ -79,21 +79,26 @@ export default function MultichoiceExercisesPage() {
               transition="box-shadow 0.3s"
               bg="var(--bg2)"
             >
-              <Container
-                mb="sm"
-                fontWeight="600"
-                overflow="hidden"
-                textOverflow="ellipsis"
-                whiteSpace="nowrap"
-              >
-                {exercise.title.length > 30
-                  ? `${exercise.title.substring(0, 30)}...`
-                  : exercise.title}
-              </Container>
-              <Container fontSize="sm" color="var(--fg5)">
-                Erstellt: {new Date(exercise.created_at).toLocaleDateString()}
-              </Container>
-            </Container>
+              <Column>
+                <Container
+                  mb="sm"
+                  fontWeight="600"
+                  overflow="hidden"
+                  textOverflow="ellipsis"
+                  whiteSpace="nowrap"
+                >
+                  {exercise.title.length > 30
+                    ? `${exercise.title.substring(0, 30)}...`
+                    : exercise.title}
+                </Container>
+                <Container fontSize="sm" color="var(--fg5)">
+                  Erstellt: {new Date(exercise.created_at).toLocaleDateString()}
+                </Container>
+              </Column>
+              <ExerciseLinkButton id={exercise.exercise_id}>
+                Link kopieren
+              </ExerciseLinkButton>
+            </Row>
           </Link>
         ))}
       </Container>

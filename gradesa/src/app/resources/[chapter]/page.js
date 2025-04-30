@@ -96,6 +96,7 @@ export const chapters = [
 function Chapter1() {
   return (
     <Column className="chapter-content">
+      <Anchor id="chapter-1-1" />
       <GlossaryParagraph>
         Dieses Lernangebot ist als eine Ergänzung zum normalen Sprachlernen
         gedacht. Wenn du also die deutsche Grammatik lernen willst, um richtig
@@ -134,6 +135,7 @@ function Chapter1() {
         Hinweise:
       </GlossaryParagraph>
       <p>Wann?</p>
+      <Anchor id="chapter-1-2" />
       <GlossaryParagraph>
         Du solltest dir klar sein, zu welchen Tageszeiten du lernen kannst oder
         willst und wieviel Zeit du dafür verwenden möchtest. Für das Sprechen
@@ -142,6 +144,7 @@ function Chapter1() {
         darauf, wie du welche Dinge lernst, und welche Ziele du selbst hast.
       </GlossaryParagraph>
       <p>Wo?</p>
+      <Anchor id="chapter-1-3" />
       <GlossaryParagraph>
         Natürlich lernst du hier in diesem Online-Kurs, aber wo dein Computer
         steht oder dein Handy sich befindet, ist individuell ganz verschieden.
@@ -150,6 +153,7 @@ function Chapter1() {
         praktisch ausprobieren willst.
       </GlossaryParagraph>
       <p>Mit wem?</p>
+      <Anchor id="chapter-1-4" />
       <GlossaryParagraph>
         Im klassischen Modell lernt man mit anderen Lernenden und einer
         Lehrkraft. In diesem Kontext wird es keine Lehrkraft geben, die jeden
@@ -233,6 +237,7 @@ function Chapter2() {
           Buch auf Deutsch, chatte auf Deutsch usw.
         </GlossaryListItem>
       </ul>
+      <Anchor id="chapter-2-2" />
     </Column>
   );
 }
@@ -241,6 +246,7 @@ function Chapter3() {
   return (
     <Column className="chapter-content">
       <h3>Welche Rolle spielt eine Lehrperson beim selbstständigen Lernen?</h3>
+      <Anchor id="chapter-3-1" />
       <GlossaryParagraph>
         In der Schule oder an der Universität leiten die Lehrkräfte traditionell
         den Unterricht, indem sie den neuen Stoff präsentieren und erklären, die
@@ -272,11 +278,13 @@ function Chapter3() {
         helfen.
       </GlossaryParagraph>
       <h3>Verantwortung für das eigene Lernen übernehmen</h3>
+      <Anchor id="chapter-3-2" />
       <GlossaryParagraph>
         Wenn du also ganz allein lernen möchtest, solltest du dir selbst einige
         Fragen beantworten.
       </GlossaryParagraph>
       <h3>Was will ich lernen?</h3>
+      <Anchor id="chapter-3-3" />
       <GlossaryParagraph>
         Bei der Auswahl der Themen, die du lernen möchtest, spielen die Ziele
         und auch dein persönliches Interesse eine große Rolle. Es ist besser,
@@ -287,6 +295,7 @@ function Chapter3() {
         sind.
       </GlossaryParagraph>
       <h3>Warum möchte ich gerade das lernen? Wofür brauche ich es?</h3>
+      <Anchor id="chapter-3-4" />
       <GlossaryParagraph>
         Hier geht es um die Frage der Zielstellungen. Stelle dir ein Lernziel,
         z. B. Ich möchte lernen, wie man auf Deutsch über vergangene Ereignisse
@@ -311,6 +320,7 @@ function Chapter3() {
       </Column>
 
       <h3>Wie möchte ich vorgehen, um das zu lernen?</h3>
+      <Anchor id="chapter-3-5" />
       <GlossaryParagraph>
         Auch hier können dir die Grafiken mit den verbundenen Phänomenen helfen,
         indem du sie der Reihe nach bearbeitest. Dabei ist es gut, wenn du dir
@@ -384,6 +394,7 @@ function Chapter3() {
         du am besten lernst. Das ist bei jedem Menschen anders.
       </GlossaryParagraph>
       <h3>Welche Materialien möchte ich zum Lernen verwenden?</h3>
+      <Anchor id="chapter-3-6" />
       <GlossaryParagraph>
         Auf dieser Seite findest du viele verschiedene Übungen, die sich an
         unterschiedliche "Lernertypen" richten. Das ist das Grundmaterial. Auf
@@ -396,6 +407,7 @@ function Chapter3() {
         etwas die deutsche Sprache.
       </GlossaryParagraph>
       <h3>Möchte ich allein oder mit anderen zusammen lernen?</h3>
+      <Anchor id="chapter-3-7" />
       <GlossaryParagraph>
         Zuerst muss man sagen: Mit anderen lernen ist die beste Methode! Wenn du
         nur online lernen willst, dann solltest du wenigstens soziale Medien
@@ -433,6 +445,7 @@ function Chapter3() {
         nicht wissen, wie es richtig ist.
       </GlossaryParagraph>
       <h3>Welche Hilfsmittel gibt es und wie werden sie verwendet?</h3>
+      <Anchor id="chapter-3-8" />
       <GlossaryParagraph>
         Diese Seiten bieten dir neben Erklärungen und Übungen – also klassischem
         Lernmaterial – auch viele andere Werkzeuge, mit denen du deinen
@@ -493,6 +506,7 @@ function Chapter3() {
         </li>
       </ul>
       <h3>Wie kann ich kontrollieren, ob ich erfolgreich gelernt habe?</h3>
+      <Anchor id="chapter-3-9" />
       <GlossaryParagraph>
         Wenn du selbstständig lernst, musst du auch überprüfen, ob und wie gut
         du die Dinge gelernt hast. Wir helfen dir dabei, indem wir am Ende von
@@ -521,6 +535,7 @@ function Chapter4() {
   return (
     <Column className="chapter-content">
       <h3>Was ist ein "Lerntyp"?</h3>
+      <Anchor id="chapter-4-1" />
       <GlossaryParagraph>
         Die Bezeichnung "Lerntyp" bezieht sich eigentlich darauf, mit welchen
         Aktivitäten man am besten lernt. Darum nennt man sie vielleicht besser
@@ -631,6 +646,7 @@ function Chapter4() {
       </Container>
 
       <h3>Lernstrategien beim selbstständigen Lernen</h3>
+      <Anchor id="chapter-4-2" />
       <GlossaryParagraph>
         Eng mit den Lernmustern verbunden sind Lernstrategien mit konkreten
         Lerntechniken. Dabei kann man die folgenden Lernstrategien
@@ -673,6 +689,7 @@ function Chapter4() {
       </ul>
 
       <h3>Welche Lerntechniken helfen mir beim Lernen und Wiederholen?</h3>
+      <Anchor id="chapter-4-3" />
       <GlossaryParagraph>
         Das Wiederholen gelernter Dinge sollte für dich ganz normal sein. Aber
         auch beim Lernen neuer Sachen kann man effektiv sein, indem man zum
@@ -742,6 +759,7 @@ function Chapter4() {
         Was kann ich tun, wenn ich bei einer Aufgabe oder einem Gespräch nicht
         weiterweiß?
       </h3>
+      <Anchor id="chapter-4-4" />
       <GlossaryParagraph>
         Jeder kennt die Situation, dass man ein Wort nicht weiß oder dass es
         einem in diesem Moment nicht einfällt. Dann muss man sehen, dass man die
@@ -778,6 +796,7 @@ function Chapter4() {
       </ul>
 
       <h3>Wie kann ich am besten lernen?</h3>
+      <Anchor id="chapter-4-5" />
       <GlossaryParagraph>
         Dieses Thema haben wir schon in Kapitel 3 angesprochen. Das Lernen ist
         ein sehr individueller Prozess, aber einige Lerntechniken kannst du als
@@ -869,6 +888,7 @@ function Chapter4() {
       </ul>
 
       <h3>Was kann ich gegen Angst vor Fehlern tun?</h3>
+      <Anchor id="chapter-4-6" />
       <GlossaryParagraph>
         Beim Lernen spielen auch Gefühle und Emotionen eine große Rolle.
         Negative Emotionen haben einen schlechten Einfluss auf die
@@ -950,6 +970,7 @@ function Chapter4() {
       </ul>
 
       <h3>Wie kann ich von anderen Personen beim Lernen profitieren?</h3>
+      <Anchor id="chapter-4-7" />
       <GlossaryParagraph>
         Auch am Computer oder am Handy in einem Online-Lernangebot ist man kein
         isolierter Lerner. Hier gilt dasselbe wie beim Lernen in der Klasse:
@@ -1000,6 +1021,7 @@ function Chapter4() {
 function Chapter5() {
   return (
     <Column className="chapter-content">
+      <Anchor id="chapter-5-1" />
       <GlossaryParagraph>
         Hier findest du einen Fragebogen, der von Fremdsprach-Didaktikern
         entwickelt wurde. Den kannst du auf Deutsch oder Englisch ausfüllen. Er

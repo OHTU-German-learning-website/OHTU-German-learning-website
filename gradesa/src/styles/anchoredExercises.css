@@ -3,7 +3,7 @@
   margin-bottom: var(--u-xl);
   display: flex;
   flex-direction: column;
-  gap: var(--u-xl);
+  gap: var(--u-md);
 }
 
 .exercise-card {
@@ -11,10 +11,35 @@
   border-radius: var(--radius-md);
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   overflow: hidden;
-  padding: var(--u-lg);
+  padding: var(--u-md) var(--u-lg);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: var(--fg1);
+}
+
+.exercise-link {
+  font-size: var(--font-sm);
+  color: var(--fg1);
+}
+.exercise-link:visited {
+  color: var(--fg1);
+}
+
+.exercise-link:link {
+  color: var(--fg1);
+}
+
+.exercise-card.hard {
+  background-color: var(--tertiary1);
+}
+
+.exercise-card.medium {
+  background-color: var(--primary1);
+}
+
+.exercise-card.easy {
+  background-color: var(--secondary1);
 }
 
 .loading-message {
@@ -62,7 +87,7 @@
 
 .link-input {
   flex: 1;
-  padding: var(--u-md);
+  padding: 4px var(--u-md);
   border: 1px solid var(--bg4);
   border-radius: var(--radius-sm);
   font-size: var(--font-sm);

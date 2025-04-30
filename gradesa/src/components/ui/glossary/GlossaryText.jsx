@@ -9,14 +9,14 @@ import { useMemo } from "react";
 export default function GlossaryText({ children, excludeWords = [] }) {
   const { wordMap, isLoading } = useGlossary();
 
-  if (isLoading || !children || typeof children !== "string") {
-    return <>{children}</>;
-  }
-
   const excludeSet = useMemo(
     () => new Set(excludeWords.map((word) => word.toLowerCase())),
     [excludeWords]
   );
+
+  if (isLoading || !children || typeof children !== "string") {
+    return <>{children}</>;
+  }
 
   const processText = (text) => {
     if (!text || typeof text !== "string") return text;

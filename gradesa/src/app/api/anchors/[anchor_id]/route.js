@@ -10,7 +10,9 @@ export async function GET(_request, { params }) {
       `SELECT 
         ea.exercise_id,
         e.id,
-        e.category
+        e.category,
+        ea.difficulty,
+        ea.title
       FROM anchors a
       INNER JOIN exercise_anchors ea ON a.id = ea.anchor_id
       INNER JOIN exercises e ON ea.exercise_id = e.id

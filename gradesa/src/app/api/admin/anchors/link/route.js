@@ -12,11 +12,14 @@ const linkSchema = z.object({
     .int()
     .positive("Exercise ID must be a positive integer"),
   position: z.number().int().optional().default(0),
+  difficulty: z.enum(["easy", "medium", "hard"]).optional().default("medium"),
+  title: z.string().optional(),
 });
 
 async function handler(request) {
   try {
-    const { anchor_id, exercise_id, position } = await request.json();
+    const { anchor_id, exercise_id, position, difficulty, title } =
+      await request.json();
 
     const exerciseResult = await DB.pool(
       "SELECT id FROM exercises WHERE id = $1",
@@ -53,13 +56,13 @@ async function handler(request) {
 
     if (linkResult.rows.length > 0) {
       await DB.pool(
-        "UPDATE exercise_anchors SET position = $1 WHERE exercise_id = $2 AND anchor_id = $3",
-        [position, exercise_id, anchorId]
+        "UPDATE exercise_anchors SET position = $1, difficulty = $2, title = $3 WHERE exercise_id = $4 AND anchor_id = $5",
+        [position, difficulty, title, exercise_id, anchorId]
       );
     } else {
       await DB.pool(
-        "INSERT INTO exercise_anchors (exercise_id, anchor_id, position) VALUES ($1, $2, $3)",
-        [exercise_id, anchorId, position]
+        "INSERT INTO exercise_anchors (exercise_id, anchor_id, position, difficulty, title) VALUES ($1, $2, $3, $4, $5)",
+        [exercise_id, anchorId, position, difficulty, title]
       );
     }
 
