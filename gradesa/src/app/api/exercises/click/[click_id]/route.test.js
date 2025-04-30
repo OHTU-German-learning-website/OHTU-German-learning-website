@@ -12,17 +12,12 @@ describe("click_exercises API", () => {
     const user = await TestFactory.user();
     const { mockGet, mockParams } = useTestRequest(user);
 
-    // Insert a test exercise into the database
-    const exercise = await DB.pool(
-      `INSERT INTO click_exercises (title, category, target_words, all_words)
-       VALUES ($1, $2, $3, $4) RETURNING *`,
-      [
-        "Verben identifizieren",
-        "Verben",
-        ["laufen", "springen", "schwimmen"],
-        ["Die", "Kinder", "laufen", "springen", "schwimmen"],
-      ]
-    );
+    const exercise = await TestFactory.clickExercise({
+      title: "Verben identifizieren",
+      category: "Verben",
+      target_words: ["laufen", "springen", "schwimmen"],
+      all_words: ["Die", "Kinder", "laufen", "springen", "schwimmen"],
+    });
 
     // Insert a user answer for the exercise
     await DB.pool(
@@ -30,15 +25,15 @@ describe("click_exercises API", () => {
        VALUES ($1, $2, $3, $4)`,
       [
         user.id,
-        exercise.rows[0].id,
+        exercise.id,
         ["laufen", "springen"],
         ["laufen", "springen", "schwimmen"],
       ]
     );
 
     const response = await GET(
-      mockGet(`/api/exercises/click/${exercise.rows[0].id}`),
-      mockParams({ click_id: exercise.rows[0].id })
+      mockGet(`/api/exercises/click/${exercise.id}`),
+      mockParams({ click_id: exercise.id })
     );
 
     expect(response).toBeDefined();

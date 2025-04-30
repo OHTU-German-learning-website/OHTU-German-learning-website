@@ -12,17 +12,12 @@ describe("click_answers API", () => {
     const user = await TestFactory.user();
     const { mockPost, mockParams } = useTestRequest(user);
 
-    // Insert a test exercise into the database
-    const exercise = await DB.pool(
-      `INSERT INTO click_exercises (title, category, target_words, all_words)
-       VALUES ($1, $2, $3, $4) RETURNING *`,
-      [
-        "Verben identifizieren",
-        "Verben",
-        ["laufen", "springen", "schwimmen"],
-        ["Die", "Kinder", "laufen", "springen", "schwimmen"],
-      ]
-    );
+    const exercise = await TestFactory.clickExercise({
+      title: "Verben identifizieren",
+      category: "Verben",
+      target_words: ["laufen", "springen", "schwimmen"],
+      all_words: ["Die", "Kinder", "laufen", "springen", "schwimmen"],
+    });
 
     const requestBody = {
       selected_words: ["laufen", "springen"],
@@ -30,11 +25,8 @@ describe("click_answers API", () => {
     };
 
     const response = await POST(
-      mockPost(
-        `/api/exercises/click/${exercise.rows[0].id}/answers`,
-        requestBody
-      ),
-      mockParams({ click_id: exercise.rows[0].id })
+      mockPost(`/api/exercises/click/${exercise.id}/answers`, requestBody),
+      mockParams({ click_id: exercise.id })
     );
 
     expect(response).toBeDefined();
@@ -45,7 +37,7 @@ describe("click_answers API", () => {
     // Verify the answers were saved in the database
     const savedAnswers = await DB.pool(
       `SELECT * FROM click_answers WHERE user_id = $1 AND click_exercise_id = $2`,
-      [user.id, exercise.rows[0].id]
+      [user.id, exercise.id]
     );
     expect(savedAnswers.rows).toHaveLength(1);
     expect(savedAnswers.rows[0].answer).toEqual(["laufen", "springen"]);
