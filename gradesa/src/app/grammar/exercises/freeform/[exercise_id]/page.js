@@ -12,12 +12,12 @@ import { LinkButton } from "@/components/ui/linkbutton";
 
 const styles = {
   errorWord: {
-    color: "var(--tertiary2)",
+    color: "var(--purple)",
     textDecoration: "line-through",
     marginRight: "4px",
   },
   similarWord: {
-    color: "var(--yellow)",
+    color: "var(--red)",
     textDecoration: "underline",
     marginRight: "4px",
   },
@@ -30,7 +30,7 @@ const styles = {
     marginRight: "4px",
   },
   missingWord: {
-    color: "var(--green1)",
+    color: "var(--green)",
     marginRight: "4px",
   },
 };
