@@ -53,14 +53,8 @@ jobs:
         working-directory: ./gradesa
         run: |
           npm run test
-      - name: Run playwright
+      - name: Run e2e tests
         working-directory: ./gradesa
         run: |
-          pnpm exec playwright install --with-deps
-          pnpm exec playwright test --project=chromium
-      - uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 30
+          npx playwright install --with-deps
+          npm run test:e2e
