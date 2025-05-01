@@ -9,9 +9,9 @@
     "start": "sh ./data/migrate.sh --skip-schema-gen && next start",
     "lint": "next lint",
     "test": "vitest --disable-console-intercept ",
-    "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui",
-    "test:e2e:debug": "playwright test --debug"
+    "test:e2e": "NODE_ENV=test playwright test",
+    "test:e2e:ui": "NODE_ENV=test playwright test --ui",
+    "test:e2e:debug": "NODE_ENV=test playwright test --debug"
   },
   "dependencies": {
     "@faker-js/faker": "^9.4.0",
