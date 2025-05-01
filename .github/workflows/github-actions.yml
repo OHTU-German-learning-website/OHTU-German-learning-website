@@ -53,3 +53,7 @@ jobs:
         working-directory: ./gradesa
         run: |
           npm run test
+      - name: Run e2e tests
+        working-directory: ./gradesa
+        run: |
+          npm run test:e2e
