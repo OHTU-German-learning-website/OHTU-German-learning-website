@@ -57,6 +57,19 @@ const user = modelFactory("users", () => ({
   salt: faker.string.alphanumeric(16),
 }));
 
+const userQuestionAnswer = modelFactory(
+  "user_question_answers",
+  () => ({}),
+  async (base) => {
+    if (!base.user_id) {
+      const user = await user();
+      base.user_id = user.id;
+    }
+    if (!base.answerer_id) {
+      base.answerer_id = base.user_id;
+    }
+  }
+);
 const exercise = modelFactory("exercises", () => ({
   category: "freeform",
 }));
@@ -185,6 +198,7 @@ const dragDropExercise = modelFactory(
 export const TestFactory = {
   user,
   exercise,
+  userQuestionAnswer,
   freeFormExercise,
   freeFormAnswer,
   anchor,

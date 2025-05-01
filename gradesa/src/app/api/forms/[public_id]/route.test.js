@@ -38,11 +38,12 @@ describe("forms", () => {
       mockParams({ public_id: "learning_type" })
     );
     const formJson = await form.json();
-    await DB.pool(
-      `insert into user_question_answers (user_id, part_question_id, answer) values ($1, $2, $3)`,
-      [user.id, formJson.parts[0].questions[0].id, 1]
-    );
-    console.log(user.id, formJson.parts[0].questions[0].id, 1, "user.id");
+    await TestFactory.userQuestionAnswer({
+      user_id: user.id,
+      answerer_id: user.id,
+      part_question_id: formJson.parts[0].questions[0].id,
+      answer: 1,
+    });
 
     const formWithAnswers = await GET(
       mockGet("/api/forms/learning_type"),

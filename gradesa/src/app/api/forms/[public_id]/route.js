@@ -8,7 +8,8 @@ export const GET = withAuth(
     const { public_id } = await params;
     const user = request.user;
     const user_id = user?.id;
-    const answerer_id = user_id ?? request.headers.get("x-session-id");
+    const sessionId = request.headers.get("x-session-id");
+    const answerer_id = user_id ?? sessionId;
     const formRows = await DB.pool(
       `
 WITH questions AS
