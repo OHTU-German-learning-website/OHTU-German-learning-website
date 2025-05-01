@@ -54,6 +54,8 @@ jobs:
         run: |
           npm run test
       - name: Run e2e tests
+        # if: github.ref == 'refs/heads/master'
         working-directory: ./gradesa
         run: |
+          npx playwright install --with-deps
           npm run test:e2e
