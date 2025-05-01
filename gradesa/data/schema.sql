@@ -404,9 +404,8 @@ CREATE TABLE public.user_question_answers (
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   updated_at timestamp with time zone NOT NULL DEFAULT now(),
   answer integer NOT NULL,
-  user_id bigint,
-  part_question_id bigint NOT NULL,
-  answerer_id text NOT NULL
+  user_id bigint NOT NULL,
+  part_question_id bigint NOT NULL
 );
 
 ALTER TABLE public.user_question_answers
