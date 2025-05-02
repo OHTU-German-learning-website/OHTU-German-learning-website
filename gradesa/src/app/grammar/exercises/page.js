@@ -23,6 +23,12 @@ const exerciseTypes = [
     link: "/grammar/exercises/multichoice",
     image: "📋",
   },
+  {
+    title: "Drag-and-Drop-Übungen",
+    description: "Üben mit Drag-and-Drop-Interaktionen",
+    link: "/grammar/exercises/dragdrop/1",
+    image: "📦",
+  },
   // Add other exercise types here
 ];
 
