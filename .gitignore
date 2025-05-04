@@ -5,3 +5,5 @@ node_modules
 test/e2e/screenshots/*
 gradesa/test-results/*
 gradesa/playwright-report/*
+playwright-report
+screenshots
