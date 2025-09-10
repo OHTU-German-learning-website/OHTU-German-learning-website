@@ -3,11 +3,14 @@ import { Migrator } from "./migrator";
 import { beforeEach, afterEach, afterAll } from "vitest";
 import { DB } from "../db";
 import { Pool } from "pg";
-import { vi } from "vitest";
 import { createHash, randomBytes } from "crypto";
 import { logger } from "../logging";
 const TestUser = "pgtdbuser";
 const TestPassword = "pgtdbpass";
+
+// useTestDatabase is called at the start of each test suite to set up the test database.
+// It includes beforeEach and afterEach hooks to set up and tear down the test database.
+// This ensures that each test is isolated from the others.
 
 export function useTestDatabase({
   conf = getConfig().db,

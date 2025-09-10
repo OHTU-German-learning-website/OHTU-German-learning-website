@@ -1,7 +1,13 @@
 import { isTest } from "../config";
-import { fa, faker } from "@faker-js/faker";
+import { faker } from "@faker-js/faker";
 import { createHash } from "node:crypto";
 import { DB } from "../db";
+
+// The testfactory makes it easier to create test data for tests.
+// Each database table should have a modelFactory function, with some default values.
+// It should also hanlde FKs by creating child models (with default values) if needed.
+// This is useful because it makes it easier to create test data and it ensures that the test data is created in a consistent way.
+// If the schema of a a table changes, you don't have 50 sql statements to update in your test suite.
 
 /**
  * @description Factory function to create a model for a given table.

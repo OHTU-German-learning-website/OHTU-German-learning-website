@@ -3,7 +3,6 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { getConfig, isTest } from "../../backend/config";
 import { AUTH_COOKIE_NAME } from "@/shared/const";
-import { TestFactory } from "../test/testfactory";
 
 const { sessionSecret, sessionTTL } = getConfig();
 const encodedKey = new TextEncoder().encode(sessionSecret);
