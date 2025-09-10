@@ -5,12 +5,15 @@ import { exec as execCB } from "child_process";
 import util from "util";
 import { dbURL } from "../db";
 import { logger } from "../logging";
+import { getConfig } from "../config";
+
+// Basically a JS implementation of the pgmigrate CLI
+
 // Tuns execCB into a promise
 const exec = util.promisify(execCB);
 
 export async function runMigrations() {
-  const config = await Config.get();
-  const conf = config.db;
+  const conf = getConfig().db;
 
   const migrator = new Migrator();
   await migrator.migrate(conf, true);
