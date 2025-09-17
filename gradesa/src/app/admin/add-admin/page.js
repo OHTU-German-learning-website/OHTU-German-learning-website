@@ -5,12 +5,17 @@ import { useState } from "react";
 
 export default function AddAdmin() {
   const [email, setEmail] = useState("");
+  const [error, setError] = useState(null);
   const request = useRequest();
 
   const handleSubmit = async function () {
-    const _ = await request("admin/add-admin", {
-      email: email,
-    });
+    try {
+      const _ = await request("admin/add-admin", {
+        email: email,
+      }); // Tässä pitäisi todennäköisesti tapahtua jotain nextjs magiaa tolla router.push komennolla
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   return (
