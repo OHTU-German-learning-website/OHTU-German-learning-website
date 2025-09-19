@@ -8,7 +8,8 @@ export default function AddAdmin() {
   const [error, setError] = useState(null);
   const request = useRequest();
 
-  const handleSubmit = async function () {
+  const handleSubmit = async function (e) {
+    e.preventDefault();
     try {
       const _ = await request("admin/add-admin", {
         email: email,
