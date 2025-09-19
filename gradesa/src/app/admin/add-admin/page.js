@@ -20,7 +20,7 @@ export default function AddAdmin() {
   };
 
   return (
-    <form action={handleSubmit}>
+    <form onSubmit={handleSubmit}>
       <input
         type="text"
         placeholder="email@example.com"
