@@ -12,7 +12,7 @@ export default function AddAdmin() {
     try {
       const _ = await request("admin/add-admin", {
         email: email,
-      }); // Tässä pitäisi todennäköisesti tapahtua jotain nextjs magiaa tolla router.push komennolla
+      }); //  Tässä pitäisi todennäköisesti tapahtua jotain nextjs magiaa tolla router.push komennolla
     } catch (error) {
       setError(error.message);
     }
