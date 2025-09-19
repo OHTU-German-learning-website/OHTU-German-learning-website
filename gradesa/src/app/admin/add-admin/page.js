@@ -11,11 +11,10 @@ export default function AddAdmin() {
   const handleSubmit = async function (e) {
     e.preventDefault();
     try {
-      const _ = await request("admin/add-admin", {
-        email: email,
-      }); //  Tässä pitäisi todennäköisesti tapahtua jotain nextjs magiaa tolla router.push komennolla
-    } catch (error) {
-      setError(error.message);
+      await request("admin/add-admin", { email });
+      setError(null); // nollaa virhe jos onnistuu
+    } catch (err) {
+      setError(err.message || "Tuntematon virhe");
     }
   };
 
@@ -25,9 +24,11 @@ export default function AddAdmin() {
         type="text"
         placeholder="email@example.com"
         onChange={(e) => setEmail(e.target.value)}
-      ></input>
-      <br></br>
-      <Button type="submit">{"Submit"}</Button>
+      />
+      <br />
+      <Button type="submit">Submit</Button>
+
+      {error && <p style={{ color: "red", marginTop: "8px" }}>{error}</p>}
     </form>
   );
 }
