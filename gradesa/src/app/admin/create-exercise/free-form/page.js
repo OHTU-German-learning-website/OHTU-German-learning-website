@@ -209,7 +209,7 @@ function AnswerItem({ answer, onAnswerChange, onRemoveAnswer, index, errors }) {
   };
 
   return (
-    <Column gap="lg" b="2px solid var(--primary6)" p="md" r="md">
+    <Column gap="lg" b="2px solid var(--primary3)" p="md" r="md">
       <Row justify={"space-between"} align={"center"}>
         <span>
           <strong>#{index + 1}:</strong>{" "}

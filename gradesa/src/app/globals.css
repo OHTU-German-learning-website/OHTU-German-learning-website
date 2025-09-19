@@ -17,33 +17,23 @@
 
   /* Colors for light mode */
   /* background colors (page, cards, etc.) */
-  --bg1: hsl(213, 80%, 98%);
-  --bg2: hsl(213, 80%, 95%);
-  --bg3: hsl(213, 80%, 92%);
-  --bg4: hsl(213, 80%, 89%);
-  --bg5: hsl(213, 80%, 86%);
-  --bg6: hsl(213, 80%, 83%);
-  --bg7: hsl(213, 80%, 80%);
-  --bg8: hsl(213, 80%, 76%);
-  --bg9: hsl(213, 80%, 62%);
+  --bg1: hsl(213, 20%, 94%);
+  --bg2: hsl(213, 20%, 96%);
+  --bg3: hsl(213, 20%, 98%);
+  --bg4: hsl(213, 20%, 99%);
 
-  --linear-gradient: linear-gradient(
-    120deg,
-    var(--primary1) 12%,
-    var(--primary3) 47%,
-    var(--primary4) 75%
-  );
+  --linear-gradient: linear-gradient(120deg,
+      var(--primary1) 12%,
+      var(--primary3) 47%,
+      var(--primary4) 75%);
 
-  --site-bg: hsl(213, 80%, 98%);
+  --site-bg: var(--bg1);
 
   /* foreground colors (text, icons, etc.) */
   --fg1: hsl(240, 40%, 5%);
   --fg2: hsl(240, 40%, 11%);
-  --fg3: hsl(240, 40%, 17%);
-  --fg4: hsl(240, 40%, 23%);
-  --fg5: hsl(240, 40%, 29%);
-  --fg6: hsl(240, 40%, 35%);
-  --fg7: hsl(240, 40%, 41%);
+  --fg3: hsl(240, 40%, 15%);
+  --fg4: hsl(0, 0%, 64%);
 
   --tertiary1: hsl(351, 90%, 90%);
   --tertiary2: hsl(351, 90%, 80%);
@@ -70,11 +60,6 @@
   --primary2: hsl(213, 90%, 80%);
   --primary3: hsl(213, 90%, 75%);
   --primary4: hsl(213, 90%, 70%);
-  --primary5: hsl(213, 90%, 65%);
-  --primary6: hsl(213, 90%, 60%);
-  --primary7: hsl(213, 90%, 55%);
-  --primary8: hsl(213, 90%, 50%);
-  --primary9: hsl(213, 90%, 45%);
 
   --green1: hsl(120, 60%, 90%);
   --green2: hsl(120, 60%, 80%);
@@ -143,32 +128,22 @@
 @media (prefers-color-scheme: dark) {
   :root {
     /* Inverted background colors for dark mode */
-    --bg1: hsl(213, 10%, 2%);
-    --bg2: hsl(213, 10%, 6%);
-    --bg3: hsl(213, 10%, 10%);
-    --bg4: hsl(213, 10%, 14%);
-    --bg5: hsl(213, 10%, 18%);
-    --bg6: hsl(213, 10%, 22%);
-    --bg7: hsl(213, 10%, 26%);
-    --bg8: hsl(213, 16%, 30%);
+    --bg1: hsl(213, 10%, 8%);
+    --bg2: hsl(213, 10%, 10%);
+    --bg3: hsl(213, 10%, 18%);
+    --bg4: hsl(213, 10%, 30%);
 
-    --linear-gradient: linear-gradient(
-      120deg,
-      var(--primary1) 12%,
-      var(--primary3) 47%,
-      var(--primary4) 75%
-    );
+    --linear-gradient: linear-gradient(120deg,
+        var(--primary3) 12%,
+        var(--primary4) 47%,
+        var(--primary2) 75%);
 
-    --site-bg: hsl(213, 60%, 14%);
+    --site-bg: var(--bg2);
 
     --fg1: hsl(213, 20%, 98%);
-    --fg2: hsl(213, 20%, 94%);
-    --fg3: hsl(213, 20%, 90%);
-    --fg4: hsl(213, 20%, 86%);
-    --fg5: hsl(213, 20%, 82%);
-    --fg6: hsl(213, 20%, 78%);
-    --fg7: hsl(213, 20%, 74%);
-    --fg8: hsl(0, 0%, 0%);
+    --fg2: hsl(213, 20%, 90%);
+    --fg3: hsl(213, 20%, 82%);
+    --fg4: hsl(213, 20%, 74%);
 
     --tertiary1: hsl(351, 40%, 30%);
     --tertiary2: hsl(351, 40%, 40%);
@@ -179,16 +154,6 @@
     --tertiary7: hsl(351, 40%, 85%);
     --tertiary8: hsl(351, 40%, 90%);
     --tertiary9: hsl(351, 40%, 95%);
-
-    --secondary1: hsl(178, 60%, 30%);
-    --secondary2: hsl(178, 60%, 40%);
-    --secondary3: hsl(178, 80%, 52%);
-    --secondary4: hsl(178, 60%, 60%);
-    --secondary5: hsl(178, 60%, 70%);
-    --secondary6: hsl(178, 60%, 80%);
-    --secondary7: hsl(178, 60%, 85%);
-    --secondary8: hsl(178, 60%, 90%);
-    --secondary9: hsl(178, 60%, 95%);
     --tertiary10: hsl(113, 93%, 49%);
 
     --secondary1: hsl(178, 60%, 30%);
@@ -201,15 +166,10 @@
     --secondary8: hsl(178, 60%, 90%);
     --secondary9: hsl(178, 60%, 95%);
 
-    --primary1: hsl(213, 45%, 15%);
-    --primary2: hsl(213, 45%, 20%);
-    --primary3: hsl(213, 45%, 25%);
-    --primary4: hsl(213, 45%, 30%);
-    --primary5: hsl(213, 45%, 35%);
-    --primary6: hsl(213, 45%, 40%);
-    --primary7: hsl(213, 45%, 45%);
-    --primary8: hsl(213, 45%, 50%);
-    --primary9: hsl(213, 45%, 55%);
+    --primary1: hsl(213, 45%, 25%);
+    --primary2: hsl(213, 45%, 30%);
+    --primary3: hsl(213, 45%, 40%);
+    --primary4: hsl(213, 45%, 50%);
 
     --green1: hsl(120, 40%, 30%);
     --green2: hsl(120, 40%, 40%);
@@ -258,26 +218,15 @@ h1 {
   margin: 0;
 }
 
-.login-btn {
-  background: transparent;
+.nav-auth-btn {
+  background-color: transparent;
   border: 2px solid var(--secondary5);
   color: var(--secondary5);
 }
 
-.login-btn:hover {
+.nav-auth-btn:hover {
   background: var(--secondary5);
-  color: var(--fg1);
-}
-
-.signup-btn {
-  background: var(--primary5);
-  border: 2px solid var(--primary7);
-  color: var(--fg1);
-}
-
-.signup-btn:hover {
-  background: transparent;
-  color: var(--primary5);
+  color: var(--bg1);
 }
 
 .container {
@@ -341,7 +290,7 @@ h1 {
   margin: 0;
 }
 
-.feature-card > a {
+.feature-card>a {
   margin-top: auto;
 }
 
@@ -410,11 +359,11 @@ button.back-button {
 }
 
 a:link {
-  color: var(--primary9);
+  color: var(--primary4);
 }
 
 a:visited {
-  color: var(--primary9);
+  color: var(--primary4);
 }
 
 a:hover {
@@ -446,28 +395,30 @@ p {
 }
 
 input {
-  border: 1px solid var(--primary8);
+  border: 1px solid var(--primary4);
   border-radius: var(--radius-sm);
   font-size: var(--font-md);
-  background: var(--bg5);
+  background: var(--bg3);
   padding: var(--u-md) var(--u-lg);
   color: var(--fg1);
+
   &:focus {
     outline: none;
-    border-color: var(--primary9);
+    border-color: var(--primary4);
   }
 }
 
 textarea {
-  border: 1px solid var(--primary8);
+  border: 1px solid var(--primary4);
   border-radius: var(--radius-sm);
   font-size: var(--font-md);
-  background: var(--bg5);
+  background: var(--bg3);
   padding: var(--u-md) var(--u-lg);
   color: var(--fg1);
+
   &:focus {
     outline: none;
-    border-color: var(--primary9);
+    border-color: var(--primary4);
   }
 }
 

@@ -20,7 +20,7 @@
   text-align: center;
   line-height: normal;
   float: left;
-  background-color: var(--bg5);
+  background-color: var(--bg3);
 }
 
 .dustbin-title {
@@ -45,6 +45,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }

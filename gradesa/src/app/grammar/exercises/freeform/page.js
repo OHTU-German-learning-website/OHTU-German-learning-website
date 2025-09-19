@@ -66,7 +66,7 @@ export default function FreeFormExercisesPage() {
           >
             <Row
               p="md"
-              b={`1px solid var(--bg6)`}
+              b={`1px solid var(--bg3)`}
               br="md"
               justify="space-between"
               align="center"
@@ -85,7 +85,7 @@ export default function FreeFormExercisesPage() {
                     ? `${exercise.question.substring(0, 30)}...`
                     : exercise.question}
                 </Container>
-                <Container fontSize="sm" color="var(--fg5)">
+                <Container fontSize="sm" color="var(--fg4)">
                   Erstellt: {new Date(exercise.created_at).toLocaleDateString()}
                 </Container>
               </Column>

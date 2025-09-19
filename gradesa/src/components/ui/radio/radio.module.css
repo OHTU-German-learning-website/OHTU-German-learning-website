@@ -8,7 +8,7 @@
 
 .radioInput {
   appearance: none;
-  background-color: var(--bg5);
+  background-color: var(--bg3);
   border: 1px solid var(--fg2);
   border-radius: 50%;
   display: flex;
@@ -16,17 +16,19 @@
   justify-content: center;
   position: relative;
   cursor: pointer;
+
   &:checked {
-    border-color: var(--primary5);
+    border-color: var(--primary2);
   }
-  transition:
-    background-color 0.2s ease-in-out,
-    border-color 0.2s ease-in-out;
+
+  transition: background-color 0.2s ease-in-out,
+  border-color 0.2s ease-in-out;
 }
 
 .radioInput.sm {
   width: 16px;
   height: 16px;
+
   &:checked::after {
     width: 12px;
     height: 12px;
@@ -36,6 +38,7 @@
 .radioInput.md {
   width: 20px;
   height: 20px;
+
   &:checked::after {
     width: 14px;
     height: 14px;
@@ -45,6 +48,7 @@
 .radioInput.lg {
   width: 26px;
   height: 26px;
+
   &:checked::after {
     width: 18px;
     height: 18px;
@@ -93,7 +97,7 @@
 
 .radioInput:focus {
   outline: none;
-  box-shadow: 0 0 0 2px var(--primary5);
+  box-shadow: 0 0 0 2px var(--primary2);
 }
 
 .radioLabel {

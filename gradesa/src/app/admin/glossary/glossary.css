@@ -2,7 +2,7 @@
   background-color: var(--bg3);
   padding: var(--u-md);
   border-radius: var(--radius-md);
-  border: 1px solid var(--bg6);
+  border: 1px solid var(--bg3);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.2s;
 }
