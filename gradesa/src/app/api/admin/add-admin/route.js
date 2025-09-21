@@ -40,7 +40,10 @@ export const POST = withAuth(
       );
     });
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json(
+      { success: true, message: "User added as admin successfully" },
+      { status: 200 }
+    );
   },
   {
     requireAdmin: true,
