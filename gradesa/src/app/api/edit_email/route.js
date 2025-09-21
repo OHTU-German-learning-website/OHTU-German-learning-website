@@ -17,14 +17,17 @@ export const POST = withAuth(
 
     if (!newEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
       return Response.json(
-        { message: "Please provide a valid email address" },
+        { message: "Bitte geben Sie eine gültige E-Mail-Adresse ein" },
         { status: 400 }
       );
     }
 
     if (newEmail === user.email) {
       return Response.json(
-        { message: "New email must be different from current email" },
+        {
+          message:
+            "Die neue E-Mail-Adresse muss sich von der aktuellen E-Mail-Adresse unterscheiden",
+        },
         { status: 400 }
       );
     }
@@ -36,7 +39,10 @@ export const POST = withAuth(
 
     if (existingUser.rows.length > 0) {
       return Response.json(
-        { message: "This email is already in use by another account" },
+        {
+          message:
+            "Diese E-Mail-Adresse wird bereits von einem anderen Konto verwendet",
+        },
         { status: 409 }
       );
     }
