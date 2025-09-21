@@ -28,7 +28,7 @@ export const POST = withAuth(
 
     const userId = userResult.rows[0].id;
 
-    // Below the user should be updated to an admin:
+    // Below the user is updated to an admin:
 
     await DB.transaction(async (tx) => {
       await tx.query(
