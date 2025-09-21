@@ -37,7 +37,7 @@ export default function EditEmail() {
     setSuccess("");
 
     if (newEmail !== confirmEmail) {
-      setError("Emails do not match");
+      setError("E-Mails stimmen nicht überein");
       return;
     }
 
@@ -50,7 +50,7 @@ export default function EditEmail() {
     });
 
     if (res.ok) {
-      setSuccess("Email changed successfully!");
+      setSuccess("E-Mail erfolgreich geändert!");
       setNewEmail("");
       setConfirmEmail("");
       setTimeout(() => {
@@ -58,7 +58,7 @@ export default function EditEmail() {
       }, 2000);
     } else {
       const data = await res.json();
-      setError(data.message || "Failed to change email.");
+      setError(data.message || "E-Mail konnte nicht geändert werden");
     }
   };
 
