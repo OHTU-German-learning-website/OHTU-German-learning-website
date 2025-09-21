@@ -21,7 +21,7 @@ export const POST = withAuth(
 
     if (userResult.rows.length === 0) {
       return NextResponse.json(
-        { error: "User does not exist with that email" },
+        { error: "Ein Benutzer mit dieser E-Mail-Adresse existiert nicht." },
         { status: 404 }
       );
     }
