@@ -41,7 +41,10 @@ export const POST = withAuth(
     });
 
     return NextResponse.json(
-      { success: true, message: "User added as admin successfully" },
+      {
+        success: true,
+        message: "Benutzer erfolgreich als administrator hinzugefügt",
+      },
       { status: 200 }
     );
   },
