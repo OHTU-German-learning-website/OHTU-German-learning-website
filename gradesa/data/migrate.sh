@@ -7,10 +7,10 @@ echo $(pwd)
 echo "Migrating"
 # Get database connection details from environment variables if available, otherwise use defaults
 DB_HOST=${DB_HOST:-localhost}
-DB_PORT=${DB_PORT:-7741}
-DB_USER=${DB_USER:-postgres}
+DB_PORT=${DB_PORT:-7742}
+DB_USER=${DB_USER:-ohtu}
 DB_PASSWORD=${DB_PASSWORD:-password}
-DB_NAME=${DB_NAME:-postgres}
+DB_NAME=${DB_NAME:-gradesa}
 
 # Construct the database connection string
 DB_URL="postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}"
@@ -31,8 +31,9 @@ fi
 # a difference between the schema file and the actual schema in the database
 
 # Create a temporary schema file inside the container
-docker exec gradesa-db sh -c "pgmigrate dump -d postgres://postgres:password@localhost:5432/postgres --out /tmp/schema.sql"
+docker exec gradesa-db sh -c "pgmigrate dump -d postgres://ohtu:password@localhost:5432/gradesa --out /tmp/schema.sql"
 
 # Copy the schema file from the container to the local directory
 docker cp gradesa-db:/tmp/schema.sql ./schema.sql
 echo "Dumping done"
+
