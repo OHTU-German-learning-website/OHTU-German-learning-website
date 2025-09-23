@@ -1,41 +1,60 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { GET, POST } from "./route";
+import { POST } from "./route";
 import { useTestRequest } from "@/backend/test/mock-request";
 import { useTestDatabase } from "@/backend/test/testdb";
 import { TestFactory } from "@/backend/test/testfactory";
-import {
-  deleteSession,
-  createSession,
-  checkSession,
-} from "@/backend/auth/session";
+import { checkSession } from "@/backend/auth/session";
 import { DB } from "@/backend/db";
 
 vi.mock("@/backend/auth/session", () => ({
-  deleteSession: vi.fn(() => Promise.resolve()),
-  createSession: vi.fn(() => Promise.resolve()),
   checkSession: vi.fn(),
 }));
 
 describe("GET /api/add-admin", () => {
   useTestDatabase();
 
-  let user;
+  let adminUser;
+  let normalUser;
 
   beforeEach(async () => {
-    user = await TestFactory.user();
+    adminUser = await TestFactory.user({ is_admin: true });
+    normalUser = await TestFactory.user({ is_admin: false });
+
     vi.clearAllMocks();
   });
 
-  const getRequest = async (authUser) => {
-    const { mockGet } = useTestRequest();
-    const request = mockGet("/api/add-admin", null, authUser);
+  const postRequest = async (email, authUser) => {
+    const { mockPost } = useTestRequest();
+    const request = mockPost("/api/add-admin", { email }, authUser);
 
     checkSession.mockImplementation(() =>
       Promise.resolve(
-        authUser ? { id: authUser.id, email: authUser.email } : null
+        authUser
+          ? {
+              id: authUser.id,
+              email: authUser.email,
+              is_admin: authUser.is_admin,
+            }
+          : null
       )
     );
 
-    return GET(request);
+    return POST(request);
   };
+
+  it("should allow an admin to promote a user to admin", async () => {
+    const response = await postRequest(normalUser.email, adminUser);
+    const result = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(result.success).toBe(true);
+    expect(result.message).toBe(
+      "Benutzer erfolgreich als administrator hinzugefügt"
+    );
+
+    const dbUser = await DB.pool(`SELECT is_admin FROM users WHERE id = $1`, [
+      normalUser.id,
+    ]);
+    expect(dbUser.rows[0].is_admin).toBe(true);
+  });
 });
