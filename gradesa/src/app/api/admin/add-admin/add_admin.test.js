@@ -57,4 +57,31 @@ describe("GET /api/add-admin", () => {
     ]);
     expect(dbUser.rows[0].is_admin).toBe(true);
   });
+
+  it("should return 404 if user with email does not exist", async () => {
+    const response = await postRequest("notfound@example.com", adminUser);
+    const result = await response.json();
+
+    expect(response.status).toBe(404);
+    expect(result.error).toBe(
+      "Ein Benutzer mit dieser E-Mail-Adresse existiert nicht."
+    );
+  });
+
+  it("should require authentication", async () => {
+    const response = await postRequest(normalUser.email, null);
+    expect(response.status).toBe(401);
+    expect(checkSession).toHaveBeenCalled();
+  });
+
+  it("should throw on database errors", async () => {
+    const originalPool = DB.pool;
+    DB.pool = vi.fn().mockRejectedValueOnce(new Error("DB failure"));
+
+    await expect(postRequest(normalUser.email, adminUser)).rejects.toThrow(
+      "DB failure"
+    );
+
+    DB.pool = originalPool;
+  });
 });
