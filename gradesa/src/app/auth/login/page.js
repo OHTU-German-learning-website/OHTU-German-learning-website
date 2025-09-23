@@ -28,20 +28,20 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      const response = await request("/auth/login", {
+      const res = await request("/auth/login", {
         identifier,
         password,
       });
 
-      if (response.status !== 200) {
-        throw new Error(response.data.error);
+      if (res.error) {
+        throw new Error(res.error);
       }
 
       // Login successful
       router.push(redirectPath);
     } catch (error) {
       // Failed validation
-      setError(error.message);
+      setError(error.message || "Ein unerwarteter Fehler ist aufgetreten");
     } finally {
       setIsLoading(false);
     }
