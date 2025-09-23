@@ -7,7 +7,7 @@
 }
 
 .exercise-card {
-  border: 1px solid var(--bg8);
+  border: 1px solid var(--bg4);
   border-radius: var(--radius-md);
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   overflow: hidden;
@@ -22,6 +22,7 @@
   font-size: var(--font-sm);
   color: var(--fg1);
 }
+
 .exercise-link:visited {
   color: var(--fg1);
 }
@@ -95,7 +96,7 @@
 
 .link-button {
   padding: var(--u-md) var(--u-lg);
-  background-color: var(--primary8);
+  background-color: var(--primary4);
   color: white;
   border: none;
   border-radius: var(--radius-sm);
@@ -105,7 +106,7 @@
 }
 
 .link-button:hover {
-  background-color: var(--primary9);
+  background-color: var(--primary4);
 }
 
 .unlink-button {

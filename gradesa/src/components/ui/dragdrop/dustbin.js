@@ -23,9 +23,9 @@ export const Dustbin = memo(function Dustbin({
   });
 
   const isActive = isOver && canDrop;
-  let backgroundColor = "var(--bg5)";
+  let backgroundColor = "var(--bg3)";
   if (isActive) {
-    backgroundColor = "var(--bg5)";
+    backgroundColor = "var(--bg3)";
   } else if (canDrop) {
     backgroundColor = "var(--bg5";
   }

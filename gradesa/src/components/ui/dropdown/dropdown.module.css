@@ -7,11 +7,13 @@
   z-index: 1000;
   flex-direction: column;
   min-width: 12rem;
-  border: 1px solid var(--fg5);
+  border: 1px solid var(--fg4);
   box-shadow: 0 0 4 4px #000000dd;
+
   &:focus-within {
     outline: none;
   }
+
   &:focus {
     outline: none;
   }
@@ -22,9 +24,11 @@
   padding: 4px 6px;
   border-radius: var(--radius-sm);
   transition: filter 0.2s;
+
   &:hover {
     background-color: var(--bg3);
   }
+
   &:focus {
     outline: none;
   }

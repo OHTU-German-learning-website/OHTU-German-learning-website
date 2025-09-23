@@ -13,7 +13,7 @@
 
 .task-description {
   font-size: var(--font-lg);
-  color: var(--fg7);
+  color: var(--fg4);
   margin-bottom: 1rem;
   font-style: italic;
 }

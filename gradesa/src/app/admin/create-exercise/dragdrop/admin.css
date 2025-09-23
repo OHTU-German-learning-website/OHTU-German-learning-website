@@ -1,64 +1,64 @@
 .admin-container {
-    display: flex;
-    flex-direction: column;
-    align-items: left;
-    gap: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  gap: 20px;
 }
 
 .admin-content {
-    flex: 1;
-    padding: 5px;
-    align-items: left;
+  flex: 1;
+  padding: 5px;
+  align-items: left;
 }
 
 .form-select {
-    padding: 0.5rem;
-    border: 1px solid var(--fg7);
-    border-radius: var(--radius-sm);
-    font-size: 1rem;
-    width: 100%;
-    max-width: 300px;
-    margin-bottom: 1rem;
-  }
-  
-  .form-group {
-    margin: 1rem 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .form-input {
-    padding: 0.5rem;
-    border: 1px solid var(--fg7);
-    border-radius: var(--radius-sm);
-    font-size: 1rem;
-    width: 100%;
-    max-width: 300px;
-    background-color: var(--bg2);
-  }
+  padding: 0.5rem;
+  border: 1px solid var(--fg4);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 1rem;
+}
 
-  .form-input::placeholder {
-    color: var(--fg7);
-    font-style: italic;
-  }
+.form-group {
+  margin: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
 
-  .form-red {
-    background-color: var(--feminine);
-  }
+.form-input {
+  padding: 0.5rem;
+  border: 1px solid var(--fg4);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  width: 100%;
+  max-width: 300px;
+  background-color: var(--bg2);
+}
 
-  .form-blue {
-    background-color: var(--masculine);
-  }
+.form-input::placeholder {
+  color: var(--fg4);
+  font-style: italic;
+}
 
-  .form-green {
-    background-color: var(--neutral);
-  }
+.form-red {
+  background-color: var(--feminine);
+}
 
-  .form-yellow {
-    background-color: var(--yellow);
-  }
+.form-blue {
+  background-color: var(--masculine);
+}
 
-  .form-purple {
-    background-color: var(--purple);
-  }
+.form-green {
+  background-color: var(--neutral);
+}
+
+.form-yellow {
+  background-color: var(--yellow);
+}
+
+.form-purple {
+  background-color: var(--purple);
+}

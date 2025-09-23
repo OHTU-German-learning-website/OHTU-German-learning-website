@@ -1,5 +1,5 @@
 .baseButton {
-  background-color: var(--bg1);
+  background-color: var(--bg3);
   color: var(--fg1);
   border: 1px solid var(--fg1);
   padding: 0.5rem 1rem;
@@ -14,6 +14,7 @@
   &:focus {
     outline: none;
   }
+
   &:active {
     transform: scale(0.99);
     opacity: 0.9;
@@ -66,11 +67,11 @@
 .baseButton.primary {
   background-color: var(--primary1);
   color: var(--fg1);
-  border: 1px solid var(--primary5);
+  border: 1px solid var(--primary2);
 
   &:hover {
     background-color: var(--primary2);
-    border: 1px solid var(--primary6);
+    border: 1px solid var(--primary3);
   }
 }
 
@@ -108,12 +109,13 @@
 
 .baseButton.outline {
   background-color: transparent;
-  color: var(--fg1);
-  border: 1px solid var(--fg7);
+  color: var(--fg2);
+  border: 1px solid var(--fg4);
 
   &:hover {
-    color: var(--primary6);
-    border: 1px solid var(--primary9);
+    color: var(--bg1);
+    border: 1px solid var(--primary4);
+    background-color: var(--primary4);
   }
 }
 

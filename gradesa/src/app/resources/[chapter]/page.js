@@ -598,7 +598,7 @@ function Chapter4() {
         kannst du im Internet viele Ressourcen finden, um es herauszufinden,
         hier eine kleine Liste (Stand: 24.2.2025):
       </GlossaryParagraph>
-      <Container bg="var(--bg4)" r="md" p="md">
+      <Container bg="var(--bg3)" r="md" p="md">
         <ul>
           <GlossaryListItem>
             Hamburger Fernhochschule&nbsp;
