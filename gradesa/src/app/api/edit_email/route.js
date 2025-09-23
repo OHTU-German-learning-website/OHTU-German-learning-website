@@ -59,7 +59,7 @@ export const POST = withAuth(
       );
 
       if (updatedUser.rows.length === 0) {
-        throw new Error("User not found after update");
+        throw new Error("Benutzer nach der Aktualisierung nicht gefunden");
       }
 
       await deleteSession();
@@ -70,13 +70,13 @@ export const POST = withAuth(
       await createSession(newUserData);
 
       return Response.json(
-        { message: "Email updated successfully" },
+        { message: "E-Mail erfolgreich aktualisiert" },
         { status: 200 }
       );
     } catch (error) {
-      console.error("Error updating email:", error);
+      console.error("Fehler beim Aktualisieren der E-Mail:", error);
       return Response.json(
-        { message: "Failed to update email" },
+        { message: "Aktualisierung der E-Mail fehlgeschlagen" },
         { status: 500 }
       );
     }
