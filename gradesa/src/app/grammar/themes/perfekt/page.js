@@ -27,7 +27,7 @@ export default function Perfekt() {
           nach dem Subjekt des Satzes konjugiert, das{" "}
           <span className="blue">Partizip II</span> ist immer gleich.
         </p>
-        <Container bg="var(--bg7)">
+        <Container bg="var(--bg4)">
           <p>Beispiele: </p>
           <p>
             ich <span className="green">habe</span>{" "}
@@ -72,7 +72,7 @@ export default function Perfekt() {
           <span className="italic">was</span>? (bei Personen{" "}
           <span className="italic">wen</span>) antwortet. (z.B. kaufen, stellen)
         </p>
-        <Container bg="var(--bg7)">
+        <Container bg="var(--bg4)">
           <p>Beispiele: </p>
           <p>
             Ich möchte. <span className="italic">Was?</span> <ArrowRightIcon />{" "}
@@ -90,7 +90,7 @@ export default function Perfekt() {
           <span className="green">Akkusativobjekt</span> ein{" "}
           <span className="blue">Subjekt</span>.
         </p>
-        <Container bg="var(--bg7)">
+        <Container bg="var(--bg4)">
           <p>Beispiele: </p>
           <p>
             Aktiv: Peter kauft{" "}
@@ -122,7 +122,7 @@ export default function Perfekt() {
           Bewegung oder Veränderung sind, die das Perfekt normalerweise mit dem
           Hilfsverb <span className="italic red">sein</span> bilden.
         </p>
-        <Container bg="var(--bg7)">
+        <Container bg="var(--bg4)">
           <p>Beispiele: </p>
           <p>
             Peter <span className="red">ist</span> von Helsinki nach Berlin mit
@@ -146,7 +146,7 @@ export default function Perfekt() {
           ebenfalls mit sein. Das Pronomen <span className="italic">es</span>{" "}
           bei den Witterungsverben steht direkt nach den Hilfsverb sein.
         </p>
-        <Container bg="var(--bg7)">
+        <Container bg="var(--bg4)">
           <p>Beispiele: </p>
           <p>
             Paul <span className="green">hat</span> <strong>sich</strong> die
@@ -181,7 +181,7 @@ export default function Perfekt() {
           <span className="italic">wachsen</span> [klein {">"} groß]), bilden
           das Perfekt mit <span className="italic">sein</span>.
         </p>
-        <Container bg="var(--bg7)">
+        <Container bg="var(--bg4)">
           <p>Beispiele: </p>
           <p>
             Hannes <span className="red">ist</span> mit dem Auto nach Flensburg{" "}

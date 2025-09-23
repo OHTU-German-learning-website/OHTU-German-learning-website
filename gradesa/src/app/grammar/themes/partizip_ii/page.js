@@ -20,7 +20,7 @@ export default function Partizip() {
           <ArrowRightIcon /> das Passiv braucht. Partizip-II-Formen können auch
           als Attribute oder Infinitivkonstruktionen auftreten.
         </p>
-        <Container bg="var(--bg7)">
+        <Container bg="var(--bg4)">
           <p>Beispiele: </p>
           <p>
             <span className="italic">
@@ -116,7 +116,7 @@ export default function Partizip() {
         <p>
           <span className="italic">machen – ge-mach-t, kaufen – ge-kauf-t</span>
         </p>
-        <Container bg="var(--bg7)">
+        <Container bg="var(--bg4)">
           <p>Weitere Beispiele:</p>
           <p>
             <span className="italic">
@@ -148,7 +148,7 @@ export default function Partizip() {
           </span>{" "}
           der Wortstamm mit oft verändertem Vokal steht in der Mitte.
         </p>
-        <Container bg="var(--bg7)">
+        <Container bg="var(--bg4)">
           <p>Beispiele:</p>
           <p>
             <span className="italic">
@@ -168,7 +168,7 @@ export default function Partizip() {
           Vokal verändert, das Partizip II aber die Endung <strong>t</strong>{" "}
           hat.
         </p>
-        <Container bg="var(--bg7)">
+        <Container bg="var(--bg4)">
           <p>
             Beispiele:{" "}
             <span className="italic">
@@ -180,7 +180,7 @@ export default function Partizip() {
           Es kann auch sein, dass andere Buchstaben hinzukommen und eine andere
           („unlogische“) Form entsteht.
         </p>
-        <Container bg="var(--bg7)">
+        <Container bg="var(--bg4)">
           <p>
             Beispiele:{" "}
             <span className="italic">
@@ -193,7 +193,7 @@ export default function Partizip() {
           Es ist auch möglich, dass das Partizip II eine komplett andere Form
           hat.
         </p>
-        <Container bg="var(--bg7)">
+        <Container bg="var(--bg4)">
           <p>
             Beispiel: <span className="italic">sein – gewesen</span>
           </p>
@@ -219,7 +219,7 @@ export default function Partizip() {
           untrennbares Verb ist. Präfixe können zu fast jedem Verb hinzugefügt
           werden. Dann entsteht ein neues Verb mit einer neuen Bedeutung.
         </p>
-        <Container bg="var(--bg7)">
+        <Container bg="var(--bg4)">
           <p>Beispiele:</p>
           <p>arbeiten: mitarbeiten, durcharbeiten, bearbeiten</p>
           <p>sehen: ansehen, zusehen, wegsehen, hinsehen</p>
@@ -231,10 +231,10 @@ export default function Partizip() {
             <strong>ge.</strong>
           </span>
         </p>
-        <Container bg="var(--bg7)">
+        <Container bg="var(--bg4)">
           <p>Beispiele:</p>
         </Container>
-        <Row bg="var(--bg7)" gap="20px">
+        <Row bg="var(--bg4)" gap="20px">
           <p>
             arbeiten – <strong>gearbeitet</strong> <br />
             mitarbeiten – mit<strong>gearbeitet</strong> <br />
@@ -278,7 +278,7 @@ export default function Partizip() {
           Die meisten zusammengesetzten Verben im Deutschen sind trennbar. Das
           heißt, das Präfix und das Verb werden in einem Satz immer getrennt.
         </p>
-        <Container bg="var(--bg7)">
+        <Container bg="var(--bg4)">
           <p>Beispiel: mitarbeiten</p>
           <p>
             Präsens: Peter <strong>arbeitet</strong> an dem neuen Projekt{" "}
@@ -314,7 +314,7 @@ export default function Partizip() {
           </span>
           gearbeitet.
         </p>
-        <Container bg="var(--bg7)">
+        <Container bg="var(--bg4)">
           <p>Beispiele:</p>
           <p>
             <span className="italic">
@@ -359,7 +359,7 @@ export default function Partizip() {
         <p>
           Das Partizip II wird aber ansonsten genauso gebildet wie sonst auch.
         </p>
-        <Container bg="var(--bg7)">
+        <Container bg="var(--bg4)">
           <p>Beispiele:</p>
           <p>
             <span className="italic">
@@ -393,7 +393,7 @@ export default function Partizip() {
           Man kennt den Wortstamm häufig aus anderen Sprachen. Das Partizip II
           hat die Endung <strong>-t</strong>.
         </p>
-        <Container bg="var(--bg7)">
+        <Container bg="var(--bg4)">
           <p>Beispiele:</p>
           <p>
             <span className="italic">
@@ -415,7 +415,7 @@ export default function Partizip() {
           </span>{" "}
           zwischen Präfix und Wortstamm.
         </p>
-        <Container bg="var(--bg7)">
+        <Container bg="var(--bg4)">
           <p>Beispiele:</p>
           <p>
             <span className="italic">

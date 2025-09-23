@@ -8,15 +8,27 @@ export async function POST(request) {
   const errorMsg = "Ungültige Benutzername/E-Mail-Adresse oder Passwort";
 
   // Perform DB query
+  // First by email
   let userResult = await DB.pool("SELECT * FROM users WHERE email = $1", [
     identifier,
   ]);
 
-  // If the user does not exist, return an error
+  // If not found with email
   if (userResult.rowCount === 0) {
+    //  If input looks like email but wasn't found -> return error
+    if (identifier.includes("@")) {
+      return NextResponse.json(
+        { error: "E-Mail Adresse nicht gefunden" },
+        { status: 404 }
+      );
+    }
+
+    // Else try with username
     userResult = await DB.pool("SELECT * FROM users WHERE username = $1", [
       identifier,
     ]);
+
+    // If not found with username either
     if (userResult.rowCount === 0) {
       return NextResponse.json({ error: errorMsg }, { status: 401 });
     }

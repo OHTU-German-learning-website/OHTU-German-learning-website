@@ -11,7 +11,7 @@ export default function grammar() {
         <main className={styles.main}>
           <Container gap="md">
             <Row gap="md">
-              <Container bg="var(--bg7)">
+              <Container bg="var(--bg4)">
                 <LinkButton href="/grammar/communications" size="lg">
                   Kommunikationssituationen
                 </LinkButton>
@@ -25,7 +25,7 @@ export default function grammar() {
                   <li>Links zu den Grammatik-Themen, die du dafür brauchst</li>
                 </ul>
               </Container>
-              <Container bg="var(--bg7)">
+              <Container bg="var(--bg4)">
                 <LinkButton href="/grammar/themes" size="lg">
                   Themen der Grammatik
                 </LinkButton>

@@ -39,21 +39,21 @@ function Navbar() {
               </Column>
               <button
                 onClick={() => router.push("/edit_info")}
-                className="login-btn"
+                className="nav-auth-btn"
               >
                 Profil
               </button>
-              <button onClick={logout} className="login-btn">
+              <button onClick={logout} className="nav-auth-btn">
                 Abmeldung
               </button>
             </>
           ) : (
             <>
               <Link href="/auth/login">
-                <button className="login-btn">Anmeldung</button>
+                <button className="nav-auth-btn">Anmeldung</button>
               </Link>
               <Link href="/auth/register">
-                <button className="signup-btn">Registrieren</button>
+                <button className="nav-auth-btn">Registrieren</button>
               </Link>
             </>
           )}

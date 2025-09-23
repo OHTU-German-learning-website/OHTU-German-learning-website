@@ -10,6 +10,8 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  max-width: min(60em, 90%);
+  margin: 0 auto;
   gap: var(--u-xl);
   flex-grow: 1;
 }

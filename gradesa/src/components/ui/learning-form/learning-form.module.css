@@ -40,20 +40,23 @@
   font-size: var(--font-lg);
   padding: var(--u-sm);
   border-radius: var(--radius-md);
-  background-color: var(--bg5) !important;
+  background-color: var(--bg3) !important;
   color: var(--fg2);
   cursor: pointer;
+
   &:hover {
-    background-color: var(--bg6) !important;
+    background-color: var(--bg3) !important;
     color: var(--fg1);
   }
+
   &:disabled {
     opacity: 0.4;
     color: var(--fg2);
     cursor: not-allowed;
   }
+
   &[data-current="true"] {
-    background-color: var(--bg6) !important;
+    background-color: var(--bg3) !important;
     border: 2px solid var(--primary2);
     color: var(--fg1);
   }
@@ -125,10 +128,8 @@
   pointer-events: none;
   top: 0;
   left: 0;
-  .questionRadioInput:checked + .questionFieldset {
+
+  .questionRadioInput:checked+.questionFieldset {
     color: var(--bg1) !important;
   }
-}
-
-.questionRadioInput {
 }

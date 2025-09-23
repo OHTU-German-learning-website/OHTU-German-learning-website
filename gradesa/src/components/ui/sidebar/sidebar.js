@@ -168,6 +168,12 @@ const adminSidebarLinks = [
     link: "/admin/glossary",
     id: "glossary",
   },
+  {
+    title: "Add admin",
+    linkLabel: "Add admin",
+    link: "/admin/add-admin",
+    id: "add-admin",
+  },
 ];
 
 function AdminSideBar() {

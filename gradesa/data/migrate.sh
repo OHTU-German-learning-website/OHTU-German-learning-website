@@ -36,3 +36,4 @@ docker exec gradesa-db sh -c "pgmigrate dump -d postgres://ohtu:password@localho
 # Copy the schema file from the container to the local directory
 docker cp gradesa-db:/tmp/schema.sql ./schema.sql
 echo "Dumping done"
+

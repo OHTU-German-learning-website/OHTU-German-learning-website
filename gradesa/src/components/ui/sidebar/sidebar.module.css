@@ -8,7 +8,7 @@
 }
 
 .sidebar {
-  width: 240px;
+  width: 340px;
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
@@ -19,8 +19,9 @@
   padding: 36px 24px;
   display: flex;
   flex-direction: column;
-  background-color: var(--bg2);
+  background-color: var(--bg1);
   gap: var(--u-3xl);
+  border-right: 1px solid var(--fg4);
 }
 
 .sidebarLink {
@@ -32,16 +33,23 @@
   padding: var(--u-sm) var(--u-md);
   color: var(--fg1);
   border-radius: var(--radius-md);
+
   &:visited {
-    color: var(--fg1);
-  }
-  &:hover {
     color: var(--fg2);
-    background-color: var(--bg3);
   }
+
+  &:link {
+    color: var(--fg2);
+  }
+
+  &:hover {
+    color: var(--fg3);
+    background-color: var(--bg4);
+  }
+
   &.active {
     color: var(--fg2);
-    background-color: var(--bg3);
+    background-color: var(--bg4);
   }
 }
 
@@ -60,17 +68,24 @@
   font-weight: normal;
   padding: var(--u-sm) var(--u-md);
   border-radius: var(--radius-md);
-  color: var(--fg1);
+  color: var(--fg3);
+
   &:visited {
-    color: var(--fg1);
+    color: var(--fg3);
   }
+
+  &:link {
+    color: var(--fg3);
+  }
+
   &.active {
     color: var(--fg2);
-    background-color: var(--bg3);
+    background-color: var(--bg4);
   }
+
   &:hover {
     color: var(--fg2);
-    background-color: var(--bg3);
+    background-color: var(--bg4);
   }
 }
 
@@ -85,13 +100,21 @@
   padding: 12px 12px;
   border-radius: var(--radius-md);
   cursor: pointer;
+
   & .sidebarLink {
     text-decoration: none;
     color: var(--fg2);
     font-size: var(--font-lg);
   }
+
   &:hover {
     color: var(--fg1);
     background-color: var(--bg2);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .sidebar {
+    background-color: var(--bg1);
   }
 }
