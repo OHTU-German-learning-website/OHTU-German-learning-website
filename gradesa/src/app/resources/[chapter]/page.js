@@ -61,14 +61,12 @@ export const chapters = [
     id: "1",
     linkLabel: "Kapitel 1",
     title: "1. Über das Lernen",
-    content: Chapter1,
     link: "/resources/1",
   },
   {
     id: "2",
     linkLabel: "Kapitel 2",
     title: "2. Die Arten des Wissens",
-    content: Chapter2,
     link: "/resources/2",
   },
   {
@@ -76,41 +74,18 @@ export const chapters = [
     linkLabel: "Kapitel 3",
     title:
       "3. Was sind die Unterschiede zwischen Lernen im Klassenraum und allein lernen?",
-    content: Chapter3,
     link: "/resources/3",
   },
   {
     id: "4",
     linkLabel: "Kapitel 4",
     title: "4. Was für ein Lerntyp bin ich?",
-    content: Chapter4,
     link: "/resources/4",
   },
   {
     id: "5",
     linkLabel: "Kapitel 5",
     title: "5.Freiwilliger Selbst-Test zu Lernstrategien",
-    content: Chapter5,
     link: "/resources/5",
   },
 ];
-
-function Chapter1() {
-  return <RenderHTML contentId={1} />;
-}
-
-function Chapter2() {
-  return <RenderHTML contentId={2} />;
-}
-
-function Chapter3() {
-  return <RenderHTML contentId={3} />;
-}
-
-function Chapter4() {
-  return <RenderHTML contentId={4} />;
-}
-
-function Chapter5() {
-  return <RenderHTML contentId={5} />;
-}
