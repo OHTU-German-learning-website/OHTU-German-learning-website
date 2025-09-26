@@ -1,4 +1,4 @@
 CREATE TABLE learning_pages_html (
-    id SERIAL PRIMMARY KEY,
+    id SERIAL PRIMARY KEY,
     content TEXT NOT NULL
 );
