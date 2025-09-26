@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react/cjs/react.production";
+import { useEffect, useState } from "react";
 import { getHTMLContent } from "@/backend/html-services";
 
 /*
@@ -15,7 +15,7 @@ NOTE:   Currently this function fetches content corresponding to id. This is ok 
 NOTE:   This function could be enhanced by providing HTML sanitizing before returning content.
         One option for this would be using dompurify sanitizer
 */
-export default function HTMLRenderer({ contentId }) {
+export default function RenderHTML({ contentId }) {
   // create state for HTML content
   const [html, setHtml] = useState("");
 

@@ -11,6 +11,7 @@ import {
   GlossaryListItem,
 } from "@/components/ui/glossary/GlossaryText";
 import Anchor from "@/components/ui/anchor/Anchor";
+import RenderHTML from "@/app/html-renderer";
 
 export default function Chapters() {
   const { chapter } = useParams();
@@ -94,79 +95,7 @@ export const chapters = [
 ];
 
 function Chapter1() {
-  return (
-    <Column className="chapter-content">
-      <Anchor id="chapter-1-1" />
-      <GlossaryParagraph>
-        Dieses Lernangebot ist als eine Ergänzung zum normalen Sprachlernen
-        gedacht. Wenn du also die deutsche Grammatik lernen willst, um richtig
-        zu sprechen oder wenn du sie lernen musst, weil du zum Beispiel
-        Germanistik studierst, dann ist dieses Material genau richtig für dich.
-      </GlossaryParagraph>
-      <GlossaryParagraph>
-        Bevor man mit dem Lernen beginnt, ist es hilfreich, sich Gedanken zu
-        machen, wie das Lernen funktioniert. Wie wir lernen, hängt natürlich von
-        unserer Person selbst ab, aber es gibt auch viele äußere Faktoren, die
-        das Lernen beeinflussen. Dazu gehören der Ort, wo du lernst, die Zeit,
-        wann du lernst, und auch das Material, mit dem du lernst. Hier hast du
-        es also mit einem Online-Angebot zu tun, bei dem du diese Faktoren im
-        Wesentlichen selbst bestimmen kannst. Du solltest dich in diesem
-        Abschnitt über das selbstständige Lernen informieren, aber du kannst
-        auch mit deiner Deutsch-Lehrkraft in Kontakt sein, welche Materialien du
-        bearbeiten solltest.
-      </GlossaryParagraph>
-      <GlossaryParagraph>
-        Wir lernen eigentlich das ganze Leben lang, daher spricht man auch von
-        lebenslangem Lernen. Aber dies passiert auf verschiedene Weise. Manche
-        Dinge lernen wir ganz gezielt (explizit), das heißt, wir wählen sie,
-        weil wir sie zum Beispiel bei der Arbeit brauchen. Auf dieser Plattform
-        kannst du grammatische Phänomene explizit lernen. Dafür suchen wir auch
-        immer Kommunikationssituationen, wo diese gebraucht werden.
-      </GlossaryParagraph>
-      <GlossaryParagraph>
-        Eine andere Art des Lernens ist das beiläufige (implizite) Lernen. Dabei
-        sehen wir Dinge auf der Straße, in den Medien oder in einem Sprachkurs,
-        an die wir uns später erinnern und die wir mit dem verbinden, was wir
-        schon wissen.
-      </GlossaryParagraph>
-      <GlossaryParagraph>
-        Wann, wo, mit wem und wie lernen wir am besten? Auch das hängt von
-        persönlichen Interessen und Vorlieben ab. Aber hier sind einige
-        Hinweise:
-      </GlossaryParagraph>
-      <p>Wann?</p>
-      <Anchor id="chapter-1-2" />
-      <GlossaryParagraph>
-        Du solltest dir klar sein, zu welchen Tageszeiten du lernen kannst oder
-        willst und wieviel Zeit du dafür verwenden möchtest. Für das Sprechen
-        ist eine ganz korrekte Grammatik vielleicht nicht notwendig, für ein
-        linguistisches Studium aber schon. Das hat natürlich einen Einfluss
-        darauf, wie du welche Dinge lernst, und welche Ziele du selbst hast.
-      </GlossaryParagraph>
-      <p>Wo?</p>
-      <Anchor id="chapter-1-3" />
-      <GlossaryParagraph>
-        Natürlich lernst du hier in diesem Online-Kurs, aber wo dein Computer
-        steht oder dein Handy sich befindet, ist individuell ganz verschieden.
-        Du solltest dir einen ruhigen Ort suchen, wenn du Dinge lernen willst,
-        du solltest dich auch mit anderen Leuten treffen, wenn du diese Dinge
-        praktisch ausprobieren willst.
-      </GlossaryParagraph>
-      <p>Mit wem?</p>
-      <Anchor id="chapter-1-4" />
-      <GlossaryParagraph>
-        Im klassischen Modell lernt man mit anderen Lernenden und einer
-        Lehrkraft. In diesem Kontext wird es keine Lehrkraft geben, die jeden
-        Lernschritt beobachten kann. Du kannst aber über unsere
-        Kommunikationskanäle jederzeit uns oder auch deine eigene
-        Deutschlehrkraft erreichen, wenn du das möchtest. Auch solltest du
-        versuchen, die gelernten Dinge mit Mitlernern auszuprobieren und zu
-        verwenden. Gut ist auch, wenn man mit Menschen spricht, die Deutsch als
-        Muttersprache haben (Muttersprachler). Dann bittest du am besten darum,
-        dass diese Personen dich korrigieren.
-      </GlossaryParagraph>
-    </Column>
-  );
+  return RenderHTML(1);
 }
 
 function Chapter2() {
