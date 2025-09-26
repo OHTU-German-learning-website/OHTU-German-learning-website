@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { getHTMLContent } from "@/backend/html-services";
 
 /*
 This function returns HTML/React content, that was fetched from db.
@@ -23,8 +22,14 @@ export default function RenderHTML({ contentId }) {
   useEffect(() => {
     // function to fetch HTML content using html-services, and set it to state html
     async function fetchHTML() {
-      const content = await getHTMLContent(contentId);
-      setHtml(content);
+      // fetch response through next.js route using getHTMLContent function
+      const res = await fetch(`/api/html-content/${contentId}`);
+
+      // chnages the response to proper json
+      const data = await res.json();
+
+      // change html state to what was fetched
+      setHtml(data.content);
     }
 
     fetchHTML();
