@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gradesa-dep
+  annotations:
+    alpha.image.policy.openshift.io/resolve-names: "*"
+    image.openshift.io/triggers: >-
+      [{"from":{"kind":"ImageStreamTag","name":"gradesa:staging","namespace":"ohtuprojekti-staging"},"fieldPath":"spec.template.spec.containers[?(@.name==\"gradesa\")].image","pause":"false"}]
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gradesa-dep
+  template:
+    metadata:
+      labels:
+        app: gradesa-dep
+    spec:
+      containers:
+        - name: gradesa
+          image: gradesa:staging
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 8080
+          envFrom:
+          - secretRef:
+              name: gradesa-secret
+          resources:
+            limits:
+              memory: "1024Mi"
+              cpu: "500m"
+            requests:
+              memory: "100Mi"
+              cpu: "50m"

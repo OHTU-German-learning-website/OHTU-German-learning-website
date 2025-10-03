@@ -1,0 +1,19 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: gradesa-route
+  namespace: ohtuprojekti-staging
+  labels:
+    app: gradesa
+    type: external
+spec:
+  host: gradesa2-ohtuprojekti-staging.ext.ocp-prod-0.k8s.it.helsinki.fi
+  port:
+    targetPort: 8080
+  to:
+    kind: Service
+    name: gradesa-svc
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
