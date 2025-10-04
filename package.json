@@ -30,5 +30,8 @@
     "prettier": "3.5.3"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "quill": "^2.0.3"
+  }
 }
