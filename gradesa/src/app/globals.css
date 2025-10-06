@@ -128,10 +128,10 @@
 @media (prefers-color-scheme: dark) {
   :root {
     /* Inverted background colors for dark mode */
-    --bg1: hsl(213, 10%, 8%);
-    --bg2: hsl(213, 10%, 10%);
-    --bg3: hsl(213, 10%, 18%);
-    --bg4: hsl(213, 10%, 30%);
+    --bg1: hsl(207, 42%, 9%);
+    --bg2: hsl(208, 30%, 11%);
+    --bg3: hsl(216, 49%, 20%);
+    --bg4: hsl(212, 84%, 17%);
 
     --linear-gradient: linear-gradient(120deg,
         var(--primary3) 12%,
@@ -166,10 +166,10 @@
     --secondary8: hsl(178, 60%, 90%);
     --secondary9: hsl(178, 60%, 95%);
 
-    --primary1: hsl(213, 45%, 25%);
-    --primary2: hsl(213, 45%, 30%);
-    --primary3: hsl(213, 45%, 40%);
-    --primary4: hsl(213, 45%, 50%);
+    --primary1: #1e2a78;
+    --primary2: #2f4fb0;
+    --primary3: #5078d0;
+    --primary4: #7f9cc7;
 
     --green1: hsl(120, 40%, 30%);
     --green2: hsl(120, 40%, 40%);
