@@ -12,25 +12,10 @@ import {
 } from "@/components/ui/glossary/GlossaryText";
 import Anchor from "@/components/ui/anchor/Anchor";
 import RenderHTML from "@/app/html-renderer";
-import { useState, useRef, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import Editor from "@/components/ui/editor";
 
 export default function Chapters() {
   const { chapter } = useParams();
   const router = useRouter();
-  const [editorActive, setEditorActive] = useState(false);
-  const [editorContent, setEditorContent] = useState("");
-
-  useEffect(() => {
-    async function fetchHTML() {
-      const res = await fetch(`/api/html-content/${parseInt(chapter)}`);
-      const data = await res.json();
-      setEditorContent(data);
-    }
-
-    fetchHTML();
-  }, []);
 
   const Chapter = chapters.find((c) => c.id === chapter);
   if (!Chapter) {
@@ -43,24 +28,12 @@ export default function Chapters() {
   const nextChapter = chapters.find(
     (c) => parseInt(c.id) === parseInt(chapter) + 1
   );
-  const quillRef = useRef();
-  if (editorActive) {
-    return (
-      <Column className={layout.viewContent}>
-        <h1>totsikko</h1>
-        <Button onClick={() => setEditorActive(false)}>Stop edit</Button>
-        <Row justify="space-between" pb="xl">
-          <Editor defaultContent={editorContent.content} ref={quillRef} />
-        </Row>
-      </Column>
-    );
-  }
+
   return (
     <Column className={layout.viewContent}>
       {Chapter && (
         <>
           <h1>{Chapter.title}</h1>
-          <Button onClick={() => setEditorActive(true)}>Edit</Button>
           <RenderHTML contentId={Chapter.id} />
           {/*<Chapter.content />*/}
         </>

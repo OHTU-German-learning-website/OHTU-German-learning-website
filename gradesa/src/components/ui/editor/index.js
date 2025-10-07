@@ -2,9 +2,8 @@ import React, { forwardRef, useEffect, useRef } from "react";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
 
-const Editor = forwardRef(({ defaultContent }, ref) => {
+const Editor = forwardRef((props, ref) => {
   const containerRef = useRef(null);
-  const defaultContentRef = useRef(defaultContent);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -31,10 +30,6 @@ const Editor = forwardRef(({ defaultContent }, ref) => {
     });
 
     ref.current = quill;
-
-    if (defaultContentRef.current) {
-      quill.clipboard.dangerouslyPasteHTML(defaultContentRef.current);
-    }
 
     return () => {
       ref.current = null;
