@@ -1,0 +1,19 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+
+metadata:
+  name: gradesa
+  labels:
+    app: gradesa
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+    - name: staging
+      from:
+        kind: DockerImage
+        name: ghcr.io/ohtu-german-learning-website/ohtu-german-learning-website:latest
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Local

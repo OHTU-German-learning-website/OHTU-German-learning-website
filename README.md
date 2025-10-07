@@ -46,6 +46,29 @@ This should be all that's needed:
   - `npm run dev` — Starts the dev server.
   - You can now find the NextJS app on localhost:3000
 
+## OpenShift
+
+The project is currently hosted on University of Helsinki TIKE OpenShift cluster. The deployment is managed with the manifest files in the manifests folder. The CI/CD pipeline is set up so that when new commit(s) are merged to master, a GitHub actions pipeline runs and builds the new code into a container image which is then pushed to ghcr.io. OpenShift is configured to poll for new images automatically with an interval of 15 minutes. This means that after a change has been merged to master and the pipelines have run successfully, it should take max 15 minutes for the new version to appear in production.
+
+All manifest files except secrets.yaml are under the manifests directory. The secrets.yaml file contains environment variables related to the database connection. A template for the file is as follows:
+
+```
+apiVersion: v1
+kind: Secret
+metadata:
+  name: gradesa-secret
+data:
+  DB_PASSWORD: <base64 encoded data>
+  MAILERSEND_API_KEY: <base64 encoded data>
+  SESSION_SECRET: <base64 encoded data>
+  DB_HOST: <base64 encoded data>
+  DB_USER: <base64 encoded data>
+  DB_PORT: <base64 encoded data>
+  DB_NAME: <base64 encoded data>
+```
+
+When constructing the file remember that the encoded form can not contain a trailing newline, so instead of using `echo secret | base64` (echo adds new line automatically at the end), use `printf secret | base64` to encode the secrets into base64.
+
 ## Documentation
 
 - [Product and Sprint Backlogs](https://github.com/orgs/OHTU-German-learning-website/projects/3)
