@@ -61,7 +61,8 @@ export default function Chapters() {
       {Chapter && (
         <>
           <h1>{Chapter.title}</h1>
-          <p>{isAdmin}</p>
+          <p>{!isAdmin && "Not admin"}</p>
+          <p>{isAdmin && "Admin"}</p>
           <Button onClick={() => setEditorActive(true)}>Open editor</Button>
           <RenderHTML contentId={Chapter.id} />
           {/*<Chapter.content />*/}
