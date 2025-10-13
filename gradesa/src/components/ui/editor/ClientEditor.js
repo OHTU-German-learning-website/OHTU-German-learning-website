@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, forwardRef } from "react";
-
-const ClientEditor = forwardRef((props, ref) => {
-  const containerRef = (useRef < HTMLDivElement) | (null > null);
+import React, { useEffect, useRef } from "react";
+// Importation strategy has a conflict with Grammarly browser extension! Removing it helps.
+const ClientEditor = (props) => {
+  const containerRef = useRef(null);
   const defaultContentRef = useRef(props.defaultContent);
 
   useEffect(() => {
@@ -9,7 +9,6 @@ const ClientEditor = forwardRef((props, ref) => {
       const Quill = (await import("quill")).default;
       const container = containerRef?.current;
       const quill = new Quill(container, { theme: "snow" });
-      ref.current = quill;
 
       if (defaultContentRef.current) {
         quill.clipboard.dangerouslyPasteHTML(defaultContentRef.current);
@@ -18,12 +17,11 @@ const ClientEditor = forwardRef((props, ref) => {
     load();
 
     return () => {
-      ref.current = null;
       if (containerRef.current) containerRef.current.innerHTML = "";
     };
   }, []);
 
   return <div ref={containerRef} />;
-});
+};
 
 export default ClientEditor;
