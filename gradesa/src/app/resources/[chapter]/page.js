@@ -15,12 +15,14 @@ import {
 } from "@/components/ui/glossary/GlossaryText";
 import Anchor from "@/components/ui/anchor/Anchor";
 import RenderHTML from "@/app/html-renderer";
+import { checkUseIsAdmin } from "@/context/user.context";
 
 export default function Chapters() {
   const { chapter } = useParams();
   const router = useRouter();
   const [editorActive, setEditorActive] = useState(false);
   const [editorContent, setEditorContent] = useState();
+  const isAdmin = checkUseIsAdmin();
 
   useEffect(() => {
     async function fetchHTML() {
@@ -59,6 +61,7 @@ export default function Chapters() {
       {Chapter && (
         <>
           <h1>{Chapter.title}</h1>
+          <p>{isAdmin}</p>
           <Button onClick={() => setEditorActive(true)}>Open editor</Button>
           <RenderHTML contentId={Chapter.id} />
           {/*<Chapter.content />*/}

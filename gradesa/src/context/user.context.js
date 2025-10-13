@@ -126,3 +126,17 @@ export function useIsAdmin() {
 
   return auth?.user?.id ? auth.user.is_admin : undefined;
 }
+
+export function checkUseIsAdmin() {
+  let is_admin = false;
+  const { auth, actAs } = useUser();
+
+  useEffect(() => {
+    if (!auth.user?.id) return;
+    if (auth.user?.is_admin && auth.isLoggedIn && actAs.value == "admin") {
+      is_admin = true;
+    }
+  }, [auth]);
+
+  return is_admin;
+}
