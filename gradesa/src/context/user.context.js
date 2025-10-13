@@ -131,12 +131,13 @@ export function checkUseIsAdmin() {
   let is_admin = false;
   const { auth, actAs } = useUser();
 
-  useEffect(() => {
-    if (!auth.user?.id) return;
-    if (auth.user?.is_admin && auth.isLoggedIn && actAs.value == "admin") {
-      is_admin = true;
-    }
-  }, [auth]);
+  if (!auth.user?.id) return;
+  if (auth.user?.is_admin || auth.isLoggedIn || actAs.value == "admin") {
+    is_admin = true;
+    // Evaluate the truth of this statement.
+    // Should be true if and only if the user has admin rights
+    // Find out what is the definition of an admin user
+  }
 
   return is_admin;
 }

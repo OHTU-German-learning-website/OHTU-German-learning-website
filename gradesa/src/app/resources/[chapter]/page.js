@@ -22,7 +22,7 @@ export default function Chapters() {
   const router = useRouter();
   const [editorActive, setEditorActive] = useState(false);
   const [editorContent, setEditorContent] = useState();
-  const isAdmin = checkUseIsAdmin();
+  //const isAdmin = checkUseIsAdmin();
 
   useEffect(() => {
     async function fetchHTML() {
@@ -61,8 +61,8 @@ export default function Chapters() {
       {Chapter && (
         <>
           <h1>{Chapter.title}</h1>
-          <p>{!isAdmin && "Not admin"}</p>
-          <p>{isAdmin && "Admin"}</p>
+          <p>{!checkUseIsAdmin() && "Not admin"}</p>
+          <p>{checkUseIsAdmin() && "Admin"}</p>
           <Button onClick={() => setEditorActive(true)}>Open editor</Button>
           <RenderHTML contentId={Chapter.id} />
           {/*<Chapter.content />*/}
