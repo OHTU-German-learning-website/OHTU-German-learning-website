@@ -5,6 +5,7 @@ import "./chapters.css";
 import layout from "@/shared/styles/layout.module.css";
 import { useParams, useRouter } from "next/navigation";
 import { LinkButton } from "@/components/ui/linkbutton";
+import Editor from "@/components/ui/editor";
 import Image from "next/image";
 import {
   GlossaryParagraph,
@@ -34,6 +35,7 @@ export default function Chapters() {
       {Chapter && (
         <>
           <h1>{Chapter.title}</h1>
+          <Editor defaultContent="lmaoxd" />
           <RenderHTML contentId={Chapter.id} />
           {/*<Chapter.content />*/}
         </>
