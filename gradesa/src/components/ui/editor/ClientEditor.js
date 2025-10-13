@@ -1,23 +1,26 @@
 import React, { useEffect, useRef } from "react";
-// Importation strategy has a conflict with Grammarly browser extension! Removing it helps.
+import "quill/dist/quill.snow.css";
+
 const ClientEditor = (props) => {
   const containerRef = useRef(null);
-  const defaultContentRef = useRef(props.defaultContent);
 
   useEffect(() => {
+    let quill;
     const load = async () => {
       const Quill = (await import("quill")).default;
-      const container = containerRef?.current;
-      const quill = new Quill(container, { theme: "snow" });
-
-      if (defaultContentRef.current) {
-        quill.clipboard.dangerouslyPasteHTML(defaultContentRef.current);
+      if (containerRef.current && containerRef.current.children.length === 0) {
+        quill = new Quill(containerRef.current, { theme: "snow" });
+        if (props.defaultContent) {
+          quill.clipboard.dangerouslyPasteHTML(props.defaultContent);
+        }
       }
     };
     load();
 
     return () => {
-      if (containerRef.current) containerRef.current.innerHTML = "";
+      if (containerRef.current) {
+        containerRef.current.innerHTML = "";
+      }
     };
   }, []);
 

@@ -1,10 +1,12 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Column, Container, Row } from "@/components/ui/layout/container";
 import "./chapters.css";
 import layout from "@/shared/styles/layout.module.css";
 import { useParams, useRouter } from "next/navigation";
 import { LinkButton } from "@/components/ui/linkbutton";
+import { Button } from "@/components/ui/button";
 import Editor from "@/components/ui/editor";
 import Image from "next/image";
 import {
@@ -17,6 +19,17 @@ import RenderHTML from "@/app/html-renderer";
 export default function Chapters() {
   const { chapter } = useParams();
   const router = useRouter();
+  const [editorActive, setEditorActive] = useState(false);
+  const [editorContent, setEditorContent] = useState();
+
+  useEffect(() => {
+    async function fetchHTML() {
+      const res = await fetch(`/api/html-content/${parseInt(chapter)}`);
+      const data = await res.json();
+      setEditorContent(data);
+    }
+    fetchHTML();
+  }, []);
 
   const Chapter = chapters.find((c) => c.id === chapter);
   if (!Chapter) {
@@ -30,12 +43,23 @@ export default function Chapters() {
     (c) => parseInt(c.id) === parseInt(chapter) + 1
   );
 
+  if (editorActive) {
+    return (
+      <Column className={layout.viewContent}>
+        <Button onClick={() => setEditorActive(false)}>Close editor</Button>
+        <Row justify="space-between" pb="xl">
+          <Editor defaultContent={editorContent.content} />
+        </Row>
+      </Column>
+    );
+  }
+
   return (
     <Column className={layout.viewContent}>
       {Chapter && (
         <>
           <h1>{Chapter.title}</h1>
-          <Editor defaultContent="lmaoxd" />
+          <Button onClick={() => setEditorActive(true)}>Open editor</Button>
           <RenderHTML contentId={Chapter.id} />
           {/*<Chapter.content />*/}
         </>
