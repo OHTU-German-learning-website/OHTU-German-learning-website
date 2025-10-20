@@ -126,3 +126,19 @@ export function useIsAdmin() {
 
   return auth?.user?.id ? auth.user.is_admin : undefined;
 }
+
+export function checkUseIsAdmin() {
+  let is_admin = true;
+  const { auth, actAs } = useUser();
+
+  if (!auth.user?.id) return;
+  if (!auth.user?.is_admin || !auth.isLoggedIn || actAs.value == "admin") {
+    is_admin = false;
+    // Evaluate the truth of this statement.
+    // Should be true if and only if the user has admin rights
+    // Find out what is the definition of an admin user
+    // Also these functions might be better if they used whitelisting instead of blacklisting
+  }
+
+  return is_admin;
+}
