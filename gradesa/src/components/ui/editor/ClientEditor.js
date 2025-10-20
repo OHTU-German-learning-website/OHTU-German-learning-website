@@ -24,7 +24,11 @@ const ClientEditor = (props) => {
     };
   }, []);
 
-  return <div ref={containerRef} />;
+  return (
+    <div>
+      <div ref={containerRef} />
+    </div>
+  );
 };
 
 export default ClientEditor;
