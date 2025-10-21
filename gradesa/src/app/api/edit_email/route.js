@@ -17,14 +17,17 @@ export const POST = withAuth(
 
     if (!newEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
       return Response.json(
-        { message: "Please provide a valid email address" },
+        { message: "Bitte geben Sie eine gültige E-Mail-Adresse ein" },
         { status: 400 }
       );
     }
 
     if (newEmail === user.email) {
       return Response.json(
-        { message: "New email must be different from current email" },
+        {
+          message:
+            "Die neue E-Mail-Adresse muss sich von der aktuellen E-Mail-Adresse unterscheiden",
+        },
         { status: 400 }
       );
     }
@@ -36,7 +39,10 @@ export const POST = withAuth(
 
     if (existingUser.rows.length > 0) {
       return Response.json(
-        { message: "This email is already in use by another account" },
+        {
+          message:
+            "Diese E-Mail-Adresse wird bereits von einem anderen Konto verwendet",
+        },
         { status: 409 }
       );
     }
@@ -53,7 +59,7 @@ export const POST = withAuth(
       );
 
       if (updatedUser.rows.length === 0) {
-        throw new Error("User not found after update");
+        throw new Error("Benutzer nach der Aktualisierung nicht gefunden");
       }
 
       await deleteSession();
@@ -64,13 +70,13 @@ export const POST = withAuth(
       await createSession(newUserData);
 
       return Response.json(
-        { message: "Email updated successfully" },
+        { message: "E-Mail erfolgreich aktualisiert" },
         { status: 200 }
       );
     } catch (error) {
-      console.error("Error updating email:", error);
+      console.error("Fehler beim Aktualisieren der E-Mail:", error);
       return Response.json(
-        { message: "Failed to update email" },
+        { message: "Aktualisierung der E-Mail fehlgeschlagen" },
         { status: 500 }
       );
     }

@@ -20,7 +20,7 @@ export default function EditPassword() {
     setSuccess("");
 
     if (newPassword !== confirmPassword) {
-      setError("Passwords do not match");
+      setError("Passwörter stimmen nicht überein");
       return;
     }
 
@@ -33,7 +33,7 @@ export default function EditPassword() {
     });
 
     if (res.ok) {
-      setSuccess("Password changed successfully!");
+      setSuccess("Passwort erfolgreich geändert!");
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
@@ -48,11 +48,11 @@ export default function EditPassword() {
 
   return (
     <Container>
-      <h1 className="text-2xl font-bold mb-4">Change Password</h1>
+      <h1 className="text-2xl font-bold mb-4">Passwort ändern</h1>
 
       <form onSubmit={handleSubmit} className="space-y-4 max-w-md">
         <div>
-          <label className="block mb-1">Current Password</label>
+          <label className="block mb-1">Aktuelles Passwort</label>
           <input
             type="password"
             className="w-full border rounded px-3 py-2"
@@ -61,9 +61,8 @@ export default function EditPassword() {
             required
           />
         </div>
-
         <div>
-          <label className="block mb-1">New Password</label>
+          <label className="block mb-1">Neues Passwort</label>
           <input
             type="password"
             className="w-full border rounded px-3 py-2"
@@ -72,9 +71,8 @@ export default function EditPassword() {
             required
           />
         </div>
-
         <div>
-          <label className="block mb-1">Confirm New Password</label>
+          <label className="block mb-1">Neues Passwort bestätigen</label>
           <input
             type="password"
             className="w-full border rounded px-3 py-2"
@@ -83,11 +81,9 @@ export default function EditPassword() {
             required
           />
         </div>
-
         {error && <p className="text-red-600">{error}</p>}
         {success && <p className="text-green-600">{success}</p>}
-
-        <Button type="submit">Update Password</Button>
+        <Button type="submit">Passwort aktualisieren</Button>{" "}
       </form>
     </Container>
   );

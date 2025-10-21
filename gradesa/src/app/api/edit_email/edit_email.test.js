@@ -85,7 +85,7 @@ describe("POST /api/edit_email", () => {
     const result = await response.json();
 
     expect(response.status).toBe(200);
-    expect(result.message).toBe("Email updated successfully");
+    expect(result.message).toBe("E-Mail erfolgreich aktualisiert");
     expect(checkSession).toHaveBeenCalled();
     expect(deleteSession).toHaveBeenCalled();
     expect(createSession).toHaveBeenCalledWith(
@@ -104,7 +104,9 @@ describe("POST /api/edit_email", () => {
       const result = await response.json();
 
       expect(response.status).toBe(400);
-      expect(result.message).toBe("Please provide a valid email address");
+      expect(result.message).toBe(
+        "Bitte geben Sie eine gültige E-Mail-Adresse ein"
+      );
     }
   });
 
@@ -114,7 +116,7 @@ describe("POST /api/edit_email", () => {
 
     expect(response.status).toBe(400);
     expect(result.message).toBe(
-      "New email must be different from current email"
+      "Die neue E-Mail-Adresse muss sich von der aktuellen E-Mail-Adresse unterscheiden"
     );
   });
 
@@ -125,7 +127,7 @@ describe("POST /api/edit_email", () => {
 
     expect(response.status).toBe(409);
     expect(result.message).toBe(
-      "This email is already in use by another account"
+      "Diese E-Mail-Adresse wird bereits von einem anderen Konto verwendet"
     );
   });
 
@@ -147,7 +149,7 @@ describe("POST /api/edit_email", () => {
     const result = await response.json();
 
     expect(response.status).toBe(500);
-    expect(result.message).toBe("Failed to update email");
+    expect(result.message).toBe("Aktualisierung der E-Mail fehlgeschlagen");
 
     DB.pool = originalPool;
   });

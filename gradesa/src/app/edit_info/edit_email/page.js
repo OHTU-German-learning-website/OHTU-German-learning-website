@@ -37,7 +37,7 @@ export default function EditEmail() {
     setSuccess("");
 
     if (newEmail !== confirmEmail) {
-      setError("Emails do not match");
+      setError("E-Mails stimmen nicht überein");
       return;
     }
 
@@ -50,7 +50,7 @@ export default function EditEmail() {
     });
 
     if (res.ok) {
-      setSuccess("Email changed successfully!");
+      setSuccess("E-Mail erfolgreich geändert!");
       setNewEmail("");
       setConfirmEmail("");
       setTimeout(() => {
@@ -58,17 +58,17 @@ export default function EditEmail() {
       }, 2000);
     } else {
       const data = await res.json();
-      setError(data.message || "Failed to change email.");
+      setError(data.message || "E-Mail konnte nicht geändert werden");
     }
   };
 
   return (
     <Container>
-      <h1 className="text-2xl font-bold mb-4">Change Email</h1>
+      <h1 className="text-2xl font-bold mb-4">E-Mail ändern</h1>
 
       <form onSubmit={handleSubmit} className="space-y-4 max-w-md">
         <div>
-          <label className="block mb-1">Current Email</label>
+          <label className="block mb-1">Aktuelle E-Mail</label>
           <input
             type="email"
             className="w-full border rounded px-3 py-2 bg-gray-100 text-gray-600 cursor-not-allowed"
@@ -78,7 +78,7 @@ export default function EditEmail() {
         </div>
 
         <div>
-          <label className="block mb-1">New Email</label>
+          <label className="block mb-1">Neue E-Mail-Adresse</label>
           <input
             type="email"
             className="w-full border rounded px-3 py-2"
@@ -89,7 +89,7 @@ export default function EditEmail() {
         </div>
 
         <div>
-          <label className="block mb-1">Confirm New Email</label>
+          <label className="block mb-1">Neue E-Mail bestätigen</label>
           <input
             type="email"
             className="w-full border rounded px-3 py-2"
@@ -102,7 +102,7 @@ export default function EditEmail() {
         {error && <p className="text-red-600">{error}</p>}
         {success && <p className="text-green-600">{success}</p>}
 
-        <Button type="submit">Update Email</Button>
+        <Button type="submit">E-Mail aktualisieren</Button>
       </form>
     </Container>
   );
