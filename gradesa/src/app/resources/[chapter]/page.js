@@ -48,7 +48,12 @@ export default function Chapters() {
   if (editorActive) {
     return (
       <Column className={layout.viewContent}>
-        <Button onClick={() => setEditorActive(false)}>Close editor</Button>
+        <Row pb="sm">
+          <Container mr="lg">
+            <Button onClick={() => setEditorActive(false)}>Close editor</Button>
+          </Container>
+          <Button onClick={() => setEditorActive(false)}>Save changes</Button>
+        </Row>
         <Row justify="space-between" pb="xl">
           <Editor defaultContent={editorContent.content} />
         </Row>
