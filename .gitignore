@@ -8,3 +8,4 @@ gradesa/playwright-report/*
 playwright-report
 screenshots
 secrets.yaml
+.vscode
