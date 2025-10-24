@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Column, Container, Row } from "@/components/ui/layout/container";
 import "./chapters.css";
 import layout from "@/shared/styles/layout.module.css";
@@ -22,7 +22,6 @@ export default function Chapters() {
   const router = useRouter();
   const [editorActive, setEditorActive] = useState(false);
   const [editorContent, setEditorContent] = useState();
-
   //const isAdmin = checkUseIsAdmin();
 
   useEffect(() => {
@@ -61,16 +60,14 @@ export default function Chapters() {
   if (editorActive) {
     return (
       <Column className={layout.viewContent}>
-        <Row pb="sm">
-          <Container mr="lg">
-            <Button onClick={() => setEditorActive(false)}>Close editor</Button>
-          </Container>
+        <Row gap="1rem">
+          <Button onClick={() => setEditorActive(false)}>Close editor</Button>
           <Button onClick={submitEditorContent}>Save changes</Button>
         </Row>
         <Row justify="space-between" pb="xl">
           <Editor
             defaultContent={editorContent.content}
-            onTextChange={(content) => setEditorContent(content)}
+            updateEditorContent={(content) => setEditorContent(content)}
           />
         </Row>
       </Column>

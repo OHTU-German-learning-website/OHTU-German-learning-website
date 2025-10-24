@@ -11,6 +11,7 @@ const ClientEditor = (props) => {
       const Quill = (await import("quill")).default;
       if (containerRef.current && containerRef.current.children.length === 0) {
         quill = new Quill(containerRef.current, { theme: "snow" });
+        quill.root.setAttribute("spellcheck", false);
         quill.on(Quill.events.TEXT_CHANGE, () => {
           updateEditorContentRef.current?.(quill.getSemanticHTML());
         });
