@@ -33,6 +33,18 @@ export default function Chapters() {
     fetchHTML();
   }, []);
 
+  const submitEditorContent = async () => {
+    const jsonData = JSON.stringify({ content: editorContent });
+    const res = await fetch(`/api/html-content/${parseInt(chapter)}`, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "PUT",
+      body: jsonData,
+    });
+  };
+
   const Chapter = chapters.find((c) => c.id === chapter);
   if (!Chapter) {
     router.replace("/resources");
@@ -48,9 +60,15 @@ export default function Chapters() {
   if (editorActive) {
     return (
       <Column className={layout.viewContent}>
-        <Button onClick={() => setEditorActive(false)}>Close editor</Button>
+        <Row gap="1rem">
+          <Button onClick={() => setEditorActive(false)}>Close editor</Button>
+          <Button onClick={submitEditorContent}>Save changes</Button>
+        </Row>
         <Row justify="space-between" pb="xl">
-          <Editor defaultContent={editorContent.content} />
+          <Editor
+            defaultContent={editorContent.content}
+            updateEditorContent={(content) => setEditorContent(content)}
+          />
         </Row>
       </Column>
     );
