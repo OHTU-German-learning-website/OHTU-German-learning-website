@@ -9,23 +9,29 @@ on:
 jobs:
   lint-format-test:
     runs-on: ubuntu-latest
+    env:
+      DB_HOST: pgtestdb
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_NAME: postgres
+      SESSION_SECRET: secret
+    services:
+      # Label used to access the service container
+      pgtestdb:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: password
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    container: node:20
     steps:
-      - uses: actions/checkout@v3
-      - name: Start databases
-        run: docker compose up -d
-      - name: Cache Node.js modules
-        uses: actions/cache@v3
-        with:
-          path: ./gradesa/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('./gradesa/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-      - name: Install Node
-        uses: actions/setup-node@v4
-        with:
-          cache-dependency-path: ./gradesa/package-lock.json
-          node-version: 22.6
-          cache: "npm"
+      - uses: actions/checkout@v5
       - name: Install dependencies
         run: npm install
       - name: Install client dependencies
@@ -35,7 +41,7 @@ jobs:
         run: npm run format:check
       - name: Download pgmigrate
         run: |
-          wget --quiet https://github.com/peterldowns/pgmigrate/releases/download/v0.1.0%2Bcommit.2f6a72b/pgmigrate-linux-amd64 -O pgmigrate
+          wget --quiet https://github.com/peterldowns/pgmigrate/releases/download/v0.0.6%2Bcommit.4f90829/pgmigrate-linux-amd64 -O pgmigrate
           chmod +x pgmigrate
           mkdir -p "$HOME/bin"
           mv pgmigrate "$HOME/bin/"
@@ -43,18 +49,25 @@ jobs:
       - name: Run migrations
         run: |
           npm run db:migrate
-      - name: Check for no uncommitted changes
+
+      - name: Check that schema.sql is up to date
+        shell: bash
+        # For the git config step, see https://github.com/actions/checkout/issues/363#issuecomment-2624179541
         run: |
-          echo "checking for uncommitted changes"
+          git config --global --add safe.directory $PWD
+          echo "Checking that schema.sql is up to date after migrations"
           git --no-pager diff
           git status
           [[ -z $(git status -s) ]] || (exit 1)
+
       - name: Run tests
         working-directory: ./gradesa
         run: |
           npm run test
       - name: Run e2e tests
         working-directory: ./gradesa
+        env:
+          HOME: /root # required in order to make Playwright Firefox tests work with GitHub actions
         run: |
           npx playwright install --with-deps
           npm run test:e2e
