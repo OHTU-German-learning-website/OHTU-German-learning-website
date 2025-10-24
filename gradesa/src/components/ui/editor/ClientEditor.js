@@ -3,6 +3,7 @@ import "quill/dist/quill.snow.css";
 
 const ClientEditor = (props) => {
   const containerRef = useRef(null);
+  const updateEditorContentRef = useRef(props.updateEditorContent);
 
   useEffect(() => {
     let quill;
@@ -10,6 +11,9 @@ const ClientEditor = (props) => {
       const Quill = (await import("quill")).default;
       if (containerRef.current && containerRef.current.children.length === 0) {
         quill = new Quill(containerRef.current, { theme: "snow" });
+        quill.on(Quill.events.TEXT_CHANGE, () => {
+          updateEditorContentRef.current?.(quill.getSemanticHTML());
+        });
         if (props.defaultContent) {
           quill.clipboard.dangerouslyPasteHTML(props.defaultContent);
         }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Column, Container, Row } from "@/components/ui/layout/container";
 import "./chapters.css";
 import layout from "@/shared/styles/layout.module.css";
@@ -22,6 +22,7 @@ export default function Chapters() {
   const router = useRouter();
   const [editorActive, setEditorActive] = useState(false);
   const [editorContent, setEditorContent] = useState();
+
   //const isAdmin = checkUseIsAdmin();
 
   useEffect(() => {
@@ -32,6 +33,18 @@ export default function Chapters() {
     }
     fetchHTML();
   }, []);
+
+  const submitEditorContent = async () => {
+    const jsonData = JSON.stringify({ content: editorContent });
+    const res = await fetch(`/api/html-content/${parseInt(chapter)}`, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "PUT",
+      body: jsonData,
+    });
+  };
 
   const Chapter = chapters.find((c) => c.id === chapter);
   if (!Chapter) {
@@ -52,10 +65,13 @@ export default function Chapters() {
           <Container mr="lg">
             <Button onClick={() => setEditorActive(false)}>Close editor</Button>
           </Container>
-          <Button onClick={() => setEditorActive(false)}>Save changes</Button>
+          <Button onClick={submitEditorContent}>Save changes</Button>
         </Row>
         <Row justify="space-between" pb="xl">
-          <Editor defaultContent={editorContent.content} />
+          <Editor
+            defaultContent={editorContent.content}
+            onTextChange={(content) => setEditorContent(content)}
+          />
         </Row>
       </Column>
     );
