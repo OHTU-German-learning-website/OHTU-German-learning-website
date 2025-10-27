@@ -50,4 +50,22 @@ NOTE:   This function also might need to be updated if the functions in these fi
 
 TODO:   This function needs to be implemented
 */
-export async function updateHTMLContent(id, content) {}
+export async function updateHTMLContent(id, content) {
+  try {
+    // get content from db using parameterized query
+    const result = await DB.pool(
+      "UPDATE learning_pages_html SET content = $1 WHERE id = $2",
+      [content, id]
+    );
+    if (result.rowCount == 1) {
+      return true;
+    }
+    console.error(
+      "Error updating HTML content, did not update one row with id  ",
+      id
+    );
+  } catch (error) {
+    console.error("Error fetching HTML content: ", error);
+  }
+  return false;
+}

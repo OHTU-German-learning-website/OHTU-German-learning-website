@@ -1,4 +1,5 @@
-import { getHTMLContent } from "@/backend/html-services";
+import { getHTMLContent, updateHTMLContent } from "@/backend/html-services";
+import { withAuth } from "@/backend/middleware/withAuth";
 
 /*
 This route fetches html content from db according to id
@@ -21,3 +22,23 @@ export async function GET(req) {
     headers: { "Content-Type": "application/json" },
   });
 }
+
+export const PUT = withAuth(
+  async (req, { params }) => {
+    const data = await req.json();
+    const { id } = await params;
+    console.log(data);
+    console.log(id);
+    // remeber to validate :)
+    if (!(await updateHTMLContent(id, data.content))) {
+      return new Response("<p>Error updating HTML content</p>", {
+        status: 400,
+      });
+    }
+    return new Response("", { status: 200 });
+  },
+  {
+    requireAdmin: true,
+    requireAuth: true,
+  }
+);
