@@ -10,7 +10,18 @@ const ClientEditor = (props) => {
     const load = async () => {
       const Quill = (await import("quill")).default;
       if (containerRef.current && containerRef.current.children.length === 0) {
-        quill = new Quill(containerRef.current, { theme: "snow" });
+        const toolbarOptions = [
+          [{ header: [false, 1, 2, 3] }],
+          ["bold", "italic", "underline", "strike"], // toggled buttons
+          ["link", "image", { color: [] }],
+
+          [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
+          [{ script: "sub" }, { script: "super" }], // superscript/subscript
+        ];
+        quill = new Quill(containerRef.current, {
+          theme: "snow",
+          modules: { toolbar: toolbarOptions },
+        });
         quill.root.setAttribute("spellcheck", false);
         quill.on(Quill.events.TEXT_CHANGE, () => {
           updateEditorContentRef.current?.(quill.getSemanticHTML());

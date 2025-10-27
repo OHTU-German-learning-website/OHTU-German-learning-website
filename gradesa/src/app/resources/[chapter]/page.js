@@ -22,13 +22,14 @@ export default function Chapters() {
   const router = useRouter();
   const [editorActive, setEditorActive] = useState(false);
   const [editorContent, setEditorContent] = useState();
+  const [editorMessage, setEditorMessage] = useState();
   //const isAdmin = checkUseIsAdmin();
 
   useEffect(() => {
     async function fetchHTML() {
       const res = await fetch(`/api/html-content/${parseInt(chapter)}`);
       const data = await res.json();
-      setEditorContent(data);
+      setEditorContent(data.content);
     }
     fetchHTML();
   }, []);
@@ -43,6 +44,11 @@ export default function Chapters() {
       method: "PUT",
       body: jsonData,
     });
+    if (res.status == 200) {
+      setEditorMessage("Saved successfully");
+    } else {
+      setEditorMessage("Failed saving changes");
+    }
   };
 
   const Chapter = chapters.find((c) => c.id === chapter);
@@ -64,9 +70,10 @@ export default function Chapters() {
           <Button onClick={() => setEditorActive(false)}>Close editor</Button>
           <Button onClick={submitEditorContent}>Save changes</Button>
         </Row>
+        <p>{editorMessage}</p>
         <Row justify="space-between" pb="xl">
           <Editor
-            defaultContent={editorContent.content}
+            defaultContent={editorContent}
             updateEditorContent={(content) => setEditorContent(content)}
           />
         </Row>

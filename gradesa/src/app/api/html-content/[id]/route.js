@@ -1,5 +1,7 @@
 import { getHTMLContent, updateHTMLContent } from "@/backend/html-services";
 import { withAuth } from "@/backend/middleware/withAuth";
+import { JSDOM } from "jsdom";
+import DOMPurify from "dompurify";
 
 /*
 This route fetches html content from db according to id
@@ -27,9 +29,16 @@ export const PUT = withAuth(
   async (req, { params }) => {
     const data = await req.json();
     const { id } = await params;
-    console.log(data);
-    console.log(id);
-    // remeber to validate :)
+
+    const window = new JSDOM("").window;
+    const purify = DOMPurify(window);
+    const cleaned = purify.sanitize(data.content, { ADD_ATTR: ["target"] });
+    if (cleaned != data.content) {
+      return new Response("<p>Invalid HTML detected</p>", {
+        status: 400,
+      });
+    }
+
     if (!(await updateHTMLContent(id, data.content))) {
       return new Response("<p>Error updating HTML content</p>", {
         status: 400,
