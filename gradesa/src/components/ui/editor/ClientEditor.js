@@ -12,11 +12,11 @@ const ClientEditor = (props) => {
       if (containerRef.current && containerRef.current.children.length === 0) {
         const toolbarOptions = [
           [{ header: [false, 1, 2, 3] }],
-          ["bold", "italic", "underline", "strike"], // toggled buttons
+          ["bold", "italic", "underline", "strike"],
           ["link", "image", { color: [] }],
 
-          [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
-          [{ script: "sub" }, { script: "super" }], // superscript/subscript
+          [{ list: "ordered" }, { list: "bullet" }],
+          [{ script: "sub" }, { script: "super" }],
         ];
         quill = new Quill(containerRef.current, {
           theme: "snow",

@@ -8,12 +8,6 @@ import { useParams, useRouter } from "next/navigation";
 import { LinkButton } from "@/components/ui/linkbutton";
 import { Button } from "@/components/ui/button";
 import Editor from "@/components/ui/editor";
-import Image from "next/image";
-import {
-  GlossaryParagraph,
-  GlossaryListItem,
-} from "@/components/ui/glossary/GlossaryText";
-import Anchor from "@/components/ui/anchor/Anchor";
 import RenderHTML from "@/app/html-renderer";
 import { checkUseIsAdmin } from "@/context/user.context";
 
@@ -22,8 +16,7 @@ export default function Chapters() {
   const router = useRouter();
   const [editorActive, setEditorActive] = useState(false);
   const [editorContent, setEditorContent] = useState();
-  const [editorMessage, setEditorMessage] = useState();
-  //const isAdmin = checkUseIsAdmin();
+  const [editorMessage, setEditorMessage] = useState({ error: false, msg: "" });
 
   useEffect(() => {
     async function fetchHTML() {
@@ -35,7 +28,10 @@ export default function Chapters() {
   }, []);
 
   const submitEditorContent = async () => {
-    const jsonData = JSON.stringify({ content: editorContent });
+    // A naive approach with string replacement is used here.
+    const jsonData = JSON.stringify({
+      content: editorContent.replace(/&nbsp;/g, " "),
+    });
     const res = await fetch(`/api/html-content/${parseInt(chapter)}`, {
       headers: {
         Accept: "application/json",
@@ -45,10 +41,11 @@ export default function Chapters() {
       body: jsonData,
     });
     if (res.status == 200) {
-      setEditorMessage("Saved successfully");
+      setEditorMessage({ error: false, msg: "Updated successfully" });
     } else {
-      setEditorMessage("Failed saving changes");
+      setEditorMessage({ error: true, msg: res.text() });
     }
+    setTimeout(() => setEditorMessage({ error: false, content: "" }), 1000);
   };
 
   const Chapter = chapters.find((c) => c.id === chapter);
@@ -70,7 +67,12 @@ export default function Chapters() {
           <Button onClick={() => setEditorActive(false)}>Close editor</Button>
           <Button onClick={submitEditorContent}>Save changes</Button>
         </Row>
-        <p>{editorMessage}</p>
+        {!!editorMessage.msg &&
+          (editorMessage.error ? (
+            <p className="error-message">{editorMessage.msg}</p>
+          ) : (
+            <p className="success-message">{editorMessage.msg}</p>
+          ))}
         <Row justify="space-between" pb="xl">
           <Editor
             defaultContent={editorContent}
