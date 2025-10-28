@@ -1,4 +1,7 @@
-import { getHTMLContent } from "@/backend/html-services";
+import { getHTMLContent, updateHTMLContent } from "@/backend/html-services";
+import { withAuth } from "@/backend/middleware/withAuth";
+import { JSDOM } from "jsdom";
+import DOMPurify from "dompurify";
 
 /*
 This route fetches html content from db according to id
@@ -21,3 +24,30 @@ export async function GET(req) {
     headers: { "Content-Type": "application/json" },
   });
 }
+
+export const PUT = withAuth(
+  async (req, { params }) => {
+    const data = await req.json();
+    const { id } = await params;
+
+    const window = new JSDOM("").window;
+    const purify = DOMPurify(window);
+    const cleaned = purify.sanitize(data.content, { ADD_ATTR: ["target"] });
+    if (cleaned != data.content) {
+      return new Response("Invalid HTML detected", {
+        status: 400,
+      });
+    }
+
+    if (!(await updateHTMLContent(id, data.content))) {
+      return new Response("Error updating HTML content", {
+        status: 400,
+      });
+    }
+    return new Response("", { status: 200 });
+  },
+  {
+    requireAdmin: true,
+    requireAuth: true,
+  }
+);

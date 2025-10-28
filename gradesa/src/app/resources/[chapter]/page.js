@@ -8,12 +8,6 @@ import { useParams, useRouter } from "next/navigation";
 import { LinkButton } from "@/components/ui/linkbutton";
 import { Button } from "@/components/ui/button";
 import Editor from "@/components/ui/editor";
-import Image from "next/image";
-import {
-  GlossaryParagraph,
-  GlossaryListItem,
-} from "@/components/ui/glossary/GlossaryText";
-import Anchor from "@/components/ui/anchor/Anchor";
 import RenderHTML from "@/app/html-renderer";
 import { checkUseIsAdmin } from "@/context/user.context";
 
@@ -22,19 +16,22 @@ export default function Chapters() {
   const router = useRouter();
   const [editorActive, setEditorActive] = useState(false);
   const [editorContent, setEditorContent] = useState();
-  //const isAdmin = checkUseIsAdmin();
+  const [editorMessage, setEditorMessage] = useState({ error: false, msg: "" });
 
   useEffect(() => {
     async function fetchHTML() {
       const res = await fetch(`/api/html-content/${parseInt(chapter)}`);
       const data = await res.json();
-      setEditorContent(data);
+      setEditorContent(data.content);
     }
     fetchHTML();
   }, []);
 
   const submitEditorContent = async () => {
-    const jsonData = JSON.stringify({ content: editorContent });
+    // A naive approach with string replacement is used here.
+    const jsonData = JSON.stringify({
+      content: editorContent.replace(/&nbsp;/g, " "),
+    });
     const res = await fetch(`/api/html-content/${parseInt(chapter)}`, {
       headers: {
         Accept: "application/json",
@@ -43,6 +40,12 @@ export default function Chapters() {
       method: "PUT",
       body: jsonData,
     });
+    if (res.status == 200) {
+      setEditorMessage({ error: false, msg: "Updated successfully" });
+    } else {
+      setEditorMessage({ error: true, msg: res.text() });
+    }
+    setTimeout(() => setEditorMessage({ error: false, content: "" }), 1000);
   };
 
   const Chapter = chapters.find((c) => c.id === chapter);
@@ -64,9 +67,15 @@ export default function Chapters() {
           <Button onClick={() => setEditorActive(false)}>Close editor</Button>
           <Button onClick={submitEditorContent}>Save changes</Button>
         </Row>
+        {!!editorMessage.msg &&
+          (editorMessage.error ? (
+            <p className="error-message">{editorMessage.msg}</p>
+          ) : (
+            <p className="success-message">{editorMessage.msg}</p>
+          ))}
         <Row justify="space-between" pb="xl">
           <Editor
-            defaultContent={editorContent.content}
+            defaultContent={editorContent}
             updateEditorContent={(content) => setEditorContent(content)}
           />
         </Row>

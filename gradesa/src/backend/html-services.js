@@ -36,9 +36,7 @@ export async function getHTMLContent(id) {
 }
 
 /*
-This function updates html content in database for a specific id.
-If no content exists, this function should create a new entry in the database table
-for the id provided.
+This function updates html content in database for a specific id. Returns true if success, false otherwise.
 
 parameter id: id of the page updated
 
@@ -47,7 +45,22 @@ parameter content: the content that will be updated
 NOTE:   This function also might need to be updated if the functions in these files
         should be used to fetch and update any html content, and not just the chapter pages.
         In this case, same kind of modifications apply as seen above in function getHTMLContent(id) 
-
-TODO:   This function needs to be implemented
 */
-export async function updateHTMLContent(id, content) {}
+export async function updateHTMLContent(id, content) {
+  try {
+    const result = await DB.pool(
+      "UPDATE learning_pages_html SET content = $1 WHERE id = $2",
+      [content, id]
+    );
+    if (result.rowCount == 1) {
+      return true;
+    }
+    console.error(
+      "Error updating HTML content, did not update one row with id  ",
+      id
+    );
+  } catch (error) {
+    console.error("Error fetching HTML content: ", error);
+  }
+  return false;
+}
