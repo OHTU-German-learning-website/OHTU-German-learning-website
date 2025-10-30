@@ -6,15 +6,14 @@ The returned content can be used by js functions that are used to render individ
 
 parameter contentId: id of the HTML content in db
 
-NOTE:   Currently this function fetches content corresponding to id. This is ok when rendering
-        lesson pages, since they are named 1-n. This function could be used to render any page content,
-        if the fetching function was changed in backend to find content based on some other identifier.
-        This function probably doens't need any changes, but at this moment it is only used to render chapter pages.
+parameter type: page type
+
+
 
 NOTE:   This function could be enhanced by providing HTML sanitizing before returning content.
         One option for this would be using dompurify sanitizer
 */
-export default function RenderHTML({ contentId }) {
+export default function RenderHTML({ contentId, type }) {
   // create state for HTML content
   const [html, setHtml] = useState("");
 
@@ -23,7 +22,7 @@ export default function RenderHTML({ contentId }) {
     // function to fetch HTML content using html-services, and set it to state html
     async function fetchHTML() {
       // fetch response through next.js route using getHTMLContent function
-      const res = await fetch(`/api/html-content/${contentId}`);
+      const res = await fetch(`/api/html-content/${contentId}?type=${type}`);
 
       // chnages the response to proper json
       const data = await res.json();
