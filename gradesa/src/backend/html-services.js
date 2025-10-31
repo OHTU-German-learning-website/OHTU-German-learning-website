@@ -5,6 +5,8 @@ This function fetches html content from database
 
 parameter id: id of the content in table learning_pages_html
 
+parameter type: PageType enum denoting the sql table name
+
 NOTE:   This function could be used to fetch html content to all pages, not just 
         for chapter pages, e.g. gradesa/resources/*. In that case, the database table 
         should be updated to include some kind of identifier other than id number 
@@ -13,11 +15,12 @@ NOTE:   This function could be used to fetch html content to all pages, not just
         other identifier as parameter for this function.
 
 */
-export async function getHTMLContent(id) {
+export async function getHTMLContent(id, type) {
   try {
+    console.log("Table type: ", type);
     // get content from db using parameterized query
     const result = await DB.pool(
-      "SELECT content FROM learning_pages_html WHERE id = $1",
+      "SELECT content FROM " + type + " WHERE id = $1",
       [id]
     );
 
