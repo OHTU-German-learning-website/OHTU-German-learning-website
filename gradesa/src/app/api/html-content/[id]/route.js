@@ -33,13 +33,8 @@ export const PUT = withAuth(
     const window = new JSDOM("").window;
     const purify = DOMPurify(window);
     const cleaned = purify.sanitize(data.content, { ADD_ATTR: ["target"] });
-    if (cleaned != data.content) {
-      return new Response("Invalid HTML detected", {
-        status: 400,
-      });
-    }
 
-    if (!(await updateHTMLContent(id, data.content))) {
+    if (!(await updateHTMLContent(id, cleaned))) {
       return new Response("Error updating HTML content", {
         status: 400,
       });
