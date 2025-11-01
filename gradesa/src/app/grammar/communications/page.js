@@ -1,6 +1,6 @@
 "use client";
 
-import { chapters } from "./[chapter]/chapters";
+import { chapters } from "./[chapter]/page";
 import Link from "next/link";
 import "@/app/grammar/themes/lessons.css";
 
