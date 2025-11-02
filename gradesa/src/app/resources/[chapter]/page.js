@@ -8,8 +8,9 @@ import { useParams, useRouter } from "next/navigation";
 import { LinkButton } from "@/components/ui/linkbutton";
 import { Button } from "@/components/ui/button";
 import Editor from "@/components/ui/editor";
-import RenderHTML from "@/app/html-renderer";
+import RenderHTML, { PageType } from "@/app/html-renderer";
 import { checkUseIsAdmin } from "@/context/user.context";
+import { PAGE_TYPES } from "next/dist/lib/page-types";
 
 export default function Chapters() {
   const { chapter } = useParams();
@@ -91,7 +92,7 @@ export default function Chapters() {
           {checkUseIsAdmin() == true && (
             <Button onClick={() => setEditorActive(true)}>Open editor</Button>
           )}
-          <RenderHTML contentId={Chapter.id} />
+          <RenderHTML contentId={Chapter.id} type="resources" />
           {/*<Chapter.content />*/}
         </>
       )}
