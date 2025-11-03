@@ -21,7 +21,9 @@ export default function Chapters() {
 
   useEffect(() => {
     async function fetchHTML() {
-      const res = await fetch(`/api/html-content/${parseInt(chapter)}`);
+      const res = await fetch(
+        `/api/html-content/${parseInt(chapter)}?type=resources`
+      );
       const data = await res.json();
       setEditorContent(data.content);
     }
