@@ -4,23 +4,39 @@ GRADESA is a freely accessible website where language learners at language centr
 
 ## Install
 
-- Docker, either of these installation options work (if you're new to docker, I recommend Docker Desktop):
+To be able to use the container-based development environment, you need to be able to run **rootless** containers.
 
-  - `brew install docker` + `brew install colima` (https://github.com/abiosoft/colima)
-  - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-    - WSL 2: Enabling `systemd` is recommended
-      - Install Docker Desktop on Windows
-      - Turn on the WSL 2 feature during installation
-      - Ensure **Use the WSL 2 based engine** is enabled in General Settings
+### For Linux
+
+- If you are using a **Cubbli laptop** with version 22.04 or older, setting up rootless docker is recommended (because podman-compose can't be installed on Ubuntu 22.04 or older). Instructions [here](https://version.helsinki.fi/cubbli/cubbli-help/-/wikis/Docker). In addition to the cubbli-docker package you need to install docker-compose with `$ sudo apt install docker-compose`.
+- If you are using anything else, podman is recommended. Install with `$ sudo apt install podman podman-compose`.
+
+### For Windows & MacOS
+
+Since none of us has a MacOS or Windows machine available, we are not able to test this. But most likely using podman would be suitable. If not, see the explanation section below to make debugging easier.
+
+### Explanation
+
+The development environment includes a container named node-dev-env which can be used as a development environment. When the container is created, a bind mount is created and the code base folder is mounted to the container. All development is done inside the container as root. If for example podman is used, this root user inside the container maps to your own user outside the container and there are no problems. If however the container process is running as root, the root user inside the container gets mapped to root user outside the container. This is not only insecure but also creates problems with file permissions. If you now for example create a new file inside the container (by for example running `$ npm install`), the newly created files are owned by root both inside the container but also outside of it.
 
 ## Running locally
 
-- `docker-compose up -d` — This command starts the development enviroment which includes two databases (one for development, one for automatic tests) and a development container named node-dev-env. If using VSCode dev-containers extension can be used to attach VSCode to the running container (see dev-containers documentation). It is also possible to run the commands with `docker-exec -it node-dev-env bash`. The codebase is mounted at /host. The next actions should be run inside node-dev-env.
-- `npm install` in project root
-- `npm run db:migrate`
-- `cd ./gradesa && npm install`
-- `npm run dev` — Starts the dev server.
-- You can now find the NextJS app on localhost:3000
+1. Clone the repo to your machine: `$ git clone git@github.com:OHTU-German-learning-website/OHTU-German-learning-website.git`
+2. Cd into cloned repository: `$ cd OHTU-German-learning-website`
+3. For docker: `$ docker-compose up -d`, or for Podman: `$ podman-compose up -d`
+4. Steps 4-8 for VScode only
+5. Install dev-containers extension
+6. If you are using podman, change the value of "Dev › Containers: Docker Path" to "podman" in settings
+7. In the bottom left corner, press "open a remote window" and select "attach to running container" and select "node-dev-env"
+8. Open folder /host in VScode in the remote window
+9. The next actions should be run inside the container at /host
+10. Run inside the container: `$ npm install && npm run db:migrate`, `$ cd gradesa && npm install`
+11. Start the application: `$ npm run dev`
+12. Navigate to localhost:3000 in your browser
+
+### Explanation
+
+`docker-compose up -d` (or podman) — This command starts the development environment which includes two databases (one for development, one for automatic tests) and a development container named node-dev-env. VSCode dev-containers can be used to attach to the running container (see [dev-containers documentation](https://code.visualstudio.com/docs/devcontainers/attach-container)). It is also possible to run commands inside the container with `docker exec -it node-dev-env bash` (or with Podman). The codebase is mounted at /host.
 
 ## OpenShift
 
@@ -47,7 +63,7 @@ When constructing the file remember that the encoded form can not contain a trai
 
 ## Documentation
 
-- [Product and Sprint Backlogs](https://github.com/orgs/OHTU-German-learning-website/projects/3)
+- [Product and Sprint Backlogs](https://github.com/orgs/OHTU-German-learning-website/projects/4)
 
 - Migrations: check [the migration README](data/README.md)
 

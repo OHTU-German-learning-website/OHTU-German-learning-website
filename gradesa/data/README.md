@@ -2,14 +2,7 @@
 
 This project uses `pgmigrate` to manage database migrations. `pgmigrate` is a tool that helps apply, and manage database schema changes in a consistent and reliable manner. Ran migrations are tracked in the `pg_migrate_migrations` table.
 
-Having a migration system that's based on sql files is good because it keeps track of schema changes in git and guarantees that everyone is using the same schema.
-
-## Prerequisites
-
-Ensure you have the following installed on your system:
-
-- PostgreSQL
-- `pgmigrate` (You can find more information and installation instructions on the [pgmigrate GitHub page](https://github.com/peterldowns/pgmigrate))
+Having a migration system that's based on sql files is good because it keeps track of schema changes in git and guarantees that everyone is using the same schema. Pgmigrate is automatically installed in the node-dev-env container.
 
 ## Migration Script
 
