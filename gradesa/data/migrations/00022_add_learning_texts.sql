@@ -1,13 +1,13 @@
 INSERT INTO learning_pages_html (id, content)
 VALUES (1, '<Column className="chapter-content">
       <Anchor id="chapter-1-1" />
-      <GlossaryParagraph>
+      <p>
         Dieses Lernangebot ist als eine Ergänzung zum normalen Sprachlernen
         gedacht. Wenn du also die deutsche Grammatik lernen willst, um richtig
         zu sprechen oder wenn du sie lernen musst, weil du zum Beispiel
         Germanistik studierst, dann ist dieses Material genau richtig für dich.
-      </GlossaryParagraph>
-      <GlossaryParagraph>
+      </p>
+      <p>
         Bevor man mit dem Lernen beginnt, ist es hilfreich, sich Gedanken zu
         machen, wie das Lernen funktioniert. Wie wir lernen, hängt natürlich von
         unserer Person selbst ab, aber es gibt auch viele äußere Faktoren, die
@@ -18,47 +18,47 @@ VALUES (1, '<Column className="chapter-content">
         Abschnitt über das selbstständige Lernen informieren, aber du kannst
         auch mit deiner Deutsch-Lehrkraft in Kontakt sein, welche Materialien du
         bearbeiten solltest.
-      </GlossaryParagraph>
-      <GlossaryParagraph>
+      </p>
+      <p>
         Wir lernen eigentlich das ganze Leben lang, daher spricht man auch von
         lebenslangem Lernen. Aber dies passiert auf verschiedene Weise. Manche
         Dinge lernen wir ganz gezielt (explizit), das heißt, wir wählen sie,
         weil wir sie zum Beispiel bei der Arbeit brauchen. Auf dieser Plattform
         kannst du grammatische Phänomene explizit lernen. Dafür suchen wir auch
         immer Kommunikationssituationen, wo diese gebraucht werden.
-      </GlossaryParagraph>
-      <GlossaryParagraph>
+      </p>
+      <p>
         Eine andere Art des Lernens ist das beiläufige (implizite) Lernen. Dabei
         sehen wir Dinge auf der Straße, in den Medien oder in einem Sprachkurs,
         an die wir uns später erinnern und die wir mit dem verbinden, was wir
         schon wissen.
-      </GlossaryParagraph>
-      <GlossaryParagraph>
+      </p>
+      <p>
         Wann, wo, mit wem und wie lernen wir am besten? Auch das hängt von
         persönlichen Interessen und Vorlieben ab. Aber hier sind einige
         Hinweise:
-      </GlossaryParagraph>
+      </p>
       <p>Wann?</p>
       <Anchor id="chapter-1-2" />
-      <GlossaryParagraph>
+      <p>
         Du solltest dir klar sein, zu welchen Tageszeiten du lernen kannst oder
         willst und wieviel Zeit du dafür verwenden möchtest. Für das Sprechen
         ist eine ganz korrekte Grammatik vielleicht nicht notwendig, für ein
         linguistisches Studium aber schon. Das hat natürlich einen Einfluss
         darauf, wie du welche Dinge lernst, und welche Ziele du selbst hast.
-      </GlossaryParagraph>
+      </p>
       <p>Wo?</p>
       <Anchor id="chapter-1-3" />
-      <GlossaryParagraph>
+      <p>
         Natürlich lernst du hier in diesem Online-Kurs, aber wo dein Computer
         steht oder dein Handy sich befindet, ist individuell ganz verschieden.
         Du solltest dir einen ruhigen Ort suchen, wenn du Dinge lernen willst,
         du solltest dich auch mit anderen Leuten treffen, wenn du diese Dinge
         praktisch ausprobieren willst.
-      </GlossaryParagraph>
+      </p>
       <p>Mit wem?</p>
       <Anchor id="chapter-1-4" />
-      <GlossaryParagraph>
+      <p>
         Im klassischen Modell lernt man mit anderen Lernenden und einer
         Lehrkraft. In diesem Kontext wird es keine Lehrkraft geben, die jeden
         Lernschritt beobachten kann. Du kannst aber über unsere
@@ -68,13 +68,13 @@ VALUES (1, '<Column className="chapter-content">
         verwenden. Gut ist auch, wenn man mit Menschen spricht, die Deutsch als
         Muttersprache haben (Muttersprachler). Dann bittest du am besten darum,
         dass diese Personen dich korrigieren.
-      </GlossaryParagraph>
+      </p>
     </Column>')
     ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO learning_pages_html (id, content)
 VALUES (2, '<Column className="chapter-content">
-      <GlossaryParagraph>
+      <p>
         Sicherlich ist dir schon aufgefallen, dass du manche Dinge einfach weißt
         und benutzen kannst, ohne viel darüber nachzudenken. Du hast dir also
         das Wissen verinnerlicht, man nennt das auch implizites Wissen. Bis du
@@ -84,8 +84,8 @@ VALUES (2, '<Column className="chapter-content">
         erst durch vielfältige Übungsformen und Anwendungsszenarien in
         implizites Wissen verwandelt werden, damit du die Dinge sozusagen
         automatisch anwenden kannst.
-      </GlossaryParagraph>
-      <GlossaryParagraph>
+      </p>
+      <p>
         Es ist wichtig, beim Lernen verschiedene Sinne anzusprechen, also
         mehrere Sinneskanäle zu verwenden. Dabei spielen zum Beispiel die
         Aktivitäten Hören, Sehen, Assoziieren oder Bewegung eine große Rolle. Du
@@ -94,28 +94,28 @@ VALUES (2, '<Column className="chapter-content">
         die Dinge woanders nachzulesen oder wiederzufinden, weitere
         Informationen zu suchen und sehen, in welchem Verhältnis sie zu den
         anderen Dingen stehen. Dabei helfen auch folgende Wissenstipps:
-      </GlossaryParagraph>
+      </p>
       <Anchor id="chapter-2-1" />
       <ul>
-        <GlossaryListItem>
+        <li>
           Häufiges Wiederholen und Üben der Themen – eine Übung kann mehrmals
           gemacht werden, man kann auch Übungen auf anderen Webseiten oder in
           Lehrbüchern machen.
-        </GlossaryListItem>
+        </li>
         <li>
-          <GlossaryParagraph>
+          <p>
             Markieren der Dinge mit Farbe, z. B. Substantive:&nbsp;
             <span className="masculine">Maskulina (Artikel der)</span>,&nbsp;
             <span className="neutral">Neutra (Artikel das)</span>&nbsp;und&nbsp;
             <span className="feminine">Feminina (Artikel die)</span>.
-          </GlossaryParagraph>
+          </p>
         </li>
-        <GlossaryListItem>
+        <li>
           Verbinden von Bild – Wort – Aussprache und anderen Kanälen, also das
           Wort oder die Konstruktion sehen, hören, nachsprechen.
-        </GlossaryListItem>
+        </li>
         <li>
-          <GlossaryParagraph>
+          <p>
             Ein Vergleich zwischen verschiedenen Sprachen, die du sprichst, kann
             auch sehr hilfreich sein, um sich an grammatische Dinge zu erinnern.
             Was ist gleich und was sind Unterschiede? Werden im Englischen nicht
@@ -126,18 +126,18 @@ VALUES (2, '<Column className="chapter-content">
             Demonstrativartikel benutzt, z. B. There is a car. – Da ist ein
             Auto. / The car ist green. – Das Auto ist grün. / That car is
             broken. – Dieses Auto ist kaputt.
-          </GlossaryParagraph>
+          </p>
         </li>
-        <GlossaryListItem>
+        <li>
           Versuche die neuen grammatischen Dinge in deiner Sprache aktiv zu
           verwenden. Schreibe eigene kleine Texte und lass sie von einer
           kompetenten Person korrigieren, sprich viel in der Fremdsprache.
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Bleib täglich in Kontakt mit der Sprache: Schau dir Filme auf Deutsch
           an, lies die täglichen Nachrichten auf Deutsch oder auch ein gutes
           Buch auf Deutsch, chatte auf Deutsch usw.
-        </GlossaryListItem>
+        </li>
       </ul>
       <Anchor id="chapter-2-2" />
     </Column>')
@@ -147,14 +147,14 @@ INSERT INTO learning_pages_html (id, content)
 VALUES (3, '<Column className="chapter-content">
       <h3>Welche Rolle spielt eine Lehrperson beim selbstständigen Lernen?</h3>
       <Anchor id="chapter-3-1" />
-      <GlossaryParagraph>
+      <p>
         In der Schule oder an der Universität leiten die Lehrkräfte traditionell
         den Unterricht, indem sie den neuen Stoff präsentieren und erklären, die
         Lernenden ihn dann auf vielfältige Weise und mit vielen verschiedenen
         Materialien üben, z. B. mithilfe von Lehrbuchaufgaben, Experimenten oder
         Simulationen.
-      </GlossaryParagraph>
-      <GlossaryParagraph>
+      </p>
+      <p>
         Wenn du allein lernst, egal ob mit einem traditionellen Buch oder eben
         in einem Online-Kurs, fehlt die Lehrkraft. Du kannst sie zwar
         kontaktieren, aber z. B. die Kommunikation via E-Mail braucht Zeit. Die
@@ -163,8 +163,8 @@ VALUES (3, '<Column className="chapter-content">
         weiter vorgehen solltest. Diese Hilfe solltest du zumindest am Anfang
         unbedingt nutzen. Du kannst auch kleine Tests und Prüfungen mit ihr
         organisieren, damit du deinen Fortschritt überprüfen kannst.
-      </GlossaryParagraph>
-      <GlossaryParagraph>
+      </p>
+      <p>
         Besondere Hilfe brauchst du, wenn du nicht weiterweißt oder etwas nicht
         verstehst. Dann musst du dir Hilfe suchen. Hilfe bekommt man am besten,
         wenn man darum bittet! Frage also uns als Autoren dieser Seiten oder
@@ -176,16 +176,16 @@ VALUES (3, '<Column className="chapter-content">
         aber auch Mitlerner (so genannte Peers), Freunde und Familienmitglieder
         dienen. Vielleicht haben sie Erfahrung mit Deutsch und können dir
         helfen.
-      </GlossaryParagraph>
+      </p>
       <h3>Verantwortung für das eigene Lernen übernehmen</h3>
       <Anchor id="chapter-3-2" />
-      <GlossaryParagraph>
+      <p>
         Wenn du also ganz allein lernen möchtest, solltest du dir selbst einige
         Fragen beantworten.
-      </GlossaryParagraph>
+      </p>
       <h3>Was will ich lernen?</h3>
       <Anchor id="chapter-3-3" />
-      <GlossaryParagraph>
+      <p>
         Bei der Auswahl der Themen, die du lernen möchtest, spielen die Ziele
         und auch dein persönliches Interesse eine große Rolle. Es ist besser,
         wenn du dich danach richtest, was du sagen willst. Auf diesen Seiten
@@ -193,10 +193,10 @@ VALUES (3, '<Column className="chapter-content">
         stellen sie auch graphisch so dar, dass man sehen kann, welche anderen
         Phänomene man beherrschen muss, also was damit verbundene Lerninhalte
         sind.
-      </GlossaryParagraph>
+      </p>
       <h3>Warum möchte ich gerade das lernen? Wofür brauche ich es?</h3>
       <Anchor id="chapter-3-4" />
-      <GlossaryParagraph>
+      <p>
         Hier geht es um die Frage der Zielstellungen. Stelle dir ein Lernziel,
         z. B. Ich möchte lernen, wie man auf Deutsch über vergangene Ereignisse
         spricht. Das kann ein zentrales Ziel sein. Damit du damit nicht
@@ -209,7 +209,7 @@ VALUES (3, '<Column className="chapter-content">
         Welche Form hat das Partizip? oder Wann benutzt man beim Perfekt sein
         und wann haben? Diese Teilziele kannst du auch in den graphischen
         Darstellungen mit den verbundenen Phänomenen erkennen, z. B.:
-      </GlossaryParagraph>
+      </p>
       <Column w={"100%"}>
         <Image
           src="/das_perfekt.png"
@@ -221,55 +221,55 @@ VALUES (3, '<Column className="chapter-content">
 
       <h3>Wie möchte ich vorgehen, um das zu lernen?</h3>
       <Anchor id="chapter-3-5" />
-      <GlossaryParagraph>
+      <p>
         Auch hier können dir die Grafiken mit den verbundenen Phänomenen helfen,
         indem du sie der Reihe nach bearbeitest. Dabei ist es gut, wenn du dir
         eine Reihenfolge von Arbeitsschritten überlegst, die zu deinem
         Lernmuster passt. Folgende Vorgehensweise hat sich bewährt:
-      </GlossaryParagraph>
+      </p>
       <ul>
         <li>
-          <GlossaryParagraph>
+          <p>
             Erkennen: Sieh dir das Material an und finde die Struktur, die du
             lernen willst. Du kannst sie markieren, herausschreiben oder auch
             laut vorlesen. Dazu gibt es Übungen auf den Seiten.
-          </GlossaryParagraph>
+          </p>
         </li>
         <li>
-          <GlossaryParagraph>
+          <p>
             Suchen: Versuche in weiteren Texten oder Korpora, die du selbst
             auswählen kannst, die Struktur, die du lernen willst, in der
             "normalen" deutschen Sprache zu finden. Wie oft kommt sie vor?
-          </GlossaryParagraph>
+          </p>
         </li>
         <li>
-          <GlossaryParagraph>
+          <p>
             Schlussfolgern: Wann, in welchen Kommunikationssituationen wird die
             Struktur verwendet?
-          </GlossaryParagraph>
+          </p>
         </li>
         <li>
-          <GlossaryParagraph>
+          <p>
             Ausprobieren: Versuche nun, die Struktur mit eigenen Wörtern oder
             Sätzen zu bilden. Dabei können dir auf dieser Seite auch einfache
             Übungen helfen. Gut ist es, wenn du ein System erkennst, wie diese
             Struktur im Allgemeinen gebildet wird. Dann wirst du auch die
             Elemente finden, die schwieriger zu erlernen sind. Auf diese
             solltest du dich dann in deinen folgenden Übungen konzentrieren.
-          </GlossaryParagraph>
+          </p>
         </li>
         <li>
-          <GlossaryParagraph>
+          <p>
             In einen Kommunikationskontext setzen: Wenn du die Struktur bilden
             kannst, sieh und hör dir in einem Korpus oder einem Text, einem
             Video oder einem anderen Medium an, wie Muttersprachler die Struktur
             verwenden. Auf dieser Seite gibt es auch Übungen, die
             Kommunikationssituationen vorgeben. Dann solltest du dir zuerst die
             Wörter ansehen, damit du sie verstehst.
-          </GlossaryParagraph>
+          </p>
         </li>
         <li>
-          <GlossaryParagraph>
+          <p>
             Nach dem Üben: Beobachte dein deutschsprachiges Umfeld, also deine
             Peers, deutschsprachige Medien (gut sind Bücher, die du schon in
             deiner Muttersprache gelesen hast), Filme und andere. Wenn du sehr
@@ -277,25 +277,25 @@ VALUES (3, '<Column className="chapter-content">
             sehr häufig vorkommt – dann solltest du sie regelmäßig üben und
             wiederholen – oder eher selten – dann ist es nicht so problematisch,
             wenn du damit noch Schwierigkeiten hast.
-          </GlossaryParagraph>
+          </p>
         </li>
         <li>
-          <GlossaryParagraph>
+          <p>
             Regelmäßig wiederholen: Dazu kannst du die Übungen auf dieser Seite
             verwenden; auch wenn du eine Übung schon einmal gemacht hast, kannst
             du sie wiederholen. So festigt sich dein Wissen, und aus explizitem
             Wissen wird langsam implizites, und du brauchst nicht mehr so viel
             nachzudenken, wenn du die Struktur benutzt.
-          </GlossaryParagraph>
+          </p>
         </li>
       </ul>
-      <GlossaryParagraph>
+      <p>
         All dies hängt natürlich von deinen eigenen Lernstrategien ab, d. h. wie
         du am besten lernst. Das ist bei jedem Menschen anders.
-      </GlossaryParagraph>
+      </p>
       <h3>Welche Materialien möchte ich zum Lernen verwenden?</h3>
       <Anchor id="chapter-3-6" />
-      <GlossaryParagraph>
+      <p>
         Auf dieser Seite findest du viele verschiedene Übungen, die sich an
         unterschiedliche "Lernertypen" richten. Das ist das Grundmaterial. Auf
         jeden Fall solltest du andere Materialien benutzen, z. B. solche, die in
@@ -305,35 +305,35 @@ VALUES (3, '<Column className="chapter-content">
         oder Hören. Das hat zugleich einen positiven Effekt auf deine
         praktischen Fertigkeiten wie Sprechen oder Schreiben. Benutze jeden Tag
         etwas die deutsche Sprache.
-      </GlossaryParagraph>
+      </p>
       <h3>Möchte ich allein oder mit anderen zusammen lernen?</h3>
       <Anchor id="chapter-3-7" />
-      <GlossaryParagraph>
+      <p>
         Zuerst muss man sagen: Mit anderen lernen ist die beste Methode! Wenn du
         nur online lernen willst, dann solltest du wenigstens soziale Medien
         oder Kommunikations-Apps verwenden, um mit anderen Menschen über das
         Lernen von Fremdsprachen zu reden. Dabei können folgende Fragen
         interessant sein:
-      </GlossaryParagraph>
+      </p>
       <ul>
-        <GlossaryListItem>
+        <li>
           Wie lernen deine Gesprächspartner Deutsch (oder andere Fremdsprachen)?
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Welche Strukturen und grammatische Phänomene finden sie im Deutschen
           am schwierigsten?
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Wie lösen sie auftretende Probleme beim Lernen?
-        </GlossaryListItem>
+        </li>
       </ul>
-      <GlossaryParagraph>
+      <p>
         Natürlich kannst du auf Deutsch auch über ganz andere Sachen sprechen.
         Oder wie wäre eine künstliche Intelligenz (KI) als Gesprächspartner?
         Wenn du sie bittest, dich zu korrigieren, kannst du eine KI als
         Lernpartner benutzen.
-      </GlossaryParagraph>
-      <GlossaryParagraph>
+      </p>
+      <p>
         Ab und zu musst du dich aber von der Technik entfernen und dich mit
         Leuten treffen, die auch Deutsch lernen oder die Muttersprachler sind.
         Da bietet sich das Klassenzimmer an. Ein Online-Kurs bringt die besten
@@ -343,17 +343,17 @@ VALUES (3, '<Column className="chapter-content">
         kann dich korrigieren. Noch besser ist es, sich gegenseitig ("peer to
         peer") zu korrigieren und die Lehrkraft nur dann zu fragen, wenn alle
         nicht wissen, wie es richtig ist.
-      </GlossaryParagraph>
+      </p>
       <h3>Welche Hilfsmittel gibt es und wie werden sie verwendet?</h3>
       <Anchor id="chapter-3-8" />
-      <GlossaryParagraph>
+      <p>
         Diese Seiten bieten dir neben Erklärungen und Übungen – also klassischem
         Lernmaterial – auch viele andere Werkzeuge, mit denen du deinen
         Lernerfolg verbessern kannst. Hier sind einige erklärt.
-      </GlossaryParagraph>
+      </p>
       <ul>
         <li>
-          <GlossaryParagraph>
+          <p>
             <strong>Wörterbücher und Übersetzungswerkzeuge:</strong>Wir bemühen
             uns um eine einfache Sprache bei den Erklärungen und auch bei diesem
             Text. Aber manchmal versteht man etwas nicht. Dann kann es beim
@@ -363,19 +363,19 @@ VALUES (3, '<Column className="chapter-content">
             hast, was der Text sagt. Versuche zu interpolieren, d. h. unbekannte
             Wörter aus dem Kontext zu erraten! Man wird richtig gut, wenn man
             das immer tut.
-          </GlossaryParagraph>
+          </p>
         </li>
         <li>
-          <GlossaryParagraph>
+          <p>
             <strong>Andere Grammatiken:</strong>Unsere Erklärungen sind für dich
             nicht so gut? Dann kannst du auf diesen Seiten Links zu weiteren
             Grammatik-Seiten und Büchern finden. Vielleicht gelingt es anderen
             Sprachlehrern, das gesuchte Phänomen für dich besser oder einfacher
             zu erklären. Probiere es aus, oft gibt es auch weitere Übungen dort!
-          </GlossaryParagraph>
+          </p>
         </li>
         <li>
-          <GlossaryParagraph>
+          <p>
             <strong>Korpora:</strong> Ein Korpus ist eine Sammlung von Texten
             aus der realen Welt, also keine von einer Deutschlehrkraft oder
             einer KI erfundenen Texte zum Deutschlernen. Diese authentischen
@@ -388,10 +388,10 @@ VALUES (3, '<Column className="chapter-content">
             enthalten zusätzlich grammatische Informationen (→ Rektion),
             lexikalische (→ Genus) oder phonetische Angaben (Aussprache), die
             dir beim Lernen helfen können.
-          </GlossaryParagraph>
+          </p>
         </li>
         <li>
-          <GlossaryParagraph>
+          <p>
             <strong>Talk-Back-Kanäle:</strong> Das sind Wege, über die du uns
             oder deine eigene, gewohnte Lehrkraft erreichen kannst, wenn es
             Fragen gibt. Bei uns gibt es keine automatischen Antworten, d. h.
@@ -402,12 +402,12 @@ VALUES (3, '<Column className="chapter-content">
             der Seite ein Formular. Vergiss nur nicht, deine E-Mail-Adresse oder
             eine andere Kontaktmöglichkeit anzugeben, damit du die Antwort
             erhalten kannst.
-          </GlossaryParagraph>
+          </p>
         </li>
       </ul>
       <h3>Wie kann ich kontrollieren, ob ich erfolgreich gelernt habe?</h3>
       <Anchor id="chapter-3-9" />
-      <GlossaryParagraph>
+      <p>
         Wenn du selbstständig lernst, musst du auch überprüfen, ob und wie gut
         du die Dinge gelernt hast. Wir helfen dir dabei, indem wir am Ende von
         manchen Seiten oder Kapiteln mehrere Selbst-Tests zu der betreffenden
@@ -415,8 +415,8 @@ VALUES (3, '<Column className="chapter-content">
         nachsehen, wie gut du die Sache jetzt schon kannst. Dann kannst du
         entscheiden, ob du sie jetzt weiter lernen willst. Nach dem Üben benutzt
         du dann einfach einen anderen Kontrolltest.
-      </GlossaryParagraph>
-      <GlossaryParagraph>
+      </p>
+      <p>
         Bei der Einschätzung deiner Kenntnisse und Fertigkeiten
         (Selbstevaluation) kannst du auch andere Werkzeuge verwenden. Das beste
         Zeichen, dass du gut gelernt hast, ist das subjektive Gefühl der
@@ -426,7 +426,7 @@ VALUES (3, '<Column className="chapter-content">
         solltest dich auch über kleine Fortschritte freuen. Sprachenlernen
         braucht viel Zeit und Wiederholung. Rom wurde auch nicht an einem Tag
         erbaut, sagt man gerne auf Deutsch.
-      </GlossaryParagraph>
+      </p>
     </Column>')
     ON CONFLICT (id) DO NOTHING;
 
@@ -434,7 +434,7 @@ INSERT INTO learning_pages_html (id, content)
 VALUES (4, '<Column className="chapter-content">
       <h3>Was ist ein "Lerntyp"?</h3>
       <Anchor id="chapter-4-1" />
-      <GlossaryParagraph>
+      <p>
         Die Bezeichnung "Lerntyp" bezieht sich eigentlich darauf, mit welchen
         Aktivitäten man am besten lernt. Darum nennt man sie vielleicht besser
         Lernmuster. Manche Menschen möchten neue Dinge lesen, in graphischen
@@ -451,16 +451,16 @@ VALUES (4, '<Column className="chapter-content">
         können. noch die Lerner, die nicht stillsitzen können. Sie lernen neue
         Dinge durch Bewegung, Tanz, Schauspielen oder andere körperliche
         Bewegungen. Man nennt dies <strong>kinästhetisches Lernmuster</strong>.
-      </GlossaryParagraph>
-      <GlossaryParagraph>
+      </p>
+      <p>
         Sicherlich hast du dich bereits in einem der Lernmuster selbst entdeckt.
         Wir wissen meistens, wie wir am besten lernen wollen. Natürlich treten
         diese Lernmuster in der Realität nicht so schön geordnet und getrennt
         auf. Wir können mehrere Lernmuster verwenden. Oft ist die Kombination
         mehrerer Kanäle und das Anregen mehrerer Sinne beim Lernen sehr
         hilfreich.
-      </GlossaryParagraph>
-      <GlossaryParagraph>
+      </p>
+      <p>
         Beim selbstständigen Lernen mit Online-Material ist dieses Wissen
         doppelt wichtig, weil ja keine Lehrkraft da ist, die uns Übungen gibt,
         sondern wir müssen sie selbst wählen. Traditionelle Grammatik-Übungen
@@ -474,8 +474,8 @@ VALUES (4, '<Column className="chapter-content">
         Drag-and-Drop-Varianten finden oder auch Abenteuer- oder andere Spiele.
         Auf diesen Seiten versuchen wir Grammatik-Übungen für alle Lernmuster
         anzubieten.
-      </GlossaryParagraph>
-      <GlossaryParagraph>
+      </p>
+      <p>
         Menschen mit visuellem Lernmuster machen vielleicht gern Übungen, bei
         denen sie graphisch etwas ergänzen sollen, oder sie profitieren von der
         graphischen Darstellung der grammatischen Strukturen in Diagrammen und
@@ -490,15 +490,15 @@ VALUES (4, '<Column className="chapter-content">
         mehrere Kanäle anzusprechen, ist es sicher gut, verschiedene Typen von
         Übungen auszuprobieren. Dabei kann man sich auch neue Lernmuster
         aneignen.
-      </GlossaryParagraph>
-      <GlossaryParagraph>
+      </p>
+      <p>
         Wenn du nicht sicher bist, was für ein Lernmuster du bevorzugst, dann
         kannst du im Internet viele Ressourcen finden, um es herauszufinden,
         hier eine kleine Liste (Stand: 24.2.2025):
-      </GlossaryParagraph>
+      </p>
       <Container bg="var(--bg3)" r="md" p="md">
         <ul>
-          <GlossaryListItem>
+          <li>
             Hamburger Fernhochschule&nbsp;
             <a
               href="https://www.hfh-fernstudium.de/blog/welcher-lerntyp-bist-du"
@@ -507,8 +507,8 @@ VALUES (4, '<Column className="chapter-content">
             >
               Erklärung der Lerntypen
             </a>
-          </GlossaryListItem>
-          <GlossaryListItem>
+          </li>
+          <li>
             Geolino&nbsp;
             <a
               href="https://www.geo.de/geolino/mensch/5849-rtkl-lernen-welcher-lerntyp-bist-du"
@@ -517,8 +517,8 @@ VALUES (4, '<Column className="chapter-content">
             >
               Erklärungen zu den Lerntypen
             </a>
-          </GlossaryListItem>
-          <GlossaryListItem>
+          </li>
+          <li>
             iQ Lingua&nbsp;
             <a
               href="https://www.iq-lingua.de/typ-checks/welcher-lerntyp-bin-ich/#c42954"
@@ -528,8 +528,8 @@ VALUES (4, '<Column className="chapter-content">
               Welcher Lerntyp bin ich?
             </a>
             &nbsp;mit direkter Auswertung.
-          </GlossaryListItem>
-          <GlossaryListItem>
+          </li>
+          <li>
             Kapiert.de&nbsp;
             <a
               href="https://www.kapiert.de/lerntypentest/"
@@ -539,81 +539,81 @@ VALUES (4, '<Column className="chapter-content">
               Welcher Lerntyp bin ich?
             </a>
             &nbsp;mit direkter Auswertung.
-          </GlossaryListItem>
+          </li>
         </ul>
       </Container>
 
       <h3>Lernstrategien beim selbstständigen Lernen</h3>
       <Anchor id="chapter-4-2" />
-      <GlossaryParagraph>
+      <p>
         Eng mit den Lernmustern verbunden sind Lernstrategien mit konkreten
         Lerntechniken. Dabei kann man die folgenden Lernstrategien
         unterscheiden:
-      </GlossaryParagraph>
-      <GlossaryParagraph>
+      </p>
+      <p>
         <strong>Erinnerungsstrategien:</strong> Wie kann ich mich besser an
         gelernte Dinge erinnern? Dazu kann man folgende Lerntechniken anwenden:
-      </GlossaryParagraph>
+      </p>
       <ul>
-        <GlossaryListItem>
+        <li>
           Elemente in Gruppen sammeln, gleichartige Elemente gruppieren, z. B.
           Sortieren Sie die Wörter, die zusammenpassen, in 2 Gruppen: die
           Lektüre, das Hörspiel, das Buch, das Radio, lesen, zuhören, der
           Podcast.
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Assoziieren, neue Wörter in einen Zusammenhang bringen, um sie sich
           besser zu merken. Das können Wortfamilien sein, also unterschiedliche
           Wortarten mit dem gleichen Stamm: sich interessieren, das Interesse,
           interessant, interessiert sein. Vielleicht auch Assoziationen: das
           Radio – die Musik – hören – das Hörspiel – nostalgisch – das Autoradio
           – gemütlich.
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Bilder, Töne/Laute, Bild-Ton Kombinationen, Handlungen usw. benutzen,
           um sich neue Ausdrücke besser zu merken. Man kann sich zum Beispiel
           Bilder oder Videos zu bestimmten Lektionen anschauen, neue Wörter
           hören, laut lesen. Manchmal eignet sich auch das mimische, gestische
           oder dramatische Nachspielen von Wörtern.
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Beim Erinnern hilft auch strukturiertes Arbeiten, zum Beispiel immer
           nach einem bestimmten Plan vorgehen, in einer bestimmten Reihenfolge,
           vom Leichten zum Schweren, vom Erkennen zum Verwenden. Das hängt ganz
           von dir selbst ab. Eine wichtige Technik ist auch die Wiederholung
           älterer Materialien. Wenn du eine Übung gemacht hast, dann solltest du
           nach einiger Zeit zurückgehen und die Übung noch einmal machen.
-        </GlossaryListItem>
+        </li>
       </ul>
 
       <h3>Welche Lerntechniken helfen mir beim Lernen und Wiederholen?</h3>
       <Anchor id="chapter-4-3" />
-      <GlossaryParagraph>
+      <p>
         Das Wiederholen gelernter Dinge sollte für dich ganz normal sein. Aber
         auch beim Lernen neuer Sachen kann man effektiv sein, indem man zum
         Beispiel folgende Lerntechniken erlernt und anwendet. Auf dieser
         Webseite wird es Übungen mit diesen Lerntechniken geben.
-      </GlossaryParagraph>
+      </p>
       <ul>
-        <GlossaryListItem>
+        <li>
           Laute und Schrift üben – Wörter oder grammatische Regeln aufschreiben.
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Formeln und Tabellen benutzen – Wörter oder grammatische Regeln in
           Tabellen zusammenfassen, aus Tabellen lernen, Tabellen ergänzen usw.
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Vertraute Elemente auf neue und unterschiedliche Weise kombinieren.
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Die Fremdsprache in verschiedenen authentischen Situationen benutzen –
           dabei hören, lesen, sprechen und schreiben.
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Schnelles Lesen, um die Hauptaussage eines Textes zu erfassen.
           Schnelles Lesen muss man üben, dann wird man immer besser.
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Nachschlagewerke benutzen. Für das Deutsche gibt es den Duden und
           andere deutschsprachige Wörterbücher (Langenscheidt, Wahrig,
           Brockhaus) mit ihren Online- Ressourcen, dazu das Digitale Wörterbuch
@@ -625,11 +625,11 @@ VALUES (4, '<Column className="chapter-content">
           Auch die Wikipedia ist sehr gut, da sie zum gleichen Thema Texte in
           verschiedenen Sprachen anbietet, so genannte Paralleltexte. Bei
           Online-Quellen immer kritisch sein!
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Notizen machen und Gehörtes oder Gelesenes zusammenfassen.
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Deduktiv denken – von einer Regel ausgehen und nach Beispielen in der
           Sprache suchen. Dazu kannst du Korpora verwenden, in ihnen werden
           viele Sprachbeispiele gesammelt. Beispiele für Korpora:{" "}
@@ -641,16 +641,16 @@ VALUES (4, '<Column className="chapter-content">
             wortschatz.uni-leipzig.de
           </a>
           .
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Ausdrücke analysieren; Sprachen kontrastiv analysieren.
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Vorsichtig sein bei wörtlicher Übersetzung und bei direkten
           Übertragungen von einer Sprache zur anderen. Manchmal gibt es "falsche
           Freunde", d. h. Wörter, die die gleiche oder eine ähnliche Form, aber
           eine andere Bedeutung haben.
-        </GlossaryListItem>
+        </li>
       </ul>
 
       <h3>
@@ -658,28 +658,28 @@ VALUES (4, '<Column className="chapter-content">
         weiterweiß?
       </h3>
       <Anchor id="chapter-4-4" />
-      <GlossaryParagraph>
+      <p>
         Jeder kennt die Situation, dass man ein Wort nicht weiß oder dass es
         einem in diesem Moment nicht einfällt. Dann muss man sehen, dass man die
         Situation irgendwie löst. Dabei können vielleicht die folgenden
         Lerntechniken helfen.
-      </GlossaryParagraph>
+      </p>
       <ul>
-        <GlossaryListItem>
+        <li>
           Man kann aus dem Kontext Indizien benutzen, um die Bedeutung
           fremdsprachlicher Ausdrücke zu erraten. Ebenso wie beim schnellen
           Lesen kann man auch das Erraten unbekannter Ausdrücke aus dem Kontext
           lernen! Wichtig: Erst raten, dann später nachschlagen.
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Global statt jedes Detail verstehen. Wenn du ein unbekanntes Wort
           findest, lies erst einmal weiter, um das große Thema des Textes zu
           verstehen. Vielleicht wird dir dann klar, was das unbekannte Wort
           bedeutet. Später kannst du immer noch nachschlagen. Also bleib nicht
           an einem unbekannten Wort hängen – in der mündlichen Konversation geht
           das auch nicht.
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Bei der sprachlichen Kommunikation kann es auch helfen, Mittel zu
           finden, um die gesprochene oder geschriebene Hauptaussage trotz der
           begrenzten Sprachkenntnisse zu verstehen. Beim Sprechen kannst du zum
@@ -690,83 +690,83 @@ VALUES (4, '<Column className="chapter-content">
           finde einen Weg! Nachschlagen kannst du dann wieder später.
           Unterhaltsam und lustig kann es auch sein, das fehlende Wort einfach
           zu "erfinden".
-        </GlossaryListItem>
+        </li>
       </ul>
 
       <h3>Wie kann ich am besten lernen?</h3>
       <Anchor id="chapter-4-5" />
-      <GlossaryParagraph>
+      <p>
         Dieses Thema haben wir schon in Kapitel 3 angesprochen. Das Lernen ist
         ein sehr individueller Prozess, aber einige Lerntechniken kannst du als
         Hilfe beim Organisieren deines eigenen Lernprozesses einsetzen.
-      </GlossaryParagraph>
+      </p>
       <ul>
-        <GlossaryListItem>
+        <li>
           Du solltest einen "Master-Plan", einen Überblick über das eigene
           Lernen haben. Dabei spielen die Fragen aus Kapitel 3 eine wichtige
           Rolle. Es ist gut, den Plan aufzuschreiben und immer wieder
           nachzulesen, was du machen wolltest. So kannst du dich besser an
           deinen Plan halten.
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Aus früheren Sprachkursen hast du vielleicht bekannte Lernmaterialien
           (Lehrbücher, Videos oder eigene Lernhefte). Die kannst du prima in den
           eigenen Lernplan einsetzen. Wenn man mit bekannten Materialien lernt,
           fällt einem Manches leichter.
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Zu deinem Lernplan gehört auch die Frage, wie genau du die Dinge
           lernen willst. Du kannst dich entscheiden, ob du auf Details oder auf
           das Ganze (globales Verstehen) achten willst.
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Hilfreich ist es auch herauszufinden, wie das persönliche
           Fremdsprachenlernen funktioniert. Mit dem freiwilligen Fragebogen auf
           dieser Seite kannst du herausfinden, welche Strategien du
           normalerweise benutzt. So lernst du dich und dein Lernen ein bisschen
           besser kennen und du kannst bewusst bestimmte Übungen auswählen.
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           In Kapitel 3 haben wir schon gesagt, dass man sich beim Lernen
           organisieren muss. Dazu gehören Dinge wie ein Zeitplan, die Umgebung,
           ein Heft oder lieber ein Tablet/ein Computer usw.
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Setz dir realistische Ziele beim Lernen. Denk daran, dass auch kleine
           Schritte zum Ziel führen.
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Wenn du eine Übung in der Fremdsprache machen willst, versuche das
           Ziel dieser Aufgabe zu identifizieren. Was soll ich mit dieser Übung
           lernen? Wenn du das verstehst, lernst du besser. Du kannst dann auch
           andere Übungen dieser Art machen oder sogar selbst erfinden.
-        </GlossaryListItem>
+        </li>
         <li>
-          <GlossaryParagraph>
+          <p>
             Das Lösen einer Aufgabe in der Fremdsprache kann man planen. Finde
             deine eigene Schrittfolge. Hier ist ein Vorschlag:
-          </GlossaryParagraph>
+          </p>
           <ul>
-            <GlossaryListItem>Erst einmal alles durchlesen,</GlossaryListItem>
-            <GlossaryListItem>
+            <li>Erst einmal alles durchlesen,</li>
+            <li>
               dann die Instruktionen und Beispiele lesen,
-            </GlossaryListItem>
-            <GlossaryListItem>
+            </li>
+            <li>
               danach unbekannte Wörter erraten oder nachschlagen,
-            </GlossaryListItem>
-            <GlossaryListItem>
+            </li>
+            <li>
               als nächstes die Lösung versuchen und überprüfen.
-            </GlossaryListItem>
+            </li>
           </ul>
         </li>
-        <GlossaryListItem>
+        <li>
           Gelegenheiten zum Üben gibt es viele, nicht nur den Unterricht oder
           deine Online-Session. Du kannst in deiner eigenen Lebensumgebung viele
           Situationen finden, in denen du lernen kannst. Zum Beispiel beim
           Einkaufen kannst du dir die Frage stellen, wie die Produkte auf
           Deutsch heißen. Zu Hause kannst du dann deinen Erfolg überprüfen.
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Aus Fehlern kann man lernen. Das ist ein Hauptprinzip beim Lernen
           einer Fremdsprache. Manchmal ist es aber schwierig, die eigenen Fehler
           zu bemerken. Es geht immer besser, je mehr man schon gelernt hat, aber
@@ -775,39 +775,39 @@ VALUES (4, '<Column className="chapter-content">
           kannst du von ihnen lernen. In den Übungen auf dieser Seite hilft dir
           das Feedback dabei. Auch Muttersprachler können dir dabei helfen, wenn
           du sie bittest, dass sie dich im Gespräch korrigieren.
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Sieh dir deinen Lernplan an und schätze dich selbst ein, welche
           Fortschritte du schon gemacht hast. Einige Fragen, die du dir selbst
           stellen kannst, können sein: Wie gut kann ich die Dinge, die ich
           lernen wollte? Habe ich alle Dinge geübt, die ich geplant hatte?
           Spreche ich nun fließender? Muss ich weniger nachdenken?
-        </GlossaryListItem>
+        </li>
       </ul>
 
       <h3>Was kann ich gegen Angst vor Fehlern tun?</h3>
       <Anchor id="chapter-4-6" />
-      <GlossaryParagraph>
+      <p>
         Beim Lernen spielen auch Gefühle und Emotionen eine große Rolle.
         Negative Emotionen haben einen schlechten Einfluss auf die
         Lernmotivation. Es ist also wichtig, dass du lernst, deine Gefühle im
         Zusammenhang mit dem Deutschlernen zu "managen". Diese Techniken können
         dabei hilfreich sein:
-      </GlossaryParagraph>
+      </p>
       <ul>
         <li>
-          <GlossaryParagraph>
+          <p>
             Angst verringern. Es gibt keinen Grund, bei der Verwendung einer
             Fremdsprache Angst zu haben. Wovor sollte man denn Angst haben?
-          </GlossaryParagraph>
+          </p>
           <ul>
-            <GlossaryListItem>
+            <li>
               Angst vor Fehlern? – Fehler sind eine Quelle von Wissen, also mach
               deine Fehler selbstbewusst. Das Feedback des Computers ist immer
               gleich nett, deine Lehrkraft und auch Muttersprachler, die du um
               Korrekturen bittest, helfen dir gerne!
-            </GlossaryListItem>
-            <GlossaryListItem>
+            </li>
+            <li>
               Angst vor den Mitlernern? – Es gibt Situationen, in denen du
               vielleicht denkst, dass deine Peers viel besser sind als du
               selbst. Bedenke dies: Manche Sprachlerner sprechen sehr viel, sie
@@ -818,37 +818,37 @@ VALUES (4, '<Column className="chapter-content">
               Kommunikation. Also auch hier gilt: Mach deine Fehler
               selbstbewusst und lerne aus ihnen! So machst du die besten
               Fortschritte.
-            </GlossaryListItem>
+            </li>
           </ul>
         </li>
-        <GlossaryListItem>
+        <li>
           So entwickelst du auch ein positives Denken, mit dem du dir immer Mut
           machen kannst. Kleine Schritte führen auch zum Ziel. Du schaffst es!
           Hab Geduld!
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Manchmal solltest du auch kleine Risiken eingehen, um neu gelernte
           Dinge auszuprobieren. Natürlich geht das nicht immer gut, aber es
           können daraus interessante Gespräche entstehen, du lernst etwas Neues
           – oder es ist einfach nur lustig. Dann solltest du mitlachen! Solche
           kleinen Missgeschicke passieren jedem!
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Nach der Arbeit steht der Lohn, also belohne dich, wenn du etwas gut
           gelernt hast! Du hast es dir durch eigene Arbeit verdient! Mach etwas,
           was dir guttut! Es muss nichts mit der deutschen Sprache zu tun haben!
           Jeder Mensch braucht Erholungspausen. Dein Gehirn "sortiert" dann die
           Dinge, die du gelernt hast.
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Wenn du, besonders in der Konversation, auf dich selbst achtest, dann
           kannst du vielleicht bemerken, dass du ein wenig gestresst und
           angespannt bist. Wenn du die eigene Anspannung wahrnehmen kannst, ist
           es auch leichter, etwas dagegen zu tun, z. B. Entspannungstechniken
           anzuwenden. Zum Beispiel ein paarmal tief ein- und auszuatmen und sich
           nur auf dieses Atmen zu konzentrieren hilft dann schon viel.
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Vielen Lernern hilft es auch, ein Tagebuch zu führen. Da schreibst du
           hinein, wann du wie lange und was gelernt hast. Auch welche Übungen du
           gemacht hast. Diese Seiten werden dir ein bisschen dabei helfen. Wenn
@@ -858,42 +858,42 @@ VALUES (4, '<Column className="chapter-content">
           Lerntagebuch in einem Heft führst, dann kannst du auch deine Gedanken
           und Gefühle aufschreiben, die du beim Lernen hast. Das hilft dir
           später beim Lernen.
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Über die eigenen Gefühle und Einstellungen gegenüber dem
           Sprachenlernen kannst du natürlich auch mit anderen Menschen (Familie,
           Freunde, Kollegen, Lehrer usw.) sprechen. Das ist der beste Weg,
           Gefühle und Emotionen zu "managen".
-        </GlossaryListItem>
+        </li>
       </ul>
 
       <h3>Wie kann ich von anderen Personen beim Lernen profitieren?</h3>
       <Anchor id="chapter-4-7" />
-      <GlossaryParagraph>
+      <p>
         Auch am Computer oder am Handy in einem Online-Lernangebot ist man kein
         isolierter Lerner. Hier gilt dasselbe wie beim Lernen in der Klasse:
         Lerne von anderen! Einige Techniken haben wir schon genannt, aber hier
         sind weitere Lerntechniken, die man beim Lernen mit und von anderen
         Menschen anwenden kann.
-      </GlossaryParagraph>
+      </p>
       <ul>
-        <GlossaryListItem>
+        <li>
           Fragen stellen, um Erklärungen zu bekommen. Wer nicht fragt, bekommt
           keine Antworten, also frag deine Lehrkraft, frag uns oder andere
           deutsche Muttersprachler. "Es gibt keine dummen Fragen."
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Bitte andere Personen darum, deine Sprache zu verbessern. Überprüfe
           auch und frage nach, warum sie dich an dieser Stelle verbessert haben.
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Bei der gemeinsamen Arbeit an kleinen Projekten mit anderen Lernenden
           oder mit anderen kompetenten Sprechern der Fremdsprache kann man viel
           lernen. Das gilt besonders auch in der linguistischen Forschung. Auf
           diesen Seiten gibt es einige "Forschungsaufträge", die du gemeinsam
           mit deinen Kolleginnen und Kollegen bearbeiten kannst.
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Durch häufigen Kontakt mit Muttersprachlern, deutschsprachigen Medien
           und durch Reisen kannst du ein (inter)kulturelles Bewusstsein
           entwickeln: In Deutschland/Österreich/in der Schweiz macht man das so.
@@ -902,15 +902,15 @@ VALUES (4, '<Column className="chapter-content">
           helfen, also lies neben deutschsprachigen Zeitungen und
           Fachzeitschriften auch ruhig mal einen Roman auf Deutsch, den du schon
           in deiner Muttersprache gelesen hast.
-        </GlossaryListItem>
-        <GlossaryListItem>
+        </li>
+        <li>
           Sich der Gedanken und Gefühle anderer bewusst werden. Denk auch
           manchmal darüber nach, wie sich andere Deutschlerner beim Lernen
           fühlen, oder Muttersprachler, wenn sie dich korrigieren oder ihre
           Sprache vereinfachen, damit du sie verstehst. Du kannst sie auch
           danach fragen. So entsteht eine Atmosphäre der Offenheit und ihr könnt
           euch besser kennenlernen.
-        </GlossaryListItem>
+        </li>
       </ul>
     </Column>')
     ON CONFLICT (id) DO NOTHING;
@@ -918,13 +918,13 @@ VALUES (4, '<Column className="chapter-content">
 INSERT INTO learning_pages_html (id, content)
 VALUES (5, '<Column className="chapter-content">
       <Anchor id="chapter-5-1" />
-      <GlossaryParagraph>
+      <p>
         Hier findest du einen Fragebogen, der von Fremdsprach-Didaktikern
         entwickelt wurde. Den kannst du auf Deutsch oder Englisch ausfüllen. Er
         soll dir zeigen, welche Lernstrategien du oP und gern verwendest. Dazu
         rechnet der Computer die DurchschniOswerte der einzelnen Teile aus. Je
         höher der Wert ist, desto mehr bevorzugst du Lernstrategien dieser
         Bereiche. Dann kannst du für dich geeignete Übungen auswählen.
-      </GlossaryParagraph>
+      </p>
     </Column>')
     ON CONFLICT (id) DO NOTHING;
