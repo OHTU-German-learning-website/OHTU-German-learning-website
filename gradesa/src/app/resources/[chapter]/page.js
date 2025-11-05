@@ -8,30 +8,48 @@ import { useParams, useRouter } from "next/navigation";
 import { LinkButton } from "@/components/ui/linkbutton";
 import { Button } from "@/components/ui/button";
 import Editor from "@/components/ui/editor";
-import Image from "next/image";
-import {
-  GlossaryParagraph,
-  GlossaryListItem,
-} from "@/components/ui/glossary/GlossaryText";
-import Anchor from "@/components/ui/anchor/Anchor";
-import RenderHTML from "@/app/html-renderer";
+import RenderHTML, { PageType } from "@/app/html-renderer";
 import { checkUseIsAdmin } from "@/context/user.context";
+import { PAGE_TYPES } from "next/dist/lib/page-types";
 
 export default function Chapters() {
   const { chapter } = useParams();
   const router = useRouter();
   const [editorActive, setEditorActive] = useState(false);
   const [editorContent, setEditorContent] = useState();
-  //const isAdmin = checkUseIsAdmin();
+  const [editorMessage, setEditorMessage] = useState({ error: false, msg: "" });
 
   useEffect(() => {
     async function fetchHTML() {
-      const res = await fetch(`/api/html-content/${parseInt(chapter)}`);
+      const res = await fetch(
+        `/api/html-content/${parseInt(chapter)}?type=resources`
+      );
       const data = await res.json();
-      setEditorContent(data);
+      setEditorContent(data.content);
     }
     fetchHTML();
   }, []);
+
+  const submitEditorContent = async () => {
+    // A naive approach with string replacement is used here.
+    const jsonData = JSON.stringify({
+      content: editorContent.replace(/&nbsp;/g, " "),
+    });
+    const res = await fetch(`/api/html-content/${parseInt(chapter)}`, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "PUT",
+      body: jsonData,
+    });
+    if (res.status == 200) {
+      setEditorMessage({ error: false, msg: "Updated successfully" });
+    } else {
+      setEditorMessage({ error: true, msg: res.text() });
+    }
+    setTimeout(() => setEditorMessage({ error: false, content: "" }), 1000);
+  };
 
   const Chapter = chapters.find((c) => c.id === chapter);
   if (!Chapter) {
@@ -48,9 +66,21 @@ export default function Chapters() {
   if (editorActive) {
     return (
       <Column className={layout.viewContent}>
-        <Button onClick={() => setEditorActive(false)}>Close editor</Button>
+        <Row gap="1rem">
+          <Button onClick={() => setEditorActive(false)}>Close editor</Button>
+          <Button onClick={submitEditorContent}>Save changes</Button>
+        </Row>
+        {!!editorMessage.msg &&
+          (editorMessage.error ? (
+            <p className="error-message">{editorMessage.msg}</p>
+          ) : (
+            <p className="success-message">{editorMessage.msg}</p>
+          ))}
         <Row justify="space-between" pb="xl">
-          <Editor defaultContent={editorContent.content} />
+          <Editor
+            defaultContent={editorContent}
+            updateEditorContent={(content) => setEditorContent(content)}
+          />
         </Row>
       </Column>
     );
@@ -64,7 +94,7 @@ export default function Chapters() {
           {checkUseIsAdmin() == true && (
             <Button onClick={() => setEditorActive(true)}>Open editor</Button>
           )}
-          <RenderHTML contentId={Chapter.id} />
+          <RenderHTML contentId={Chapter.id} type="resources" />
           {/*<Chapter.content />*/}
         </>
       )}

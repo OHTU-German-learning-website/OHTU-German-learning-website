@@ -7,7 +7,7 @@ metadata:
     app: gradesa
     type: external
 spec:
-  host: gradesa2-ohtuprojekti-staging.ext.ocp-prod-0.k8s.it.helsinki.fi
+  host: gradesa-ohtuprojekti-staging.ext.ocp-prod-0.k8s.it.helsinki.fi
   port:
     targetPort: 8080
   to:

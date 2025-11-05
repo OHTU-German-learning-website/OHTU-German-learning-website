@@ -154,7 +154,7 @@
     --tertiary7: hsl(351, 40%, 85%);
     --tertiary8: hsl(351, 40%, 90%);
     --tertiary9: hsl(351, 40%, 95%);
-    --tertiary10: hsl(113, 93%, 49%);
+    --tertiary10: hsl(113, 100%, 25%);
 
     --secondary1: hsl(178, 60%, 30%);
     --secondary2: hsl(178, 60%, 40%);
@@ -450,4 +450,26 @@ label {
   z-index: var(--z-max);
   pointer-events: none;
   overflow: hidden;
+}
+
+.error-message {
+  padding: var(--u-md);
+  background-color: var(--tertiary5);
+  font-size: var(--font-md);
+  color: var(--fg1);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--u-lg);
+  text-align: center;
+  margin-top: var(--u-lg);
+}
+
+.success-message {
+  padding: var(--u-md);
+  background-color: var(--tertiary10);
+  font-size: var(--font-md);
+  color: var(--fg9);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--u-lg);
+  text-align: center;
+  margin-top: var(--u-lg);
 }
