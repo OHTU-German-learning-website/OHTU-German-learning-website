@@ -1,28 +1,21 @@
 version: "3.6"
 services:
   db:
-    image: postgres:15
+    image: docker.io/library/postgres:15
     container_name: gradesa-db
     environment:
       POSTGRES_PASSWORD: password
     volumes:
       - pg-data:/var/lib/postgresql/data/
-      - ./provision_db.sql:/docker-entrypoint-initdb.d/1_provision_db.sql
     restart: unless-stopped
-    ports:
-      - "7742:5432"
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "postgres"]
       interval: 10s
       retries: 20
-    command: >
-      sh -c "apt update && 
-             apt install -y wget && 
-             wget https://github.com/peterldowns/pgmigrate/releases/download/v0.0.6%2Bcommit.4f90829/pgmigrate-linux-amd64 -O /usr/local/bin/pgmigrate && 
-             chmod +x /usr/local/bin/pgmigrate && 
-             /usr/local/bin/docker-entrypoint.sh postgres"
+    command: -p 7742
+
   pgtestdb:
-    image: postgres:15
+    image: docker.io/library/postgres:15
     container_name: gradesa-pgtestdb
     environment:
       POSTGRES_PASSWORD: password
@@ -35,12 +28,30 @@ services:
     command: >
       sh -c "apt update && apt install -y postgresql-15-rum &&
              echo 'trusted = true' >> /usr/share/postgresql/15/extension/rum.control &&
-             /usr/local/bin/docker-entrypoint.sh -c fsync=off -c log_statement=all"
-    ports:
-      - "7741:5432"
+             /usr/local/bin/docker-entrypoint.sh -p 5432 -c fsync=off -c log_statement=all"
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "postgres"]
       interval: 10s
       retries: 20
+
+  node-dev-env:
+    image: docker.io/library/node:20
+    container_name: node-dev-env
+    environment:
+      DB_HOST: gradesa-db
+      DB_PORT: 7742
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_NAME: postgres
+      SESSION_SECRET: secret
+    volumes:
+      - .:/host:Z
+    ports:
+      - "3000:3000"
+    command: >
+      sh -c "apt install -y wget && 
+             wget https://github.com/peterldowns/pgmigrate/releases/download/v0.0.6%2Bcommit.4f90829/pgmigrate-linux-amd64 -O /usr/local/bin/pgmigrate && 
+             chmod +x /usr/local/bin/pgmigrate && 
+             /usr/local/bin/docker-entrypoint.sh sleep inf"
 volumes:
   pg-data:

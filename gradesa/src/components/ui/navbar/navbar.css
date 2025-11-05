@@ -1,5 +1,3 @@
-@import "/globals.css";
-
 .navbar {
   background: var(--bg1);
   padding: var(--u-md) var(--u-2xl);
