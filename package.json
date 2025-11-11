@@ -6,6 +6,7 @@
   "scripts": {
     "db:migrate": "./gradesa/data/migrate.sh",
     "db:reset": "./gradesa/data/reset-db.sh",
+    "db:admin": "psql \"postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}\" -c \"UPDATE users SET is_admin = 't';\" 2>/dev/null",
     "prepare": "husky install",
     "dev": "npm run --prefix gradesa dev",
     "format:check": "prettier --check \"**/*.{js,jsx,md,yml}\"",

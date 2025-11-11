@@ -35,7 +35,7 @@ services:
       retries: 20
 
   node-dev-env:
-    image: docker.io/library/node:20
+    image: docker.io/library/node:20-trixie
     container_name: node-dev-env
     environment:
       DB_HOST: gradesa-db
@@ -49,7 +49,7 @@ services:
     ports:
       - "3000:3000"
     command: >
-      sh -c "apt install -y wget && 
+      sh -c "apt update && apt install -y wget postgresql-client && 
              wget https://github.com/peterldowns/pgmigrate/releases/download/v0.0.6%2Bcommit.4f90829/pgmigrate-linux-amd64 -O /usr/local/bin/pgmigrate && 
              chmod +x /usr/local/bin/pgmigrate && 
              /usr/local/bin/docker-entrypoint.sh sleep inf"
