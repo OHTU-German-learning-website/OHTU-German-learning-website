@@ -22,7 +22,7 @@ export default function RenderHTML({ contentId, type }) {
     // function to fetch HTML content using html-services, and set it to state html
     async function fetchHTML() {
       // fetch response through next.js route using getHTMLContent function
-      const res = await fetch(`/api/html-content/${contentId}?type=${type}`);
+      const res = await fetch(`/api/html-content/${type}/${contentId}`);
 
       // chnages the response to proper json
       const data = await res.json();

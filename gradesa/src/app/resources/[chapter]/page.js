@@ -22,7 +22,7 @@ export default function Chapters() {
   useEffect(() => {
     async function fetchHTML() {
       const res = await fetch(
-        `/api/html-content/${parseInt(chapter)}?type=resources`
+        `/api/html-content/resources/${parseInt(chapter)}`
       );
       const data = await res.json();
       setEditorContent(data.content);
@@ -35,14 +35,17 @@ export default function Chapters() {
     const jsonData = JSON.stringify({
       content: editorContent.replace(/&nbsp;/g, " "),
     });
-    const res = await fetch(`/api/html-content/${parseInt(chapter)}`, {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      method: "PUT",
-      body: jsonData,
-    });
+    const res = await fetch(
+      `/api/html-content/resources/${parseInt(chapter)}`,
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        method: "PUT",
+        body: jsonData,
+      }
+    );
     if (res.status == 200) {
       setEditorMessage({ error: false, msg: "Updated successfully" });
     } else {

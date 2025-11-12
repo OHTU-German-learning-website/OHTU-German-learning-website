@@ -1,5 +1,7 @@
 import { DB } from "@/backend/db";
 
+const allowedTables = ["learning_pages_html", "communications_pages_html"];
+
 /*
 This function fetches html content from database
 
@@ -15,9 +17,12 @@ NOTE:   This function could be used to fetch html content to all pages, not just
         other identifier as parameter for this function.
 
 */
-export async function getHTMLContent(id, type) {
+export async function getHTMLContent(type, id) {
   try {
     console.log("Table type: ", type);
+    if (!allowedTables.includes(type)) {
+      return "<p>Error loading page</p>";
+    }
     // get content from db using parameterized query
     const result = await DB.pool(
       "SELECT content FROM " + type + " WHERE id = $1",
@@ -49,10 +54,13 @@ NOTE:   This function also might need to be updated if the functions in these fi
         should be used to fetch and update any html content, and not just the chapter pages.
         In this case, same kind of modifications apply as seen above in function getHTMLContent(id) 
 */
-export async function updateHTMLContent(id, content) {
+export async function updateHTMLContent(type, id, content) {
+  if (!allowedTables.includes(type)) {
+    return false;
+  }
   try {
     const result = await DB.pool(
-      "UPDATE learning_pages_html SET content = $1 WHERE id = $2",
+      "UPDATE " + type + " SET content = $1 WHERE id = $2",
       [content, id]
     );
     if (result.rowCount == 1) {

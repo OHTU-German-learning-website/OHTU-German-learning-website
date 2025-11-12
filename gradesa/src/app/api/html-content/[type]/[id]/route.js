@@ -6,19 +6,8 @@ import DOMPurify from "dompurify";
 /*
 This route fetches html content from db according to id and page type
 */
-export async function GET(req) {
-  // create URL-object from request
-  const url = new URL(req.url);
-
-  // split path to segments
-  const pathSegments = url.pathname.split("/");
-
-  // get page type from url parameters
-  const type = url.searchParams.get("type");
-
-  // get last segment, which is the correct id of the page
-  const id = pathSegments[pathSegments.length - 1];
-
+export async function GET(req, { params }) {
+  const { type, id } = await params;
   // returns correct db table based on url. Prevents malicious code
   const getTableType = (type) => {
     if (type == "resources") {
@@ -30,7 +19,7 @@ export async function GET(req) {
     }
   };
 
-  const content = await getHTMLContent(id, getTableType(type));
+  const content = await getHTMLContent(getTableType(type), id);
 
   // returns the fetched html as json
   return new Response(JSON.stringify({ content }), {
@@ -41,13 +30,23 @@ export async function GET(req) {
 export const PUT = withAuth(
   async (req, { params }) => {
     const data = await req.json();
-    const { id } = await params;
+    const { type, id } = await params;
+
+    const getTableType = (type) => {
+      if (type == "resources") {
+        return "learning_pages_html";
+      } else if (type == "communications") {
+        return "communications_pages_html";
+      } else {
+        return "";
+      }
+    };
 
     const window = new JSDOM("").window;
     const purify = DOMPurify(window);
     const cleaned = purify.sanitize(data.content, { ADD_ATTR: ["target"] });
 
-    if (!(await updateHTMLContent(id, cleaned))) {
+    if (!(await updateHTMLContent(getTableType(type), id, cleaned))) {
       return new Response("Error updating HTML content", {
         status: 400,
       });
