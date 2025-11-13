@@ -4,12 +4,54 @@ import { Column, Container, Row } from "@/components/ui/layout/container";
 import "../../../resources/[chapter]/chapters.css";
 import layout from "@/shared/styles/layout.module.css";
 import { useParams, useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 import { LinkButton } from "@/components/ui/linkbutton";
+import { Button } from "@/components/ui/button";
+import Editor from "@/components/ui/editor";
 import RenderHTML, { PageType } from "@/app/html-renderer";
+import { checkUseIsAdmin } from "@/context/user.context";
 
 export default function Chapters() {
   const { chapter } = useParams();
   const router = useRouter();
+  const [editorActive, setEditorActive] = useState(false);
+  const [editorContent, setEditorContent] = useState();
+  const [editorMessage, setEditorMessage] = useState({ error: false, msg: "" });
+
+  useEffect(() => {
+    async function fetchHTML() {
+      const res = await fetch(
+        `/api/html-content/communications/${parseInt(chapter)}`
+      );
+      const data = await res.json();
+      setEditorContent(data.content);
+    }
+    fetchHTML();
+  }, []);
+
+  const submitEditorContent = async () => {
+    // A naive approach with string replacement is used here.
+    const jsonData = JSON.stringify({
+      content: editorContent.replace(/&nbsp;/g, " "),
+    });
+    const res = await fetch(
+      `/api/html-content/communications/${parseInt(chapter)}`,
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        method: "PUT",
+        body: jsonData,
+      }
+    );
+    if (res.status == 200) {
+      setEditorMessage({ error: false, msg: "Updated successfully" });
+    } else {
+      setEditorMessage({ error: true, msg: res.text() });
+    }
+    setTimeout(() => setEditorMessage({ error: false, content: "" }), 1000);
+  };
 
   const Chapter = chapters.find((c) => c.id === chapter);
   if (!Chapter) {
@@ -23,11 +65,39 @@ export default function Chapters() {
     (c) => parseInt(c.id) === parseInt(chapter) + 1
   );
 
+  // Render the editor, save button & close button if editorActive is set to true
+  if (editorActive) {
+    return (
+      <Column className={layout.viewContent}>
+        <Row gap="1rem">
+          <Button onClick={() => setEditorActive(false)}>Close editor</Button>
+          <Button onClick={submitEditorContent}>Save changes</Button>
+        </Row>
+        {!!editorMessage.msg &&
+          (editorMessage.error ? (
+            <p className="error-message">{editorMessage.msg}</p>
+          ) : (
+            <p className="success-message">{editorMessage.msg}</p>
+          ))}
+        <Row justify="space-between" pb="xl">
+          <Editor
+            defaultContent={editorContent}
+            updateEditorContent={(content) => setEditorContent(content)}
+          />
+        </Row>
+      </Column>
+    );
+  }
+
+  // Render the open editor button if editorActive is set to false
   return (
     <Column className={layout.viewContent}>
       {Chapter && (
         <>
           <h1>{Chapter.title}</h1>
+          {checkUseIsAdmin() == true && (
+            <Button onClick={() => setEditorActive(true)}>Open editor</Button>
+          )}
           <p>
             Auf dieser Seite wird die Kommunikationssituation {Chapter.title}{" "}
             erklärt.
