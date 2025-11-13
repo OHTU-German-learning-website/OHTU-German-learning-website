@@ -66,6 +66,7 @@ export default function Chapters() {
     (c) => parseInt(c.id) === parseInt(chapter) + 1
   );
 
+  // Render the editor, save button & close button if editorActive is set to true
   if (editorActive) {
     return (
       <Column className={layout.viewContent}>
@@ -89,6 +90,7 @@ export default function Chapters() {
     );
   }
 
+  // Render the open editor button if editorActive is set to false
   return (
     <Column className={layout.viewContent}>
       {Chapter && (
