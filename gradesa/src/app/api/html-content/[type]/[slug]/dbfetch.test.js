@@ -22,7 +22,7 @@ vi.mock("@/backend/middleware/withAuth", () => ({
 import { GET, PUT } from "./route";
 import { useTestDatabase } from "@/backend/test/testdb";
 import { useTestRequest } from "@/backend/test/mock-request";
-import { getHTMLContent } from "@/backend/html-services";
+import { getPageData } from "@/backend/html-services";
 import { updateHTMLContent } from "@/backend/html-services";
 
 describe("GET /api/html-content/[type]/[id]", () => {
@@ -39,32 +39,32 @@ describe("GET /api/html-content/[type]/[id]", () => {
   };
 
   it("should return HTML content as JSON", async () => {
-    getHTMLContent.mockResolvedValueOnce("<p>Mocked HTML</p>");
+    getPageData.mockResolvedValueOnce("<p>Mocked HTML</p>");
 
     const response = await getRequest("resources", 1);
     const body = await response.json();
 
-    expect(getHTMLContent).toHaveBeenCalledWith("learning_pages_html", 1);
+    expect(getPageData).toHaveBeenCalledWith("learning_pages_html", 1);
     expect(response.status).toBe(200);
     expect(body).toEqual({ content: "<p>Mocked HTML</p>" });
   });
 
   it("should call correct table for communications type", async () => {
-    getHTMLContent.mockResolvedValueOnce("<p>Mocked HTML</p>");
+    getPageData.mockResolvedValueOnce("<p>Mocked HTML</p>");
 
     const response = await getRequest("communications", 5);
     await response.json();
 
-    expect(getHTMLContent).toHaveBeenCalledWith("communications_pages_html", 5);
+    expect(getPageData).toHaveBeenCalledWith("communications_pages_html", 5);
   });
 
   it("should return empty string table if type is invalid", async () => {
-    getHTMLContent.mockResolvedValueOnce("<p>Mocked HTML</p>");
+    getPageData.mockResolvedValueOnce("<p>Mocked HTML</p>");
 
     const response = await getRequest("unknown", 3);
     await response.json();
 
-    expect(getHTMLContent).toHaveBeenCalledWith("", 3);
+    expect(getPageData).toHaveBeenCalledWith("", 3);
   });
 });
 
