@@ -22,7 +22,7 @@ export default function Chapters() {
   useEffect(() => {
     async function fetchHTML() {
       const res = await fetch(
-        `/api/html-content/${parseInt(chapter)}?type=resources`
+        `/api/html-content/resources/${parseInt(chapter)}`
       );
       const data = await res.json();
       setEditorContent(data.content);
@@ -35,14 +35,17 @@ export default function Chapters() {
     const jsonData = JSON.stringify({
       content: editorContent.replace(/&nbsp;/g, " "),
     });
-    const res = await fetch(`/api/html-content/${parseInt(chapter)}`, {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      method: "PUT",
-      body: jsonData,
-    });
+    const res = await fetch(
+      `/api/html-content/resources/${parseInt(chapter)}`,
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        method: "PUT",
+        body: jsonData,
+      }
+    );
     if (res.status == 200) {
       setEditorMessage({ error: false, msg: "Updated successfully" });
     } else {
@@ -63,6 +66,7 @@ export default function Chapters() {
     (c) => parseInt(c.id) === parseInt(chapter) + 1
   );
 
+  // Render the editor, save button & close button if editorActive is set to true
   if (editorActive) {
     return (
       <Column className={layout.viewContent}>
@@ -86,6 +90,7 @@ export default function Chapters() {
     );
   }
 
+  // Render the open editor button if editorActive is set to false
   return (
     <Column className={layout.viewContent}>
       {Chapter && (
