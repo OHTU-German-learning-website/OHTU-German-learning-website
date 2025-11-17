@@ -2,18 +2,18 @@ import { getPageData, setPageData } from "@/backend/html-services";
 import { withAuth } from "@/backend/middleware/withAuth";
 import { JSDOM } from "jsdom";
 import DOMPurify from "dompurify";
-import { notFound } from "next/navigation";
+import { NextResponse } from "next/server";
 
 export async function GET(req, { params }) {
   const { type, slug } = await params;
   try {
     const page = await getPageData(type, slug);
 
-    return new Response(JSON.stringify({ page }), {
+    return new NextResponse(JSON.stringify({ page }), {
       headers: { "Content-Type": "application/json" },
     });
   } catch {
-    notFound();
+    return new NextResponse("not found", { status: 404 });
   }
 }
 
@@ -22,25 +22,30 @@ export const PUT = withAuth(
     const data = await req.json();
     const { type, slug } = await params;
 
-    let newData = await getPageData(type, slug);
+    let newData;
+    try {
+      newData = await getPageData(type, slug);
+    } catch {
+      return new NextResponse("not found", { status: 404 });
+    }
     if (data.title) newData.title = data.title;
     if (data.page_order) newData.page_order = data.page_order;
     if (data.slug) newData.slug = data.slug;
     if (data.content) newData.content = sanitize(data.content);
-    if (data.slug) newData.slug = data.slug;
+    if (data.slug) newData.slug = data.slug.replace(/[^A-Za-z0-9\-\_\+]/g, "");
 
     if (newData.slug !== slug && (await slugIsInUse(type, newData.slug))) {
-      return new Response("Page slug already in use", {
+      return new NextResponse("Page slug already in use", {
         status: 400,
       });
     }
 
     if (!(await setPageData(type, slug, newData))) {
-      return new Response("Error updating HTML content", {
+      return new NextResponse("Error updating HTML content", {
         status: 400,
       });
     }
-    return new Response("", { status: 200 });
+    return new NextResponse("", { status: 200 });
   },
   {
     requireAdmin: true,
