@@ -2,7 +2,11 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import DOMPurify from "dompurify";
 
 vi.mock("@/backend/html-services", () => ({
+  // Mock exports used by the route under test. `getPageData` is used by the
+  // GET and non-content PUT flows; `updateHTMLContent` is used for content-only
+  // PUT updates (allows empty-string content handling).
   getHTMLContent: vi.fn(),
+  getPageData: vi.fn(),
   updateHTMLContent: vi.fn(),
 }));
 
@@ -44,7 +48,7 @@ describe("GET /api/html-content/[type]/[id]", () => {
     const response = await getRequest("resources", 1);
     const body = await response.json();
 
-    expect(getPageData).toHaveBeenCalledWith("learning_pages_html", 1);
+    expect(getPageData).toHaveBeenCalledWith("resources", 1);
     expect(response.status).toBe(200);
     expect(body).toEqual({ content: "<p>Mocked HTML</p>" });
   });
@@ -55,7 +59,7 @@ describe("GET /api/html-content/[type]/[id]", () => {
     const response = await getRequest("communications", 5);
     await response.json();
 
-    expect(getPageData).toHaveBeenCalledWith("communications_pages_html", 5);
+    expect(getPageData).toHaveBeenCalledWith("communications", 5);
   });
 
   it("should return empty string table if type is invalid", async () => {
@@ -89,7 +93,7 @@ describe("PUT /api/html-content/[type]/[id]", () => {
     const response = await putRequest("resources", 1, "<p>Mocked HTML</p>");
     expect(response.status).toBe(200);
     expect(updateHTMLContent).toHaveBeenCalledWith(
-      "learning_pages_html",
+      "resources",
       1,
       "<p>Mocked HTML</p>"
     );
@@ -106,7 +110,7 @@ describe("PUT /api/html-content/[type]/[id]", () => {
       ADD_ATTR: ["target"],
     });
     expect(updateHTMLContent).toHaveBeenCalledWith(
-      "learning_pages_html",
+      "resources",
       1,
       "<p>clean</p>"
     );
@@ -116,11 +120,7 @@ describe("PUT /api/html-content/[type]/[id]", () => {
   it("should allow an admin to save an empty editor file", async () => {
     updateHTMLContent.mockResolvedValueOnce(true);
     const response = await putRequest("resources", 1, "");
-    expect(updateHTMLContent).toHaveBeenCalledWith(
-      "learning_pages_html",
-      1,
-      ""
-    );
+    expect(updateHTMLContent).toHaveBeenCalledWith("resources", 1, "");
     expect(response.status).toBe(200);
   });
 
