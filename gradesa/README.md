@@ -28,3 +28,28 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 ```
+
+## Testing & Vitest UI
+
+This project uses Vitest for unit tests and V8 for coverage. Two helper scripts are provided:
+
+- `npm run test:coverage` — run tests with coverage in the terminal (no UI).
+- `npm run test:coverage:ui` — start the Vitest UI bound to all interfaces so you can open the browser on your host:
+
+  - Server: `http://localhost:51204/__vitest__/`
+  - Use this when accessing the UI from outside a container (port `51204` is forwarded in `docker-compose.yml`).
+
+- `npm run test:coverage:ui:localhost` — start the Vitest UI bound to `127.0.0.1`:
+  - Server: `http://127.0.0.1:51204/__vitest__/`
+  - Use this for local browser debugging (helps with Firefox connection issues).
+
+Notes & Troubleshooting
+
+- If the UI shows "Connecting…" in Firefox but works in Chrome:
+  - Try the `:localhost` script and open `http://127.0.0.1:51204`.
+  - Disable privacy extensions or open the UI in a Private Window.
+  - Clear site data / unregister service workers for that origin (DevTools → Application → Service Workers).
+  - Check the DevTools Console / Network tab for blocked WebSocket (ws://) connections.
+- When running inside Docker/devcontainer:
+  - Ensure port `51204` is forwarded (the provided `docker-compose.yml` already maps `51204:51204`).
+  - If Vitest attempts to open a browser inside the container, use `--open=false` (already set in scripts).

@@ -1,15 +1,46 @@
-import { getPageData, setPageData } from "@/backend/html-services";
+import {
+  getPageData,
+  setPageData,
+  updateHTMLContent,
+} from "@/backend/html-services";
 import { withAuth } from "@/backend/middleware/withAuth";
 import { JSDOM } from "jsdom";
 import DOMPurify from "dompurify";
 import { NextResponse } from "next/server";
 
-export async function GET(req, { params }) {
-  const { type, slug } = await params;
-  try {
-    const page = await getPageData(type, slug);
+// Allowed page_group values stored in the consolidated `html_pages` table.
+const VALID_PAGE_GROUPS = new Set(["resources", "communications"]);
 
-    return new NextResponse(JSON.stringify({ page }), {
+/*
+  Route behavior (summary):
+  - The `type` route param maps to the `page_group` value stored in the
+    consolidated `html_pages` table (values: `resources`, `communications`).
+  - GET returns JSON `{ content: string }`. `getPageData` may return either
+    a DB row object or (in tests) a raw HTML string; this handler normalizes
+    both into the `content` string.
+  - PUT has two flows:
+    * Content-only updates: when the request body includes the `content`
+      property (including an explicit empty string) the route sanitizes the
+      value and calls `updateHTMLContent(page_group, slug, cleaned)`. A
+      failed update returns HTTP 400.
+    * Full-page updates: when other fields (title/slug/page_order) are
+      provided the handler fetches the page, applies changes and calls
+      `setPageData` with slug collision checks.
+  - The route requires an authenticated admin (`withAuth(..., { requireAdmin: true })`).
+*/
+
+export async function GET(req, { params }) {
+  const p = await params;
+  const { type } = p;
+  const slug = p.slug ?? p.id;
+  const table = VALID_PAGE_GROUPS.has(type) ? type : "";
+  try {
+    const page = await getPageData(table, slug);
+    // getPageData may return the DB row object or (in tests/mocks) a raw HTML
+    // string. Normalize to a `content` string for the API response.
+    const content = typeof page === "string" ? page : (page?.content ?? "");
+
+    return new NextResponse(JSON.stringify({ content }), {
       headers: { "Content-Type": "application/json" },
     });
   } catch {
@@ -31,7 +62,12 @@ export const PUT = withAuth(
     if (data.title) newData.title = data.title;
     if (data.page_order) newData.page_order = data.page_order;
     if (data.slug) newData.slug = data.slug;
-    if (data.content) newData.content = sanitize(data.content);
+    // Allow also empty content string.
+    if (Object.prototype.hasOwnProperty.call(data, "content"))
+      newData.content = sanitize(data.content);
+    // Make sure that the slug only contains characters that do not need escaping
+    // in the url. This ensures that the slug the user types can be used as-is
+    // in the browser address bar.
     if (data.slug) newData.slug = data.slug.replace(/[^A-Za-z0-9\-\_\+]/g, "");
 
     if (newData.slug !== slug && (await slugIsInUse(type, newData.slug))) {

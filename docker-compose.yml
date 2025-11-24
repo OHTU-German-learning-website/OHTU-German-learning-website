@@ -48,6 +48,7 @@ services:
       - .:/host:Z
     ports:
       - "3000:3000"
+      - "51204:51204"
     command: >
       sh -c "apt update && apt install -y wget postgresql-client && 
              wget https://github.com/peterldowns/pgmigrate/releases/download/v0.0.6%2Bcommit.4f90829/pgmigrate-linux-amd64 -O /usr/local/bin/pgmigrate && 
