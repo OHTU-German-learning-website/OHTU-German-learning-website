@@ -51,39 +51,32 @@ export async function GET(req, { params }) {
 export const PUT = withAuth(
   async (req, { params }) => {
     const data = await req.json();
-    const p = await params;
-    const { type } = p;
-    const slug = p.slug ?? p.id;
+    const { type, slug } = await params;
 
-    const table = VALID_PAGE_GROUPS.has(type) ? type : "";
-
-    // If content is present (including empty string), sanitize and update only content
-    if (Object.prototype.hasOwnProperty.call(data, "content")) {
-      const cleaned = sanitize(data.content);
-      if (!(await updateHTMLContent(table, slug, cleaned))) {
-        return new NextResponse("Error updating HTML content", { status: 400 });
-      }
-      return new NextResponse("", { status: 200 });
-    }
-
-    // For other updates (title, slug, page_order) fall back to full page update
     let newData;
     try {
-      newData = await getPageData(table, slug);
+      newData = await getPageData(type, slug);
     } catch {
       return new NextResponse("not found", { status: 404 });
     }
     if (data.title) newData.title = data.title;
     if (data.page_order) newData.page_order = data.page_order;
+    if (data.slug) newData.slug = data.slug;
+    // Allow also empty content string.
+    if (Object.prototype.hasOwnProperty.call(data, "content"))
+      newData.content = sanitize(data.content);
+    // Make sure that the slug only contains characters that do not need escaping
+    // in the url. This ensures that the slug the user types can be used as-is
+    // in the browser address bar.
     if (data.slug) newData.slug = data.slug.replace(/[^A-Za-z0-9\-\_\+]/g, "");
 
-    if (newData.slug !== slug && (await slugIsInUse(table, newData.slug))) {
+    if (newData.slug !== slug && (await slugIsInUse(type, newData.slug))) {
       return new NextResponse("Page slug already in use", {
         status: 400,
       });
     }
 
-    if (!(await setPageData(table, slug, newData))) {
+    if (!(await setPageData(type, slug, newData))) {
       return new NextResponse("Error updating HTML content", {
         status: 400,
       });

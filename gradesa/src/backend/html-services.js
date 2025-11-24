@@ -20,28 +20,6 @@ export async function setPageData(type, slug, newData) {
   return result.rowCount == 1;
 }
 
-export async function updateHTMLContent(type, slug, content) {
-  // Update only the `content` column for the given `page_group` and `slug`.
-  // Returns `true` when exactly one row was affected.
-  const result = await DB.pool(
-    "UPDATE html_pages SET content = $1 WHERE page_group = $2 AND slug = $3",
-    [content, type, slug]
-  );
-  // Helpful debug output when running locally or in dev; keep non-intrusive.
-  if (typeof console !== "undefined" && console.debug) {
-    console.debug("updateHTMLContent:", {
-      type,
-      slug,
-      contentLength: content?.length ?? 0,
-      rowCount: result.rowCount,
-    });
-  }
-  return result.rowCount == 1;
-}
-
-// Note: `updateHTMLContent` updates only the `content` column and mirrors the
-// boolean return convention used by `setPageData` (true when rowCount == 1).
-
 export async function getPageList(type) {
   const result = await DB.pool(
     "SELECT title, slug FROM html_pages WHERE page_group = $1 ORDER BY page_order ASC",
