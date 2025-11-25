@@ -44,14 +44,14 @@ export async function POST(request) {
     let contentOrder = 1;
     for (const item of content) {
       const contentRes = await DB.pool(
-        `INSERT INTO multichoice_content 
+        `INSERT INTO multichoice_content
            (multichoice_exercise_id, content_type, content_value, content_order, correct_answer)
          VALUES ($1, $2, $3, $4, $5)
          RETURNING id`,
         [
           multichoice_id,
           item.type,
-          item.value ?? null,
+          item.value ?? "",
           contentOrder,
           item.type === "multichoice" ? item.correct : null,
         ]
