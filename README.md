@@ -65,7 +65,21 @@ When constructing the file remember that the encoded form can not contain a trai
 
 - [Product and Sprint Backlogs](https://github.com/orgs/OHTU-German-learning-website/projects/4)
 
-- Migrations: check [the migration README](data/README.md)
+- Migrations: check [the migration README](gradesa/data/DATABASE_MIGRATIONS.md)
+
+## Appendix: Project Documentation
+
+Organized documentation files throughout the repository:
+
+- **[gradesa/NEXTJS_APP_GUIDE.md](gradesa/NEXTJS_APP_GUIDE.md)** – Next.js development server setup, testing with Vitest, and coverage UI
+- **[gradesa/GLOBAL_MIDDLEWARE.md](gradesa/GLOBAL_MIDDLEWARE.md)** – Global Next.js middleware for route protection and auth redirects
+- **[gradesa/data/DATABASE_MIGRATIONS.md](gradesa/data/DATABASE_MIGRATIONS.md)** – Database migration workflow using pgmigrate
+- **[gradesa/playwright/e2e/E2E_TESTS.md](gradesa/playwright/e2e/E2E_TESTS.md)** – End-to-end testing documentation
+- **[gradesa/src/SOURCE_OVERVIEW.md](gradesa/src/SOURCE_OVERVIEW.md)** – High-level source code organization, patterns, and conventions
+- **[gradesa/src/backend/middleware/BACKEND_MIDDLEWARE.md](gradesa/src/backend/middleware/BACKEND_MIDDLEWARE.md)** – Backend middleware wrappers (withAuth, withInputValidation)
+- **[gradesa/src/context/APP_CONTEXTS.md](gradesa/src/context/APP_CONTEXTS.md)** – React context providers (user auth, glossary)
+- **[gradesa/src/shared/hooks/DATA_FETCHING_HOOKS.md](gradesa/src/shared/hooks/DATA_FETCHING_HOOKS.md)** – Custom data fetching hooks (useQuery, useRequest)
+- **[gradesa/src/components/ui/layout/LAYOUT_COMPONENTS.md](gradesa/src/components/ui/layout/LAYOUT_COMPONENTS.md)** – Layout component system (Container, Row, Column)
 
 ## Definition of Done
 
