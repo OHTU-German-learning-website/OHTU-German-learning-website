@@ -8,7 +8,7 @@ import RenderHTML from "@/app/html-renderer"; // Old renderer for static pages
 import layout from "@/shared/styles/layout.module.css"; // Keep original styles
 import "../../../resources/[chapter]/chapters.css"; // Keep original styles
 
-// 1. THE PROFESSOR'S STATIC LIST (Do not change)
+// 1.STATIC LIST (Do not change)
 export const chapters = [
   {
     id: "1",
@@ -90,7 +90,7 @@ export default function Chapters() {
   const { chapter: chapterSlug } = useParams(); // Get the URL part
   const router = useRouter();
 
-  // A. Check if it is a STATIC page (The Professor's content)
+  // A. Check if it is a STATIC page
   const staticChapter = chapters.find((c) => c.id === chapterSlug);
 
   // State for DYNAMIC pages (Your new database content)
