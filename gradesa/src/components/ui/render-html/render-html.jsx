@@ -34,6 +34,8 @@ export default function RenderHTML({ data }) {
         );
       }
 
+      if (name.startsWith("glossary")) return;
+
       // Muut custom-tagit -> standardi HTML
       if (name in tagMapToHtml) {
         const HtmlTag = tagMapToHtml[name];
