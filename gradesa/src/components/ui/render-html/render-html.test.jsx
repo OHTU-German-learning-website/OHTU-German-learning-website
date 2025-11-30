@@ -205,6 +205,41 @@ describe("RenderHTML Component", () => {
       expect(container.textContent).toContain("end");
       expect(container.textContent).toContain("finish");
     });
+
+    // Tests below are for the console errors regarding unknown tags:
+
+    it("should map <column> to <div>", () => {
+      const html = "<column>Column content</column>";
+      const { container } = render(<RenderHTML data={html} />);
+      const div = container.querySelector("div");
+      expect(div).toBeTruthy();
+      expect(div.textContent).toBe("Column content");
+    });
+
+    it("should map <container> to <div>", () => {
+      const html = '<container class="wrap"><p>Inside</p></container>';
+      const { container } = render(<RenderHTML data={html} />);
+      const div = container.querySelector("div.wrap");
+      expect(div).toBeTruthy();
+      expect(div.textContent).toContain("Inside");
+    });
+
+    it("should map <anchor> to <a>", () => {
+      const html = '<anchor href="/test">Go</anchor>';
+      const { container } = render(<RenderHTML data={html} />);
+      const a = container.querySelector("a");
+      expect(a).toBeTruthy();
+      expect(a.href).toContain("/test");
+      expect(a.textContent).toBe("Go");
+    });
+
+    it("should fallback unknown tags to <div>", () => {
+      const html = "<foo>Unknown</foo>";
+      const { container } = render(<RenderHTML data={html} />);
+      const div = container.querySelector("div");
+      expect(div).toBeTruthy();
+      expect(div.textContent).toBe("Unknown");
+    });
   });
 
   describe("Edge cases", () => {
