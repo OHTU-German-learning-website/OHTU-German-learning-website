@@ -1,57 +1,14 @@
 "use client";
 
-import { Column, Container, Row } from "@/components/ui/layout/container";
-import "../../../resources/[chapter]/chapters.css";
-import layout from "@/shared/styles/layout.module.css";
+import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { Column, Container, Row } from "@/components/ui/layout/container";
 import { LinkButton } from "@/components/ui/linkbutton";
-import RenderHTML, { PageType } from "@/app/html-renderer";
+import RenderHTML from "@/app/html-renderer"; // Old renderer for static pages
+import layout from "@/shared/styles/layout.module.css"; // Keep original styles
+import "../../../resources/[chapter]/chapters.css"; // Keep original styles
 
-export default function Chapters() {
-  const { chapter } = useParams();
-  const router = useRouter();
-
-  const Chapter = chapters.find((c) => c.id === chapter);
-  if (!Chapter) {
-    router.replace("grammar/communications");
-  }
-
-  const previousChapter = chapters.find(
-    (c) => parseInt(c.id) === parseInt(chapter) - 1
-  );
-  const nextChapter = chapters.find(
-    (c) => parseInt(c.id) === parseInt(chapter) + 1
-  );
-
-  return (
-    <Column className={layout.viewContent}>
-      {Chapter && (
-        <>
-          <h1>{Chapter.title}</h1>
-          <p>
-            Auf dieser Seite wird die Kommunikationssituation {Chapter.title}{" "}
-            erklärt.
-          </p>
-          <p>Folgende Grammatik-Themen sind damit verbunden: </p>
-          <RenderHTML contentId={Chapter.id} type="communications" />
-        </>
-      )}
-      <Row justify="space-between" pb="xl">
-        {!!previousChapter && (
-          <Container mr="auto">
-            <LinkButton href={previousChapter.link}>Zurück</LinkButton>
-          </Container>
-        )}
-        {!!nextChapter && (
-          <Container ml="auto">
-            <LinkButton href={nextChapter.link}>Weiter</LinkButton>
-          </Container>
-        )}
-      </Row>
-    </Column>
-  );
-}
-
+// 1. THE PROFESSOR'S STATIC LIST (Do not change)
 export const chapters = [
   {
     id: "1",
@@ -94,11 +51,7 @@ export const chapters = [
     title: "8. Firmen und Produkte beschreiben",
     link: "/grammar/communications/8",
   },
-  {
-    id: "9",
-    title: "9. Werbung machen",
-    link: "/grammar/communications/9",
-  },
+  { id: "9", title: "9. Werbung machen", link: "/grammar/communications/9" },
   {
     id: "10",
     title: "10. Einkaufen privat und geschäftlich",
@@ -114,11 +67,7 @@ export const chapters = [
     title: "12. Über historische Ereignisse sprechen",
     link: "/grammar/communications/12",
   },
-  {
-    id: "13",
-    title: "13. Pläne machen",
-    link: "/grammar/communications/13",
-  },
+  { id: "13", title: "13. Pläne machen", link: "/grammar/communications/13" },
   {
     id: "14",
     title:
@@ -136,3 +85,110 @@ export const chapters = [
     link: "/grammar/communications/16",
   },
 ];
+
+export default function Chapters() {
+  const { chapter: chapterSlug } = useParams(); // Get the URL part
+  const router = useRouter();
+
+  // A. Check if it is a STATIC page (The Professor's content)
+  const staticChapter = chapters.find((c) => c.id === chapterSlug);
+
+  // State for DYNAMIC pages (Your new database content)
+  const [dbPage, setDbPage] = useState(null);
+  const [loading, setLoading] = useState(!staticChapter); // Only load if not static
+  const [error, setError] = useState(false);
+
+  // B. If not static, try to fetch from Database API
+  useEffect(() => {
+    if (staticChapter) return; // If we found it in the list, stop here.
+
+    async function fetchPage() {
+      try {
+        // Call the new API we created earlier
+        const res = await fetch(`/api/content-by-slug?slug=${chapterSlug}`);
+
+        if (res.ok) {
+          const data = await res.json();
+          setDbPage(data);
+        } else {
+          setError(true);
+        }
+      } catch (err) {
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchPage();
+  }, [chapterSlug, staticChapter]);
+
+  // --- RENDER LOGIC ---
+
+  // 1. RENDER STATIC PAGE (The Original Design)
+  if (staticChapter) {
+    const previousChapter = chapters.find(
+      (c) => parseInt(c.id) === parseInt(chapterSlug) - 1
+    );
+    const nextChapter = chapters.find(
+      (c) => parseInt(c.id) === parseInt(chapterSlug) + 1
+    );
+
+    return (
+      <Column className={layout.viewContent}>
+        <h1>{staticChapter.title}</h1>
+        <p>
+          Auf dieser Seite wird die Kommunikationssituation{" "}
+          {staticChapter.title} erklärt.
+        </p>
+        <p>Folgende Grammatik-Themen sind damit verbunden: </p>
+
+        {/* Use the old renderer */}
+        <RenderHTML contentId={staticChapter.id} type="communications" />
+
+        <Row justify="space-between" pb="xl">
+          {!!previousChapter && (
+            <Container mr="auto">
+              <LinkButton href={previousChapter.link}>Zurück</LinkButton>
+            </Container>
+          )}
+          {!!nextChapter && (
+            <Container ml="auto">
+              <LinkButton href={nextChapter.link}>Weiter</LinkButton>
+            </Container>
+          )}
+        </Row>
+      </Column>
+    );
+  }
+
+  // 2. LOADING STATE
+  if (loading) return <div style={{ padding: "2rem" }}>Laden...</div>;
+
+  // 3. ERROR STATE (404)
+  if (error || !dbPage) {
+    return (
+      <div style={{ padding: "2rem", textAlign: "center" }}>
+        <h1>404 - Seite nicht gefunden</h1>
+        <LinkButton href="/grammar/communications">Zurück</LinkButton>
+      </div>
+    );
+  }
+
+  // 4. RENDER NEW DATABASE PAGE
+  return (
+    <Column className={layout.viewContent}>
+      <h1>{dbPage.title}</h1>
+
+      {/* Inject the HTML content from the editor */}
+      <div
+        className="ql-editor" // Apply Quill styles so it looks nice
+        style={{ padding: 0 }}
+        dangerouslySetInnerHTML={{ __html: dbPage.content }}
+      />
+
+      <div style={{ marginTop: "2rem" }}>
+        <LinkButton href="/grammar/communications">Zurück</LinkButton>
+      </div>
+    </Column>
+  );
+}
