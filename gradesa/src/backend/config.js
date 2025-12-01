@@ -1,15 +1,40 @@
 import { config } from "dotenv";
 
+/**
+ * Environment and configuration helpers.
+ *
+ * This module centralizes reading environment variables from `.env` and
+ * `.env.<NODE_ENV>`, and exposes a structured `getConfig()` object for
+ * application settings, including PostgreSQL connection parameters.
+ */
+
+/**
+ * Current runtime environment (e.g., `development`, `test`, `production`).
+ * @type {string | undefined}
+ */
 export const environment = process.env.NODE_ENV;
 
+/** Whether running in test environment. */
 export const isTest = environment === "test";
+/** Whether running in development environment. */
 export const isDevelopment = environment === "development";
+/** Whether running in production environment. */
 export const isProduction = environment === "production";
 
 // Loads .env and .env.NODE_ENV (e.g. .env.development)
 // Shared environment variables are in .env
 // Environment specific variables are in .env.NODE_ENV
 // NextJS defaults to 'development' when running npm run dev
+/**
+ * Loads environment variable files.
+ *
+ * - Always loads `.env`
+ * - Then loads `.env.<environment>` if `environment` is one of
+ *   `test`, `development`, or `production`.
+ *
+ * Note: This function is synchronous despite being declared `async` in
+ * some usages; dotenv's `config` is synchronous.
+ */
 export const initConfig = async () => {
   switch (environment) {
     case "test":
@@ -19,7 +44,8 @@ export const initConfig = async () => {
       config({ path: `${process.cwd()}/.env.${environment}`, override: true });
       break;
     default:
-      throw new Error("Unsupported environment: " + env);
+      // Provide a clearer error without referencing undefined variables.
+      throw new Error("Unsupported environment: " + String(environment));
   }
 };
 
@@ -27,8 +53,28 @@ export const initConfig = async () => {
 // It's used to read environment variables from .env and .env.NODE_ENV
 // So instead of using process.env.DB_HOST, you can use getConfig().db.host
 // This is useful for keeping the code clean and gives you clear errors if you miss a variable.
+/** @type {ReturnType<typeof create> | undefined} */
 let cachedConfig;
 
+/**
+ * Returns the cached application configuration, creating it on first access.
+ * Ensures environment files are loaded before reading variables.
+ *
+ * @returns {{
+ *   url: string,
+ *   apiUrl: string,
+ *   sessionSecret: string,
+ *   sessionTTL: number,
+ *   db: {
+ *     host: string,
+ *     port: number,
+ *     user: string,
+ *     password: string,
+ *     database: string,
+ *     ssl: boolean,
+ *   }
+ * }}
+ */
 export const getConfig = () => {
   if (cachedConfig) {
     return cachedConfig;
@@ -38,6 +84,11 @@ export const getConfig = () => {
   return cachedConfig;
 };
 
+/**
+ * Reads a raw value from `process.env`.
+ * @param {string} key - Environment variable name.
+ * @returns {string | undefined} The value or `undefined` if not set.
+ */
 function getFromEnv(key) {
   const val = process.env[key];
   if (val === undefined) {
@@ -46,9 +97,22 @@ function getFromEnv(key) {
   return val;
 }
 
+/**
+ * Builds the structured configuration object from environment variables.
+ * Validates presence and basic type parsing, accumulating missing keys
+ * and throwing an error if any are invalid.
+ *
+ * @returns {ReturnType<typeof getConfig>}
+ * @throws {Error} If required environment variables are missing or invalid.
+ */
 function create() {
   let errors = [];
 
+  /**
+   * Reads a non-empty string env var; records missing/empty keys.
+   * @param {string} key
+   * @returns {string}
+   */
   function readString(key) {
     const val = getFromEnv(key);
     if (val === undefined || val.trim() === "") {
@@ -57,6 +121,11 @@ function create() {
     return val ?? "";
   }
 
+  /**
+   * Reads a required integer env var; records missing keys.
+   * @param {string} key
+   * @returns {number}
+   */
   function readInt(key) {
     const val = getFromEnv(key);
     if (val === undefined) {
@@ -66,11 +135,18 @@ function create() {
     return parseInt(val);
   }
 
+  /**
+   * Reads an optional integer env var with a default fallback.
+   * @param {string} key
+   * @param {number} defaultValue
+   * @returns {number}
+   */
   function readIntOptional(key, defaultValue) {
     const value = getFromEnv(key);
     return value === undefined ? defaultValue : parseInt(value);
   }
 
+  /** @type {ReturnType<typeof getConfig>} */
   const config = {
     url: "http://localhost:3000",
     apiUrl: "http://localhost:3000/api",
