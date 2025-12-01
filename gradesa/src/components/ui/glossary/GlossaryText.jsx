@@ -62,20 +62,32 @@ export default function GlossaryText({ children, excludeWords = [] }) {
   return <>{processText(children)}</>;
 }
 
-export function GlossaryParagraph({ children }) {
-  if (typeof children !== "string") return <p>{children}</p>;
-  return (
-    <p>
-      <GlossaryText>{children}</GlossaryText>
-    </p>
-  );
+export function GlossaryParagraph({ children, ...props }) {
+  // If children is a string, apply glossary detection
+  if (typeof children === "string") {
+    return (
+      <p {...props}>
+        <GlossaryText>{children}</GlossaryText>
+      </p>
+    );
+  }
+
+  // If children contains React elements (from html-react-parser), render as-is
+  // The text nodes within will already be processed if needed
+  return <p {...props}>{children}</p>;
 }
 
-export function GlossaryListItem({ children }) {
-  if (typeof children !== "string") return <li>{children}</li>;
-  return (
-    <li>
-      <GlossaryText>{children}</GlossaryText>
-    </li>
-  );
+export function GlossaryListItem({ children, ...props }) {
+  // If children is a string, apply glossary detection
+  if (typeof children === "string") {
+    return (
+      <li {...props}>
+        <GlossaryText>{children}</GlossaryText>
+      </li>
+    );
+  }
+
+  // If children contains React elements (from html-react-parser), render as-is
+  // The text nodes within will already be processed if needed
+  return <li {...props}>{children}</li>;
 }
