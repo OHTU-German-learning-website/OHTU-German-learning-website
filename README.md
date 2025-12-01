@@ -2,6 +2,12 @@
 
 GRADESA is a freely accessible website where language learners at language centres as well as university students of German studies can autonomously work on their German grammar skills and knowledge.
 
+## Prerequisites
+
+- **Node.js**: v20 or higher (included in the dev container)
+- **npm**: v10.2.4 or higher (included in the dev container)
+- **Container runtime**: Docker or Podman with compose support
+
 ## Install
 
 To be able to use the container-based development environment, you need to be able to run **rootless** containers.
@@ -13,7 +19,12 @@ To be able to use the container-based development environment, you need to be ab
 
 ### For Windows & MacOS
 
-Since none of us has a MacOS or Windows machine available, we are not able to test this. But most likely using podman would be suitable. If not, see the explanation section below to make debugging easier.
+**Note**: These instructions have not been tested on Windows or MacOS.
+
+- **Windows**: Use [Docker Desktop for Windows](https://docs.docker.com/desktop/install/windows-install/) or [Podman Desktop](https://podman-desktop.io/)
+- **MacOS**: Use [Docker Desktop for Mac](https://docs.docker.com/desktop/install/mac-install/) or [Podman Desktop](https://podman-desktop.io/)
+
+If you encounter permission issues, see the explanation section below about rootless containers.
 
 ### Explanation
 
@@ -22,17 +33,43 @@ The development environment includes a container named node-dev-env which can be
 ## Running locally
 
 1. Clone the repo to your machine: `$ git clone git@github.com:OHTU-German-learning-website/OHTU-German-learning-website.git`
-2. Cd into cloned repository: `$ cd OHTU-German-learning-website`
+2. cd into cloned repository: `$ cd OHTU-German-learning-website`
 3. For docker: `$ docker-compose up -d`, or for Podman: `$ podman-compose up -d`
-4. Steps 4-8 for VScode only
-5. Install dev-containers extension
-6. If you are using podman, change the value of "Dev › Containers: Docker Path" to "podman" in settings
-7. In the bottom left corner, press "open a remote window" and select "attach to running container" and select "node-dev-env"
-8. Open folder /host in VScode in the remote window
-9. The next actions should be run inside the container at /host
-10. Run inside the container: `$ npm install && npm run db:migrate`, `$ cd gradesa && npm install`
-11. Start the application: `$ npm run dev`
-12. Navigate to localhost:3000 in your browser
+
+### VSCode Setup (Optional)
+
+4. Install the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+5. If using Podman, change "Dev › Containers: Docker Path" to "podman" in VSCode settings
+6. Click the remote window icon (bottom left corner) → "Attach to Running Container" → select "node-dev-env"
+7. In the container window, open folder `/host`
+
+### Alternative: Terminal Access
+
+Without VSCode, access the container with:
+
+```bash
+# Docker
+docker exec -it node-dev-env bash
+
+# Podman
+podman exec -it node-dev-env bash
+```
+
+### Start Development
+
+8. Inside the container at `/host`, install dependencies and set up the database:
+
+```bash
+npm install && npm run db:migrate
+cd gradesa && npm install
+```
+
+9. Start the application: run `npm run dev` from the `gradesa/` folder (or run `npm run dev` at the repository root which forwards to the `gradesa` app).
+10. Navigate to `http://localhost:3000` in your browser
+
+### Environment Variables
+
+Required environment variables are documented in `gradesa/src/backend/config.js`. The dev environment uses `.env` and `.env.development` files. See [Database Migrations](gradesa/data/DATABASE_MIGRATIONS.md) for database configuration.
 
 ### Explanation
 

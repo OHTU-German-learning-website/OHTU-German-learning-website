@@ -4,7 +4,7 @@ import { checkSession } from "@/backend/auth/session";
 /**
  * Wraps a Next.js Route Handler with authentication/authorization checks.
  *
- * Usage examples appear in `src/backend/middleware/README.md` and various
+ * Usage examples appear in `src/backend/middleware/BACKEND_MIDDLEWARE.md` and various
  * API routes (e.g., `src/app/api/.../route.js`).
  *
  * Behavior:

@@ -1,58 +1,49 @@
-# Middleware Documentation
+# Backend middleware (API helpers)
 
-This document provides an overview and usage examples for the middleware functions in the application.
+Last updated: November 30, 2025
 
-## Table of Contents
+This document summarizes the small set of middleware wrappers used by Next.js API route handlers. For implementation, see the source files in `gradesa/src/backend/middleware/`.
 
-1. [`withAuth`](#withAuth)
-   - [Features](#features)
-   - [Parameters](#parameters)
-   - [Usage](#usage)
-   - [Example Use-Cases](#example-use-cases)
+Key wrappers
 
-## `withAuth`
+- `withAuth` — enforces authentication (optionally admin-only) and attaches `request.user`.
+- `withInputValidation` — validates request bodies using Zod schemas and attaches the parsed data to `request.body`.
 
-The `withAuth` middleware provides authentication and authorization for API route handlers. It wraps route handlers to check if the user has an active session and optionally verifies admin privileges.
+Usage highlights
 
-### Features
-
-- Verifies user authentication status
-- Optionally enforces admin-only access
-- Attaches the user object to the request for use in the handler
-- Returns appropriate error responses for unauthorized requests
-
-### Parameters
-
-- `callback`: The route handler function to be wrapped
-- `options`: Configuration object with the following properties:
-  - `requireAuth`: Boolean (default: `true`) - Whether authentication is required
-  - `requireAdmin`: Boolean (default: `false`) - Whether admin privileges are required
-
-### Usage
-
-import { NextResponse } from "next/server";
-import { withAuth } from "@/backend/middleware/withAuth";
+- Compose wrappers for common patterns. Example (authentication outside validation):
 
 ```js
-// Protected GET endpoint example
-export const GET = withAuth(async (request, { params }) => {
-  // Retrieve the authenticated user added to the request by withAuth
-  const user = request.user;
-
-  return NextResponse.json({
-    message: "Protected GET route accessed successfully",
-    user,
-  });
-});
-
-// Admin-only POST endpoint example
-export const POST = withAuth(
-  async (request) => {
-    // Implement admin-specific logic here.
-    return NextResponse.json({
-      message: "Admin-only route accessed successfully",
-    });
-  },
-  { requireAdmin: true }
+// PUT endpoint: auth + validation
+export const PUT = withAuth(
+  withInputValidation(async (req) => {
+    const user = req.user;
+    const data = req.body;
+    // ...
+  }, updateProfileSchema)
 );
 ```
+
+- `withAuth` options: pass `{ isAdmin: true }` to require admin privileges.
+
+Error responses
+
+- `withAuth` returns `401` for missing/invalid session and `403` for insufficient privileges.
+- `withInputValidation` returns `400` with a `details` array (Zod-style errors) for invalid input.
+
+Testing
+
+- Middleware tests live with other backend tests under `gradesa/src/backend/test/` (search for `withAuth` and `withInputValidation` tests).
+- To run the app's unit tests from the repo root:
+
+```bash
+cd /host/gradesa
+npm test
+```
+
+Notes
+
+- Keep middleware small and focused; prefer composition over duplication.
+- For handler-specific behavior (optional auth), inspect `request.user` directly in the handler instead of using `withAuth`.
+
+See also: `gradesa/README.md` (root onboarding), and `gradesa/src/SOURCE_OVERVIEW.md` for a high-level map of source folders.

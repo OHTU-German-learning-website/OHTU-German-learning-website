@@ -1,6 +1,24 @@
-# src Directory Overview
+# Source Code Overview
+
+_Last Updated: November 30, 2025_
 
 This directory contains the application source code organized by responsibility. Below is a quick guide to the main folders and notable files.
+
+## Import Path Aliases
+
+The project uses path aliases configured in `jsconfig.json`:
+
+```javascript
+// Instead of relative imports:
+import { useUser } from "../../../context/user.context";
+
+// Use @/ alias for cleaner imports:
+import { useUser } from "@/context/user.context";
+import Button from "@/components/ui/button/button";
+import { withAuth } from "@/backend/middleware/withAuth";
+```
+
+The `@/*` alias maps to `./src/*`, making imports consistent regardless of file depth.
 
 ## Top-Level Structure
 
@@ -11,7 +29,7 @@ This directory contains the application source code organized by responsibility.
   - `middleware/` (`withAuth`, `withInputValidation` and their tests, middleware README)
   - `test/` backend-specific helpers/tests
 - `components/` – Reusable UI components. Currently organized under `components/ui/`.
-- `context/` – React context providers and related logic (e.g. user and glossary contexts). Contains its own README.
+- `context/` – React context providers and related logic (e.g. user and glossary contexts). See [APP_CONTEXTS.md](./context/APP_CONTEXTS.md) for details.
 - `shared/` – Common code shared across client and server: constants, hooks, schemas (Zod), styles, small utilities.
 - `styles/` – Global or feature-scoped standalone CSS not colocated with components (e.g. `anchoredExercises.css`).
 - `middleware.js` – Global Next.js middleware controlling auth-based route access and redirects.
@@ -32,8 +50,15 @@ This directory contains the application source code organized by responsibility.
 
 ## Testing Notes
 
-- Middleware and validation have dedicated tests under `backend/middleware/`.
-- Backend helpers use test flags (`isTest`) allowing session and DB swapping.
+### Testing
+
+- Unit tests: Vitest (V8 coverage). Run with `npm test` from the repository root or use the scripts documented in `gradesa/NEXTJS_APP_GUIDE.md`.
+- E2E tests: Playwright — see `gradesa/playwright/e2e/E2E_TESTS.md` for how to run and author tests.
+
+Test helpers and conventions (summary):
+
+- Tests should be colocated with source where practical; see existing patterns in `components/`, `backend/`, and `shared/`.
+- Backend helpers expose test flags (e.g. `isTest`) to make session/DB swapping easier in tests.
 
 ## Conventions
 
@@ -43,4 +68,4 @@ This directory contains the application source code organized by responsibility.
 
 ---
 
-For deeper details on middleware wrappers, see `backend/middleware/README.md`. For auth/session details, consult JSDoc in `backend/auth/session.js` and `backend/auth/hash.js`.
+For deeper details on middleware wrappers, see [BACKEND_MIDDLEWARE.md](./backend/middleware/BACKEND_MIDDLEWARE.md). For auth/session details, consult JSDoc in `backend/auth/session.js` and `backend/auth/hash.js`.

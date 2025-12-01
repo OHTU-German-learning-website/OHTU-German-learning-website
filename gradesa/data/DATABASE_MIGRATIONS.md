@@ -1,22 +1,53 @@
-# Database Migration with pgmigrate
+# Database Migrations
 
-This project uses `pgmigrate` to manage database migrations. `pgmigrate` is a tool that helps apply, and manage database schema changes in a consistent and reliable manner. Ran migrations are tracked in the `pg_migrate_migrations` table.
+_Last Updated: November 30, 2025_
 
-Having a migration system that's based on sql files is good because it keeps track of schema changes in git and guarantees that everyone is using the same schema. Pgmigrate is automatically installed in the node-dev-env container.
+This project uses `pgmigrate` to manage schema changes. Applied migrations are tracked in the `pg_migrate_migrations` table.
 
-## Migration Script
+Location and scripts
 
-The migration script is located at `data/migrate.sh`. This script uses `pgmigrate` to apply migrations to the database.
+- Migration files: `gradesa/data/migrations/`
+- Helper scripts: `gradesa/data/migrate.sh`, `gradesa/data/reset-db.sh`
 
-### Running Migrations
+Connection configuration is read from environment variables (see `gradesa/src/backend/config.js`): `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`.
 
-To run the migrations, execute the following command (in root): `npm run db:migrate`
+Note: the development `docker-compose.yml` and the migration scripts use port `7742` for the main database by default.
 
-### Resetting the database
+Quick commands (run from project root `/host`):
 
-To reset the database, you can use the following command: `npm run db:reset`
-This will clear all tables, and rerun migrations.
+```bash
+# Apply pending migrations
+npm run db:migrate
 
-### Adding migrations
+# Reset DB (drops data) and reapply all migrations
+npm run db:reset
+```
 
-To add a migration, create a new SQL file with the migration you want to run and give it a name with the next number. (ex. `00042_create_user.sql`)
+Naming and workflow
+
+- File pattern: `<5-digit-number>_<descriptive_name>.sql` (e.g. `00002_add_users_table.sql`). Numbers must be sequential and zero-padded.
+- Never edit a migration that has already been applied in any environment—create a new migration to make changes.
+
+Adding a migration (summary):
+
+1. Add `00027_your_description.sql` to `gradesa/data/migrations/`.
+2. Test locally: `npm run db:migrate`.
+3. Commit the new file and push.
+
+Best practices
+
+- Prefer idempotent statements (e.g. `IF NOT EXISTS`).
+- Use transactions where appropriate.
+- For destructive fixes in production, prefer new compensating migrations over editing old files.
+- Document complex migrations with comments.
+
+Rollback strategy
+
+- `pgmigrate` does not provide automatic rollbacks. To reverse a change, author a new migration that undoes the previous change (e.g. `00028_rollback_xyz.sql`).
+- For local development, `npm run db:reset` recreates the schema from scratch.
+
+Troubleshooting pointers
+
+- If a migration fails partway, inspect `pg_migrate_migrations` to see what applied and author a corrective migration.
+- Check environment variables and ensure the DB container is running (`docker ps` / `podman ps`).
+- Pull latest migrations before creating new ones to avoid numbering conflicts.
