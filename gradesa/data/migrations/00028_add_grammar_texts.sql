@@ -1,4 +1,4 @@
-INSERT INTO grammar_pages_html (id, content)
+INSERT INTO grammar_pages_html (id, title, slug, content)
 VALUES ( 1,
          'Das Partizip II',
          'partizip2',
@@ -427,7 +427,7 @@ VALUES ( 1,
       </div>')
 ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO grammar_pages_html (id, content)
+INSERT INTO grammar_pages_html (id, title, slug, content)
 VALUES ( 2,
          'Das Perfekt',
          'perfekt',
