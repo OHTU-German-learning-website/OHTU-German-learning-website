@@ -15,5 +15,9 @@ INSERT INTO html_pages (content, slug, title, page_order, page_group)
 SELECT content, id AS slug, id AS title, id AS page_order, 'communications' AS page_group
 FROM communications_pages_html;
 
+INSERT INTO html_pages (content, slug, title, page_order, page_group)
+SELECT content, title, slug, id AS page_order, 'grammar' AS page_group
+FROM grammar_pages_html;
+
 DROP TABLE communications_pages_html;
 DROP TABLE learning_pages_html;
