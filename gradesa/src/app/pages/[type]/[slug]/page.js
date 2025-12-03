@@ -13,6 +13,8 @@ export default async function Chapters({ params }) {
 
   // Transform HTML to include glossary tags
   const transformedContent = transformHtmlToGlossaryTags(pageData.content);
+  const showLearningFormLink = type === "resources" && slug === "5"; // Hotfix for showing learning form link.
+  // Notice that if you edit the slug or type, you need to adjust them here. Otherwise the button doesn't show.
 
   const pageList = await getPageList(type);
   const currentIndex = pageList.findIndex((e) => e.slug === slug);
@@ -36,11 +38,13 @@ export default async function Chapters({ params }) {
             <LinkButton href={previousLink}>Zurück</LinkButton>
           </Container>
         )}
-        {nextLink && (
-          <Container>
-            <LinkButton href={nextLink}>Weiter</LinkButton>
-          </Container>
-        )}
+        <Container>
+          {showLearningFormLink ? (
+            <LinkButton href="/learning">Go to form</LinkButton>
+          ) : (
+            nextLink && <LinkButton href={nextLink}>Weiter</LinkButton>
+          )}
+        </Container>
       </Row>
     </Column>
   );
