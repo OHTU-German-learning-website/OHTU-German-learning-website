@@ -243,6 +243,24 @@ describe("RenderHTML Component", () => {
       expect(code).toBeTruthy();
       expect(code.textContent).toBe("console.log()");
     });
+
+    it("should render custom anchor tags as span.glossary-anchor with data-href preserved", () => {
+      const html = '<anchor href="/test">Click me</anchor>';
+      const { container } = render(<RenderHTML data={html} />);
+      const anchorSpan = container.querySelector("span.glossary-anchor");
+      expect(anchorSpan).toBeTruthy();
+      // data-href becomes dataset.href
+      expect(anchorSpan.dataset.href).toBe("/test");
+      expect(anchorSpan.textContent).toBe("Click me");
+    });
+
+    it("should render custom column tags as div.glossary-column and preserve classes/children", () => {
+      const html = '<column class="chapter">Hello Column</column>';
+      const { container } = render(<RenderHTML data={html} />);
+      const columnDiv = container.querySelector("div.chapter.glossary-column");
+      expect(columnDiv).toBeTruthy();
+      expect(columnDiv.textContent).toContain("Hello Column");
+    });
   });
 
   describe("Performance scenarios", () => {
