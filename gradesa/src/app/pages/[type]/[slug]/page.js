@@ -66,7 +66,7 @@ export default function PageViewer({ params }) {
           marginBottom: "1.5rem",
         }}
       >
-        <EditButton url={`/pages/${type}/edit/${slug}`} />
+        <EditButton url={`/admin/edit-page/${type}/${slug}`} />
 
         {auth.isLoggedIn && auth.user?.is_admin && (
           <button

@@ -2,12 +2,10 @@
 import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/context/user.context";
-import { Container } from "@/components/ui/layout/container";
-import styles from "@/app/page.module.css";
-import dynamic from "next/dynamic";
-import "react-quill-new/dist/quill.snow.css";
-
-const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
+import Editor from "@/components/ui/editor";
+import { Button } from "@/components/ui/button";
+import { Column, Row } from "@/components/ui/layout/container";
+import layout from "@/shared/styles/layout.module.css";
 
 export default function CreatePage({ params }) {
   const { type } = use(params);
@@ -57,114 +55,49 @@ export default function CreatePage({ params }) {
   };
 
   return (
-    <div className={styles.page}>
-      <style jsx global>{`
-        .ql-toolbar {
-          background-color: #1e293b !important;
-          border-color: #334155 !important;
-        }
-        .ql-container {
-          background-color: #0f172a !important;
-          border-color: #334155 !important;
-          color: white !important;
-        }
-        .ql-editor.ql-blank::before {
-          color: #94a3b8 !important;
-        }
-      `}</style>
-      <main className={styles.main}>
-        <Container bg="var(--bg4)">
-          <h1 style={{ marginBottom: "20px" }}>
-            Neue Seite erstellen ({type})
-          </h1>
-          <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
-            <button
-              onClick={() => router.back()}
-              style={{
-                padding: "10px 20px",
-                background: "#334155",
-                color: "white",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
-            >
-              Abbrechen
-            </button>
-            <button
-              onClick={handleSubmit}
-              disabled={loading}
-              style={{
-                padding: "10px 20px",
-                background: "#2563eb",
-                color: "white",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
-            >
-              Speichern
-            </button>
-          </div>
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}
-          >
-            <div>
-              <label style={{ display: "block", marginBottom: "5px" }}>
-                Titel
-              </label>
-              <input
-                type="text"
-                value={formData.title}
-                onChange={handleTitleChange}
-                style={{
-                  width: "100%",
-                  padding: "12px",
-                  borderRadius: "5px",
-                  border: "1px solid #334155",
-                  background: "#1e293b",
-                  color: "white",
-                }}
-              />
-            </div>
-            <div>
-              <label style={{ display: "block", marginBottom: "5px" }}>
-                Slug (ID)
-              </label>
-              <input
-                type="text"
-                value={formData.slug}
-                onChange={(e) =>
-                  setFormData((p) => ({ ...p, slug: e.target.value }))
-                }
-                style={{
-                  width: "100%",
-                  padding: "12px",
-                  borderRadius: "5px",
-                  border: "1px solid #334155",
-                  background: "#1e293b",
-                  color: "white",
-                }}
-              />
-            </div>
-            <div>
-              <label style={{ display: "block", marginBottom: "5px" }}>
-                Inhalt
-              </label>
-              <div style={{ height: "400px", marginBottom: "50px" }}>
-                <ReactQuill
-                  theme="snow"
-                  value={formData.content}
-                  onChange={(val) =>
-                    setFormData((p) => ({ ...p, content: val }))
-                  }
-                  style={{ height: "350px" }}
-                />
-              </div>
-            </div>
-          </div>
-        </Container>
-      </main>
-    </div>
+    <Column className={layout.viewContent}>
+      <Row gap="1rem">
+        <Button
+          onClick={() => {
+            router.back();
+          }}
+        >
+          Close editor
+        </Button>
+        <Button onClick={handleSubmit} disabled={loading}>
+          Save changes
+        </Button>
+      </Row>
+      <Row gap="1rem">
+        <label htmlFor="title">Title</label>
+        <input
+          type="text"
+          id="title"
+          value={formData.title}
+          onChange={handleTitleChange}
+          required
+        />
+      </Row>
+      <Row gap="1rem">
+        <label htmlFor="slug">Slug</label>
+        <input
+          type="text"
+          id="slug"
+          value={formData.slug}
+          onInput={(e) => {
+            setFormData((p) => ({ ...p, slug: e.target.value }));
+          }}
+          required
+        />
+      </Row>
+      <Row justify="space-between" pb="xl">
+        <Editor
+          defaultContent={formData.content}
+          updateEditorContent={(content) => {
+            setFormData((p) => ({ ...p, content }));
+          }}
+        />
+      </Row>
+    </Column>
   );
 }

@@ -82,28 +82,6 @@ export default function ChapterList({ params }) {
             <Link href={`/pages/${type}/${chapter.slug}`} style={{ flex: 1 }}>
               {chapter.title}
             </Link>
-
-            {/* DELETE BUTTON: For Admins, on EVERY page */}
-            {auth.isLoggedIn && auth.user?.is_admin && (
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleDelete(chapter.slug);
-                }}
-                style={{
-                  background: "#dc2626",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "4px",
-                  padding: "2px 8px",
-                  cursor: "pointer",
-                  marginLeft: "10px",
-                  fontSize: "0.8rem",
-                }}
-              >
-                Löschen
-              </button>
-            )}
           </div>
         );
       })}
