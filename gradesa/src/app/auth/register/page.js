@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [confirmEmail, setConfirmEmail] = useState("");
   const [username, setUsername] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
@@ -17,6 +19,21 @@ export default function Register() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    // Double check that email and password confirmation match
+
+    if (email !== confirmEmail) {
+      setError("E-Mail-Adressen stimmen nicht überein");
+      setSubmitted(false);
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwörter stimmen nicht überein");
+      setSubmitted(false);
+      return;
+    }
+
     try {
       const data = await makeRequest("/auth/register", {
         email,
@@ -70,6 +87,7 @@ export default function Register() {
             required
           />
         </div>
+
         <div className="form-group">
           <label className="form-label" htmlFor="email">
             E-Mail-Adresse
@@ -86,6 +104,21 @@ export default function Register() {
         </div>
 
         <div className="form-group">
+          <label className="form-label" htmlFor="email">
+            E-Mail-Adresse bestätigen
+          </label>
+          <input
+            className="form-input"
+            type="email"
+            id="confirmEmail"
+            name="confirmEmail"
+            value={confirmEmail}
+            onChange={(e) => setConfirmEmail(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="form-group">
           <label className="form-label" htmlFor="password">
             Passwort
           </label>
@@ -96,6 +129,21 @@ export default function Register() {
             name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label className="form-label" htmlFor="confirmPassword">
+            Passwort bestätigen
+          </label>
+          <input
+            className="form-input"
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
         </div>
