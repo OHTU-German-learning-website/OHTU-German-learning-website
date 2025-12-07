@@ -1,22 +1,19 @@
 FROM node:18-alpine
 
-WORKDIR /app/gradesa
 # Disable Husky during install
 ENV HUSKY=0
 
-# Set default environment variables for build
-
-ENV SESSION_SECRET=secret \
-
-    DB_HOST=localhost \
-
-    DB_PORT=5432 \
-
-    DB_USER=postgres \
-
-    DB_PASSWORD=password \
-
-    DB_NAME=postgres
+# Can be overriden by setting build-args when building image
+ARG DB_HOST="localhost"
+ARG DB_PORT="5432"
+ARG DB_USER="postgres"
+ARG DB_PASSWORD="password"
+ARG DB_NAME="postgres"
+ARG SESSION_SECRET="secret"
+ARG NODE_ENV="production"
+# NOTE: The above args and the following ENVs are overridden
+# by .env and .env.$NODE_ENV file contents if they exist
+# so these apply ONLY when ./init-env.sh has not been run
 
 RUN apk update && \
     apk add --no-cache wget && \
@@ -25,14 +22,29 @@ RUN apk update && \
 
 RUN apk add --no-cache postgresql-client
 
+# OpenShift requires non-root user
+RUN adduser -D nonroot
+USER nonroot
+
+WORKDIR /app/gradesa
+
 # Copy package files from gradesa
-COPY gradesa/package*.json ./
+COPY --chown=nonroot:nonroot gradesa/package*.json ./
+
+# Set default environment variables for build
+ENV SESSION_SECRET=$SESSION_SECRET \
+    DB_HOST=$DB_HOST \
+    DB_PORT=$DB_PORT \
+    DB_USER=$DB_USER \
+    DB_PASSWORD=$DB_PASSWORD \
+    DB_NAME=$DB_NAME \
+    NODE_ENV=$NODE_ENV
 
 # Install ALL dependencies (including dev) for build
-RUN npm i
+RUN npm ci
 
 # Copy app files including .env.production
-COPY gradesa/ .
+COPY --chown=nonroot:nonroot gradesa/ .
 
 #This is for memory optimizing
 ENV NODE_OPTIONS="--max-old-space-size=8192"
@@ -41,16 +53,15 @@ ENV NODE_OPTIONS="--max-old-space-size=8192"
 RUN npm run build
 
 # Remove dev dependencies
-RUN npm prune --production
+RUN npm prune --omit=dev
 
-# OpenShift requires non-root user
-RUN adduser -D nonroot && chown -R nonroot:nonroot /app/gradesa
-USER nonroot
+# Copy static files to .next/standalone, this is not done automatically
+RUN cp -r .next/static .next/standalone/.next
+RUN cp -r public .next/standalone/
+
 
 # Next.js needs to listen on 8080
 ENV PORT=8080
 EXPOSE 8080
 
-
-
-CMD ["npm", "start"]
+CMD ["npm", "run", "start:standalone"]
