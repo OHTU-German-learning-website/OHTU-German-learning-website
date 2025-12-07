@@ -1,0 +1,30 @@
+services:
+  db:
+    image: docker.io/library/postgres:15
+    container_name: gradesa-db
+    environment:
+      POSTGRES_PASSWORD: password
+    volumes:
+      - pg-data:/var/lib/postgresql/data/
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      retries: 20
+    command: -p 7742
+
+  gradesa:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: production
+        DB_HOST: db
+        DB_PORT: 7742
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+
+volumes:
+  pg-data:
