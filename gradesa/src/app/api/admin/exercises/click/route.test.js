@@ -9,8 +9,8 @@ describe("create click_exercises API", () => {
   useTestDatabase();
 
   it("should create a new click_exercise with valid details", async () => {
-    const user = await TestFactory.user();
-    const { mockPost } = useTestRequest(user);
+    const admin = await TestFactory.user({ is_admin: true });
+    const { mockPost } = useTestRequest(admin);
 
     const response = await POST(
       mockPost("api/exercises/create/click", {
@@ -34,8 +34,8 @@ describe("create click_exercises API", () => {
     expect(exercise.rows.length).toBe(1);
   });
   it("should return 400 if required fields are missing", async () => {
-    const user = await TestFactory.user();
-    const { mockPost } = useTestRequest(user);
+    const admin = await TestFactory.user({ is_admin: true });
+    const { mockPost } = useTestRequest(admin);
 
     const response = await POST(
       mockPost("api/exercises/create/click", {
@@ -51,8 +51,8 @@ describe("create click_exercises API", () => {
     expect(json.error).toBe("Alle Felder sind erforderlich.");
   });
   it("should return 422 if title is too short", async () => {
-    const user = await TestFactory.user();
-    const { mockPost } = useTestRequest(user);
+    const admin = await TestFactory.user({ is_admin: true });
+    const { mockPost } = useTestRequest(admin);
 
     const response = await POST(
       mockPost("api/exercises/create/click", {
@@ -71,8 +71,8 @@ describe("create click_exercises API", () => {
     );
   });
   it("should return 422 if title is too long", async () => {
-    const user = await TestFactory.user();
-    const { mockPost } = useTestRequest(user);
+    const admin = await TestFactory.user({ is_admin: true });
+    const { mockPost } = useTestRequest(admin);
 
     const response = await POST(
       mockPost("api/exercises/create/click", {
@@ -91,8 +91,8 @@ describe("create click_exercises API", () => {
     );
   });
   it("should return 422 if targetCategory is too short", async () => {
-    const user = await TestFactory.user();
-    const { mockPost } = useTestRequest(user);
+    const admin = await TestFactory.user({ is_admin: true });
+    const { mockPost } = useTestRequest(admin);
 
     const response = await POST(
       mockPost("api/exercises/create/click", {
@@ -111,8 +111,8 @@ describe("create click_exercises API", () => {
     );
   });
   it("should return 422 if targetCategory is too long", async () => {
-    const user = await TestFactory.user();
-    const { mockPost } = useTestRequest(user);
+    const admin = await TestFactory.user({ is_admin: true });
+    const { mockPost } = useTestRequest(admin);
 
     const response = await POST(
       mockPost("api/exercises/create/click", {
@@ -131,8 +131,8 @@ describe("create click_exercises API", () => {
     );
   });
   it("should return 422 if targetWords is empty", async () => {
-    const user = await TestFactory.user();
-    const { mockPost } = useTestRequest(user);
+    const admin = await TestFactory.user({ is_admin: true });
+    const { mockPost } = useTestRequest(admin);
 
     const response = await POST(
       mockPost("api/exercises/create/click", {
@@ -151,8 +151,8 @@ describe("create click_exercises API", () => {
     );
   });
   it("should return 422 if targetWords is too long", async () => {
-    const user = await TestFactory.user();
-    const { mockPost } = useTestRequest(user);
+    const admin = await TestFactory.user({ is_admin: true });
+    const { mockPost } = useTestRequest(admin);
 
     const response = await POST(
       mockPost("api/exercises/create/click", {
@@ -170,8 +170,8 @@ describe("create click_exercises API", () => {
     );
   });
   it("should return 422 if allWords is empty", async () => {
-    const user = await TestFactory.user();
-    const { mockPost } = useTestRequest(user);
+    const admin = await TestFactory.user({ is_admin: true });
+    const { mockPost } = useTestRequest(admin);
 
     const response = await POST(
       mockPost("api/exercises/create/click", {
@@ -190,8 +190,8 @@ describe("create click_exercises API", () => {
     );
   });
   it("should return 422 if allWords is too long", async () => {
-    const user = await TestFactory.user();
-    const { mockPost } = useTestRequest(user);
+    const admin = await TestFactory.user({ is_admin: true });
+    const { mockPost } = useTestRequest(admin);
 
     const response = await POST(
       mockPost("api/exercises/create/click", {
@@ -210,8 +210,8 @@ describe("create click_exercises API", () => {
     );
   });
   it("should return 409 if exercise with the same title already exists", async () => {
-    const user = await TestFactory.user();
-    const { mockPost } = useTestRequest(user);
+    const admin = await TestFactory.user({ is_admin: true });
+    const { mockPost } = useTestRequest(admin);
 
     // Create the first exercise
     await POST(
