@@ -117,6 +117,7 @@ Organized documentation files throughout the repository:
 - **[gradesa/src/context/APP_CONTEXTS.md](gradesa/src/context/APP_CONTEXTS.md)** – React context providers (user auth, glossary)
 - **[gradesa/src/shared/hooks/DATA_FETCHING_HOOKS.md](gradesa/src/shared/hooks/DATA_FETCHING_HOOKS.md)** – Custom data fetching hooks (useQuery, useRequest)
 - **[gradesa/src/components/ui/layout/LAYOUT_COMPONENTS.md](gradesa/src/components/ui/layout/LAYOUT_COMPONENTS.md)** – Layout component system (Container, Row, Column)
+- **[gradesa/src/components/ui/UI_COMPONENTS.md](gradesa/src/components/ui/UI_COMPONENTS.md)** – UI components quick reference (buttons, layout, exercises, glossary)
 
 ## Definition of Done
 

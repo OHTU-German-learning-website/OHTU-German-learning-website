@@ -14,6 +14,9 @@ export default function CreateExercise() {
       <LinkButton href="/admin/create-exercise/dragdrop">
         Drag und drop
       </LinkButton>
+      <LinkButton href="/admin/create-exercise/multichoice">
+        Multiple choice
+      </LinkButton>
     </Column>
   );
 }

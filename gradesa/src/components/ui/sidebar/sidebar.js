@@ -47,7 +47,7 @@ function StudentSideBar() {
   const [chapters, setChapters] = useState([]);
 
   useEffect(() => {
-    fetch("/api/html-content/resources")
+    fetch("/api/pages/resources")
       .then((res) => res.json())
       .then((data) => {
         setChapters(
@@ -171,6 +171,11 @@ const adminSidebarLinks = [
     title: "Add admin",
     link: "/admin/add-admin",
     id: "add-admin",
+  },
+  {
+    title: "New page",
+    link: "/admin/new-page",
+    id: "new-page",
   },
 ];
 

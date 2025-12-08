@@ -4,7 +4,7 @@ import layout from "@/shared/styles/layout.module.css";
 import RenderHTML from "@/components/ui/render-html/render-html";
 import { getPageData, getPageList } from "@/backend/html-services";
 import { transformHtmlToGlossaryTags } from "@/backend/html-transform";
-import EditButton from "./edit-button";
+import AdminButtons from "./admin-buttons";
 import { LinkButton } from "@/components/ui/linkbutton";
 
 export default async function Chapters({ params }) {
@@ -29,7 +29,7 @@ export default async function Chapters({ params }) {
 
   return (
     <Column className={layout.viewContent}>
-      <EditButton url={`/admin/edit-page/${type}/${slug}`} />
+      <AdminButtons type={type} slug={slug} />
       <h1>{pageData.title}</h1>
       <RenderHTML data={transformedContent} />
       <Row pb="xl" justify="space-between">
