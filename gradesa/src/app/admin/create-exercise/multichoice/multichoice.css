@@ -1,5 +1,242 @@
-.textField {
-  display: inline;
-  field-sizing: content;
-  min-width: 0;
+/* --- Global Container --- */
+.admin-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  color: #e2e8f0; /* Default text color for the page (Light Grey) */
+}
+
+.error-message {
+  color: #ff8080; /* Lighter red for visibility on dark */
+  background: #451a1a; /* Dark red background */
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ff8080;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Label styling to ensure visibility */
+.form-group label {
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.form-input {
+  padding: 10px;
+  background-color: #1e293b; /* Dark Slate Blue */
+  color: #ffffff;            /* White Text */
+  border: 1px solid #475569; /* Grey Border */
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.form-input::placeholder {
+    color: #94a3b8; /* Light grey placeholder text */
+}
+
+.divider {
+  border: 0;
+  border-top: 1px solid #334155;
+  margin: 15px 0;
+}
+
+/* --- Sentence Builder Area (Top Box) --- */
+.sentence-builder-container {
+  background: #1e293b; /* Dark background */
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+}
+
+.sentence-flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  min-height: 50px;
+  padding: 10px;
+  background: #0f172a; /* Slightly darker inner box for the sentence area */
+  border-radius: 6px;
+  border: 1px solid #334155;
+}
+
+.inline-block-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* The text input in the sentence flow (The "..." lines) */
+.text-block-input {
+  border: none;
+  border-bottom: 2px solid #64748b;
+  background: transparent;
+  padding: 5px;
+  font-size: 1.1rem;
+  color: #ffffff; /* FORCE WHITE TEXT HERE */
+  width: auto;
+  min-width: 60px;
+  max-width: 150px;
+  transition: border-color 0.2s;
+}
+
+.text-block-input:focus {
+  outline: none;
+  border-bottom-color: var(--blue, #3b82f6);
+}
+
+/* The Dropdown Placeholder (Clickable Chips) */
+.dropdown-placeholder {
+  background: #334155; /* Dark grey background */
+  border: 2px solid var(--blue, #3b82f6);
+  color: #ffffff; /* White text */
+  padding: 5px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s;
+}
+
+.dropdown-placeholder:hover {
+    background: #475569;
+}
+
+.dropdown-placeholder.active {
+  background: var(--blue, #3b82f6); /* Bright blue when selected */
+  color: white;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+}
+
+.delete-x {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 1.2rem;
+  margin-left: -5px;
+  margin-top: -15px;
+  z-index: 2;
+}
+
+.delete-x:hover {
+  color: #ef4444; /* Red on hover */
+}
+
+.action-row {
+  display: flex;
+  gap: 10px;
+}
+
+/* --- Editor Panel (Bottom Box - "Edit Options") --- */
+.dropdown-editor-panel {
+  border: 1px solid var(--blue, #3b82f6);
+  padding: 20px;
+  border-radius: 8px;
+  background: #1e293b; /* Match top container */
+  margin-top: 10px;
+}
+
+/* Headings inside the editor panel */
+.dropdown-editor-panel h3,
+.dropdown-editor-panel h4 {
+    margin-top: 0;
+    color: #ffffff;
+}
+
+.option-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+/* Inputs for the answers (Option 1, Option 2...) */
+.option-input {
+  flex: 1;
+  padding: 10px;
+  background: #0f172a; /* Very dark background */
+  color: #ffffff;      /* White text */
+  border: 1px solid #475569;
+  border-radius: 6px;
+}
+
+.delete-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #94a3b8;
+  transition: color 0.2s;
+}
+
+.delete-btn:hover {
+    color: #ef4444;
+}
+
+.hint {
+  font-size: 0.9rem;
+  color: #94a3b8; /* Light grey for hints */
+  margin-bottom: 15px;
+}
+
+/* --- Main Buttons --- */
+.main-actions {
+  display: flex;
+  gap: 10px;
+  padding-bottom: 50px;
+  margin-top: 20px;
+}
+
+/* --- Preview Modal --- */
+.preview-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8); /* Darker overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.preview-content {
+  background: #1e293b; /* Dark modal background */
+  padding: 30px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  border: 1px solid #334155;
+  color: #fff;
+}
+
+.preview-sentence {
+  font-size: 1.2rem;
+  line-height: 2;
+  margin: 20px 0;
+}
+
+.preview-select {
+  padding: 5px;
+  font-size: 1rem;
+  border: 1px solid #475569;
+  border-radius: 4px;
+  margin: 0 5px;
+  background: #0f172a; /* Dark dropdown in preview */
+  color: white;
+}
+
+.preview-close {
+  display: flex;
+  justify-content: flex-end;
 }
