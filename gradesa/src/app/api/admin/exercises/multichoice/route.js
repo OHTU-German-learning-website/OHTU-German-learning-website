@@ -5,6 +5,7 @@ export const POST = withAuth(
   async (request) => {
     try {
       const json = await request.json();
+      // We extract description but ignore it for the DB save
       const { title, description, content } = json;
 
       // Validation
@@ -30,6 +31,7 @@ export const POST = withAuth(
       const created_by = 1;
 
       // 1. Insert into parent 'exercises' table
+      // FIX: Removed 'description' column. Only saving creator and category.
       const exResult = await DB.pool(
         `INSERT INTO exercises (created_by, category)
          VALUES ($1, 'multichoice')
@@ -38,6 +40,8 @@ export const POST = withAuth(
       );
       const exercise_id = exResult.rows[0].id;
 
+      // 2. Insert into multichoice_exercises
+      // FIX: Removed 'description' here too. Only saving exercise_id and title.
       const mcRes = await DB.pool(
         `INSERT INTO multichoice_exercises (exercise_id, title)
          VALUES ($1, $2)
@@ -49,7 +53,8 @@ export const POST = withAuth(
       // Insert content blocks
       let order = 1;
       for (const item of content) {
-        if (!item.type || !item.value) {
+        // Validation: Only require 'value' if it is a text block.
+        if (!item.type || (item.type === "text" && !item.value)) {
           return Response.json(
             { error: "Jedes Content-Item benötigt Typ und Wert." },
             { status: 422 }
@@ -64,7 +69,8 @@ export const POST = withAuth(
           [
             multichoice_id,
             item.type,
-            item.value,
+            // FIX: Send empty string "" for dropdowns so DB doesn't crash on NULL
+            item.value || "",
             order,
             item.type === "multichoice" ? item.correct : null,
           ]

@@ -7,7 +7,6 @@ import "./multichoice.css";
 export default function CreateMultichoicePage() {
   const router = useRouter();
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
 
   const [sections, setSections] = useState([
     { id: "1", type: "text", value: "Ich" },
@@ -71,13 +70,24 @@ export default function CreateMultichoicePage() {
       setIsSubmitting(true);
       setError("");
 
+      // --- FIX 1: Convert Index to Text for correct answer ---
+      const contentToSave = sections.map((section) => {
+        if (section.type === "multichoice") {
+          return {
+            ...section,
+            correct: section.options[section.correct],
+          };
+        }
+        return section;
+      });
+
       const res = await fetch("/api/admin/exercises/multichoice", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title,
-          description,
-          content: sections, // Sends the array exactly as backend expects
+          // --- FIX 2: REMOVED description from here ---
+          content: contentToSave,
         }),
       });
 
@@ -110,17 +120,6 @@ export default function CreateMultichoicePage() {
           placeholder="Titel der Übung"
         />
       </div>
-
-      <div className="form-group">
-        <label>Beschreibung</label>
-        <input
-          className="form-input"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Anleitung für den Schüler"
-        />
-      </div>
-
       <hr className="divider" />
 
       {/* --- The Sentence Builder (Inline Flow) --- */}
@@ -271,7 +270,7 @@ export default function CreateMultichoicePage() {
         <div className="preview-overlay">
           <div className="preview-content">
             <h2>Vorschau: {title}</h2>
-            <p className="preview-desc">{description}</p>
+            {/* FIX 3: Removed description from here */}
 
             <div className="preview-sentence">
               {sections.map((s, i) =>
