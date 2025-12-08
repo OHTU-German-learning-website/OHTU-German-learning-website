@@ -7,6 +7,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "sh ./data/migrate.sh --skip-schema-gen && next start",
+    "start:standalone": "sh ./data/migrate.sh --skip-schema-gen && node .next/standalone/server.js",
     "lint": "next lint",
     "test": "vitest --disable-console-intercept",
     "test:coverage": "vitest --disable-console-intercept --coverage.enabled=true",
