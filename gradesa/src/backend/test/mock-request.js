@@ -26,6 +26,10 @@ export function useTestRequest(user) {
         method: "POST",
         body: JSON.stringify(data),
       }),
+    mockDelete: (url) =>
+      requestWithUser(user, sessionId, `${config.apiUrl}${url}`, {
+        method: "DELETE",
+      }),
     mockPut: (url, data) =>
       requestWithUser(user, sessionId, `${config.apiUrl}${url}`, {
         method: "PUT",
