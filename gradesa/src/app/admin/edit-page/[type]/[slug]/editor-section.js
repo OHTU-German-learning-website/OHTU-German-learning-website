@@ -29,7 +29,7 @@ export default function EditorSection({
       title: titleInput,
       slug: slugInput,
     });
-    const res = await fetch(`/api/html-content/${type}/${slug}`, {
+    const res = await fetch(`/api/admin/pages/${type}/${slug}`, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",

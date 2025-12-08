@@ -47,7 +47,7 @@ function StudentSideBar() {
   const [chapters, setChapters] = useState([]);
 
   useEffect(() => {
-    fetch("/api/html-content/resources")
+    fetch("/api/pages/resources")
       .then((res) => res.json())
       .then((data) => {
         setChapters(
