@@ -1,0 +1,5 @@
+.textField {
+  display: inline;
+  field-sizing: content;
+  min-width: 0;
+}
