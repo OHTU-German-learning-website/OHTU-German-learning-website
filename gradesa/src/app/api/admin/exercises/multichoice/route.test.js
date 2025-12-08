@@ -4,6 +4,7 @@ import { useTestDatabase } from "@/backend/test/testdb";
 import { useTestRequest } from "@/backend/test/mock-request";
 import { TestFactory } from "@/backend/test/testfactory";
 import { DB } from "@/backend/db";
+
 describe("POST /api/admin/exercises/multichoice", () => {
   useTestDatabase();
 
@@ -21,7 +22,8 @@ describe("POST /api/admin/exercises/multichoice", () => {
         },
         {
           type: "multichoice",
-          value: null,
+          // --- FIX: Changed null to a string so validation passes ---
+          value: "gap",
           correct: "France",
           options: ["France", "Germany", "Spain", "Italy"],
         },
