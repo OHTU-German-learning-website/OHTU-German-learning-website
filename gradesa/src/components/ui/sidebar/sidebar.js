@@ -172,6 +172,11 @@ const adminSidebarLinks = [
     link: "/admin/add-admin",
     id: "add-admin",
   },
+  {
+    title: "New page",
+    link: "/admin/new-page",
+    id: "new-page",
+  },
 ];
 
 function AdminSideBar() {

@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 import { DB } from "@/backend/db";
 
 // Allowed page_group values stored in the consolidated `html_pages` table.
-const VALID_PAGE_GROUPS = new Set(["resources", "communications"]);
+const VALID_PAGE_GROUPS = new Set(["resources", "communications", "grammar"]);
 
 /*
   Route behavior (summary):
@@ -27,7 +27,6 @@ export const DELETE = withAuth(
   async (req, { params }) => {
     const { type, slug } = await params;
 
-    // const query = `DELETE FROM html_pages WHERE slug = $1 AND page_group = $2 RETURNING *`;
     const query = `DELETE FROM html_pages WHERE slug = $1 AND page_group = $2 RETURNING *`;
     const result = await DB.pool(query, [slug, type]);
 
@@ -62,7 +61,7 @@ export const PUT = withAuth(
     // Make sure that the slug only contains characters that do not need escaping
     // in the url. This ensures that the slug the user types can be used as-is
     // in the browser address bar.
-    if (data.slug) newData.slug = data.slug.replace(/[^A-Za-z0-9\-\_\+]/g, "");
+    if (data.slug) newData.slug = sanitizeSlug(data.slug);
 
     if (newData.slug !== slug && (await slugIsInUse(type, newData.slug))) {
       return new NextResponse("Page slug already in use", {
@@ -76,6 +75,33 @@ export const PUT = withAuth(
       });
     }
     return new NextResponse("", { status: 200 });
+  },
+  {
+    requireAdmin: true,
+    requireAuth: true,
+  }
+);
+
+export const POST = withAuth(
+  async (req, { params }) => {
+    const { type, slug } = await params;
+    if (
+      slug !== sanitizeSlug(slug) ||
+      (await slugIsInUse(type, slug)) ||
+      !VALID_PAGE_GROUPS.has(type)
+    ) {
+      return new NextResponse("Invalid slug", {
+        status: 400,
+      });
+    }
+    const title = (await req.json()).title;
+    const query = `INSERT INTO html_pages (title, content, slug, page_group) VALUES ($1, $2, $3, $4)`;
+    const result = await DB.pool(query, [title, "", slug, type]);
+
+    if (result.rowCount === 0)
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+    return NextResponse.json({ message: "Created" }, { status: 200 });
   },
   {
     requireAdmin: true,
@@ -98,4 +124,8 @@ async function slugIsInUse(type, slug) {
     // since getPage failed, slug is not in use
     return false;
   }
+}
+
+function sanitizeSlug(slug) {
+  return slug.replace(/[^A-Za-z0-9\-\_\+]/g, "");
 }

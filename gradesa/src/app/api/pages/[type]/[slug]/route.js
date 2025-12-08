@@ -9,7 +9,7 @@ import DOMPurify from "dompurify";
 import { NextResponse } from "next/server";
 
 // Allowed page_group values stored in the consolidated `html_pages` table.
-const VALID_PAGE_GROUPS = new Set(["resources", "communications"]);
+const VALID_PAGE_GROUPS = new Set(["resources", "communications", "grammar"]);
 
 /*
   Route behavior (summary):
