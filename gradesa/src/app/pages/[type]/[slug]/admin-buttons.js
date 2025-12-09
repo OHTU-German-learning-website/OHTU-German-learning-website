@@ -2,12 +2,13 @@
 
 import { checkUseIsAdmin } from "@/context/user.context";
 import { Button } from "@/components/ui/button";
-import router from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useUser } from "@/context/user.context";
 import { Row } from "@/components/ui/layout/container";
 
 export default function AdminButtons({ type, slug }) {
   const { setActAs } = useUser();
+  const router = useRouter();
   const handleDelete = async () => {
     if (!confirm("Möchten Sie diese Seite wirklich löschen?")) return;
     const res = await fetch(`/api/admin/pages/${type}/${slug}`, {
@@ -24,7 +25,7 @@ export default function AdminButtons({ type, slug }) {
         <Button
           onClick={() => {
             setActAs({ label: "Lehrer", value: "admin" });
-            router.redirect(`/admin/edit-page/${type}/${slug}`);
+            router.push(`/admin/edit-page/${type}/${slug}`);
           }}
         >
           Edit Page
