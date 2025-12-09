@@ -9,7 +9,7 @@ export default function Home() {
         <section className="hero">
           <h1>Gradesa 2.0</h1>
           <p>
-            Grammatik Deutsch selbständig und Lerne und übe die deutsche
+            Grammatik Deutsch selbständig und autonom Lerne und übe die deutsche
             Grammatik mit kommunikativen Situationen!
           </p>
         </section>
