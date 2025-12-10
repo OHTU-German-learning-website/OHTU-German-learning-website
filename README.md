@@ -4,9 +4,7 @@ GRADESA is a freely accessible website where language learners at language centr
 
 ## Prerequisites
 
-- **Node.js**: v20 or higher (included in the dev container)
-- **npm**: v10.2.4 or higher (included in the dev container)
-- **Container runtime**: Docker or Podman with compose support
+- **Rootless container runtime**: Docker (rootless) or Podman with compose support
 
 ## Install
 
@@ -26,9 +24,7 @@ To be able to use the container-based development environment, you need to be ab
 
 If you encounter permission issues, see the explanation section below about rootless containers.
 
-### Explanation
-
-The development environment includes a container named node-dev-env which can be used as a development environment. When the container is created, a bind mount is created and the code base folder is mounted to the container. All development is done inside the container as root. If for example podman is used, this root user inside the container maps to your own user outside the container and there are no problems. If however the container process is running as root, the root user inside the container gets mapped to root user outside the container. This is not only insecure but also creates problems with file permissions. If you now for example create a new file inside the container (by for example running `$ npm install`), the newly created files are owned by root both inside the container but also outside of it.
+For deeper explanation, see [DEV_ENVIRONMENT.md](./DEV_ENVIRONMENT.md).
 
 ## Running locally
 
@@ -70,10 +66,6 @@ cd gradesa && npm install
 ### Environment Variables
 
 Required environment variables are documented in `gradesa/src/backend/config.js`. The dev environment uses `.env` and `.env.development` files. See [Database Migrations](gradesa/data/DATABASE_MIGRATIONS.md) for database configuration.
-
-### Explanation
-
-`docker-compose up -d` (or podman) — This command starts the development environment which includes two databases (one for development, one for automatic tests) and a development container named node-dev-env. VSCode dev-containers can be used to attach to the running container (see [dev-containers documentation](https://code.visualstudio.com/docs/devcontainers/attach-container)). It is also possible to run commands inside the container with `docker exec -it node-dev-env bash` (or with Podman). The codebase is mounted at /host.
 
 ## OpenShift
 
@@ -118,6 +110,7 @@ Organized documentation files throughout the repository:
 - **[gradesa/src/shared/hooks/DATA_FETCHING_HOOKS.md](gradesa/src/shared/hooks/DATA_FETCHING_HOOKS.md)** – Custom data fetching hooks (useQuery, useRequest)
 - **[gradesa/src/components/ui/layout/LAYOUT_COMPONENTS.md](gradesa/src/components/ui/layout/LAYOUT_COMPONENTS.md)** – Layout component system (Container, Row, Column)
 - **[gradesa/src/components/ui/UI_COMPONENTS.md](gradesa/src/components/ui/UI_COMPONENTS.md)** – UI components quick reference (buttons, layout, exercises, glossary)
+- **[DEV_ENVIRONMENT.md](./DEV_ENVIRONMENT.md)** – Explanation about dev containers workflow
 
 ## Definition of Done
 
