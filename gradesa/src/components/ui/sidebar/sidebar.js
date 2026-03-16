@@ -5,7 +5,12 @@ import styles from "./sidebar.module.css";
 import { usePathname } from "next/navigation";
 import { Column } from "../layout/container";
 import { Dropdown } from "../dropdown";
-import { useUser, userOptions } from "@/context/user.context";
+import {
+  useUser,
+  STUDENT_OPTION,
+  TEACHER_OPTION,
+  ADMIN_OPTION,
+} from "@/context/user.context";
 import { Button } from "../button";
 import { useEffect, useState } from "react";
 import { useIsMounted } from "@/shared/hooks/useIsMounted";
@@ -13,24 +18,50 @@ import { useIsMounted } from "@/shared/hooks/useIsMounted";
 const Sidebar = () => {
   const { auth, setActAs, actAs } = useUser();
 
-  const handleActAsChange = (actAs) => {
-    setActAs(actAs);
+  const handleActAsChange = (selectedActAs) => {
+    setActAs(selectedActAs);
   };
 
   const isMounted = useIsMounted();
+
+  /**
+   * Return only the role options that the current user is allowed to use.
+   *
+   * - students: Student
+   * - teachers: Student, Lehrer
+   * - admins/superadmins: Student, Lehrer, Administrator
+   */
+  const getAvailableUserOptions = () => {
+    if (!auth.user.is_admin) {
+      return [STUDENT_OPTION];
+    }
+
+    if (auth.user.is_superadmin) {
+      return [STUDENT_OPTION, TEACHER_OPTION, ADMIN_OPTION];
+    }
+
+    return [STUDENT_OPTION, TEACHER_OPTION];
+  };
+
   const renderSidebar = () => {
     if (!isMounted) return null;
-    if (actAs.value === "admin") {
-      return <AdminSideBar />;
+
+    if (actAs.value === "superadmin" && auth.user.is_superadmin) {
+      return <AdminSideBar showUsers={true} />;
+    }
+
+    if (auth.user.is_admin && actAs.value === "admin") {
+      return <AdminSideBar showUsers={false} />;
     }
     return <StudentSideBar />;
   };
+
   return (
     <nav className={styles.sidebar}>
       <Column gap="xl">
-        {auth.user.is_admin && (
+        {auth.isLoggedIn && (
           <Dropdown
-            options={userOptions}
+            options={getAvailableUserOptions()}
             onSelect={handleActAsChange}
             value={actAs}
           >
@@ -168,6 +199,11 @@ const adminSidebarLinks = [
     id: "glossary",
   },
   {
+    title: "Benutzer",
+    link: "/admin/users",
+    id: "users",
+  },
+  {
     title: "Add admin",
     link: "/admin/add-admin",
     id: "add-admin",
@@ -179,10 +215,20 @@ const adminSidebarLinks = [
   },
 ];
 
-function AdminSideBar() {
-  return (
-    <SidebarGroup title="Admin" sublinks={adminSidebarLinks} topLink="/admin" />
-  );
+/**
+ * AdminSideBar is used for both Lehrer and Administrator views.
+ *
+ * The difference is:
+ * - Lehrer: no access to "Benutzer"
+ * - Administrator: full admin link set
+ */
+
+function AdminSideBar({ showUsers }) {
+  const links = showUsers
+    ? adminSidebarLinks
+    : adminSidebarLinks.filter((l) => l.id !== "users");
+
+  return <SidebarGroup title="Admin" sublinks={links} topLink="/admin" />;
 }
 
 function SidebarGroup({ title, sublinks, topLink }) {
