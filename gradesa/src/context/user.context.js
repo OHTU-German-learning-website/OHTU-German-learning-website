@@ -5,26 +5,29 @@ import { useRouter, usePathname } from "next/navigation";
 import { useRequest } from "../shared/hooks/useRequest";
 import useLocalStorage from "@/shared/utils/useLocalStorage";
 
-export const userOptions = [
-  { label: "Student", value: "user" },
-  { label: "Lehrer", value: "admin" },
-];
+export const STUDENT_OPTION = { label: "Student", value: "user" };
+export const TEACHER_OPTION = { label: "Lehrer", value: "admin" };
+export const ADMIN_OPTION = { label: "Administrator", value: "superadmin" };
+
+export const userOptions = [STUDENT_OPTION, TEACHER_OPTION, ADMIN_OPTION];
 
 // Define the default user state
 const defaultUserState = {
   isLoggedIn: false,
+  isAuthResolved: false,
   user: {
     id: null,
     username: null,
     email: null,
     is_admin: false,
+    is_superadmin: false,
   },
 };
 
 // Create the context
 const UserContext = createContext({
   user: defaultUserState,
-  actAs: userOptions[0],
+  actAs: STUDENT_OPTION,
 });
 
 // Create a provider component
@@ -39,9 +42,10 @@ export function UserProvider({ children }) {
   const [auth, setAuth] = useState(defaultUserState);
   const makeRequest = useRequest();
   const pathname = usePathname();
+  const router = useRouter();
   const [actAs, setActAs, clearActAs] = useLocalStorage(
     "gradesa_act_as",
-    userOptions[0]
+    STUDENT_OPTION
   );
   // Check if user is logged in on initial load
   /**
@@ -51,7 +55,10 @@ export function UserProvider({ children }) {
    * @returns {void}
    */
   const resetAuthState = () => {
-    setAuth(defaultUserState);
+    setAuth({
+      ...defaultUserState,
+      isAuthResolved: true,
+    });
     clearActAs();
   };
 
@@ -68,22 +75,27 @@ export function UserProvider({ children }) {
         const response = await makeRequest("/auth/session", undefined, {
           method: "GET",
         }).catch((e) => {
-          // Allow 401s
-          if (e.status !== 401) {
+          // Allow 401s and treat them as "not logged in"
+          const status = e?.response?.status ?? e?.status;
+
+          if (status !== 401) {
             throw e;
           }
-          return e;
+
+          return { status: 401, data: null };
         });
         if (response.status === 200 && response.data) {
           const user = response.data.user;
           setAuth((prev) => ({
             ...prev,
             isLoggedIn: true,
+            isAuthResolved: true,
             user: {
               id: user.id,
               username: user.username,
               email: user.email,
               is_admin: user.is_admin,
+              is_superadmin: user.is_superadmin,
             },
           }));
         } else {
@@ -92,6 +104,7 @@ export function UserProvider({ children }) {
         }
       } catch (error) {
         console.error("Failed to fetch user session:", error);
+        resetAuthState();
       }
     }
     checkUserSession();
@@ -100,7 +113,7 @@ export function UserProvider({ children }) {
   /**
    * logout - perform logout request and reset client state on success.
    * If the server responds with status 200 the local auth state is reset
-   * and the page is reloaded to clear any cached state.
+   * and the user is redirected to the homepage.
    *
    * @returns {Promise<void>} resolves when the logout completes.
    */
@@ -109,7 +122,7 @@ export function UserProvider({ children }) {
     if (response.status === 200) {
       console.debug("User logged out");
       resetAuthState();
-      window.location.reload();
+      router.replace("/");
     }
   };
 
@@ -171,13 +184,53 @@ export function useIsAdmin() {
 
   useEffect(() => {
     if (!auth.user?.id) return;
-    if (!auth.user?.is_admin || !auth.isLoggedIn || actAs.value !== "admin") {
+
+    const isAllowedAdminView =
+      actAs.value === "admin" || actAs.value === "superadmin";
+
+    if (!auth.user?.is_admin || !auth.isLoggedIn || !isAllowedAdminView) {
       console.debug("Not authorized to view admin page", auth);
       router.replace("/");
     }
   }, [auth, router, pathname]);
 
   return auth?.user?.id ? auth.user.is_admin : undefined;
+}
+
+/**
+ * useIsSuperAdmin - hook that enforces superadmin-only access to a route.
+ *
+ * Works similarly to `useIsAdmin`, but checks for the highest privilege
+ * level in the system. If the current user is not a superadmin, the hook
+ * will redirect them to the root (`/`).
+ *
+ * This hook should be used for pages that expose sensitive functionality,
+ * such as:
+ * - User management
+ * - System configuration
+ * - Role management
+ *
+ * @returns {boolean|undefined} `true` if the current user is a superadmin,
+ * `false` if not authorized, or `undefined` while the authentication state
+ * is still loading.
+ */
+
+export function useIsSuperAdmin() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const { auth } = useUser();
+
+  useEffect(() => {
+    if (!auth.isAuthResolved) return;
+
+    if (!auth.isLoggedIn || !auth.user?.is_superadmin) {
+      console.debug("Not authorized to view superadmin page", auth);
+      router.replace("/");
+    }
+  }, [auth, router, pathname]);
+
+  if (!auth.isAuthResolved) return undefined;
+  return auth.isLoggedIn ? auth.user.is_superadmin : false;
 }
 
 /**

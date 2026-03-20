@@ -52,7 +52,7 @@ export async function verifySession(session) {
  * Stores a signed JWT in `AUTH_COOKIE_NAME` with `httpOnly`, `sameSite:lax`,
  * and environment-appropriate `secure`. Skips cookie setting in tests.
  *
- * @param {{ id:number, username:string, email:string, is_admin:boolean }} user -
+ * @param {{ id:number, username:string, email:string, is_admin:boolean, is_superadmin:boolean }} user -
  *   Minimal user info to embed in the session.
  * @returns {Promise<void>} Resolves when the cookie is set (or skipped in tests).
  */
@@ -64,6 +64,7 @@ export async function createSession(user) {
       username: user.username,
       email: user.email,
       is_admin: user.is_admin,
+      is_superadmin: user.is_superadmin,
     },
     expiresAt: expiresAt,
   };
