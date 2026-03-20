@@ -7,13 +7,15 @@ CREATE TABLE IF NOT EXISTS html_pages (
   page_group TEXT
 );
 
-INSERT INTO html_pages (content, slug, title, page_order, page_group)
-SELECT content, id AS slug, id AS title, id AS page_order, 'resources' AS page_group
-FROM learning_pages_html;
+
 
 INSERT INTO html_pages (content, slug, title, page_order, page_group)
 SELECT content, id AS slug, id AS title, id AS page_order, 'communications' AS page_group
 FROM communications_pages_html;
+
+INSERT INTO html_pages (content, slug, title, page_order, page_group)
+SELECT content, id AS slug, id AS title, id AS page_order, 'resources' AS page_group
+FROM learning_pages_html;
 
 DROP TABLE communications_pages_html;
 DROP TABLE learning_pages_html;
