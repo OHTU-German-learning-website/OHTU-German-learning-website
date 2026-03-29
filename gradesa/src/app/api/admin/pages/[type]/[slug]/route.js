@@ -69,11 +69,37 @@ export const PUT = withAuth(
       });
     }
 
-    if (!(await setPageData(type, slug, newData))) {
+    let updated = await setPageData(type, slug, newData);
+
+    if (!updated && type === "grammar") {
+      const insertQuery = `
+    INSERT INTO html_pages (title, content, slug, page_group)
+    VALUES ($1, $2, $3, $4)
+    ON CONFLICT DO NOTHING
+  `;
+
+      await DB.pool(insertQuery, [
+        newData.title,
+        newData.content ?? "",
+        newData.slug,
+        type,
+      ]);
+
+      updated = await setPageData(type, slug, newData);
+    }
+
+    if (!updated) {
+      console.log("PUT failed", {
+        type,
+        slug,
+        newData,
+      });
+
       return new NextResponse("Error updating HTML content", {
         status: 400,
       });
     }
+
     return new NextResponse("", { status: 200 });
   },
   {
