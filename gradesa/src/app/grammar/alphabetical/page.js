@@ -12,7 +12,7 @@ export default function Chapter() {
       <h1>Grammatik in alphabetischer Reihenfolge</h1>
 
       {chapters.map((chapter) => (
-        <Link key={chapter.id} href={chapter.link}>
+        <Link key={chapter.id} href={`${chapter.link}?view=alphabetical`}>
           {chapter.title}
         </Link>
       ))}

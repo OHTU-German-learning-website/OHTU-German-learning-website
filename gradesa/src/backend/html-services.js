@@ -51,7 +51,7 @@ export async function setPageData(type, slug, newData) {
     "UPDATE html_pages SET title = $1, slug = $2, content = $3 WHERE page_group = $4 AND slug = $5",
     [newData.title, newData.slug, newData.content, type, slug]
   );
-  return result.rowCount == 1;
+  return result.rowCount >= 1;
 }
 
 /**

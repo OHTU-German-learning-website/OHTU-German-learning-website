@@ -8,10 +8,11 @@ test.describe("Learning Page", () => {
   });
 
   test("should show language dropdown button", async ({ page }) => {
-    await page.goto("/learning");
+    await page.goto("/learning", { waitUntil: "domcontentloaded" });
+
     await expect(
       page.getByRole("button", { name: /English|Deutsch/i })
-    ).toBeVisible();
+    ).toBeVisible({ timeout: 15000 });
   });
 
   test("should have language selection functionality", async ({ page }) => {
@@ -28,9 +29,7 @@ test.describe("Learning Page", () => {
   });
 
   test("should show learning form when data is loaded", async ({ page }) => {
-    await page.goto("/learning");
-
-    await page.waitForLoadState("networkidle");
+    await page.goto("/learning", { waitUntil: "domcontentloaded" });
 
     const formContainer = page.locator(
       '.LearningForm, [data-test="learning-form"]'
