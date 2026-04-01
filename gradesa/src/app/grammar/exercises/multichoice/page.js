@@ -90,7 +90,9 @@ export default function MultichoiceExercisesPage() {
                   Erstellt: {new Date(exercise.created_at).toLocaleDateString()}
                 </Container>
               </Column>
-              <ExerciseLinkButton id={exercise.exercise_id}>
+              <ExerciseLinkButton
+                href={`/grammar/exercises/multichoice/${exercise.multichoice_exercise_id}`}
+              >
                 Link kopieren
               </ExerciseLinkButton>
             </Row>

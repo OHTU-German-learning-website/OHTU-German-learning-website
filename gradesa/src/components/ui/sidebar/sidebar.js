@@ -116,26 +116,6 @@ function StudentSideBar() {
 
 const extraLinks = [
   {
-    title: "DeepL",
-    link: "https://www.deepl.com/de/translator",
-    id: "deepl",
-  },
-  {
-    title: "Google Translator",
-    link: "https://translate.google.com/",
-    id: "google-translator",
-  },
-  {
-    title: "ChatGPT",
-    link: "https://chatgpt.com/",
-    id: "chatgpt",
-  },
-  {
-    title: "Google Gemini",
-    link: "https://gemini.google.com",
-    id: "google-gemini",
-  },
-  {
     title: "Wortschatz Uni Leipzig",
     link: "https://wortschatz.uni-leipzig.de/de",
     id: "wortschatz-uni-leipzig",
@@ -166,24 +146,24 @@ const extraLinks = [
     id: "progr@mm",
   },
   {
-    title: "Hamburger Fernhochschule",
-    link: "https://www.hfh-fernstudium.de/blog/welcher-lerntyp-bist-du",
-    id: "hamburger-fernhochschule",
+    title: "DeepL",
+    link: "https://www.deepl.com/de/translator",
+    id: "deepl",
   },
   {
-    title: "IQLingua",
-    link: "https://www.iq-lingua.de/typ-checks/welcher-lerntyp-bin-ich/#c42954",
-    id: "iq-lingua",
+    title: "Google Translator",
+    link: "https://translate.google.com/",
+    id: "google-translator",
   },
   {
-    title: "Geolino",
-    link: "https://www.geo.de/geolino/mensch/5849-rtkl-lernen-welcher-lerntyp-bist-du",
-    id: "geolino",
+    title: "ChatGPT",
+    link: "https://chatgpt.com/",
+    id: "chatgpt",
   },
   {
-    title: "Kapiert.de",
-    link: "https://www.kapiert.de/lerntypentest/",
-    id: "kapiert-de",
+    title: "Google Gemini",
+    link: "https://gemini.google.com",
+    id: "google-gemini",
   },
 ];
 
