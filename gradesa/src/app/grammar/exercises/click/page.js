@@ -89,7 +89,9 @@ export default function ClickExercisesPage() {
                   Erstellt: {new Date(exercise.created_at).toLocaleDateString()}
                 </Container>
               </Column>
-              <ExerciseLinkButton id={exercise.exercise_id}>
+              <ExerciseLinkButton
+                href={`/grammar/exercises/click/${exercise.click_id}`}
+              >
                 Link kopieren
               </ExerciseLinkButton>
             </Row>

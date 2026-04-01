@@ -234,28 +234,24 @@ export function useIsSuperAdmin() {
 }
 
 /**
- * checkUseIsAdmin - utility that inspects the current `UserContext` and
- * returns a boolean indicating admin rights.
+ * checkUseIsAdmin - utility that inspects the current UserContext and
+ * returns whether the authenticated user has admin rights.
  *
- * Note: this function relies on `useUser()` so it must be called from
- * React component or hook context (i.e. during render) to access the
- * current context value.
+ * Note: this function relies on useUser() so it must be called from
+ * a React component or hook context (i.e. during render) to access
+ * the current context value.
  *
- * @returns {boolean|undefined} `true` when user is admin, `false` when
- * not an admin, or `undefined` when there is no authenticated user.
+ * This check is based on the actual authenticated user (auth.user.is_admin)
+ * and not on the temporary "actAs" role used for UI switching.
+ *
+ * @returns {boolean} true when the user is an admin, otherwise false.
  */
 export function checkUseIsAdmin() {
-  let is_admin = true;
-  const { auth, actAs } = useUser();
+  const { auth } = useUser();
 
-  if (!auth.user?.id) return;
-  if (!auth.user?.is_admin || !auth.isLoggedIn || actAs.value == "admin") {
-    is_admin = false;
-    // Evaluate the truth of this statement.
-    // Should be true if and only if the user has admin rights
-    // Find out what is the definition of an admin user
-    // Also these functions might be better if they used whitelisting instead of blacklisting
-  }
+  if (!auth.user?.id) return false;
+  if (!auth.isLoggedIn) return false;
+  if (!auth.user?.is_admin) return false;
 
-  return is_admin;
+  return true;
 }

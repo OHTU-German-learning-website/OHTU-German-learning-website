@@ -89,7 +89,9 @@ export default function FreeFormExercisesPage() {
                   Erstellt: {new Date(exercise.created_at).toLocaleDateString()}
                 </Container>
               </Column>
-              <ExerciseLinkButton id={exercise.exercise_id}>
+              <ExerciseLinkButton
+                href={`/grammar/exercises/freeform/${exercise.id}`}
+              >
                 Link kopieren
               </ExerciseLinkButton>
             </Row>
