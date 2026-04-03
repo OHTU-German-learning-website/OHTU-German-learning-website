@@ -1,3 +1,4 @@
+"use client";
 import parse, { domToReact } from "html-react-parser";
 import {
   GlossaryParagraph,
@@ -57,6 +58,12 @@ export default function RenderHTML({ data }) {
   // Handlers for specific custom tags. Each handler receives normalized
   // attributes and the already-converted children (as React nodes).
   const handlers = {
+    p: (attributes, children) => (
+      <GlossaryParagraph {...attributes}>{children}</GlossaryParagraph>
+    ),
+    li: (attributes, children) => (
+      <GlossaryListItem {...attributes}>{children}</GlossaryListItem>
+    ),
     glossaryparagraph: (attributes, children) => (
       <GlossaryParagraph {...attributes}>{children}</GlossaryParagraph>
     ),
@@ -96,5 +103,5 @@ export default function RenderHTML({ data }) {
   };
 
   const parsedContent = parse(data, { replace: replacer });
-  return <div>{parsedContent}</div>;
+  return <div className="rendered-html">{parsedContent}</div>;
 }

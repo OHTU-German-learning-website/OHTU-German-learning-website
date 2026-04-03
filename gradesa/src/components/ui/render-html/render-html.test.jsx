@@ -56,7 +56,9 @@ describe("RenderHTML Component", () => {
   it("should render transformed glossary paragraph tags", () => {
     const html = "<glossaryparagraph>Test paragraph</glossaryparagraph>";
     render(<RenderHTML data={html} />);
-    expect(screen.getByTestId("glossary-paragraph")).toBeTruthy();
+    expect(screen.getAllByTestId("glossary-paragraph").length).toBeGreaterThan(
+      0
+    );
     expect(screen.getByText("Test paragraph")).toBeTruthy();
   });
 
