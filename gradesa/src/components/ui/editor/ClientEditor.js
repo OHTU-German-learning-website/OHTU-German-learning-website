@@ -53,7 +53,7 @@ const ClientEditor = (props) => {
         });
         quill.root.setAttribute("spellcheck", false);
         quill.on(Quill.events.TEXT_CHANGE, () => {
-          updateEditorContentRef.current?.(quill.getSemanticHTML());
+          updateEditorContentRef.current?.(quill.root.innerHTML);
         });
         if (props.defaultContent) {
           const delta = quill.clipboard.convert({ html: props.defaultContent });

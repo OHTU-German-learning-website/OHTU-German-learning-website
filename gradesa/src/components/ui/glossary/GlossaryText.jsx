@@ -1,11 +1,11 @@
 "use client";
+import React, { cloneElement, isValidElement, useMemo } from "react";
 import { useGlossary } from "@/context/glossary.context";
 import GlossaryTooltip from "./GlossaryTooltip";
-import { useMemo } from "react";
 
-//Component that automatically detects glossary words in text and wraps them with tooltips
-//Usage: <GlossaryText>Some text containing glossary words</GlossaryText>
-
+/**  Component that automatically detects glossary words in plain text
+ * and wraps matching terms with tooltip components.
+ * Usage: <GlossaryText>Some text containing glossary words</GlossaryText> */
 export default function GlossaryText({ children, excludeWords = [] }) {
   const { wordMap, isLoading } = useGlossary();
 
@@ -14,80 +14,95 @@ export default function GlossaryText({ children, excludeWords = [] }) {
     [excludeWords]
   );
 
+  /** Glossary matching only works on plain string content.
+   *   If the glossary is still loading, or children is not a string,
+   *   render the content unchanged. */
   if (isLoading || !children || typeof children !== "string") {
     return <>{children}</>;
   }
 
-  const processText = (text) => {
-    if (!text || typeof text !== "string") return text;
+  /** Sort glossary words by length so longer phrases are matched first. */
+  const glossaryWords = Object.keys(wordMap)
+    .filter((word) => !excludeSet.has(word.toLowerCase()))
+    .sort((a, b) => b.length - a.length);
 
-    // Get all glossary words sorted by length (longest first)
-    // This ensures we match longer phrases before shorter ones
-    const glossaryWords = Object.keys(wordMap)
-      .filter((word) => !excludeSet.has(word))
-      .sort((a, b) => b.length - a.length);
+  if (glossaryWords.length === 0) return <>{children}</>;
 
-    if (glossaryWords.length === 0) return text;
+  /**  Escape special regex characters before building the matching pattern. */
+  const escapedWords = glossaryWords.map((word) =>
+    word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+  );
 
-    const glossaryRegex = new RegExp(
-      `\\b(${glossaryWords.join("|")})\\b`,
-      "gi"
-    );
+  const glossaryRegex = new RegExp(`\\b(${escapedWords.join("|")})\\b`, "gi");
+  const parts = children.split(glossaryRegex);
 
-    const parts = text.split(glossaryRegex);
+  if (parts.length <= 1) return <>{children}</>;
 
-    if (parts.length <= 1) return text;
-
-    const result = [];
-    for (let i = 0; i < parts.length; i++) {
-      if (parts[i]) result.push(parts[i]);
-
-      if (
-        i < parts.length - 1 &&
-        glossaryWords.some((word) => parts[i + 1].toLowerCase() === word)
-      ) {
-        const matchedWord = parts[i + 1];
-        result.push(
-          <GlossaryTooltip key={`glossary-${i}`} word={matchedWord}>
-            {matchedWord}
-          </GlossaryTooltip>
+  return (
+    <>
+      {parts.map((part, index) => {
+        const matchedWord = glossaryWords.find(
+          (word) => word.toLowerCase() === part.toLowerCase()
         );
-        i++;
-      }
+
+        if (matchedWord) {
+          return (
+            <GlossaryTooltip key={`glossary-${index}`} word={part}>
+              {part}
+            </GlossaryTooltip>
+          );
+        }
+
+        return <React.Fragment key={`text-${index}`}>{part}</React.Fragment>;
+      })}
+    </>
+  );
+}
+
+/**
+ * Recursively processes parsed HTML children and applies glossary detection
+ * only to string text nodes, while preserving nested React elements such as
+ * <strong>, <em>, <br>, and other inline markup produced by html-react-parser.
+ */
+function processGlossaryChildren(children) {
+  return React.Children.map(children, (child) => {
+    if (typeof child === "string") {
+      return <GlossaryText>{child}</GlossaryText>;
     }
 
-    return result;
-  };
+    if (!isValidElement(child)) {
+      return child;
+    }
 
-  return <>{processText(children)}</>;
+    if (!child.props?.children) {
+      return child;
+    }
+
+    return cloneElement(
+      child,
+      { ...child.props },
+      processGlossaryChildren(child.props.children)
+    );
+  });
 }
 
+/**
+ * Glossary-aware paragraph renderer.
+ *
+ * Applies glossary processing to text nodes inside the paragraph while keeping
+ * nested markup intact. This is especially useful for HTML parsed from the
+ * editor, where children may be a mix of strings and React elements.
+ */
 export function GlossaryParagraph({ children, ...props }) {
-  // If children is a string, apply glossary detection
-  if (typeof children === "string") {
-    return (
-      <p {...props}>
-        <GlossaryText>{children}</GlossaryText>
-      </p>
-    );
-  }
-
-  // If children contains React elements (from html-react-parser), render as-is
-  // The text nodes within will already be processed if needed
-  return <p {...props}>{children}</p>;
+  return <p {...props}>{processGlossaryChildren(children)}</p>;
 }
 
+/**
+ * Glossary-aware list item renderer.
+ *
+ * Works like GlossaryParagraph, but for <li> elements. Text nodes are scanned
+ * for glossary terms and wrapped with tooltips without flattening nested markup.
+ */
 export function GlossaryListItem({ children, ...props }) {
-  // If children is a string, apply glossary detection
-  if (typeof children === "string") {
-    return (
-      <li {...props}>
-        <GlossaryText>{children}</GlossaryText>
-      </li>
-    );
-  }
-
-  // If children contains React elements (from html-react-parser), render as-is
-  // The text nodes within will already be processed if needed
-  return <li {...props}>{children}</li>;
+  return <li {...props}>{processGlossaryChildren(children)}</li>;
 }

@@ -473,3 +473,52 @@ label {
   text-align: center;
   margin-top: var(--u-lg);
 }
+
+.rendered-html p {
+  margin-bottom: 1em;
+  white-space: pre-wrap;
+}
+
+.rendered-html p:last-child {
+  margin-bottom: 0;
+}
+
+.rendered-html li {
+  margin-bottom: 0.35em;
+}
+
+.rendered-html .ql-size-small {
+  font-size: 0.75em;
+}
+
+.rendered-html .ql-size-large {
+  font-size: 1.5em;
+}
+
+.rendered-html .ql-size-huge {
+  font-size: 2.5em;
+}
+
+.ql-table-menus,
+.ql-table-dropdown,
+.ql-table-tooltip {
+  background: #fff !important;
+  color: #000 !important;
+  border-color: #ccc !important;
+}
+
+.ql-table-menus *,
+.ql-table-dropdown *,
+.ql-table-tooltip * {
+  color: #000 !important;
+}
+
+.ql-table-menus svg,
+.ql-table-dropdown svg,
+.ql-table-tooltip svg,
+.ql-table-menus path,
+.ql-table-dropdown path,
+.ql-table-tooltip path {
+  fill: #000 !important;
+  stroke: #000 !important;
+}
