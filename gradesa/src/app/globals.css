@@ -487,6 +487,20 @@ label {
   margin-bottom: 0.35em;
 }
 
+.rendered-html ul,
+.rendered-html ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1em;
+}
+
+.rendered-html li[data-list="bullet"] {
+  list-style-type: disc;
+}
+
+.rendered-html li[data-list="ordered"] {
+  list-style-type: decimal;
+}
+
 .rendered-html .ql-size-small {
   font-size: 0.75em;
 }

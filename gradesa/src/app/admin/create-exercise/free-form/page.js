@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Column, Row } from "@/components/ui/layout/container";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRequest } from "@/shared/hooks/useRequest";
 import { useRouter } from "next/navigation";
 import { zodErrorToFormErrors } from "@/shared/schemas/schema-utils";
@@ -16,6 +16,9 @@ export default function CreateFreeFormExercise() {
   const [generalError, setGeneralError] = useState("");
   const [formErrors, setFormErrors] = useState(defaultFormErrors);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+
+  const successDialogRef = useRef(null);
   const makeRequest = useRequest();
   const router = useRouter();
 
@@ -74,7 +77,7 @@ export default function CreateFreeFormExercise() {
       });
 
       if (res.status === 200) {
-        router.push("/admin/exercises");
+        setShowSuccessDialog(true);
       }
     } catch (e) {
       console.error("Submission error:", e);
@@ -103,6 +106,27 @@ export default function CreateFreeFormExercise() {
   const handleCancel = () => {
     router.push("/admin/create-exercise");
   };
+
+  const handleSuccessOk = () => {
+    setShowSuccessDialog(false);
+    setQuestion("");
+    setAnswers([]);
+    setGeneralError("");
+    setFormErrors(defaultFormErrors);
+  };
+
+  const handleSuccessView = () => {
+    router.push("/grammar/exercises/freeform");
+  };
+
+  useEffect(() => {
+    if (showSuccessDialog && successDialogRef.current) {
+      successDialogRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }, [showSuccessDialog]);
 
   return (
     <Column gap="md">
@@ -137,10 +161,11 @@ export default function CreateFreeFormExercise() {
           errors={formErrors.answers}
         />
         <Row justify={"space-between"} gap="md" mt={"xl"} mb={"xl"}>
-          <Button variant="outline" onClick={handleCancel}>
+          <Button type="button" variant="outline" onClick={handleCancel}>
             Abbrechen
           </Button>
           <Button
+            type="button"
             variant="secondary"
             onClick={handleSubmit}
             disabled={isSubmitting}
@@ -149,6 +174,33 @@ export default function CreateFreeFormExercise() {
           </Button>
         </Row>
       </Column>
+      {showSuccessDialog && (
+        <div ref={successDialogRef}>
+          <Column
+            gap="md"
+            p="lg"
+            mt="lg"
+            b="2px solid var(--green)"
+            br="md"
+            bg="var(--green1)"
+          >
+            <h3>Übung wurde erfolgreich erstellt.</h3>
+
+            <Row gap="md">
+              <Button type="button" variant="outline" onClick={handleSuccessOk}>
+                OK
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={handleSuccessView}
+              >
+                Zur Liste
+              </Button>
+            </Row>
+          </Column>
+        </div>
+      )}
     </Column>
   );
 }
@@ -177,10 +229,10 @@ function Answers({
       <h3>Antworten {answers.length > 0 ? `(${answers.length})` : ""}</h3>
       {renderAnswers()}
       <Row gap="md">
-        <Button width={"fit"} onClick={() => onAddAnswer(true)}>
+        <Button type="button" width={"fit"} onClick={() => onAddAnswer(true)}>
           Richtige Antwort hinzufügen
         </Button>
-        <Button width={"fit"} onClick={() => onAddAnswer(false)}>
+        <Button type="button" width={"fit"} onClick={() => onAddAnswer(false)}>
           Falsche Antwort hinzufügen
         </Button>
       </Row>
@@ -215,7 +267,7 @@ function AnswerItem({ answer, onAnswerChange, onRemoveAnswer, index, errors }) {
           <strong>#{index + 1}:</strong>{" "}
           {answer.is_correct ? "Richtige Antwort" : "Falsche Antwort"}
         </span>
-        <Button size="sm" onClick={confirmRemove}>
+        <Button type="button" size="sm" onClick={confirmRemove}>
           Entfernen
         </Button>
       </Row>
