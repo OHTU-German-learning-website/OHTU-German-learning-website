@@ -50,7 +50,9 @@ export default function MultichoicePage({ exerciseId }) {
       // Initialize user answers and checked answers
       setUserAnswers(
         shuffledData.content.map((item) =>
-          item.content_type === "multichoice" ? "" : null
+          item.content_type === "multichoice" || item.content_type === "gap"
+            ? ""
+            : null
         )
       );
       setCheckedAnswers(shuffledData.content.map(() => false));
@@ -76,7 +78,10 @@ export default function MultichoicePage({ exerciseId }) {
     const hasMissingAnswers = userAnswers.some((answer) => answer === "");
     const newCheckedAnswers = shuffledExerciseData.content.map(
       (item, index) => {
-        if (item.content_type === "multichoice") {
+        if (
+          item.content_type === "multichoice" ||
+          item.content_type === "gap"
+        ) {
           return (
             userAnswers[index]?.trim().toLowerCase() ===
             item.correct_answer.toLowerCase()
@@ -88,8 +93,9 @@ export default function MultichoicePage({ exerciseId }) {
 
     const hasIncorrectAnswers = newCheckedAnswers.some(
       (isCorrect, index) =>
-        shuffledExerciseData.content[index].content_type === "multichoice" &&
-        !isCorrect
+        shuffledExerciseData.content[index].content_type === "multichoice" ||
+        (shuffledExerciseData.content[index].content_type === "gap" &&
+          !isCorrect)
     );
 
     // Set error state if there are missing or incorrect answers
@@ -104,7 +110,9 @@ export default function MultichoicePage({ exerciseId }) {
   const handleReset = () => {
     setUserAnswers(
       shuffledExerciseData.content.map((item) =>
-        item.content_type === "multichoice" ? "" : null
+        item.content_type === "multichoice" || item.content_type === "gap"
+          ? ""
+          : null
       )
     );
     setIsSubmitted(false);
