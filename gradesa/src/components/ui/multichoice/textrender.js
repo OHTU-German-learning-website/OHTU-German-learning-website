@@ -11,6 +11,31 @@ export default function RenderText({
       return <span key={index}>{item.content_value} </span>;
     }
 
+    if (item.content_type === "gap") {
+      const userAnswer = userAnswers[index] || "";
+      const isCorrect = checkedAnswers[index];
+      const inputClassName =
+        dropdownSubmittedStates[index] && userAnswer !== ""
+          ? isCorrect
+            ? "correct"
+            : "incorrect"
+          : "";
+
+      return (
+        <input
+          key={index}
+          type="text"
+          value={userAnswer}
+          onChange={(e) => {
+            onAnswerChange(index, e.target.value);
+          }}
+          disabled={isSubmitted && isCorrect}
+          className={`gap-input ${inputClassName}`}
+          placeholder="..."
+        />
+      );
+    }
+
     if (item.content_type === "multichoice") {
       const userAnswer = userAnswers[index] || "";
       const isCorrect = checkedAnswers[index];

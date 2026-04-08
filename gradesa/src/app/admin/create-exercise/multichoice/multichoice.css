@@ -6,15 +6,15 @@
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
-  color: #e2e8f0; /* Default text color for the page (Light Grey) */
+  color: var(--fg1);
 }
 
 .error-message {
-  color: #ff8080; /* Lighter red for visibility on dark */
-  background: #451a1a; /* Dark red background */
+  color: var(--fg1);
+  background: var(--tertiary1);
   padding: 10px;
   border-radius: 4px;
-  border: 1px solid #ff8080;
+  border: 1px solid var(--tertiary2);
 }
 
 .form-group {
@@ -25,36 +25,37 @@
 
 /* Label styling to ensure visibility */
 .form-group label {
-    font-weight: 600;
-    color: #ffffff;
+  font-weight: 600;
+  color: var(--fg1);
 }
 
 .form-input {
   padding: 10px;
-  background-color: #1e293b; /* Dark Slate Blue */
-  color: #ffffff;            /* White Text */
-  border: 1px solid #475569; /* Grey Border */
+  background-color: var(--bg1);
+  color: var(--fg1);
+  border: 1px solid var(--bg3);
   border-radius: 6px;
   font-size: 1rem;
 }
 
 .form-input::placeholder {
-    color: #94a3b8; /* Light grey placeholder text */
+  color: var(--fg4);
 }
 
 .divider {
   border: 0;
-  border-top: 1px solid #334155;
+  border-top: 1px solid var(--bg3);
   margin: 15px 0;
 }
 
 /* --- Sentence Builder Area (Top Box) --- */
 .sentence-builder-container {
-  background: #1e293b; /* Dark background */
+  background: var(--bg2);
   padding: 20px;
   border-radius: 8px;
-  border: 1px solid #334155;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--bg3);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  color: var(--fg1);
 }
 
 .sentence-flow {
@@ -65,9 +66,9 @@
   margin-bottom: 20px;
   min-height: 50px;
   padding: 10px;
-  background: #0f172a; /* Slightly darker inner box for the sentence area */
+  background: var(--bg1);
   border-radius: 6px;
-  border: 1px solid #334155;
+  border: 1px solid var(--bg3);
 }
 
 .inline-block-wrapper {
@@ -79,11 +80,11 @@
 /* The text input in the sentence flow (The "..." lines) */
 .text-block-input {
   border: none;
-  border-bottom: 2px solid #64748b;
+  border-bottom: 2px solid var(--fg3);
   background: transparent;
   padding: 5px;
   font-size: 1.1rem;
-  color: #ffffff; /* FORCE WHITE TEXT HERE */
+  color: var(--fg1);
   width: auto;
   min-width: 60px;
   max-width: 150px;
@@ -97,9 +98,9 @@
 
 /* The Dropdown Placeholder (Clickable Chips) */
 .dropdown-placeholder {
-  background: #334155; /* Dark grey background */
+  background: var(--bg1);
   border: 2px solid var(--blue, #3b82f6);
-  color: #ffffff; /* White text */
+  color: var(--fg1);
   padding: 5px 12px;
   border-radius: 20px;
   cursor: pointer;
@@ -111,19 +112,19 @@
 }
 
 .dropdown-placeholder:hover {
-    background: #475569;
+  background: var(--bg2);
 }
 
 .dropdown-placeholder.active {
-  background: var(--blue, #3b82f6); /* Bright blue when selected */
+  background: var(--blue, #3b82f6);
   color: white;
-  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
 }
 
 .delete-x {
   background: none;
   border: none;
-  color: #94a3b8;
+  color: var(--fg4);
   cursor: pointer;
   font-size: 1.2rem;
   margin-left: -5px;
@@ -132,7 +133,8 @@
 }
 
 .delete-x:hover {
-  color: #ef4444; /* Red on hover */
+  color: #ef4444;
+  /* Red on hover */
 }
 
 .action-row {
@@ -145,15 +147,16 @@
   border: 1px solid var(--blue, #3b82f6);
   padding: 20px;
   border-radius: 8px;
-  background: #1e293b; /* Match top container */
+  background: var(--bg2);
   margin-top: 10px;
+  color: var(--fg1);
 }
 
 /* Headings inside the editor panel */
 .dropdown-editor-panel h3,
 .dropdown-editor-panel h4 {
-    margin-top: 0;
-    color: #ffffff;
+  margin-top: 0;
+  color: var(--fg1);
 }
 
 .option-row {
@@ -167,9 +170,9 @@
 .option-input {
   flex: 1;
   padding: 10px;
-  background: #0f172a; /* Very dark background */
-  color: #ffffff;      /* White text */
-  border: 1px solid #475569;
+  background: var(--bg1);
+  color: var(--fg1);
+  border: 1px solid var(--bg3);
   border-radius: 6px;
 }
 
@@ -177,17 +180,17 @@
   border: none;
   background: none;
   cursor: pointer;
-  color: #94a3b8;
+  color: var(--fg4);
   transition: color 0.2s;
 }
 
 .delete-btn:hover {
-    color: #ef4444;
+  color: #ef4444;
 }
 
 .hint {
   font-size: 0.9rem;
-  color: #94a3b8; /* Light grey for hints */
+  color: var(--fg4);
   margin-bottom: 15px;
 }
 
@@ -203,7 +206,7 @@
 .preview-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.8); /* Darker overlay */
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -211,13 +214,13 @@
 }
 
 .preview-content {
-  background: #1e293b; /* Dark modal background */
+  background: var(--bg1);
   padding: 30px;
   border-radius: 12px;
   width: 90%;
   max-width: 600px;
-  border: 1px solid #334155;
-  color: #fff;
+  border: 1px solid var(--bg3);
+  color: var(--fg1);
 }
 
 .preview-sentence {
@@ -229,11 +232,11 @@
 .preview-select {
   padding: 5px;
   font-size: 1rem;
-  border: 1px solid #475569;
+  border: 1px solid var(--bg3);
   border-radius: 4px;
   margin: 0 5px;
-  background: #0f172a; /* Dark dropdown in preview */
-  color: white;
+  background: var(--bg1);
+  color: var(--fg1);
 }
 
 .preview-close {

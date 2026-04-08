@@ -79,3 +79,29 @@ select.incorrect {
   background-color: var(--tertiary2);
   text-align: center;
 }
+
+.gap-input {
+  width: 12rem;
+  padding: 0.3rem;
+  margin: 0.2rem 0.5rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--fg3);
+  font-size: var(--font-lg);
+  background-color: var(--bg1);
+  color: var(--fg1);
+  text-align: center;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+  min-width: 90px;
+}
+
+.gap-input.correct {
+  background-color: var(--tertiary10);
+  border-color: var(--fg8);
+  color: var(--fg8);
+}
+
+.gap-input.incorrect {
+  background-color: var(--tertiary2);
+}

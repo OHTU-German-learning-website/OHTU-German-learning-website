@@ -53,10 +53,23 @@ export const POST = withAuth(
       // Insert content blocks
       let order = 1;
       for (const item of content) {
-        // Validation: Only require 'value' if it is a text block.
-        if (!item.type || (item.type === "text" && !item.value)) {
+        if (!item.type) {
           return Response.json(
-            { error: "Jedes Content-Item benötigt Typ und Wert." },
+            { error: "Jedes Content-Item benötigt einen Typ." },
+            { status: 422 }
+          );
+        }
+
+        if (item.type === "text" && !item.value) {
+          return Response.json(
+            { error: "Text-Blöcke benötigen einen Wert." },
+            { status: 422 }
+          );
+        }
+
+        if (item.type === "gap" && !item.correct) {
+          return Response.json(
+            { error: "Lücken benötigen eine korrekte Antwort." },
             { status: 422 }
           );
         }
@@ -72,7 +85,9 @@ export const POST = withAuth(
             // FIX: Send empty string "" for dropdowns so DB doesn't crash on NULL
             item.value || "",
             order,
-            item.type === "multichoice" ? item.correct : null,
+            item.type === "multichoice" || item.type === "gap"
+              ? item.correct
+              : null,
           ]
         );
 
