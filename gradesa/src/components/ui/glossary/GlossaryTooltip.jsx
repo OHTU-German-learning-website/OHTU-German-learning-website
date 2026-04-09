@@ -7,7 +7,11 @@ import { createPortal } from "react-dom";
 export default function GlossaryTooltip({ word, children }) {
   const { wordMap, isLoading } = useGlossary();
   const [isOpen, setIsOpen] = useState(false);
-  const [tooltipPosition, setTooltipPosition] = useState({ left: 0, top: 0 });
+  const [tooltipPosition, setTooltipPosition] = useState({
+    left: 0,
+    top: 0,
+    transform: "translate(-50%, -100%)",
+  });
   const wordRef = useRef(null);
   const tooltipRef = useRef(null);
   const [portalElement, setPortalElement] = useState(null);
@@ -28,10 +32,32 @@ export default function GlossaryTooltip({ word, children }) {
       const rect = wordRef.current.getBoundingClientRect();
       const scrollTop = window.scrollY || document.documentElement.scrollTop;
       const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
+      const viewportHeight = window.innerHeight;
+
+      // Estimate tooltip height (adjust based on content)
+      const estimatedTooltipHeight = 120; // Approximate height in pixels
+      const spaceAbove = rect.top;
+      const spaceBelow = viewportHeight - rect.bottom;
+
+      let top, transform;
+      if (spaceAbove > estimatedTooltipHeight) {
+        // Position above the word
+        top = rect.top + scrollTop - 10;
+        transform = "translate(-50%, -100%)";
+      } else if (spaceBelow > estimatedTooltipHeight) {
+        // Position below the word
+        top = rect.bottom + scrollTop + 10;
+        transform = "translate(-50%, 0%)";
+      } else {
+        // Default to above if neither has enough space
+        top = rect.top + scrollTop - 10;
+        transform = "translate(-50%, -100%)";
+      }
 
       setTooltipPosition({
         left: rect.left + scrollLeft + rect.width / 2,
-        top: rect.top + scrollTop - 10,
+        top,
+        transform,
       });
     }
   }, [isOpen]);
@@ -75,12 +101,12 @@ export default function GlossaryTooltip({ word, children }) {
         createPortal(
           <div
             ref={tooltipRef}
-            className={styles.tooltip}
+            className={`${styles.tooltip} ${tooltipPosition.transform === "translate(-50%, 0%)" ? styles.tooltipBelow : styles.tooltipAbove}`}
             style={{
               position: "absolute",
               left: `${tooltipPosition.left}px`,
               top: `${tooltipPosition.top}px`,
-              transform: "translate(-50%, -100%)",
+              transform: tooltipPosition.transform,
             }}
           >
             <h4 className={styles.tooltipTitle}>{entry.word}</h4>

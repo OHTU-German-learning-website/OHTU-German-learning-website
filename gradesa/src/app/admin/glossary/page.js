@@ -71,31 +71,46 @@ export default function GlossaryList() {
           templateColumns="repeat(auto-fill, minmax(300px, 1fr))"
           gap="md"
         >
-          {entries?.map((entry) => (
-            <Container key={entry.id} className="glossary-card">
-              <Column gap="sm">
-                <h4 className="glossary-word">{entry.word}</h4>
-                <p className="glossary-definition">{entry.word_definition}</p>
-                <Row justify="space-between" className="glossary-meta">
-                  <span>
-                    Erstellt: {new Date(entry.created_at).toLocaleDateString()}
-                  </span>
-                  <Button
-                    variant={confirmDelete === entry.id ? "danger" : "outline"}
-                    size="sm"
-                    onClick={() => handleDelete(entry.id)}
-                    disabled={deleting === entry.id}
-                  >
-                    {deleting === entry.id
-                      ? "Löschen..."
-                      : confirmDelete === entry.id
-                        ? "Bestätigen"
-                        : "Löschen"}
-                  </Button>
-                </Row>
-              </Column>
-            </Container>
-          ))}
+          {entries
+            ?.sort((a, b) => a.word.localeCompare(b.word))
+            ?.map((entry) => (
+              <Container key={entry.id} className="glossary-card">
+                <Column gap="sm">
+                  <h4 className="glossary-word">{entry.word}</h4>
+                  <p className="glossary-definition">{entry.word_definition}</p>
+                  <Row justify="space-between" className="glossary-meta">
+                    <span>
+                      Erstellt:{" "}
+                      {new Date(entry.created_at).toLocaleDateString()}
+                    </span>
+                    <Row gap="sm">
+                      <LinkButton
+                        href={`/admin/glossary/create?id=${entry.id}`}
+                        variant="outline"
+                        size="sm"
+                      >
+                        Editieren
+                      </LinkButton>
+                      <Button
+                        variant={
+                          confirmDelete === entry.id ? "danger" : "outline"
+                        }
+                        size="sm"
+                        width="fit"
+                        onClick={() => handleDelete(entry.id)}
+                        disabled={deleting === entry.id}
+                      >
+                        {deleting === entry.id
+                          ? "Löschen..."
+                          : confirmDelete === entry.id
+                            ? "Bestätigen"
+                            : "Löschen"}
+                      </Button>
+                    </Row>
+                  </Row>
+                </Column>
+              </Container>
+            ))}
         </Container>
       )}
     </Column>

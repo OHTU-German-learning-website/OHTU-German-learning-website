@@ -4,17 +4,21 @@
 }
 
 .glossaryWord {
-  text-decoration: underline dotted var(--primary4);
+  text-decoration: none;
   cursor: pointer;
-  color: inherit;
+  color: var(--primary4);
+  font-weight: 600;
+  box-shadow: inset 0 -2px 0 var(--primary4);
+  transition: color 0.2s ease, background-color 0.2s ease;
 }
 
 .glossaryWord:hover {
   color: var(--primary);
+  background-color: var(--bg2);
 }
 
 .tooltip {
-  width: 250px;
+  width: 350px;
   background-color: var(--bg3);
   color: var(--text);
   padding: var(--u-sm) var(--u-md);
@@ -28,12 +32,21 @@
 .tooltip::after {
   content: "";
   position: absolute;
-  bottom: -8px;
   left: 50%;
   transform: translateX(-50%);
   border-width: 8px;
   border-style: solid;
   border-color: var(--bg3) transparent transparent transparent;
+}
+
+.tooltipAbove::after {
+  bottom: -8px;
+  border-color: var(--bg3) transparent transparent transparent;
+}
+
+.tooltipBelow::after {
+  top: -8px;
+  border-color: transparent transparent var(--bg3) transparent;
 }
 
 .tooltipTitle {
