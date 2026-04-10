@@ -89,7 +89,7 @@ export default function GlossaryList() {
                         variant="outline"
                         size="sm"
                       >
-                        Editieren
+                        Bearbeiten
                       </LinkButton>
                       <Button
                         variant={

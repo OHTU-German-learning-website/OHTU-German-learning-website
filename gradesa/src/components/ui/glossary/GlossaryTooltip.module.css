@@ -18,7 +18,8 @@
 }
 
 .tooltip {
-  width: 350px;
+  width: 420px;
+  max-width: 90vw;
   background-color: var(--bg3);
   color: var(--text);
   padding: var(--u-sm) var(--u-md);
