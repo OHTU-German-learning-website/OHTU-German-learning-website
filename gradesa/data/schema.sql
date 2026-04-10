@@ -453,3 +453,4 @@ FOREIGN KEY (exercise_id) REFERENCES dnd_exercises(id) ON DELETE CASCADE;
 ALTER TABLE public.word_category_mappings
 ADD CONSTRAINT word_category_mappings_word_id_fkey
 FOREIGN KEY (word_id) REFERENCES draggable_words(id) ON DELETE CASCADE;
+

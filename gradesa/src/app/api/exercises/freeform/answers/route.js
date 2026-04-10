@@ -204,6 +204,7 @@ export const POST = withAuth(
   withInputValidation(
     z.object({
       freeFormExerciseId: z.string(),
+      freeFormQuestionId: z.string(),
       answer: z.string(),
     }),
     async (request) => {
@@ -211,9 +212,9 @@ export const POST = withAuth(
         const userId = request.user.id;
 
         const body = await request.json();
-        const { freeFormExerciseId, answer } = body;
+        const { freeFormExerciseId, freeFormQuestionId, answer } = body;
 
-        if (!freeFormExerciseId || !answer) {
+        if (!freeFormExerciseId || !freeFormQuestionId || !answer) {
           return NextResponse.json(
             { error: "Missing required fields" },
             { status: 400 }
@@ -223,8 +224,8 @@ export const POST = withAuth(
         const { rows: possibleAnswers } = await DB.pool(
           `SELECT id, answer, is_correct, feedback 
            FROM free_form_answers 
-           WHERE free_form_exercise_id = $1`,
-          [freeFormExerciseId]
+           WHERE free_form_exercise_id = $1 AND free_form_question_id = $2`,
+          [freeFormExerciseId, freeFormQuestionId]
         );
 
         if (possibleAnswers.length === 0) {
@@ -249,7 +250,13 @@ export const POST = withAuth(
 
         // If similarity is below threshold, consider it not matched
         if (bestMatch.similarity < SIMILARITY_THRESHOLD) {
-          await recordUserAnswer(userId, freeFormExerciseId, answer, false);
+          await recordUserAnswer(
+            userId,
+            freeFormExerciseId,
+            freeFormQuestionId,
+            answer,
+            false
+          );
 
           return NextResponse.json({
             is_correct: false,
@@ -276,6 +283,7 @@ export const POST = withAuth(
         await recordUserAnswer(
           userId,
           freeFormExerciseId,
+          freeFormQuestionId,
           answer,
           isAnswerCorrect
         );
@@ -316,18 +324,24 @@ export const POST = withAuth(
   )
 );
 
-async function recordUserAnswer(userId, freeFormExerciseId, answer, isCorrect) {
+async function recordUserAnswer(
+  userId,
+  freeFormExerciseId,
+  freeFormQuestionId,
+  answer,
+  isCorrect
+) {
   try {
     await DB.pool(
       `INSERT INTO free_form_user_answers 
-       (answer, free_form_exercise_id, is_correct, user_id) 
-       VALUES ($1, $2, $3, $4)
+       (answer, free_form_exercise_id, free_form_question_id, is_correct, user_id) 
+       VALUES ($1, $2, $3, $4, $5)
        ON CONFLICT (user_id, free_form_exercise_id) 
        DO UPDATE SET 
          answer = $1, 
-         is_correct = $3, 
+         is_correct = $4, 
          updated_at = NOW()`,
-      [answer, freeFormExerciseId, isCorrect, userId]
+      [answer, freeFormExerciseId, freeFormQuestionId, isCorrect, userId]
     );
   } catch (error) {
     console.error("Error recording user answer:", error);

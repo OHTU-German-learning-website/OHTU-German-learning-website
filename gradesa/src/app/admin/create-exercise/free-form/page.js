@@ -7,12 +7,16 @@ import { useRouter } from "next/navigation";
 import { zodErrorToFormErrors } from "@/shared/schemas/schema-utils";
 
 const defaultFormErrors = {
-  question: "",
-  answers: [],
+  questions: [],
 };
+
 export default function CreateFreeFormExercise() {
-  const [question, setQuestion] = useState("");
-  const [answers, setAnswers] = useState([]);
+  const [questions, setQuestions] = useState([
+    {
+      question: "",
+      answers: [],
+    },
+  ]);
   const [generalError, setGeneralError] = useState("");
   const [formErrors, setFormErrors] = useState(defaultFormErrors);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -22,47 +26,85 @@ export default function CreateFreeFormExercise() {
   const makeRequest = useRequest();
   const router = useRouter();
 
-  const handleQuestionChange = (e) => {
-    const val = e.target.value;
-    setQuestion(val);
-
-    // Clear question error when user starts typing
-    if (formErrors.question) {
-      setFormErrors((prev) => ({ ...prev, question: "" }));
-    }
-  };
-
-  const handleAnswersChange = (key, value, index) => {
-    setAnswers((prev) =>
-      prev.map((ans, i) => (i !== index ? ans : { ...ans, [key]: value }))
+  const handleQuestionChange = (questionIndex, value) => {
+    setQuestions((prev) =>
+      prev.map((q, i) => (i !== questionIndex ? q : { ...q, question: value }))
     );
 
-    // Clear specific answer field error
-    if (formErrors.answers[index]?.[key]) {
+    if (formErrors.questions[questionIndex]?.question) {
       setFormErrors((prev) => {
-        const newAnswerErrors = [...prev.answers];
-        if (!newAnswerErrors[index]) {
-          newAnswerErrors[index] = {};
-        }
-        newAnswerErrors[index] = { ...newAnswerErrors[index], [key]: "" };
-        return { ...prev, answers: newAnswerErrors };
+        const newQuestions = [...(prev.questions || [])];
+        if (!newQuestions[questionIndex]) return prev;
+
+        newQuestions[questionIndex] = {
+          ...newQuestions[questionIndex],
+          question: "",
+        };
+        return { ...prev, questions: newQuestions };
       });
     }
   };
 
-  const handleAddAnswer = (is_correct = true) => {
-    setAnswers((prev) => [
+  const handleAddQuestion = () => {
+    setQuestions((prev) => [
       ...prev,
       {
-        answer: "",
-        feedback: "",
-        is_correct,
+        question: "",
+        answers: [],
       },
     ]);
   };
 
-  const handleRemoveAnswer = (i) => {
-    setAnswers((prev) => prev.filter((_, j) => i !== j));
+  const handleRemoveQuestion = (questionIndex) => {
+    setQuestions((prev) => prev.filter((_, j) => j !== questionIndex));
+  };
+
+  const handleAnswersChange = (questionIndex, answerIndex, key, value) => {
+    setQuestions((prev) =>
+      prev.map((q, i) =>
+        i !== questionIndex
+          ? q
+          : {
+              ...q,
+              answers: q.answers.map((ans, j) =>
+                j !== answerIndex ? ans : { ...ans, [key]: value }
+              ),
+            }
+      )
+    );
+  };
+
+  const handleAddAnswer = (questionIndex, is_correct = true) => {
+    setQuestions((prev) =>
+      prev.map((q, i) =>
+        i !== questionIndex
+          ? q
+          : {
+              ...q,
+              answers: [
+                ...q.answers,
+                {
+                  answer: "",
+                  feedback: "",
+                  is_correct,
+                },
+              ],
+            }
+      )
+    );
+  };
+
+  const handleRemoveAnswer = (questionIndex, answerIndex) => {
+    setQuestions((prev) =>
+      prev.map((q, i) =>
+        i !== questionIndex
+          ? q
+          : {
+              ...q,
+              answers: q.answers.filter((_, j) => j !== answerIndex),
+            }
+      )
+    );
   };
 
   const handleSubmit = async () => {
@@ -73,7 +115,7 @@ export default function CreateFreeFormExercise() {
 
       const res = await makeRequest("/admin/exercises/free-form", {
         method: "POST",
-        body: { question, answers },
+        body: { questions },
       });
 
       if (res.status === 200) {
@@ -109,8 +151,12 @@ export default function CreateFreeFormExercise() {
 
   const handleSuccessOk = () => {
     setShowSuccessDialog(false);
-    setQuestion("");
-    setAnswers([]);
+    setQuestions([
+      {
+        question: "",
+        answers: [],
+      },
+    ]);
     setGeneralError("");
     setFormErrors(defaultFormErrors);
   };
@@ -142,38 +188,73 @@ export default function CreateFreeFormExercise() {
           {generalError}
         </p>
       )}
-      <label>
-        Frage
-        <textarea
-          value={question}
-          onChange={handleQuestionChange}
-          placeholder="Geben Sie hier Ihre Frage ein"
-          className={formErrors.question ? "error-input" : ""}
-        />
-        {formErrors.question && <p className="error">{formErrors.question}</p>}
-      </label>
-      <Column mt="xl">
-        <Answers
-          answers={answers}
-          onRemoveAnswer={handleRemoveAnswer}
-          onAddAnswer={handleAddAnswer}
-          onAnswersChange={handleAnswersChange}
-          errors={formErrors.answers}
-        />
-        <Row justify={"space-between"} gap="md" mt={"xl"} mb={"xl"}>
-          <Button type="button" variant="outline" onClick={handleCancel}>
-            Abbrechen
-          </Button>
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={handleSubmit}
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "Wird gesendet..." : "Absenden"}
-          </Button>
-        </Row>
-      </Column>
+      {questions.map((q, questionIndex) => (
+        <Column
+          key={questionIndex}
+          gap="md"
+          p="lg"
+          b="2px solid var(--primary3)"
+          br="md"
+        >
+          <Row justify={"space-between"} align={"center"}>
+            <h3>Frage #{questionIndex + 1}</h3>
+            {questions.length > 1 && (
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={() => handleRemoveQuestion(questionIndex)}
+              >
+                Frage entfernen
+              </Button>
+            )}
+          </Row>
+
+          <label>
+            Frage
+            <textarea
+              value={q.question}
+              onChange={(e) =>
+                handleQuestionChange(questionIndex, e.target.value)
+              }
+              placeholder="Geben Sie hier Ihre Frage ein"
+              //   className={formErrors.question ? "error-input" : ""}
+              // />
+              // {formErrors.question && <p className="error">{formErrors.question}</p>}
+            />
+          </label>
+
+          <Answers
+            questionIndex={questionIndex}
+            answers={q.answers}
+            onRemoveAnswer={handleRemoveAnswer}
+            onAddAnswer={handleAddAnswer}
+            onAnswersChange={handleAnswersChange}
+            errors={formErrors.questions?.[questionIndex]?.answers || []}
+          />
+        </Column>
+      ))}
+
+      <Row mt="md">
+        <Button type="button" onClick={handleAddQuestion}>
+          Weitere Frage hinzufügen
+        </Button>
+      </Row>
+
+      <Row justify={"space-between"} gap="md" mt={"xl"} mb={"xl"}>
+        <Button type="button" variant="outline" onClick={handleCancel}>
+          Abbrechen
+        </Button>
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Wird gesendet..." : "Absenden"}
+        </Button>
+      </Row>
+
       {showSuccessDialog && (
         <div ref={successDialogRef}>
           <Column
@@ -206,6 +287,7 @@ export default function CreateFreeFormExercise() {
 }
 
 function Answers({
+  questionIndex,
   answers,
   onAnswersChange,
   onAddAnswer,
@@ -218,8 +300,10 @@ function Answers({
         key={i}
         index={i}
         answer={ans}
-        onRemoveAnswer={() => onRemoveAnswer(i)}
-        onAnswerChange={(key, value) => onAnswersChange(key, value, i)}
+        onRemoveAnswer={() => onRemoveAnswer(questionIndex, i)}
+        onAnswerChange={(key, value) =>
+          onAnswersChange(questionIndex, i, key, value)
+        }
         errors={errors[i] || {}}
       />
     ));
@@ -229,10 +313,18 @@ function Answers({
       <h3>Antworten {answers.length > 0 ? `(${answers.length})` : ""}</h3>
       {renderAnswers()}
       <Row gap="md">
-        <Button type="button" width={"fit"} onClick={() => onAddAnswer(true)}>
+        <Button
+          type="button"
+          width={"fit"}
+          onClick={() => onAddAnswer(questionIndex, true)}
+        >
           Richtige Antwort hinzufügen
         </Button>
-        <Button type="button" width={"fit"} onClick={() => onAddAnswer(false)}>
+        <Button
+          type="button"
+          width={"fit"}
+          onClick={() => onAddAnswer(questionIndex, false)}
+        >
           Falsche Antwort hinzufügen
         </Button>
       </Row>

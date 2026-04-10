@@ -2,14 +2,40 @@
 
 import Link from "next/link";
 import { Container, Row, Column } from "@/components/ui/layout/container";
-import { useRequest } from "@/shared/hooks/useRequest";
 import useQuery from "@/shared/hooks/useQuery";
 import { ExerciseLinkButton } from "@/components/ui/button/exercise-link-button";
+import { Button } from "@/components/ui/button";
 
 export default function FreeFormExercisesPage() {
-  const makeRequest = useRequest();
+  const {
+    data: exercises,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery("/exercises/freeform");
 
-  const { data: exercises, isLoading, error } = useQuery("/exercises/freeform");
+  const handleDelete = async (exerciseId) => {
+    const confirmed = confirm("Möchten Sie diese Übung wirklich löschen?");
+
+    if (!confirmed) return;
+
+    try {
+      const response = await fetch(
+        `/api/admin/exercises/free-form/${exerciseId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Fehler beim Löschen der Übung.");
+      }
+      refetch();
+    } catch (error) {
+      console.error("Error deleting exercise:", error);
+      alert("Fehler beim Löschen der Übung.");
+    }
+  };
 
   if (isLoading) {
     return (
@@ -60,42 +86,68 @@ export default function FreeFormExercisesPage() {
         mb="lg"
       >
         {exercises.map((exercise) => (
-          <Link
+          <Row
             key={exercise.id}
-            href={`/grammar/exercises/freeform/${exercise.id}`}
+            p="md"
+            b={`1px solid var(--bg3)`}
+            br="md"
+            justify="space-between"
+            align="center"
+            boxShadow="0 1px 2px 0 rgba(0, 0, 0, 0.05)"
+            bg="var(--bg2)"
+            gap="md"
           >
-            <Row
-              p="md"
-              b={`1px solid var(--bg3)`}
-              br="md"
-              justify="space-between"
-              align="center"
-              boxShadow="0 1px 2px 0 rgba(0, 0, 0, 0.05)"
-              bg="var(--bg2)"
-            >
-              <Column>
-                <Container
-                  mb="sm"
-                  fontWeight="600"
-                  overflow="hidden"
-                  textOverflow="ellipsis"
-                  whiteSpace="nowrap"
+            <Column flex="1">
+              <Container
+                mb="sm"
+                fontWeight="600"
+                overflow="hidden"
+                textOverflow="ellipsis"
+                whiteSpace="nowrap"
+              >
+                <Link
+                  href={`/grammar/exercises/freeform/${exercise.id}`}
+                  style={{ fontSize: "var(--font-lg)" }}
                 >
                   {exercise.question.length > 30
                     ? `${exercise.question.substring(0, 30)}...`
                     : exercise.question}
-                </Container>
-                <Container fontSize="sm" color="var(--fg4)">
-                  Erstellt: {new Date(exercise.created_at).toLocaleDateString()}
-                </Container>
-              </Column>
+                </Link>
+              </Container>
+              <Container fontSize="md" color="var(--fg4)">
+                Erstellt: {new Date(exercise.created_at).toLocaleDateString()}
+              </Container>
+            </Column>
+            <Column gap="sm" align="flex-end">
               <ExerciseLinkButton
                 href={`/grammar/exercises/freeform/${exercise.id}`}
               >
                 Link kopieren
               </ExerciseLinkButton>
-            </Row>
-          </Link>
+
+              <Link
+                href={`/admin/create-exercise/free-form/${exercise.id}/edit`}
+              >
+                <Button type="button" variant="outline" size="sm">
+                  Bearbeiten
+                </Button>
+              </Link>
+
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                style={{
+                  color: "#fff5f5",
+                  borderColor: "#d85a5a",
+                  backgroundColor: "#d85a5a",
+                }}
+                onClick={() => handleDelete(exercise.id)}
+              >
+                Löschen
+              </Button>
+            </Column>
+          </Row>
         ))}
       </Container>
 

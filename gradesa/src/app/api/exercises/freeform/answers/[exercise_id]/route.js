@@ -4,7 +4,7 @@ import { withAuth } from "@/backend/middleware/withAuth";
 
 export const GET = withAuth(async (request, { params }) => {
   try {
-    const { exercise_id } = params;
+    const { exercise_id } = await params;
 
     const { rows: exerciseRows } = await DB.pool(
       `SELECT id FROM free_form_exercises WHERE id = $1`,
