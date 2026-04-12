@@ -13,17 +13,21 @@ describe("POST /api/auth/admin/exercises/free-form", () => {
     const { mockPost } = useTestRequest(admin);
 
     const validInput = {
-      questions: "What is the capital of France?",
-      answers: [
+      questions: [
         {
-          answer: "Paris",
-          feedback: "Excellent work!",
-          is_correct: true,
-        },
-        {
-          answer: "London",
-          feedback: "Try again!",
-          is_correct: false,
+          question: "What is the capital of France?",
+          answers: [
+            {
+              answer: "Paris",
+              feedback: "Excellent work!",
+              is_correct: true,
+            },
+            {
+              answer: "London",
+              feedback: "Try again!",
+              is_correct: false,
+            },
+          ],
         },
       ],
     };
@@ -53,7 +57,7 @@ describe("POST /api/auth/admin/exercises/free-form", () => {
     );
 
     const questionRows = await DB.pool(
-      "SELECT * FROM free_form_questions WHERE free_form_exercise_id = $1 ORDER BY ASC",
+      "SELECT * FROM free_form_questions WHERE free_form_exercise_id = $1 ORDER BY question_order ASC",
       [freeFormExerciseResult.rows[0].id]
     );
     expect(questionRows.rows.length).toBe(1);
@@ -63,7 +67,7 @@ describe("POST /api/auth/admin/exercises/free-form", () => {
     // Verify that the free_form_answers were inserted
     const freeFormAnswersResult = await DB.pool(
       "SELECT * FROM free_form_answers WHERE free_form_exercise_id = $1",
-      [questionRows.rows[0].id]
+      [freeFormExerciseResult.rows[0].id]
     );
     expect(freeFormAnswersResult.rows.length).toBe(
       validInput.questions[0].answers.length
@@ -75,10 +79,15 @@ describe("POST /api/auth/admin/exercises/free-form", () => {
     const { mockPost } = useTestRequest(admin);
 
     const invalidInput = {
-      answers: [
+      questions: [
         {
-          answer: "Paris",
-          feedback: [{ feedback: "Excellent work!" }],
+          answers: [
+            {
+              answer: "Paris",
+              feedback: "Excellent work!",
+              is_correct: true,
+            },
+          ],
         },
       ],
     };
