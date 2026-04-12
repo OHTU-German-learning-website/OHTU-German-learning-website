@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams } from "next/navigation";
 import { Container, Row } from "@/components/ui/layout/container";
 import { Button } from "@/components/ui/button";
@@ -28,7 +28,7 @@ export default function FreeformFeedback() {
 
   return (
     <Container mt="xl">
-      <Container textAlign="center" mb="md">
+      <Container mb="md">
         <Button variant="outline" onClick={toggleFeedback}>
           {showAllFeedback ? "Hide Feedback" : "Show correct answers"}
         </Button>
@@ -87,7 +87,7 @@ export default function FreeformFeedback() {
                   <h3>Possible Answers</h3>
                   {feedback.possibleAnswers
                     .filter((answer) => answer.is_correct)
-                    .map((answer) => (
+                    .map((answer, index) => (
                       <Container
                         key={answer.id}
                         p="sm"
@@ -100,7 +100,7 @@ export default function FreeformFeedback() {
                         br="md"
                       >
                         <div>
-                          <strong>Answer:</strong> {answer.answer}
+                          <strong>Answer {index + 1}:</strong> {answer.answer}
                         </div>
                         <div>
                           <strong>Feedback:</strong>{" "}

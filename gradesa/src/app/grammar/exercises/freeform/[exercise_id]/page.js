@@ -132,13 +132,24 @@ export default function FreeFormExercisePage() {
   const { exercise_id } = useParams();
   const [answer, setAnswer] = useState("");
   const [feedback, setFeedback] = useState(null);
-  const [isCorrect, setIsCorrect] = useState(null);
   const [error, setError] = useState(null);
   const makeRequest = useRequest();
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   const { data: exercise, isLoading } = useQuery(
     `/exercises/freeform/${exercise_id}`
   );
+
+  const { data: allExercises } = useQuery("/exercises/freeform");
+
+  const currentExerciseIndex = allExercises?.findIndex(
+    (ex) => String(ex.id) === String(exercise_id)
+  );
+
+  const nextExercise =
+    currentExerciseIndex !== undefined &&
+    currentExerciseIndex !== -1 &&
+    allExercises?.[currentExerciseIndex + 1];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -146,11 +157,11 @@ export default function FreeFormExercisePage() {
     try {
       const response = await makeRequest("/exercises/freeform/answers", {
         freeFormExerciseId: exercise_id,
+        freeFormQuestionId: exercise.questions[currentQuestionIndex].id,
         answer,
       });
       const data = response.data;
       if (data) {
-        setIsCorrect(data.is_correct);
         setFeedback(data);
       }
     } catch (error) {
@@ -188,11 +199,13 @@ export default function FreeFormExercisePage() {
       </Container>
 
       <Container mb="xl" p="md" bg="var(--bg2)" br="md">
-        <Container mb="sm">
-          <h2>Frage:</h2>
+        <Container mb="xs" fontSize="sm" color="var(--fg4)">
+          Frage {currentQuestionIndex + 1} von {exercise.questions.length}
         </Container>
         <Container>
-          <p>{exercise.question}</p>
+          <h2 style={{ fontSize: "2rem", lineHeight: "1.3", margin: 0 }}>
+            {exercise.questions[currentQuestionIndex]?.question}
+          </h2>
         </Container>
       </Container>
 
@@ -212,11 +225,46 @@ export default function FreeFormExercisePage() {
               />
             </label>
           </Container>
-          <Button type="submit" variant="secondary">
-            Antwort abschicken
-          </Button>
+
+          <Row justify="center">
+            <Button type="submit" variant="secondary" width="fit">
+              Antwort abschicken
+            </Button>
+          </Row>
         </Column>
       </form>
+
+      <Row justify="space-between" align="center" mt="lg" mb="md">
+        <FreeformFeedback />
+        <Row justify="end" gap="md">
+          {currentQuestionIndex > 0 && (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                setCurrentQuestionIndex((prev) => prev - 1);
+                setAnswer("");
+                setFeedback(null);
+              }}
+            >
+              Vorherige
+            </Button>
+          )}
+          {currentQuestionIndex < exercise.questions.length - 1 && (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                setCurrentQuestionIndex((prev) => prev + 1);
+                setAnswer("");
+                setFeedback(null);
+              }}
+            >
+              Nächste
+            </Button>
+          )}
+        </Row>
+      </Row>
 
       {feedback && (
         <Row
@@ -241,12 +289,14 @@ export default function FreeFormExercisePage() {
         <AnswerComparison comparisonDetails={feedback.comparisonDetails} />
       )}
 
-      <FreeformFeedback />
-
       <Row gap="md" mt="xl" justify="space-between">
         <LinkButton href="/grammar/exercises">Zurück zu den Übungen</LinkButton>
-        {feedback?.is_correct && (
-          <LinkButton variant="secondary" href="/grammar/exercises/freeform">
+
+        {feedback?.is_correct && nextExercise && (
+          <LinkButton
+            variant="secondary"
+            href={`/grammar/exercises/freeform/${nextExercise.id}`}
+          >
             Nächste Übung
           </LinkButton>
         )}

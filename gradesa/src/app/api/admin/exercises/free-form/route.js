@@ -3,15 +3,24 @@ import { withInputValidation } from "@/backend/middleware/withInputValidation";
 import { DB } from "@/backend/db";
 import { freeFormExerciseSchema } from "@/shared/schemas/free-form.schemas";
 import { NextResponse } from "next/server";
+
 export const POST = withAuth(
   withInputValidation(freeFormExerciseSchema, async (req) => {
     const body = await req.json();
-    const { question, answers } = body;
-    const hasValidAnswers = answers.some((answer) => answer.is_correct);
+    const { questions } = body;
 
-    if (!hasValidAnswers) {
+    const hasValidAnswerBalance = questions.every(
+      (q) =>
+        q.answers.some((answer) => answer.is_correct) &&
+        q.answers.some((answer) => !answer.is_correct)
+    );
+
+    if (!hasValidAnswerBalance) {
       return NextResponse.json(
-        { error: "At least one answer must be correct" },
+        {
+          error:
+            "Each question must have at least one correct answer and one incorrect answer",
+        },
         { status: 422 }
       );
     }
@@ -28,23 +37,40 @@ export const POST = withAuth(
         VALUES ($1, $2)
         RETURNING id
       `,
-        [exerciseId, question]
+        [exerciseId, questions[0].question]
       );
+
       const freeFormExerciseId = freeFormExercise.rows[0].id;
-      for (const answer of answers) {
-        await tx.query(
+
+      for (let i = 0; i < questions.length; i++) {
+        const currentQuestion = questions[i];
+
+        const insertedQuestion = await tx.query(
           `
-        INSERT INTO free_form_answers (free_form_exercise_id, answer, is_correct, feedback)
-        VALUES ($1, $2, $3, $4)
+        INSERT INTO free_form_questions (free_form_exercise_id, question, question_order)
+        VALUES ($1, $2, $3)
         RETURNING id
       `,
-          [
-            freeFormExerciseId,
-            answer.answer,
-            answer.is_correct,
-            answer.feedback,
-          ]
+          [freeFormExerciseId, currentQuestion.question, i + 1]
         );
+        const freeFormQuestionId = insertedQuestion.rows[0].id;
+
+        for (const answer of currentQuestion.answers) {
+          await tx.query(
+            `
+            INSERT INTO free_form_answers 
+            (free_form_exercise_id, free_form_question_id, answer, is_correct, feedback)
+            VALUES ($1, $2, $3, $4, $5)
+          `,
+            [
+              freeFormExerciseId,
+              freeFormQuestionId,
+              answer.answer,
+              answer.is_correct,
+              answer.feedback,
+            ]
+          );
+        }
       }
 
       return exerciseId;
