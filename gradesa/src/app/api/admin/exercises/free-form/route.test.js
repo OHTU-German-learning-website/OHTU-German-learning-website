@@ -4,6 +4,7 @@ import { useTestDatabase } from "@/backend/test/testdb";
 import { useTestRequest } from "@/backend/test/mock-request";
 import { TestFactory } from "@/backend/test/testfactory";
 import { DB } from "@/backend/db";
+
 describe("POST /api/auth/admin/exercises/free-form", () => {
   useTestDatabase();
 
@@ -12,12 +13,17 @@ describe("POST /api/auth/admin/exercises/free-form", () => {
     const { mockPost } = useTestRequest(admin);
 
     const validInput = {
-      question: "What is the capital of France?",
+      questions: "What is the capital of France?",
       answers: [
         {
           answer: "Paris",
           feedback: "Excellent work!",
           is_correct: true,
+        },
+        {
+          answer: "London",
+          feedback: "Try again!",
+          is_correct: false,
         },
       ],
     };
@@ -42,14 +48,26 @@ describe("POST /api/auth/admin/exercises/free-form", () => {
       [exercise_id]
     );
     expect(freeFormExerciseResult.rows.length).toBe(1);
-    expect(freeFormExerciseResult.rows[0].question).toBe(validInput.question);
+    expect(freeFormExerciseResult.rows[0].question).toBe(
+      validInput.questions[0].question
+    );
 
+    const questionRows = await DB.pool(
+      "SELECT * FROM free_form_questions WHERE free_form_exercise_id = $1 ORDER BY ASC",
+      [freeFormExerciseResult.rows[0].id]
+    );
+    expect(questionRows.rows.length).toBe(1);
+    expect(questionRows.rows[0].question).toBe(
+      validInput.questions[0].question
+    );
     // Verify that the free_form_answers were inserted
     const freeFormAnswersResult = await DB.pool(
       "SELECT * FROM free_form_answers WHERE free_form_exercise_id = $1",
-      [freeFormExerciseResult.rows[0].id]
+      [questionRows.rows[0].id]
     );
-    expect(freeFormAnswersResult.rows.length).toBe(validInput.answers.length);
+    expect(freeFormAnswersResult.rows.length).toBe(
+      validInput.questions[0].answers.length
+    );
   });
 
   it("should return a 422 error for invalid input (missing question)", async () => {

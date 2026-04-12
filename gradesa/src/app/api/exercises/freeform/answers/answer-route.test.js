@@ -17,15 +17,25 @@ describe("freeform answers", () => {
     const exercise = await TestFactory.exercise({
       category: "freeform",
     });
+
     const exerciseId = exercise.id;
     const freeFormExercise = await TestFactory.freeFormExercise({
       exercise_id: exerciseId,
       question: "Test Question",
     });
 
+    const freeFormQuestion = await DB.pool(
+      `INSERT INTO free_form_questions (free_form_exercise_id, question, question_order)
+        VALUES ($1, $2, $3) RETURNING *`,
+      [freeFormExercise.id, "Test Question", 1]
+    );
+
+    const questionId = freeFormQuestion.rows[0].id;
+
     // Add possible answers
     await TestFactory.freeFormAnswer({
       free_form_exercise_id: freeFormExercise.id,
+      free_form_question_id: questionId,
       answer: "This is the correct answer",
       is_correct: true,
       feedback: "Great job!",
@@ -33,6 +43,7 @@ describe("freeform answers", () => {
 
     await TestFactory.freeFormAnswer({
       free_form_exercise_id: freeFormExercise.id,
+      free_form_question_id: questionId,
       answer: "This is another correct answer",
       is_correct: true,
       feedback: "Well done!",
@@ -40,22 +51,24 @@ describe("freeform answers", () => {
 
     await TestFactory.freeFormAnswer({
       free_form_exercise_id: freeFormExercise.id,
+      free_form_question_id: questionId,
       answer: "This is an incorrect answer",
       is_correct: false,
       feedback: "Try again",
     });
 
-    return freeFormExercise.id;
+    return { exerciseId: freeFormExercise.id, questionId };
   }
 
   it("should evaluate exact match answers correctly", async () => {
     const user = await TestFactory.user();
     const { mockPost } = useTestRequest(user);
-    const exerciseId = await setupExercise();
+    const { exerciseId, questionId } = await setupExercise();
 
     const response = await POST(
       mockPost("/api/exercises/freeform/answers", {
         freeFormExerciseId: exerciseId,
+        freeFormQuestionId: questionId,
         answer: "This is the correct answer",
       })
     );
@@ -72,11 +85,12 @@ describe("freeform answers", () => {
   it("should evaluate similar but not exact answers", async () => {
     const user = await TestFactory.user();
     const { mockPost } = useTestRequest(user);
-    const exerciseId = await setupExercise();
+    const { exerciseId, questionId } = await setupExercise();
 
     const response = await POST(
       mockPost("/api/exercises/freeform/answers", {
         freeFormExerciseId: exerciseId,
+        freeFormQuestionId: questionId,
         answer: "This is the correct answer word",
       })
     );
@@ -94,11 +108,12 @@ describe("freeform answers", () => {
   it("should reject completely incorrect answers", async () => {
     const user = await TestFactory.user();
     const { mockPost } = useTestRequest(user);
-    const exerciseId = await setupExercise();
+    const { exerciseId, questionId } = await setupExercise();
 
     const response = await POST(
       mockPost("/api/exercises/freeform/answers", {
         freeFormExerciseId: exerciseId,
+        freeFormQuestionId: questionId,
         answer: "Something totally different",
       })
     );
@@ -110,14 +125,15 @@ describe("freeform answers", () => {
     expect(result.similarity).toBeLessThan(0.7);
   });
 
-  it("should return 400 for missing required fields", async () => {
+  it("should return 422 for missing required fields", async () => {
     const user = await TestFactory.user();
     const { mockPost } = useTestRequest(user);
 
     const response = await POST(
       mockPost("/api/exercises/freeform/answers", {
-        freeFormExerciseId: "some-id",
-        // missing answer field
+        freeFormExerciseId: "123",
+        // missing answer
+        //missing freeFormQuestionId
       })
     );
 
@@ -131,6 +147,7 @@ describe("freeform answers", () => {
     const response = await POST(
       mockPost("/api/exercises/freeform/answers", {
         freeFormExerciseId: "-1",
+        freeFormQuestionId: "-1",
         answer: "Some answer",
       })
     );
@@ -141,23 +158,27 @@ describe("freeform answers", () => {
   it("should record user answers in the database", async () => {
     const user = await TestFactory.user();
     const { mockPost } = useTestRequest(user);
-    const exerciseId = await setupExercise();
+    const { exerciseId, questionId } = await setupExercise();
 
     await POST(
       mockPost("/api/exercises/freeform/answers", {
         freeFormExerciseId: exerciseId,
+        freeFormQuestionId: questionId,
         answer: "This is the correct answer",
       })
     );
 
     const result = await DB.pool(
-      `SELECT * FROM free_form_user_answers`
-      //  WHERE user_id = $1 AND free_form_exercise_id = $2`,
-      // [user.id, exerciseId]
+      `SELECT * FROM free_form_user_answers
+       WHERE user_id = $1 AND free_form_exercise_id = $2`,
+      [user.id, exerciseId]
     );
     expect(result.rows.length).toBe(1);
     expect(result.rows[0].answer).toBe("This is the correct answer");
     expect(result.rows[0].is_correct).toBe(true);
+    expect(String(result.rows[0].free_form_question_id)).toBe(
+      String(questionId)
+    );
   });
 });
 
