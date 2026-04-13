@@ -30,7 +30,9 @@ export default function FreeformFeedback() {
     <Container mt="xl">
       <Container mb="md">
         <Button variant="outline" onClick={toggleFeedback}>
-          {showAllFeedback ? "Hide Feedback" : "Show correct answers"}
+          {showAllFeedback
+            ? "Feedback ausblenden"
+            : "Richtige Antworten anzeigen"}
         </Button>
       </Container>
 
@@ -38,15 +40,15 @@ export default function FreeformFeedback() {
         <>
           {isLoading && (
             <Container p="md" bg="var(--bg2)" br="md" mb="md">
-              Loading feedback...
+              Feedback wird geladen...
             </Container>
           )}
 
           {error && (
             <Container p="md" bg="var(--tertiary1)" br="md" mb="md">
-              Error: {error}
+              Fehler: {error}
               <Button onClick={refetch} variant="secondary" size="sm" mt="sm">
-                Try Again
+                Erneut versuchen
               </Button>
             </Container>
           )}
@@ -57,7 +59,7 @@ export default function FreeformFeedback() {
 
               {feedback.userAnswers && feedback.userAnswers.length > 0 ? (
                 <Container mt="md">
-                  <h3>Your Answer</h3>
+                  <h3>Ihre Antwort</h3>
                   {feedback.userAnswers.map((answer, index) => (
                     <Container
                       key={index}
@@ -69,11 +71,11 @@ export default function FreeformFeedback() {
                       br="md"
                     >
                       <Row justify="space-between" w="100%">
-                        <strong>Answer: {answer.answer}</strong>
-                        {answer.is_correct ? "Correct" : "Incorrect"}
+                        <strong>Antwort: {answer.answer}</strong>
+                        {answer.is_correct ? "Richtig" : "Falsch"}
                       </Row>
                       <div>
-                        <strong>Attempted:</strong>{" "}
+                        <strong>Versucht:</strong>{" "}
                         {new Date(answer.updated_at).toLocaleString()}
                       </div>
                     </Container>
@@ -84,7 +86,7 @@ export default function FreeformFeedback() {
               {feedback.possibleAnswers &&
               feedback.possibleAnswers.length > 0 ? (
                 <Container mt="md">
-                  <h3>Possible Answers</h3>
+                  <h3>Mögliche Antworten</h3>
                   {feedback.possibleAnswers
                     .filter((answer) => answer.is_correct)
                     .map((answer, index) => (
@@ -100,12 +102,12 @@ export default function FreeformFeedback() {
                         br="md"
                       >
                         <div>
-                          <strong>Answer {index + 1}:</strong> {answer.answer}
+                          <strong>Antwort {index + 1}:</strong> {answer.answer}
                         </div>
                         <div>
                           <strong>Feedback:</strong>{" "}
                           {answer.feedback ||
-                            (answer.is_correct ? "Correct" : "Incorrect")}
+                            (answer.is_correct ? "Richtig" : "Falsch")}
                         </div>
                       </Container>
                     ))}
@@ -116,7 +118,7 @@ export default function FreeformFeedback() {
                 !feedback.possibleAnswers.length) &&
                 (!feedback.userAnswers || !feedback.userAnswers.length) && (
                   <Container>
-                    No feedback available for this exercise.
+                    Für diese Übung ist kein Feedback verfügbar.
                   </Container>
                 )}
             </Container>

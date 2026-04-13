@@ -66,6 +66,10 @@ export default function RenderText({
       );
     }
 
+    if (item.content_type === "linebreak") {
+      return <br key={index} />;
+    }
+
     return null; // Fallback for unsupported types
   };
   return <p className="task-sentence">{exerciseData.map(renderItem)}</p>;

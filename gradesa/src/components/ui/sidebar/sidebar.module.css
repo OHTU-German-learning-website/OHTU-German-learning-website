@@ -95,6 +95,30 @@
   gap: var(--u-md);
 }
 
+.sidebarGroupToggle {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+}
+
+.chevron {
+  display: inline-block;
+  font-size: var(--font-md);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
 .navItem {
   width: 100%;
   padding: 12px 12px;

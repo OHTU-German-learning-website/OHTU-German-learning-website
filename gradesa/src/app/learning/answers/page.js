@@ -2,16 +2,15 @@
 import useQuery from "@/shared/hooks/useQuery";
 import styles from "./learning-answers.module.css";
 import { FORM_LANGUAGE_OPTIONS } from "../page";
-import { useState } from "react";
 import {
   getLanguageField,
   getLanguageTitle,
 } from "@/components/ui/learning-form";
-import { Dropdown } from "@/components/ui/dropdown";
 import { Button } from "@/components/ui/button";
 import layout from "@/shared/styles/layout.module.css";
 import { useRouter } from "next/navigation";
 import useLocalStorage from "@/shared/utils/useLocalStorage";
+
 export default function LearningAnswersPage() {
   const { data: answers } = useQuery("/forms/learning_type/answer");
   const { data: form } = useQuery("/forms/learning_type");
@@ -20,8 +19,16 @@ export default function LearningAnswersPage() {
     "language",
     FORM_LANGUAGE_OPTIONS[0]
   );
+
+  const partsByHighestScore = [...(form?.parts || [])].sort((partA, partB) => {
+    const scoreA = answers?.[partA.id] ?? 0;
+    const scoreB = answers?.[partB.id] ?? 0;
+
+    return scoreB - scoreA;
+  });
+
   const renderAverages = () => {
-    return form?.parts.map((part, index) => {
+    return partsByHighestScore.map((part) => {
       const average = answers?.[part.id];
       return (
         <LearningAverage
@@ -35,7 +42,7 @@ export default function LearningAnswersPage() {
   };
 
   const renderAdvices = () => {
-    return form?.parts
+    return [...(form?.parts || [])]
       .sort(
         (a, b) =>
           (b.advice_threshold < answers?.[b.id]) -
@@ -56,9 +63,32 @@ export default function LearningAnswersPage() {
   return (
     <div className={layout.view}>
       <div className={styles.learningAnswersHeader}>
-        <Dropdown options={FORM_LANGUAGE_OPTIONS} onSelect={setLanguage}>
-          <Button>{language.label}</Button>
-        </Dropdown>
+        <div className={styles.languageToggleWrap}>
+          <span className={styles.languageLabel}>Language / Sprache</span>
+          <div
+            className={styles.languageToggle}
+            role="group"
+            aria-label="Choose language"
+          >
+            {FORM_LANGUAGE_OPTIONS.map((option) => {
+              const isActive = language.value === option.value;
+
+              return (
+                <Button
+                  key={option.value}
+                  type="button"
+                  size="sm"
+                  variant={isActive ? "primary" : "outline"}
+                  className={styles.languageButton}
+                  onClick={() => setLanguage(option)}
+                  aria-pressed={isActive}
+                >
+                  {option.label}
+                </Button>
+              );
+            })}
+          </div>
+        </div>
         <Button onClick={() => router.push("/learning")}>
           {language.value === "de" ? "Test neu machen" : "Retake Test"}
         </Button>

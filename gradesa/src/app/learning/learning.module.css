@@ -1,0 +1,34 @@
+.languageToggleWrap {
+    display: flex;
+    flex-direction: column;
+    gap: var(--u-sm);
+}
+
+.languageLabel {
+    font-size: var(--font-sm);
+    color: var(--fg3);
+}
+
+.languageToggle {
+    display: inline-flex;
+    gap: var(--u-sm);
+    padding: var(--u-xs);
+    border: 1px solid var(--fg4);
+    border-radius: var(--radius-md);
+    background: var(--bg2);
+}
+
+.languageButton {
+    min-width: 7rem;
+}
+
+@media (max-width: 768px) {
+    .languageToggle {
+        width: 100%;
+    }
+
+    .languageButton {
+        flex: 1;
+        min-width: 0;
+    }
+}

@@ -95,12 +95,16 @@ function StudentSideBar() {
   return (
     <>
       <SidebarGroup
-        title="Richtig Online Lernen"
+        title="Effektiv online lernen"
         sublinks={chapters}
         topLink="/pages/resources"
+        collapsible
       />
       <Link className={styles.sidebarLink} href="/pages/communications">
         Kommunikations-situationen
+      </Link>
+      <Link className={styles.sidebarLink} href="/grammar/themes">
+        Themen der Grammatik
       </Link>
       <Link className={styles.sidebarLink} href="/talkback">
         Rückmeldekanal-Feedback geben
@@ -211,8 +215,54 @@ function AdminSideBar({ showUsers }) {
   return <SidebarGroup title="Admin" sublinks={links} topLink="/admin" />;
 }
 
-function SidebarGroup({ title, sublinks, topLink }) {
+function SidebarGroup({ title, sublinks, topLink, collapsible = false }) {
   const pathname = usePathname();
+  const isUnderSection =
+    pathname === topLink || pathname.startsWith(topLink + "/");
+  const [open, setOpen] = useState(isUnderSection);
+
+  if (collapsible) {
+    return (
+      <div className={styles.sidebarGroup}>
+        <button
+          type="button"
+          className={[
+            styles.sidebarLink,
+            styles.sidebarGroupToggle,
+            isUnderSection ? styles.active : "",
+          ].join(" ")}
+          onClick={() => setOpen((o) => !o)}
+          aria-expanded={open}
+        >
+          {title}
+          <span
+            className={[styles.chevron, open ? styles.chevronOpen : ""].join(
+              " "
+            )}
+            aria-hidden="true"
+          >
+            ▾
+          </span>
+        </button>
+        {open && (
+          <div className={styles.sublinkContainer}>
+            {sublinks.map((sublink) => (
+              <Link
+                className={[
+                  styles.sublink,
+                  pathname === sublink.link ? styles.active : "",
+                ].join(" ")}
+                key={sublink.link}
+                href={sublink.link}
+              >
+                {sublink.title}
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className={styles.sidebarGroup}>

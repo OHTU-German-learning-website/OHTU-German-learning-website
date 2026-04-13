@@ -7,23 +7,37 @@ test.describe("Learning Page", () => {
     await expect(page.getByRole("main").first()).toBeVisible();
   });
 
-  test("should show language dropdown button", async ({ page }) => {
+  test("should show language toggle options", async ({ page }) => {
     await page.goto("/learning", { waitUntil: "domcontentloaded" });
 
     await expect(
-      page.getByRole("button", { name: /English|Deutsch/i })
+      page.getByRole("group", { name: "Choose language" })
     ).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole("button", { name: "English" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Deutsch" })).toBeVisible();
   });
 
-  test("should have language selection functionality", async ({ page }) => {
+  test("should switch language selection", async ({ page }) => {
     await page.goto("/learning");
 
-    const languageButton = page.getByRole("button", {
-      name: /English|Deutsch/i,
-    });
-    await expect(languageButton).toBeVisible();
+    const englishButton = page.getByRole("button", { name: "English" });
+    const deutschButton = page.getByRole("button", { name: "Deutsch" });
 
-    await languageButton.click();
+    await expect(englishButton).toBeVisible();
+    await expect(deutschButton).toBeVisible();
+
+    const englishPressed =
+      (await englishButton.getAttribute("aria-pressed")) === "true";
+
+    if (englishPressed) {
+      await deutschButton.click();
+      await expect(deutschButton).toHaveAttribute("aria-pressed", "true");
+      await expect(englishButton).toHaveAttribute("aria-pressed", "false");
+    } else {
+      await englishButton.click();
+      await expect(englishButton).toHaveAttribute("aria-pressed", "true");
+      await expect(deutschButton).toHaveAttribute("aria-pressed", "false");
+    }
 
     await expect(page).toHaveURL(/.*learning/);
   });

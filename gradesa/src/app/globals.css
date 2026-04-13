@@ -388,6 +388,7 @@ h2 {
 
 ul {
   list-style-type: circle;
+  padding-left: 1rem;
 }
 
 p {
@@ -489,7 +490,7 @@ label {
 
 .rendered-html ul,
 .rendered-html ol {
-  padding-left: 1.5rem;
+  padding-left: 3rem;
   margin-bottom: 1em;
 }
 
