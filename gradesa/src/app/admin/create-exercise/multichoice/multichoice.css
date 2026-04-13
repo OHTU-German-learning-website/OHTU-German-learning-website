@@ -11,7 +11,7 @@
 
 .error-message {
   color: var(--fg1);
-  background: var(--tertiary1);
+  background: var(--tertiary2);
   padding: 10px;
   border-radius: 4px;
   border: 1px solid var(--tertiary2);
@@ -36,6 +36,18 @@
   border: 1px solid var(--bg3);
   border-radius: 6px;
   font-size: 1rem;
+}
+
+.form-input.input-error {
+  border-color: var(--tertiary2, #ef4444);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+
+.field-error-hint {
+  font-size: 0.85rem;
+  color: var(--tertiary2, #ef4444);
+  margin-top: 2px;
 }
 
 .form-input::placeholder {
@@ -75,6 +87,18 @@
   position: relative;
   display: flex;
   align-items: center;
+}
+
+.linebreak-block {
+  width: 100%;
+  flex-basis: 100%;
+}
+
+.linebreak-indicator {
+  font-size: 1.1rem;
+  color: var(--fg4);
+  padding: 0 6px;
+  user-select: none;
 }
 
 /* The text input in the sentence flow (The "..." lines) */

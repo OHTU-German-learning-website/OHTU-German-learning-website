@@ -26,6 +26,7 @@ export default function CreateMultichoicePage() {
   const [showPreview, setShowPreview] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [titleError, setTitleError] = useState(false);
 
   // --- Actions ---
 
@@ -65,6 +66,10 @@ export default function CreateMultichoicePage() {
     setActiveSectionIndex(newIndex);
   };
 
+  const addLineBreakSection = () => {
+    setSections([...sections, { id: crypto.randomUUID(), type: "linebreak" }]);
+  };
+
   const handleTextChange = (index, newValue) => {
     const newSections = [...sections];
     newSections[index].value = newValue;
@@ -83,6 +88,7 @@ export default function CreateMultichoicePage() {
     try {
       setIsSubmitting(true);
       setError("");
+      setTitleError(false);
 
       // --- FIX 1: Convert Index to Text for correct answer ---
       const contentToSave = sections.map((section) => {
@@ -107,6 +113,7 @@ export default function CreateMultichoicePage() {
 
       const data = await res.json();
       if (!res.ok) {
+        if (res.status === 409) setTitleError(true);
         throw new Error(data.error || "Fehler beim Speichern");
       }
 
@@ -128,11 +135,19 @@ export default function CreateMultichoicePage() {
       <div className="form-group">
         <label>Titel</label>
         <input
-          className="form-input"
+          className={`form-input${titleError ? " input-error" : ""}`}
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => {
+            setTitle(e.target.value);
+            setTitleError(false);
+          }}
           placeholder="Titel der Übung"
         />
+        {titleError && (
+          <span className="field-error-hint">
+            Dieser Titel existiert bereits. Bitte wähle einen anderen.
+          </span>
+        )}
       </div>
       <hr className="divider" />
 
@@ -151,6 +166,22 @@ export default function CreateMultichoicePage() {
                     className="text-block-input"
                     placeholder="..."
                   />
+                  <button
+                    onClick={() => removeSection(index)}
+                    className="delete-x"
+                  >
+                    ×
+                  </button>
+                </div>
+              );
+            }
+            if (section.type === "linebreak") {
+              return (
+                <div
+                  key={section.id}
+                  className="inline-block-wrapper linebreak-block"
+                >
+                  <span className="linebreak-indicator">↵</span>
                   <button
                     onClick={() => removeSection(index)}
                     className="delete-x"
@@ -209,10 +240,13 @@ export default function CreateMultichoicePage() {
             + Text
           </Button>
           <Button size="sm" onClick={addMultiChoiceSection}>
-            + Dropdown
+            + Runterfallen
           </Button>
           <Button size="sm" onClick={addGapSection}>
-            + Gap
+            + Lücke
+          </Button>
+          <Button size="sm" onClick={addLineBreakSection}>
+            + Zeilenumbruch
           </Button>
         </div>
       </div>
@@ -358,6 +392,8 @@ export default function CreateMultichoicePage() {
                     placeholder="..."
                     disabled
                   />
+                ) : s.type === "linebreak" ? (
+                  <br key={i} />
                 ) : null
               )}
             </div>

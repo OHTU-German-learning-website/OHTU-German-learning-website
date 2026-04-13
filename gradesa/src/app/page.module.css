@@ -53,3 +53,53 @@
 .card {
   padding: 2em;
 }
+
+.creditsSection {
+  width: min(100%, 1080px);
+  margin: 0 auto;
+  padding: 1.75rem 2rem;
+  border-radius: 24px;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.08);
+}
+
+.creditsTitle {
+  margin-bottom: 1rem;
+  color: var(--fg2);
+  font-size: clamp(1.25rem, 2vw, 1.7rem);
+  font-weight: 700;
+}
+
+.creditsList {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.creditsItem {
+  color: var(--fg2);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+
+.creditsLink {
+  color: var(--blue);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  transition: color 0.2s ease;
+}
+
+.creditsLink:hover {
+  color: var(--fg1);
+}
+
+@media (max-width: 768px) {
+  .creditsSection {
+    padding: 1.25rem;
+    border-radius: 18px;
+  }
+
+  .creditsItem {
+    font-size: 1rem;
+  }
+}

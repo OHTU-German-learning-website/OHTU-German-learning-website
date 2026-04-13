@@ -1,5 +1,5 @@
-const { test, expect } = require("@playwright/test");
-const { takeScreenshot, elementExists } = require("./utils/helpers");
+const { test } = require("@playwright/test");
+const { elementExists } = require("./utils/helpers");
 
 test.describe("Page Structure Analysis", () => {
   test("analyze homepage structure", async ({ page }) => {
@@ -40,8 +40,11 @@ test.describe("Page Structure Analysis", () => {
     const hasH1 = await elementExists(page, "h1");
     console.log("Has h1:", hasH1);
 
-    const hasTabs = await elementExists(page, '[role="tablist"]');
-    console.log("Has tablist:", hasTabs);
+    const hasLanguageToggle = await elementExists(
+      page,
+      '[role="group"][aria-label="Choose language"]'
+    );
+    console.log("Has language toggle group:", hasLanguageToggle);
 
     const hasButtons = await elementExists(page, "button");
     console.log("Has buttons:", hasButtons);

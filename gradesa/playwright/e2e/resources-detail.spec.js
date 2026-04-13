@@ -36,7 +36,7 @@ test.describe("Resources Detail Pages", () => {
     await page.goto("/pages/resources/1", { waitUntil: "domcontentloaded" });
 
     const resourcesLink = page.getByRole("link", {
-      name: "Richtig Online Lernen",
+      name: "Effektiv online lernen",
     });
 
     if (await resourcesLink.isVisible()) {
