@@ -1,63 +1,140 @@
 "use client";
-import { useState } from "react";
-import { Column, Row } from "@/components/ui/layout/container";
+import { useState, useEffect } from "react";
+import { Column } from "@/components/ui/layout/container";
 import { Button } from "@/components/ui/button";
 import layout from "@/shared/styles/layout.module.css";
+import styles from "./new-page.module.css";
 import { useRouter } from "next/navigation";
 
 export default function NewPage() {
   const [type, setType] = useState("resources");
   const [title, setTitle] = useState("");
-  const [slug, setSlug] = useState("");
   const [creationMessage, setCreationMessage] = useState("");
+  const [grammarTopics, setGrammarTopics] = useState([]);
+  const [selectedTopicId, setSelectedTopicId] = useState("");
+  const [newTopicName, setNewTopicName] = useState("");
   const router = useRouter();
+
+  useEffect(() => {
+    if (type !== "grammar") return;
+    fetch("/api/admin/grammar-topics")
+      .then((res) => res.json())
+      .then((data) => {
+        setGrammarTopics(data);
+        setSelectedTopicId("none");
+        setNewTopicName("");
+      })
+      .catch(() => setGrammarTopics([]));
+  }, [type]);
+
   const submit = async () => {
-    const response = await fetch(`/api/admin/pages/${type}/${slug}`, {
+    const body = { title, type };
+    if (type === "grammar") {
+      if (selectedTopicId === "new") {
+        body.newTopicName = newTopicName;
+      } else if (selectedTopicId !== "none") {
+        body.topicId = Number(selectedTopicId);
+      }
+    }
+
+    const response = await fetch(`/api/admin/pages`, {
       method: "POST",
-      body: JSON.stringify({ title }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
     });
+
     if (response.ok) {
-      router.push(`/admin/edit-page/${type}/${slug}`);
+      const data = await response.json();
+      router.push(`/admin/edit-page/${type}/${data.slug}`);
     } else {
       setTimeout(() => setCreationMessage(""), 1000);
-      setCreationMessage("Slug already in use");
+      setCreationMessage("Fehler beim Erstellen der Seite");
     }
   };
+
   return (
     <Column className={layout.viewContent}>
-      <h1>New page</h1>
+      <h1 className={styles.title}>Neue Seite</h1>
       {!!creationMessage && <p className="error-message">{creationMessage}</p>}
-      <Row gap="1rem">
-        <label htmlFor="title">Title</label>
-        <input
-          type="text"
-          id="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        />
-      </Row>
-      <Row gap="1rem">
-        <label htmlFor="title">Slug</label>
-        <input
-          type="text"
-          id="title"
-          value={slug}
-          onInput={(e) => {
-            setSlug(e.target.value.replace(/[^A-Za-z0-9\-\_\+]/g, ""));
-          }}
-          required
-        />
-      </Row>
-      <Row>
-        <label htmlFor="type">Page group</label>
-        <select value={type} onChange={(e) => setType(e.target.value)}>
-          <option value="resources">Learning</option>
-          <option value="grammar">Grammar</option>
-          <option value="communications">Communication</option>
-        </select>
-      </Row>
-      <Button onClick={submit}>Create</Button>
+      <div className={styles.form}>
+        <div className={styles.fieldRow}>
+          <label className={styles.label} htmlFor="title">
+            Titel
+          </label>
+          <input
+            className={styles.control}
+            type="text"
+            id="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className={styles.fieldRow}>
+          <label className={styles.label} htmlFor="type">
+            Seitengruppe
+          </label>
+          <select
+            className={styles.control}
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+          >
+            <option value="resources">Lernen</option>
+            <option value="grammar">Grammatik</option>
+            <option value="communications">Kommunikation</option>
+          </select>
+        </div>
+
+        {type === "grammar" && (
+          <>
+            <div className={styles.fieldRow}>
+              <label className={styles.label} htmlFor="topic">
+                Thema
+              </label>
+              <select
+                className={styles.control}
+                id="topic"
+                value={selectedTopicId}
+                onChange={(e) => {
+                  setSelectedTopicId(e.target.value);
+                  setNewTopicName("");
+                }}
+              >
+                <option value="none">Ohne Thema</option>
+                {grammarTopics.map((t) => (
+                  <option key={t.id} value={t.id.toString()}>
+                    {t.name}
+                  </option>
+                ))}
+                <option value="new">Neues Thema hinzufügen...</option>
+              </select>
+            </div>
+
+            {selectedTopicId === "new" && (
+              <div className={styles.fieldRow}>
+                <label className={styles.label} htmlFor="newTopic">
+                  Neuer Themenname
+                </label>
+                <input
+                  className={styles.control}
+                  type="text"
+                  id="newTopic"
+                  value={newTopicName}
+                  onChange={(e) => setNewTopicName(e.target.value)}
+                  required
+                />
+              </div>
+            )}
+          </>
+        )}
+
+        <div className={styles.actions}>
+          <Button onClick={submit}>Erstellen</Button>
+        </div>
+      </div>
     </Column>
   );
 }

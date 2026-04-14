@@ -1,42 +1,42 @@
-import { getPageData } from "@/backend/html-services";
+import {
+  getAlphabeticalGrammarPages,
+  getGrammarTopicsWithPages,
+  getPageData,
+} from "@/backend/html-services";
 import EditorSection from "./editor-section";
-import { chapters } from "@/app/grammar/alphabetical/chapters";
-import { grammarTopics } from "@/app/grammar/themes/topics";
 
 /** The editor needs the correct fallback title for pages that do not yet exist
  * in the database. The visible title depends on the current grammar view. */
 
-function getChapterBySlug(slug, view) {
+function getChapterBySlug(slug, view, chapters, grammarTopics) {
   if (view === "topics") {
     for (const topic of grammarTopics) {
-      const subtopicMatch = topic.subtopics.find((subtopic) =>
-        subtopic.link.endsWith(`/${slug}`)
+      const subtopicMatch = topic.subtopics.find(
+        (subtopic) => subtopic.slug === slug
       );
 
       if (subtopicMatch) {
         return {
-          title: subtopicMatch.name,
-          link: subtopicMatch.link,
+          title: subtopicMatch.title,
+          slug: subtopicMatch.slug,
         };
       }
     }
   }
 
-  const alphabeticalMatch = chapters.find((chapter) =>
-    chapter.link.endsWith(`/${slug}`)
-  );
+  const alphabeticalMatch = chapters.find((chapter) => chapter.slug === slug);
 
   if (alphabeticalMatch) return alphabeticalMatch;
 
   for (const topic of grammarTopics) {
-    const subtopicMatch = topic.subtopics.find((subtopic) =>
-      subtopic.link.endsWith(`/${slug}`)
+    const subtopicMatch = topic.subtopics.find(
+      (subtopic) => subtopic.slug === slug
     );
 
     if (subtopicMatch) {
       return {
-        title: subtopicMatch.name,
-        link: subtopicMatch.link,
+        title: subtopicMatch.title,
+        slug: subtopicMatch.slug,
       };
     }
   }
@@ -69,7 +69,17 @@ export default async function Edit({ params, searchParams }) {
     );
   } catch {
     if (type === "grammar") {
-      const chapter = getChapterBySlug(decodedSlug, view);
+      const [chapters, grammarTopics] = await Promise.all([
+        getAlphabeticalGrammarPages(),
+        getGrammarTopicsWithPages(),
+      ]);
+
+      const chapter = getChapterBySlug(
+        decodedSlug,
+        view,
+        chapters,
+        grammarTopics
+      );
 
       return (
         <EditorSection

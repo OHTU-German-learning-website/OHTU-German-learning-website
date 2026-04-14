@@ -121,6 +121,7 @@ export default function FreeFormExercisesPage() {
             <Column gap="sm" align="flex-end">
               <ExerciseLinkButton
                 href={`/grammar/exercises/freeform/${exercise.id}`}
+                size="sm"
               >
                 Link kopieren
               </ExerciseLinkButton>

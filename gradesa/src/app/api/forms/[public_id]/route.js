@@ -30,7 +30,8 @@ WITH questions AS
                  jsonb_agg(
                          to_jsonb(
                                  pq.*
-                         )
+           )
+           ORDER BY pq.id
                  ) as questions
         FROM form_parts fp
                    JOIN questions pq
@@ -48,7 +49,8 @@ WITH questions AS
                  jsonb_agg(
                          to_jsonb(
                                  fp.*
-                         )
+           )
+           ORDER BY fp.step_label
                  ) as parts
           FROM forms f
                    JOIN parts fp ON f.id = fp.form_id

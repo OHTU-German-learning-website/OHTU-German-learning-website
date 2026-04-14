@@ -18,7 +18,6 @@ export default function EditorSection({
   const [editorContent, setEditorContent] = useState(initialContent);
   const [editorMessage, setEditorMessage] = useState({ error: false, msg: "" });
   const [titleInput, setTitleInput] = useState(title);
-  const [slugInput, setSlugInput] = useState(slug);
   const router = useRouter();
   const searchParams = useSearchParams();
   const view = searchParams.get("view");
@@ -38,11 +37,10 @@ export default function EditorSection({
     const jsonData = JSON.stringify({
       content: editorContent.replace(/&nbsp;/g, " "),
       title: titleInput,
-      slug: slugInput,
     });
 
     if (!pageExists && type === "grammar") {
-      const createRes = await fetch(`/api/admin/pages/${type}/${slugInput}`, {
+      const createRes = await fetch(`/api/admin/pages/${type}/${slug}`, {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
@@ -72,7 +70,7 @@ export default function EditorSection({
 
     if (res.status == 200) {
       setEditorMessage({ error: false, msg: "Updated successfully" });
-      router.push(getViewPath(type, slugInput));
+      router.push(getViewPath(type, slug));
     } else {
       const errorText = await res.text();
       setEditorMessage({
@@ -108,18 +106,6 @@ export default function EditorSection({
           id="title"
           value={titleInput}
           onChange={(e) => setTitleInput(e.target.value)}
-          required
-        />
-      </Row>
-      <Row gap="1rem">
-        <label htmlFor="slug">Slug</label>
-        <input
-          type="text"
-          id="slug"
-          value={slugInput}
-          onInput={(e) => {
-            setSlugInput(e.target.value.replace(/[^A-Za-z0-9\-\_\+]/g, ""));
-          }}
           required
         />
       </Row>

@@ -67,7 +67,7 @@ export default function Home() {
                   rel="noreferrer"
                   className={styles.creditsLink}
                 >
-                  Stiftung Erkki-J-Hollo
+                  Stiftung Erkki J. Hollo
                 </a>
                 .
               </p>
