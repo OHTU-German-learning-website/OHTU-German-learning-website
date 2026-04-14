@@ -25,6 +25,13 @@ describe("POST /api/admin/pages", () => {
     const admin = await TestFactory.user({ is_admin: true });
     const { mockPost } = useTestRequest(admin);
 
+    const before = await DB.pool(
+      `SELECT COALESCE(MAX(page_order), 0) AS max_order
+       FROM html_pages
+       WHERE page_group = 'resources'`
+    );
+    const expectedNextOrder = Number(before.rows[0].max_order) + 1;
+
     const response = await POST(
       mockPost("/api/admin/pages", {
         title: "New Resource",
@@ -42,7 +49,7 @@ describe("POST /api/admin/pages", () => {
 
     expect(inserted.rowCount).toBe(1);
     expect(inserted.rows[0].title).toBe("New Resource");
-    expect(inserted.rows[0].page_order).toBe(2);
+    expect(inserted.rows[0].page_order).toBe(expectedNextOrder);
     expect(inserted.rows[0].grammar_topic_id).toBeNull();
   });
 
