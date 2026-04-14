@@ -20,16 +20,58 @@ export default function LearningAnswersPage() {
     FORM_LANGUAGE_OPTIONS[0]
   );
 
+  const getPartScore = (part) => {
+    const scoreFromApi = Number(answers?.[part.id]);
+    if (Number.isFinite(scoreFromApi)) {
+      return scoreFromApi;
+    }
+
+    const questions = part?.questions || [];
+    if (!questions.length) return 0;
+
+    const total = questions.reduce(
+      (sum, question) => sum + Number(question.answer || 0),
+      0
+    );
+    return Math.round((total / questions.length) * 100) / 100;
+  };
+
   const partsByHighestScore = [...(form?.parts || [])].sort((partA, partB) => {
-    const scoreA = answers?.[partA.id] ?? 0;
-    const scoreB = answers?.[partB.id] ?? 0;
+    const scoreA = getPartScore(partA);
+    const scoreB = getPartScore(partB);
 
     return scoreB - scoreA;
   });
 
+  const partsByGrade = [...(form?.parts || [])].sort((partA, partB) => {
+    const gradeA = partA.step_label || "";
+    const gradeB = partB.step_label || "";
+
+    const parsedA = gradeA.match(/^([A-F])(\d+)?$/i);
+    const parsedB = gradeB.match(/^([A-F])(\d+)?$/i);
+
+    if (parsedA && parsedB) {
+      const letterOrder =
+        parsedA[1].toUpperCase().charCodeAt(0) -
+        parsedB[1].toUpperCase().charCodeAt(0);
+
+      if (letterOrder !== 0) return letterOrder;
+
+      const levelA = Number(parsedA[2] || 0);
+      const levelB = Number(parsedB[2] || 0);
+
+      return levelA - levelB;
+    }
+
+    return gradeA.localeCompare(gradeB, undefined, {
+      numeric: true,
+      sensitivity: "base",
+    });
+  });
+
   const renderAverages = () => {
-    return partsByHighestScore.map((part) => {
-      const average = answers?.[part.id];
+    return partsByGrade.map((part) => {
+      const average = getPartScore(part);
       return (
         <LearningAverage
           key={part.id}
@@ -42,22 +84,16 @@ export default function LearningAnswersPage() {
   };
 
   const renderAdvices = () => {
-    return [...(form?.parts || [])]
-      .sort(
-        (a, b) =>
-          (b.advice_threshold < answers?.[b.id]) -
-          (a.advice_threshold < answers?.[a.id])
-      )
-      .map((part) => {
-        return (
-          <LearningAdvice
-            key={part.id}
-            part={part}
-            language={language.value}
-            highlight={part.advice_threshold < answers?.[part.id]}
-          />
-        );
-      });
+    return partsByHighestScore.map((part) => {
+      return (
+        <LearningAdvice
+          key={part.id}
+          part={part}
+          language={language.value}
+          highlight={part.advice_threshold < getPartScore(part)}
+        />
+      );
+    });
   };
 
   return (

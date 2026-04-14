@@ -236,16 +236,16 @@ export default function CreateMultichoicePage() {
 
         {/* --- Buttons to add new parts --- */}
         <div className="action-row">
-          <Button size="sm" onClick={addTextSection}>
+          <Button size="sm" width="fit" onClick={addTextSection}>
             + Text
           </Button>
-          <Button size="sm" onClick={addMultiChoiceSection}>
+          <Button size="sm" width="fit" onClick={addMultiChoiceSection}>
             + Runterfallen
           </Button>
-          <Button size="sm" onClick={addGapSection}>
+          <Button size="sm" width="fit" onClick={addGapSection}>
             + Lücke
           </Button>
-          <Button size="sm" onClick={addLineBreakSection}>
+          <Button size="sm" width="fit" onClick={addLineBreakSection}>
             + Zeilenumbruch
           </Button>
         </div>

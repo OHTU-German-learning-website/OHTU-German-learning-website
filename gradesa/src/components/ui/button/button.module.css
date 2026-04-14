@@ -23,9 +23,8 @@
 
 .baseButton.sm {
   padding: 0.25rem 0.5rem;
-  /* width: 8rem; , it aligns better with auto */
-  width: auto;
-  /* height: 1.5rem; , it aligns better with auto */
+  width: 8rem;
+  height: 1.5rem;
   height: auto;
   border-radius: var(--radius-sm);
   font-size: var(--font-md);
@@ -33,9 +32,8 @@
 
 .baseButton.md {
   padding: 0.5rem 1rem;
-  /* width: 12rem; it aligns better with auto*/
-  width: auto;
-  /* height: 2rem; it aligns better with auto*/
+  width: 12rem;
+  height: 2rem;
   height: auto;
   font-size: var(--font-md);
   border-radius: var(--radius-md);

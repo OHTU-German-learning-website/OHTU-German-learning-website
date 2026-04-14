@@ -188,12 +188,12 @@ const adminSidebarLinks = [
     id: "users",
   },
   {
-    title: "Add admin",
+    title: "Admin hinzufügen",
     link: "/admin/add-admin",
     id: "add-admin",
   },
   {
-    title: "New page",
+    title: "Neue Seite",
     link: "/admin/new-page",
     id: "new-page",
   },
