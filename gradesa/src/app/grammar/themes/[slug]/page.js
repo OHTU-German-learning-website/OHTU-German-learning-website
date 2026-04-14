@@ -9,6 +9,8 @@ import AdminButtons from "@/app/pages/[type]/[slug]/admin-buttons";
 import { LinkButton } from "@/components/ui/linkbutton";
 import "../lessons.css";
 
+export const dynamic = "force-dynamic";
+
 /**  A grammar page slug can have different display labels depending on whether
  * the user arrived from the topics view or the alphabetical view.
  * We prefer the title from the active view, and fall back to the other list. */

@@ -3,6 +3,8 @@ import { Column } from "@/components/ui/layout/container";
 import { LinkButton } from "@/components/ui/linkbutton";
 import { getAlphabeticalGrammarPages } from "@/backend/html-services";
 
+export const dynamic = "force-dynamic";
+
 export default async function Chapter() {
   const chapters = await getAlphabeticalGrammarPages();
 

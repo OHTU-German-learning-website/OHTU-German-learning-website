@@ -2,6 +2,8 @@ import { LinkButton } from "@/components/ui/linkbutton";
 import { getGrammarTopicsWithPages } from "@/backend/html-services";
 import TopicsList from "./topics-list";
 
+export const dynamic = "force-dynamic";
+
 export default async function ThemesPage() {
   const grammarTopics = await getGrammarTopicsWithPages();
 
