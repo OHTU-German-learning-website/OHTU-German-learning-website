@@ -90,3 +90,24 @@ table th {
 table th {
   font-weight: 600;
 }
+
+.chapter-nav-row {
+  width: 100%;
+}
+
+.chapter-nav-left,
+.chapter-nav-right {
+  flex: 1;
+}
+
+.chapter-nav-left {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.chapter-nav-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.75rem;
+}

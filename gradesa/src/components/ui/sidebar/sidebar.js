@@ -89,6 +89,10 @@ function StudentSideBar() {
             };
           })
         );
+      })
+      .catch(() => {
+        // Silently handle errors (e.g., no resources pages exist yet)
+        setChapters([]);
       });
   }, []);
 

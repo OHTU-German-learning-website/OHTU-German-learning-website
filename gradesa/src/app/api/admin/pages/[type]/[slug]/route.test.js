@@ -32,6 +32,7 @@ describe("PUT /api/admin/pages/[type]/[slug]", () => {
     const { mockPut, mockParams } = useTestRequest(admin);
 
     const updateData = {
+      description: "Updated resource description",
       slug: "new-slug",
     };
 
@@ -42,12 +43,13 @@ describe("PUT /api/admin/pages/[type]/[slug]", () => {
 
     expect(response.status).toBe(200);
     const result = await DB.pool(
-      "SELECT slug FROM html_pages WHERE page_group = $1 AND slug = $2",
+      "SELECT slug, description FROM html_pages WHERE page_group = $1 AND slug = $2",
       ["resources", "new-slug"]
     );
 
     expect(result.rows.length).toBe(1);
     expect(result.rows[0].slug).toBe("new-slug");
+    expect(result.rows[0].description).toBe("Updated resource description");
 
     const oldResult = await DB.pool(
       "SELECT * FROM html_pages WHERE page_group = $1 AND slug = $2",
@@ -130,7 +132,14 @@ describe("DELETE /api/admin/pages/[type]/[slug]", () => {
 
     expect(response.status).toBe(200);
     const json = await response.json();
-    expect(json.message).toBe("Deleted");
+    expect(json.message).toBe("Cleared");
+
+    const result = await DB.pool(
+      "SELECT content FROM html_pages WHERE page_group = $1 AND slug = $2",
+      ["resources", "test-page"]
+    );
+    expect(result.rowCount).toBe(1);
+    expect(result.rows[0].content).toBe("");
   });
 
   it("should return 404 if page does not exist", async () => {

@@ -10,20 +10,20 @@ ALTER TABLE html_pages ADD COLUMN IF NOT EXISTS grammar_topic_id INT REFERENCES 
 
 -- Insert the 8 existing topic categories (matching hardcoded topics.js)
 INSERT INTO grammar_topics (name, sort_order) VALUES
-  ('Das Adjektiv', 1),
-  ('Das Adverb', 2),
-  ('Das Artikelwort', 3),
-  ('Das Pronomen', 4),
-  ('Das Substantiv', 5),
-  ('Das Verb', 6),
-  ('Die Präposition', 7),
-  ('Die Syntax', 8);
+  ('Adjektiv', 1),
+  ('Adverb', 2),
+  ('Artikelwort', 3),
+  ('Pronomen', 4),
+  ('Substantiv', 5),
+  ('Verb', 6),
+  ('Präposition', 7),
+  ('Syntax', 8);
 
 -- Assign grammar_topic_id for existing grammar pages
 
--- Das Adjektiv
+-- Adjektiv
 UPDATE html_pages
-SET grammar_topic_id = (SELECT id FROM grammar_topics WHERE name = 'Das Adjektiv')
+SET grammar_topic_id = (SELECT id FROM grammar_topics WHERE name = 'Adjektiv')
 WHERE page_group = 'grammar' AND slug IN (
   'pradikative-adverbiale-adjektive',
   'attributive-adjektive',
@@ -33,9 +33,9 @@ WHERE page_group = 'grammar' AND slug IN (
   'wortbildung-der-adjektive'
 );
 
--- Das Adverb
+-- Adverb
 UPDATE html_pages
-SET grammar_topic_id = (SELECT id FROM grammar_topics WHERE name = 'Das Adverb')
+SET grammar_topic_id = (SELECT id FROM grammar_topics WHERE name = 'Adverb')
 WHERE page_group = 'grammar' AND slug IN (
   'hin-und-her',
   'pronominaladverbien',
@@ -43,18 +43,18 @@ WHERE page_group = 'grammar' AND slug IN (
   'unterscheidung-zu-anderen-wortarten'
 );
 
--- Das Artikelwort
+-- Artikelwort
 UPDATE html_pages
-SET grammar_topic_id = (SELECT id FROM grammar_topics WHERE name = 'Das Artikelwort')
+SET grammar_topic_id = (SELECT id FROM grammar_topics WHERE name = 'Artikelwort')
 WHERE page_group = 'grammar' AND slug IN (
   'artikelwörter',
   'gebrauch-von-bestimmtem-unbestimmtem-und-nullartikel',
   'gebrauch-anderer-artikelwörter'
 );
 
--- Das Pronomen
+-- Pronomen
 UPDATE html_pages
-SET grammar_topic_id = (SELECT id FROM grammar_topics WHERE name = 'Das Pronomen')
+SET grammar_topic_id = (SELECT id FROM grammar_topics WHERE name = 'Pronomen')
 WHERE page_group = 'grammar' AND slug IN (
   'personalpronomen',
   'demonstrativpronomen',
@@ -63,9 +63,9 @@ WHERE page_group = 'grammar' AND slug IN (
   'pronomen-es'
 );
 
--- Das Substantiv
+-- Substantiv
 UPDATE html_pages
-SET grammar_topic_id = (SELECT id FROM grammar_topics WHERE name = 'Das Substantiv')
+SET grammar_topic_id = (SELECT id FROM grammar_topics WHERE name = 'Substantiv')
 WHERE page_group = 'grammar' AND slug IN (
   'genuszuordnung',
   'pluralbildung-der-substantive',
@@ -74,9 +74,9 @@ WHERE page_group = 'grammar' AND slug IN (
   'homonyme'
 );
 
--- Das Verb
+-- Verb
 UPDATE html_pages
-SET grammar_topic_id = (SELECT id FROM grammar_topics WHERE name = 'Das Verb')
+SET grammar_topic_id = (SELECT id FROM grammar_topics WHERE name = 'Verb')
 WHERE page_group = 'grammar' AND slug IN (
   'tempora',
   'perfekt',
@@ -110,9 +110,9 @@ WHERE page_group = 'grammar' AND slug IN (
   'funktionsverbgefüge'
 );
 
--- Die Präposition
+-- Präposition
 UPDATE html_pages
-SET grammar_topic_id = (SELECT id FROM grammar_topics WHERE name = 'Die Präposition')
+SET grammar_topic_id = (SELECT id FROM grammar_topics WHERE name = 'Präposition')
 WHERE page_group = 'grammar' AND slug IN (
   'nominativ',
   'akkusativ',
@@ -122,11 +122,11 @@ WHERE page_group = 'grammar' AND slug IN (
   'lokalprapositionen'
 );
 
--- Die Syntax
--- Note: 'konditionalsatze' appears in both Das Verb and Die Syntax in topics.js;
--- it is assigned here to Die Syntax since Konditionalsätze is a syntax phenomenon.
+-- Syntax
+-- Note: 'konditionalsatze' appears in both Verb and Syntax in topics.js;
+-- it is assigned here to Syntax since Konditionalsätze is a syntax phenomenon.
 UPDATE html_pages
-SET grammar_topic_id = (SELECT id FROM grammar_topics WHERE name = 'Die Syntax')
+SET grammar_topic_id = (SELECT id FROM grammar_topics WHERE name = 'Syntax')
 WHERE page_group = 'grammar' AND slug IN (
   'konjunktionalsatze',
   'konditionalsatze',

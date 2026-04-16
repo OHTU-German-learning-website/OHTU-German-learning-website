@@ -60,6 +60,7 @@ export default async function Edit({ params, searchParams }) {
     return (
       <EditorSection
         initialContent={pageContent.content}
+        initialDescription={pageContent.description ?? ""}
         type={type}
         slug={decodedSlug}
         title={pageContent.title}
@@ -84,6 +85,7 @@ export default async function Edit({ params, searchParams }) {
       return (
         <EditorSection
           initialContent=""
+          initialDescription=""
           type={type}
           slug={decodedSlug}
           title={chapter?.title || decodedSlug}

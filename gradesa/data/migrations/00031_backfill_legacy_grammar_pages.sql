@@ -120,19 +120,19 @@ WHERE hp.page_group = 'grammar'
 
 -- Backfill topic mapping for known legacy slugs when topic is still NULL.
 UPDATE html_pages
-SET grammar_topic_id = (SELECT id FROM grammar_topics WHERE name = 'Das Adjektiv' ORDER BY id LIMIT 1)
+SET grammar_topic_id = (SELECT id FROM grammar_topics WHERE name = 'Adjektiv' ORDER BY id LIMIT 1)
 WHERE page_group = 'grammar'
   AND grammar_topic_id IS NULL
   AND slug IN ('adjektivdeklination', 'adjektivkomparation');
 
 UPDATE html_pages
-SET grammar_topic_id = (SELECT id FROM grammar_topics WHERE name = 'Das Artikelwort' ORDER BY id LIMIT 1)
+SET grammar_topic_id = (SELECT id FROM grammar_topics WHERE name = 'Artikelwort' ORDER BY id LIMIT 1)
 WHERE page_group = 'grammar'
   AND grammar_topic_id IS NULL
   AND slug IN ('artikelwörter');
 
 UPDATE html_pages
-SET grammar_topic_id = (SELECT id FROM grammar_topics WHERE name = 'Das Verb' ORDER BY id LIMIT 1)
+SET grammar_topic_id = (SELECT id FROM grammar_topics WHERE name = 'Verb' ORDER BY id LIMIT 1)
 WHERE page_group = 'grammar'
   AND grammar_topic_id IS NULL
   AND slug IN (
@@ -154,25 +154,25 @@ WHERE page_group = 'grammar'
   );
 
 UPDATE html_pages
-SET grammar_topic_id = (SELECT id FROM grammar_topics WHERE name = 'Das Substantiv' ORDER BY id LIMIT 1)
+SET grammar_topic_id = (SELECT id FROM grammar_topics WHERE name = 'Substantiv' ORDER BY id LIMIT 1)
 WHERE page_group = 'grammar'
   AND grammar_topic_id IS NULL
   AND slug IN ('genuszuordnung', 'pluralbildung-der-substantive');
 
 UPDATE html_pages
-SET grammar_topic_id = (SELECT id FROM grammar_topics WHERE name = 'Das Pronomen' ORDER BY id LIMIT 1)
+SET grammar_topic_id = (SELECT id FROM grammar_topics WHERE name = 'Pronomen' ORDER BY id LIMIT 1)
 WHERE page_group = 'grammar'
   AND grammar_topic_id IS NULL
   AND slug IN ('pronomen-es');
 
 UPDATE html_pages
-SET grammar_topic_id = (SELECT id FROM grammar_topics WHERE name = 'Die Präposition' ORDER BY id LIMIT 1)
+SET grammar_topic_id = (SELECT id FROM grammar_topics WHERE name = 'Präposition' ORDER BY id LIMIT 1)
 WHERE page_group = 'grammar'
   AND grammar_topic_id IS NULL
   AND slug IN ('akkusativ', 'dativ', 'genitiv', 'nominativ', 'prapositionen', 'lokalprapositionen');
 
 UPDATE html_pages
-SET grammar_topic_id = (SELECT id FROM grammar_topics WHERE name = 'Die Syntax' ORDER BY id LIMIT 1)
+SET grammar_topic_id = (SELECT id FROM grammar_topics WHERE name = 'Syntax' ORDER BY id LIMIT 1)
 WHERE page_group = 'grammar'
   AND grammar_topic_id IS NULL
   AND slug IN (

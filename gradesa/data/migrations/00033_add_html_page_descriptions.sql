@@ -1,0 +1,2 @@
+ALTER TABLE html_pages
+ADD COLUMN IF NOT EXISTS description TEXT;

@@ -1,5 +1,11 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { getPageData, setPageData, getPageList } from "./html-services";
+import {
+  getPageData,
+  setPageData,
+  getPageList,
+  getGrammarTopicsWithPages,
+  getAlphabeticalGrammarPages,
+} from "./html-services";
 import { useTestDatabase } from "@/backend/test/testdb";
 import { DB } from "@/backend/db";
 
@@ -8,12 +14,12 @@ describe("html-services", () => {
 
   beforeEach(async () => {
     await DB.pool(
-      `INSERT INTO html_pages (title, content, page_order, slug, page_group)
+      `INSERT INTO html_pages (title, description, content, page_order, slug, page_group)
        VALUES
-       ('Welcome', '<p>Welcome to our site</p>', 1, 'welcome', 'home'),
-       ('About Us', '<p>Learn about us</p>', 2, 'about', 'home'),
-       ('Contact', '<p>Contact us here</p>', 1, 'contact', 'contact'),
-       ('FAQ', '<p>Frequently asked questions</p>', 1, 'faq', 'support')`
+       ('Welcome', 'Welcome description', '<p>Welcome to our site</p>', 1, 'welcome', 'home'),
+       ('About Us', 'About description', '<p>Learn about us</p>', 2, 'about', 'home'),
+       ('Contact', 'Contact description', '<p>Contact us here</p>', 1, 'contact', 'contact'),
+       ('FAQ', 'FAQ description', '<p>Frequently asked questions</p>', 1, 'faq', 'support')`
     );
   });
 
@@ -25,6 +31,7 @@ describe("html-services", () => {
       expect(page.title).toBe("Welcome");
       expect(page.slug).toBe("welcome");
       expect(page.page_group).toBe("home");
+      expect(page.description).toBe("Welcome description");
       expect(page.content).toBe("<p>Welcome to our site</p>");
       expect(page.page_order).toBe(1);
     });
@@ -61,6 +68,7 @@ describe("html-services", () => {
       const page = await getPageData("home", "welcome");
 
       expect(page).toHaveProperty("title");
+      expect(page).toHaveProperty("description");
       expect(page).toHaveProperty("content");
       expect(page).toHaveProperty("page_order");
       expect(page).toHaveProperty("slug");
@@ -69,9 +77,10 @@ describe("html-services", () => {
   });
 
   describe("setPageData", () => {
-    it("should update page title, slug, and content", async () => {
+    it("should update page title, description, slug, and content", async () => {
       const success = await setPageData("home", "welcome", {
         title: "Welcome Updated",
+        description: "Updated description",
         slug: "welcome-new",
         content: "<p>Updated welcome content</p>",
       });
@@ -80,12 +89,14 @@ describe("html-services", () => {
 
       const updatedPage = await getPageData("home", "welcome-new");
       expect(updatedPage.title).toBe("Welcome Updated");
+      expect(updatedPage.description).toBe("Updated description");
       expect(updatedPage.content).toBe("<p>Updated welcome content</p>");
     });
 
     it("should return false when page does not exist", async () => {
       const success = await setPageData("home", "nonexistent", {
         title: "New Title",
+        description: "New description",
         slug: "new-slug",
         content: "<p>New content</p>",
       });
@@ -96,6 +107,7 @@ describe("html-services", () => {
     it("should return false when type does not match", async () => {
       const success = await setPageData("nonexistent", "welcome", {
         title: "New Title",
+        description: "New description",
         slug: "new-slug",
         content: "<p>New content</p>",
       });
@@ -108,6 +120,7 @@ describe("html-services", () => {
 
       await setPageData("home", "welcome", {
         title: "New Title",
+        description: "New description",
         slug: "welcome",
         content: "<p>New content</p>",
       });
@@ -115,6 +128,7 @@ describe("html-services", () => {
       const updatedPage = await getPageData("home", "welcome");
 
       expect(updatedPage.title).toBe("New Title");
+      expect(updatedPage.description).toBe("New description");
       expect(updatedPage.content).toBe("<p>New content</p>");
       expect(updatedPage.page_order).toBe(originalPage.page_order);
       expect(updatedPage.page_group).toBe(originalPage.page_group);
@@ -123,6 +137,7 @@ describe("html-services", () => {
     it("should allow changing the slug", async () => {
       await setPageData("home", "welcome", {
         title: "Welcome",
+        description: "Welcome description",
         slug: "welcome-updated",
         content: "<p>Welcome to our site</p>",
       });
@@ -140,6 +155,7 @@ describe("html-services", () => {
 
       await setPageData("home", "welcome", {
         title: "Welcome",
+        description: "Welcome description",
         slug: "welcome",
         content: htmlContent,
       });
@@ -151,6 +167,7 @@ describe("html-services", () => {
     it("should handle empty content", async () => {
       const success = await setPageData("home", "welcome", {
         title: "Welcome",
+        description: null,
         slug: "welcome",
         content: "",
       });
@@ -183,6 +200,7 @@ describe("html-services", () => {
 
       pages.forEach((page) => {
         expect(page).toHaveProperty("title");
+        expect(page).toHaveProperty("description");
         expect(page).toHaveProperty("slug");
         expect(page).not.toHaveProperty("content");
         expect(page).not.toHaveProperty("page_group");
@@ -211,8 +229,102 @@ describe("html-services", () => {
 
       pages.forEach((page) => {
         const keys = Object.keys(page).sort();
-        expect(keys).toEqual(["slug", "title"]);
+        expect(keys).toEqual(["description", "slug", "title"]);
       });
+    });
+
+    it("should sort communications alphabetically by title", async () => {
+      await DB.pool(
+        `INSERT INTO html_pages (title, description, content, page_order, slug, page_group)
+         VALUES
+         ('Zugfahrt', 'Z description', '', 3, 'zugfahrt', 'communications'),
+         ('Arztbesuch', 'A description', '', 1, 'arztbesuch', 'communications'),
+         ('Bahnhof', 'B description', '', 2, 'bahnhof', 'communications')`
+      );
+
+      const pages = await getPageList("communications");
+
+      const relevantSlugs = pages
+        .map((page) => page.slug)
+        .filter((slug) => ["arztbesuch", "bahnhof", "zugfahrt"].includes(slug));
+
+      expect(relevantSlugs).toEqual(["arztbesuch", "bahnhof", "zugfahrt"]);
+    });
+
+    it("should sort resources by the number in title", async () => {
+      await DB.pool(
+        `INSERT INTO html_pages (title, content, page_order, slug, page_group)
+         VALUES
+         ('Lektion 10', '', 3, 'lektion-10', 'resources'),
+         ('Lektion 2', '', 1, 'lektion-2', 'resources'),
+         ('Lektion 1', '', 2, 'lektion-1', 'resources')`
+      );
+
+      const pages = await getPageList("resources");
+
+      const relevantSlugs = pages
+        .map((page) => page.slug)
+        .filter((slug) =>
+          ["lektion-1", "lektion-2", "lektion-10"].includes(slug)
+        );
+
+      expect(relevantSlugs).toEqual(["lektion-1", "lektion-2", "lektion-10"]);
+    });
+  });
+
+  describe("grammar topic/alphabetical consistency", () => {
+    it("should exclude Ohne Thema and keep identical slug sets across views", async () => {
+      const insertedTopics = await DB.pool(
+        `INSERT INTO grammar_topics (name, sort_order)
+         VALUES ('Verb', 1), ('Ohne Thema', 2), ('Nomen', 3)
+         RETURNING id, name`
+      );
+
+      const topicIdByName = new Map(
+        insertedTopics.rows.map((row) => [row.name, row.id])
+      );
+
+      await DB.pool(
+        `INSERT INTO html_pages (
+           title,
+           content,
+           page_order,
+           slug,
+           page_group,
+           grammar_topic_id
+         )
+         VALUES
+         ('Zeta Thema', '', 1, 'zeta-thema', 'grammar', $1),
+         ('Alpha Thema', '', 2, 'alpha-thema', 'grammar', $2),
+         ('Should Be Hidden', '', 3, 'hidden-ohne-thema', 'grammar', $3)`,
+        [
+          topicIdByName.get("Verb"),
+          topicIdByName.get("Nomen"),
+          topicIdByName.get("Ohne Thema"),
+        ]
+      );
+
+      const [topics, alphabetical] = await Promise.all([
+        getGrammarTopicsWithPages(),
+        getAlphabeticalGrammarPages(),
+      ]);
+
+      const topicSlugs = topics.flatMap((topic) =>
+        topic.subtopics.map((subtopic) => subtopic.slug)
+      );
+      const alphabeticalSlugs = alphabetical.map((page) => page.slug);
+
+      expect(topics.some((topic) => topic.name === "Ohne Thema")).toBe(false);
+      expect(topicSlugs).not.toContain("hidden-ohne-thema");
+      expect(alphabeticalSlugs).not.toContain("hidden-ohne-thema");
+
+      expect(new Set(alphabeticalSlugs)).toEqual(new Set(topicSlugs));
+
+      const alphabeticalTitles = alphabetical.map((page) => page.title);
+      const sortedAlphabeticalTitles = [...alphabeticalTitles].sort((a, b) =>
+        a.localeCompare(b, undefined, { sensitivity: "base" })
+      );
+      expect(alphabeticalTitles).toEqual(sortedAlphabeticalTitles);
     });
   });
 });

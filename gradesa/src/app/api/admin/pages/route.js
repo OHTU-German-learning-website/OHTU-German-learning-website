@@ -4,6 +4,13 @@ import { NextResponse } from "next/server";
 
 const VALID_PAGE_GROUPS = new Set(["resources", "communications", "grammar"]);
 
+function normalizePageDescription(description) {
+  if (typeof description !== "string") return null;
+
+  const trimmedDescription = description.trim();
+  return trimmedDescription ? trimmedDescription : null;
+}
+
 function generateBaseSlug(title) {
   return title
     .toLowerCase()
@@ -86,7 +93,8 @@ async function resolveGrammarTopicId(topicId, newTopicName) {
 
 export const POST = withAuth(
   async (req) => {
-    const { title, type, topicId, newTopicName } = await req.json();
+    const { title, description, type, topicId, newTopicName } =
+      await req.json();
 
     if (!title || !type || !VALID_PAGE_GROUPS.has(type)) {
       return new NextResponse("Invalid input", { status: 400 });
@@ -99,6 +107,7 @@ export const POST = withAuth(
 
     const slug = await generateUniqueSlug(type, trimmedTitle);
     const pageOrder = await getNextPageOrder(type);
+    const pageDescription = normalizePageDescription(description);
 
     let grammarTopicId = null;
     if (type === "grammar") {
@@ -106,8 +115,8 @@ export const POST = withAuth(
     }
 
     await DB.pool(
-      "INSERT INTO html_pages (title, content, slug, page_group, page_order, grammar_topic_id) VALUES ($1, $2, $3, $4, $5, $6)",
-      [trimmedTitle, "", slug, type, pageOrder, grammarTopicId]
+      "INSERT INTO html_pages (title, description, content, slug, page_group, page_order, grammar_topic_id) VALUES ($1, $2, $3, $4, $5, $6, $7)",
+      [trimmedTitle, pageDescription, "", slug, type, pageOrder, grammarTopicId]
     );
 
     return NextResponse.json({ slug }, { status: 200 });

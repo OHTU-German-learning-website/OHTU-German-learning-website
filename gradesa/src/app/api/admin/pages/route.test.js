@@ -11,7 +11,7 @@ describe("POST /api/admin/pages", () => {
   beforeEach(async () => {
     await DB.pool(
       `INSERT INTO grammar_topics (name, sort_order) VALUES ($1, $2), ($3, $4)`,
-      ["Das Verb", 1, "Die Syntax", 2]
+      ["Verb", 1, "Syntax", 2]
     );
 
     await DB.pool(
@@ -34,6 +34,7 @@ describe("POST /api/admin/pages", () => {
 
     const response = await POST(
       mockPost("/api/admin/pages", {
+        description: "Resource summary",
         title: "New Resource",
         type: "resources",
       })
@@ -42,13 +43,14 @@ describe("POST /api/admin/pages", () => {
     expect(response.status).toBe(200);
 
     const inserted = await DB.pool(
-      `SELECT slug, title, page_order, grammar_topic_id
+      `SELECT slug, title, description, page_order, grammar_topic_id
        FROM html_pages
        WHERE page_group = 'resources' AND slug = 'new-resource'`
     );
 
     expect(inserted.rowCount).toBe(1);
     expect(inserted.rows[0].title).toBe("New Resource");
+    expect(inserted.rows[0].description).toBe("Resource summary");
     expect(inserted.rows[0].page_order).toBe(expectedNextOrder);
     expect(inserted.rows[0].grammar_topic_id).toBeNull();
   });
@@ -82,7 +84,7 @@ describe("POST /api/admin/pages", () => {
     const { mockPost } = useTestRequest(admin);
 
     const topic = await DB.pool(
-      "SELECT id FROM grammar_topics WHERE name = 'Die Syntax'"
+      "SELECT id FROM grammar_topics WHERE name = 'Syntax'"
     );
 
     const response = await POST(
