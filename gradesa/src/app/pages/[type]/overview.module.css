@@ -1,0 +1,36 @@
+.cards {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.card {
+    background-color: var(--bg3);
+    color: var(--fg2);
+    padding: 1.75rem;
+    width: min(100%, 38rem);
+}
+
+.cardTitle {
+    color: var(--fg2);
+    display: inline-block;
+    font-size: var(--font-lg);
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    text-decoration: none;
+}
+
+.cardTitle:hover,
+.cardTitle:focus-visible {
+    text-decoration: underline;
+}
+
+.cardDescription {
+    color: var(--fg2);
+    margin: 0;
+    white-space: pre-line;
+}
+
+.linkList {
+    display: grid;
+    gap: 0.5rem;
+}

@@ -1,12 +1,10 @@
 "use client";
+import { Fragment } from "react";
 import parse, { domToReact } from "html-react-parser";
 import {
   GlossaryParagraph,
   GlossaryListItem,
 } from "@/components/ui/glossary/GlossaryText";
-
-// ?NOTE The <container> tag still throws an error, but for now I've chosen not to go down that rabbit hole
-// ?It seems slightly too complicated for this last sprint.
 
 /**
  * Normalize HTML attributes for use in React elements.
@@ -77,6 +75,9 @@ export default function RenderHTML({ data }) {
         .join(" ");
       return <div {...safeAttribs}>{children}</div>; // This replacement should maybe use <Column> if it exists
     },
+    // Legacy DB content can contain <Container> tags from old React markup.
+    // Render only children to preserve previous look without invalid tag warnings.
+    container: (_attributes, children) => <Fragment>{children}</Fragment>,
     anchor: (attributes, children) => {
       const safeAttribs = { ...attributes };
       const href = safeAttribs.href || safeAttribs["data-href"];

@@ -32,18 +32,15 @@ export default async function Chapters({ params }) {
       <AdminButtons type={type} slug={slug} />
       <h1>{pageData.title}</h1>
       <RenderHTML data={transformedContent} />
-      <Row pb="xl" justify="space-between">
-        {previousLink && (
-          <Container>
-            <LinkButton href={previousLink}>Zurück</LinkButton>
-          </Container>
-        )}
-        <Container>
-          {showLearningFormLink ? (
+      <Row pb="xl" className="chapter-nav-row" justify="space-between">
+        <Container className="chapter-nav-left">
+          {previousLink && <LinkButton href={previousLink}>Zurück</LinkButton>}
+        </Container>
+        <Container className="chapter-nav-right">
+          {showLearningFormLink && (
             <LinkButton href="/learning">Go to form</LinkButton>
-          ) : (
-            nextLink && <LinkButton href={nextLink}>Weiter</LinkButton>
           )}
+          {nextLink && <LinkButton href={nextLink}>Weiter</LinkButton>}
         </Container>
       </Row>
     </Column>

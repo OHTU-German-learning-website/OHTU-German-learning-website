@@ -21,18 +21,30 @@ export default function NewPage() {
       .then((res) => res.json())
       .then((data) => {
         setGrammarTopics(data);
-        setSelectedTopicId("none");
+        setSelectedTopicId("");
         setNewTopicName("");
       })
-      .catch(() => setGrammarTopics([]));
+      .catch(() => {
+        setGrammarTopics([]);
+        setSelectedTopicId("");
+      });
   }, [type]);
 
   const submit = async () => {
     const body = { title, type };
     if (type === "grammar") {
+      if (!selectedTopicId) {
+        setCreationMessage("Bitte Thema auswählen");
+        return;
+      }
+
       if (selectedTopicId === "new") {
+        if (!newTopicName.trim()) {
+          setCreationMessage("Bitte neuen Themennamen eingeben");
+          return;
+        }
         body.newTopicName = newTopicName;
-      } else if (selectedTopicId !== "none") {
+      } else {
         body.topicId = Number(selectedTopicId);
       }
     }
@@ -98,12 +110,15 @@ export default function NewPage() {
                 className={styles.control}
                 id="topic"
                 value={selectedTopicId}
+                required
                 onChange={(e) => {
                   setSelectedTopicId(e.target.value);
                   setNewTopicName("");
                 }}
               >
-                <option value="none">Ohne Thema</option>
+                <option value="" disabled>
+                  Thema auswählen...
+                </option>
                 {grammarTopics.map((t) => (
                   <option key={t.id} value={t.id.toString()}>
                     {t.name}

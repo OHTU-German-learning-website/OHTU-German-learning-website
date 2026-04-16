@@ -1,13 +1,13 @@
 export const grammarTopics = [
   {
-    title: "Das Adjektiv",
+    title: "Adjektiv",
     subtopics: [
       {
-        name: "prädikative und adverbiale Adjektive",
+        name: "Prädikative und adverbiale Adjektive",
         link: "/grammar/themes/pradikative-adverbiale-adjektive",
       },
       {
-        name: "attributive Adjektive",
+        name: "Attributive Adjektive",
         link: "/grammar/themes/attributive-adjektive",
       },
       {
@@ -19,20 +19,20 @@ export const grammarTopics = [
         link: "/grammar/themes/adjektivkomparation",
       },
       {
-        name: "die Rektion der Adjektive",
+        name: "Rektion der Adjektive",
         link: "/grammar/themes/rektion-der-adjektive",
       },
       {
-        name: "die Wortbildung der Adjektive",
+        name: "Wortbildung der Adjektive",
         link: "/grammar/themes/wortbildung-der-adjektive",
       },
     ],
   },
   {
-    title: "Das Adverb",
+    title: "Adverb",
     subtopics: [
       {
-        name: "hin und her",
+        name: "Hin und her",
         link: "/grammar/themes/hin-und-her",
       },
       {
@@ -44,55 +44,55 @@ export const grammarTopics = [
         link: "/grammar/themes/konjunktionaladverbien",
       },
       {
-        name: "die Unterscheidung zu anderen Wortarten (Konjunktion, prädikatives Attribut, Modalwort, Partikel)",
+        name: "Unterscheidung zu anderen Wortarten (Konjunktion, prädikatives Attribut, Modalwort, Partikel)",
         link: "/grammar/themes/unterscheidung-zu-anderen-wortarten",
       },
     ],
   },
   {
-    title: "Das Artikelwort",
+    title: "Artikelwort",
     subtopics: [
       {
         name: "Formen von Artikelwörtern",
         link: "/grammar/themes/artikelwörter",
       },
       {
-        name: "der Gebrauch von bestimmtem, unbestimmtem und Nullartikel",
+        name: "Gebrauch von bestimmtem, unbestimmtem und Nullartikel",
         link: "/grammar/themes/gebrauch-von-bestimmtem-unbestimmtem-und-nullartikel",
       },
       {
-        name: "der Gebrauch anderer Artikelwörter",
+        name: "Gebrauch anderer Artikelwörter",
         link: "/grammar/themes/gebrauch-anderer-artikelwörter",
       },
     ],
   },
   {
-    title: "Das Pronomen",
+    title: "Pronomen",
     subtopics: [
       {
-        name: "das Personalpronomen",
+        name: "Personalpronomen",
         link: "/grammar/themes/personalpronomen",
       },
       {
-        name: "das Demonstrativpronomen",
+        name: "Demonstrativpronomen",
         link: "/grammar/themes/demonstrativpronomen",
       },
       {
-        name: "das Possessivpronomen",
+        name: "Possessivpronomen",
         link: "/grammar/themes/possessivpronomen",
       },
       {
-        name: "das Relativpronomen",
+        name: "Relativpronomen",
         link: "/grammar/themes/relativpronomen",
       },
       {
-        name: "das Pronomen es",
+        name: "Pronomen es",
         link: "/grammar/themes/pronomen-es",
       },
     ],
   },
   {
-    title: "Das Substantiv",
+    title: "Substantiv",
     subtopics: [
       {
         name: "Genuszuordnung",
@@ -103,11 +103,11 @@ export const grammarTopics = [
         link: "/grammar/themes/pluralbildung-der-substantive",
       },
       {
-        name: "die Kasusformen und ihre Bildung: Nominativ, Akkusativ, Dativ, Genitiv",
+        name: "Kasusformen und ihre Bildung: Nominativ, Akkusativ, Dativ, Genitiv",
         link: "/grammar/themes/kasusformen-und-ihre-bildung",
       },
       {
-        name: "besondere Namen (geographische, Nationalitäten usw.)",
+        name: "Besondere Namen (geographische, Nationalitäten usw.)",
         link: "/grammar/themes/besondere-namen",
       },
       {
@@ -117,30 +117,30 @@ export const grammarTopics = [
     ],
   },
   {
-    title: "Das Verb",
+    title: "Verb",
     subtopics: [
-      { name: "die Tempora", link: "/grammar/themes/tempora" },
-      { name: "das Perfekt", link: "/grammar/themes/perfekt" },
+      { name: "Tempora", link: "/grammar/themes/tempora" },
+      { name: "Perfekt", link: "/grammar/themes/perfekt" },
       { name: "Partizip II", link: "/grammar/themes/partizip_ii" },
-      { name: "das Präsens", link: "/grammar/themes/prasens" },
-      { name: "das Präteritum", link: "/grammar/themes/prateritum" },
-      { name: "das Plusquamperfekt", link: "/grammar/themes/plusquamperfekt" },
-      { name: "das Futur I und II", link: "/grammar/themes/futur" },
-      { name: "der Numerus", link: "/grammar/themes/numerus" },
-      { name: "die Konjugation", link: "/grammar/themes/konjugation" },
-      { name: "schwache Verben", link: "/grammar/themes/schwache-verben" },
+      { name: "Präsens", link: "/grammar/themes/prasens" },
+      { name: "Präteritum", link: "/grammar/themes/prateritum" },
+      { name: "Plusquamperfekt", link: "/grammar/themes/plusquamperfekt" },
+      { name: "Futur I und II", link: "/grammar/themes/futur" },
+      { name: "Numerus", link: "/grammar/themes/numerus" },
+      { name: "Konjugation", link: "/grammar/themes/konjugation" },
+      { name: "Schwache Verben", link: "/grammar/themes/schwache-verben" },
       {
-        name: "starke und unregelmäßige Verben",
+        name: "Starke und unregelmäßige Verben",
         link: "/grammar/themes/starke-und-unregelmasige-verben",
       },
       { name: "Hilfsverben", link: "/grammar/themes/hilfsverben" },
       {
-        name: "die Kategorien des Verbs",
+        name: "Kategorien des Verbs",
         link: "/grammar/themes/kategorien-des-verbs",
       },
-      { name: "die Formenbildung", link: "/grammar/themes/formenbildung" },
+      { name: "Formenbildung", link: "/grammar/themes/formenbildung" },
       {
-        name: "trennbare Verben",
+        name: "Trennbare Verben",
         link: "/grammar/themes/zusammengesetzte-verben",
       },
       {
@@ -148,53 +148,53 @@ export const grammarTopics = [
         link: "/grammar/themes/modalverben-und-subjektive-modalitat",
       },
       {
-        name: "objektive Modalität",
+        name: "Objektive Modalität",
         link: "/grammar/themes/objektive-modalitat",
       },
-      { name: "reflexive Verben", link: "/grammar/themes/reflexive-verben" },
-      { name: "der Modus", link: "/grammar/themes/modus" },
+      { name: "Reflexive Verben", link: "/grammar/themes/reflexive-verben" },
+      { name: "Modus", link: "/grammar/themes/modus" },
       {
-        name: "der Konjunktiv I (=Konjunktiv Präsens)",
+        name: "Konjunktiv I (=Konjunktiv Präsens)",
         link: "/grammar/themes/konjunktiv_i",
       },
       {
-        name: "der Konjunktiv II (=Konjunktiv Präteritum)",
+        name: "Konjunktiv II (=Konjunktiv Präteritum)",
         link: "/grammar/themes/konjunktiv_ii",
       },
-      { name: "die würde-Form", link: "/grammar/themes/konditionalsatze" },
-      { name: "der Imperativ", link: "/grammar/themes/imperativ" },
-      { name: "das Genus Verbi", link: "/grammar/themes/genus-verbi" },
-      { name: "das Passiv", link: "/grammar/themes/passiv" },
+      { name: "Würde-Form", link: "/grammar/themes/konditionalsatze" },
+      { name: "Imperativ", link: "/grammar/themes/imperativ" },
+      { name: "Genus Verbi", link: "/grammar/themes/genus-verbi" },
+      { name: "Passiv", link: "/grammar/themes/passiv" },
       {
         name: "Passiv-Ersatzformen (Paraphrasen)",
         link: "/grammar/themes/passiv-ersatzformen",
       },
       {
-        name: "die Rektion der Verben",
+        name: "Rektion der Verben",
         link: "/grammar/themes/rektion-der-verben",
       },
       {
-        name: "mit reinem Kasus: Verben mit dem Dativ, Verben mit dem Akkusativ, Verben mit dem Genitiv, Verben mit dem Nominativ",
+        name: "Mit reinem Kasus: Verben mit dem Dativ, Verben mit dem Akkusativ, Verben mit dem Genitiv, Verben mit dem Nominativ",
         link: "/grammar/themes/mit-reinem-kasus",
       },
       {
-        name: "mit Präpositionalkasus",
+        name: "Mit Präpositionalkasus",
         link: "/grammar/themes/mit-prapositionalkasus",
       },
       { name: "Infinitivformen", link: "/grammar/themes/infinitivformen" },
       {
-        name: "das Funktionsverbgefüge",
+        name: "Funktionsverbgefüge",
         link: "/grammar/themes/funktionsverbgefüge",
       },
     ],
   },
   {
-    title: "Die Präposition",
+    title: "Präposition",
     subtopics: [
-      { name: "mit Nominativ", link: "/grammar/themes/nominativ" },
-      { name: "mit Akkusativ", link: "/grammar/themes/akkusativ" },
-      { name: "mit Dativ", link: "/grammar/themes/dativ" },
-      { name: "mit Genitiv", link: "/grammar/themes/genitiv" },
+      { name: "Mit Nominativ", link: "/grammar/themes/nominativ" },
+      { name: "Mit Akkusativ", link: "/grammar/themes/akkusativ" },
+      { name: "Mit Dativ", link: "/grammar/themes/dativ" },
+      { name: "Mit Genitiv", link: "/grammar/themes/genitiv" },
       { name: "Wechselpräpositionen", link: "/grammar/themes/prapositionen" },
       {
         name: "Lokalpräpositionen",
@@ -203,7 +203,7 @@ export const grammarTopics = [
     ],
   },
   {
-    title: "Die Syntax",
+    title: "Syntax",
     subtopics: [
       {
         name: "Konjunktionalsätze",
@@ -222,12 +222,12 @@ export const grammarTopics = [
         link: "/grammar/themes/temporalsatze",
       },
       {
-        name: "indirekte Fragesätze",
+        name: "Indirekte Fragesätze",
         link: "/grammar/themes/indirekte-fragesatze",
       },
       { name: "Relativsätze", link: "/grammar/themes/relativsatze" },
-      { name: "die Satzklammer", link: "/grammar/themes/satzklammer" },
-      { name: "uneingeleitete Nebensätze", link: "/grammar/themes/nebensatze" },
+      { name: "Satzklammer", link: "/grammar/themes/satzklammer" },
+      { name: "Uneingeleitete Nebensätze", link: "/grammar/themes/nebensatze" },
       {
         name: "Infinitivkonstruktionen",
         link: "/grammar/themes/infinitivkonstruktionen",
@@ -236,7 +236,7 @@ export const grammarTopics = [
         name: "Konjunktionen und Konjunktionaladverbien",
         link: "/grammar/themes/konjunktionalsatze",
       },
-      { name: "die Satzperiode", link: "/grammar/themes/satzperiode" },
+      { name: "Satzperiode", link: "/grammar/themes/satzperiode" },
     ],
   },
 ];

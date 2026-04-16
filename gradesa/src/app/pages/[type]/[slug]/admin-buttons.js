@@ -22,10 +22,14 @@ export default function AdminButtons({ type, slug, pageExists = true }) {
     });
 
     if (res.ok) {
-      window.location.reload();
-    } else {
-      alert("Fehler beim Löschen.");
+      router.refresh();
+      return;
     }
+
+    const message = await res.text();
+    alert(
+      `Fehler beim Löschen (HTTP ${res.status}): ${message || "Unbekannter Fehler"}`
+    );
   };
 
   if (checkUseIsAdmin()) {

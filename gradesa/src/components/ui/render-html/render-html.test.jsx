@@ -263,6 +263,14 @@ describe("RenderHTML Component", () => {
       expect(columnDiv).toBeTruthy();
       expect(columnDiv.textContent).toContain("Hello Column");
     });
+
+    it("should unwrap custom container tags without rendering container elements", () => {
+      const html = "<container><p>Wrapped content</p></container>";
+      const { container } = render(<RenderHTML data={html} />);
+
+      expect(container.querySelector("container")).toBeNull();
+      expect(screen.getByText("Wrapped content")).toBeTruthy();
+    });
   });
 
   describe("Performance scenarios", () => {

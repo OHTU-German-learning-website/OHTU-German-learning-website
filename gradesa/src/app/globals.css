@@ -514,6 +514,11 @@ label {
   font-size: 2.5em;
 }
 
+.rendered-html img {
+  max-width: 100%;
+  height: auto;
+}
+
 .ql-table-menus,
 .ql-table-dropdown,
 .ql-table-tooltip {

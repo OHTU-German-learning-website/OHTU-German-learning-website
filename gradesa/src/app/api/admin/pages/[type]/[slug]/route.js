@@ -8,6 +8,13 @@ import { DB } from "@/backend/db";
 // Allowed page_group values stored in the consolidated `html_pages` table.
 const VALID_PAGE_GROUPS = new Set(["resources", "communications", "grammar"]);
 
+function normalizePageDescription(description) {
+  if (typeof description !== "string") return null;
+
+  const trimmedDescription = description.trim();
+  return trimmedDescription ? trimmedDescription : null;
+}
+
 /*
   Route behavior (summary):
   - The `type` route param maps to the `page_group` value stored in the
@@ -25,15 +32,23 @@ const VALID_PAGE_GROUPS = new Set(["resources", "communications", "grammar"]);
 
 export const DELETE = withAuth(
   async (req, { params }) => {
-    const { type, slug } = await params;
+    try {
+      const { type, slug } = await params;
 
-    const query = `DELETE FROM html_pages WHERE slug = $1 AND page_group = $2 RETURNING *`;
-    const result = await DB.pool(query, [slug, type]);
+      const query = `UPDATE html_pages SET content = '' WHERE slug = $1 AND page_group = $2 RETURNING *`;
+      const result = await DB.pool(query, [slug, type]);
 
-    if (result.rowCount === 0)
-      return NextResponse.json({ error: "Not found" }, { status: 404 });
+      if (result.rowCount === 0)
+        return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-    return NextResponse.json({ message: "Deleted" }, { status: 200 });
+      return NextResponse.json({ message: "Cleared" }, { status: 200 });
+    } catch (error) {
+      console.error("DELETE page failed", error);
+      return NextResponse.json(
+        { error: error?.message || "Delete failed" },
+        { status: 500 }
+      );
+    }
   },
   {
     requireAdmin: true,
@@ -55,6 +70,9 @@ export const PUT = withAuth(
     if (data.title) newData.title = data.title;
     if (data.page_order) newData.page_order = data.page_order;
     if (data.slug) newData.slug = data.slug;
+    if (Object.prototype.hasOwnProperty.call(data, "description")) {
+      newData.description = normalizePageDescription(data.description);
+    }
     // Allow also empty content string.
     if (Object.prototype.hasOwnProperty.call(data, "content"))
       newData.content = sanitize(data.content);
@@ -73,13 +91,14 @@ export const PUT = withAuth(
 
     if (!updated && type === "grammar") {
       const insertQuery = `
-    INSERT INTO html_pages (title, content, slug, page_group)
-    VALUES ($1, $2, $3, $4)
+    INSERT INTO html_pages (title, description, content, slug, page_group)
+    VALUES ($1, $2, $3, $4, $5)
     ON CONFLICT DO NOTHING
   `;
 
       await DB.pool(insertQuery, [
         newData.title,
+        newData.description ?? null,
         newData.content ?? "",
         newData.slug,
         type,
@@ -120,9 +139,15 @@ export const POST = withAuth(
         status: 400,
       });
     }
-    const title = (await req.json()).title;
-    const query = `INSERT INTO html_pages (title, content, slug, page_group) VALUES ($1, $2, $3, $4)`;
-    const result = await DB.pool(query, [title, "", slug, type]);
+    const { title, description } = await req.json();
+    const query = `INSERT INTO html_pages (title, description, content, slug, page_group) VALUES ($1, $2, $3, $4, $5)`;
+    const result = await DB.pool(query, [
+      title,
+      normalizePageDescription(description),
+      "",
+      slug,
+      type,
+    ]);
 
     if (result.rowCount === 0)
       return NextResponse.json({ error: "Not found" }, { status: 404 });

@@ -380,7 +380,8 @@ CREATE TABLE public.html_pages (
   page_order integer,
   slug text,
   page_group text,
-  grammar_topic_id integer
+  grammar_topic_id integer,
+  description text
 );
 
 ALTER TABLE public.html_pages

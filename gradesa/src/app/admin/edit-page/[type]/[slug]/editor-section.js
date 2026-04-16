@@ -9,6 +9,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 export default function EditorSection({
   initialContent,
+  initialDescription,
   type,
   slug,
   title,
@@ -16,8 +17,10 @@ export default function EditorSection({
   pageExists,
 }) {
   const [editorContent, setEditorContent] = useState(initialContent);
+  const [descriptionInput, setDescriptionInput] = useState(initialDescription);
   const [editorMessage, setEditorMessage] = useState({ error: false, msg: "" });
   const [titleInput, setTitleInput] = useState(title);
+  const supportsDescription = type === "communications";
   const router = useRouter();
   const searchParams = useSearchParams();
   const view = searchParams.get("view");
@@ -34,10 +37,16 @@ export default function EditorSection({
 
   const submitEditorContent = async () => {
     // A naive approach with string replacement is used here.
-    const jsonData = JSON.stringify({
+    const requestBody = {
       content: editorContent.replace(/&nbsp;/g, " "),
       title: titleInput,
-    });
+    };
+
+    if (supportsDescription) {
+      requestBody.description = descriptionInput;
+    }
+
+    const jsonData = JSON.stringify(requestBody);
 
     if (!pageExists && type === "grammar") {
       const createRes = await fetch(`/api/admin/pages/${type}/${slug}`, {
@@ -109,6 +118,17 @@ export default function EditorSection({
           required
         />
       </Row>
+      {supportsDescription && (
+        <Column gap="0.5rem">
+          <label htmlFor="description">Beschreibung</label>
+          <textarea
+            id="description"
+            rows={4}
+            value={descriptionInput}
+            onChange={(e) => setDescriptionInput(e.target.value)}
+          />
+        </Column>
+      )}
       <Row justify="space-between" pb="xl">
         <Editor
           defaultContent={editorContent}
