@@ -79,10 +79,11 @@ export default function CreateGlossaryEntry() {
         ? `/admin/glossary?id=${entryId}`
         : "/admin/glossary";
 
-      const res = await makeRequest(url, {
-        method,
-        body: { word, word_definition: wordDefinition },
-      });
+      const res = await makeRequest(
+        url,
+        { word, word_definition: wordDefinition },
+        { method }
+      );
 
       if (res.status === 200) {
         router.push("/admin/glossary");
