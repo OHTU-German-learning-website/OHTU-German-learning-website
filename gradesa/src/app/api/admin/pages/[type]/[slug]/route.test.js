@@ -132,14 +132,13 @@ describe("DELETE /api/admin/pages/[type]/[slug]", () => {
 
     expect(response.status).toBe(200);
     const json = await response.json();
-    expect(json.message).toBe("Cleared");
+    expect(json.message).toBe("Deleted");
 
     const result = await DB.pool(
       "SELECT content FROM html_pages WHERE page_group = $1 AND slug = $2",
       ["resources", "test-page"]
     );
-    expect(result.rowCount).toBe(1);
-    expect(result.rows[0].content).toBe("");
+    expect(result.rowCount).toBe(0);
   });
 
   it("should return 404 if page does not exist", async () => {

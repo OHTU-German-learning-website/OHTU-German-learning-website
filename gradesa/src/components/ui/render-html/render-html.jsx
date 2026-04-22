@@ -104,5 +104,5 @@ export default function RenderHTML({ data }) {
   };
 
   const parsedContent = parse(data, { replace: replacer });
-  return <div className="rendered-html">{parsedContent}</div>;
+  return <div className="ql-editor rendered-html">{parsedContent}</div>;
 }

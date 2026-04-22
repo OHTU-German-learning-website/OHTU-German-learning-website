@@ -31,7 +31,11 @@ export default async function Chapters({ params }) {
     <Column className={layout.viewContent}>
       <AdminButtons type={type} slug={slug} />
       <h1>{pageData.title}</h1>
-      <RenderHTML data={transformedContent} />
+
+      <Container className="chapter-rendered-content">
+        <RenderHTML data={transformedContent} />
+      </Container>
+
       <Row pb="xl" className="chapter-nav-row" justify="space-between">
         <Container className="chapter-nav-left">
           {previousLink && <LinkButton href={previousLink}>Zurück</LinkButton>}

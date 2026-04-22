@@ -76,6 +76,7 @@ const Sidebar = () => {
 
 function StudentSideBar() {
   const [chapters, setChapters] = useState([]);
+  const pathname = usePathname();
 
   useEffect(() => {
     fetch("/api/pages/resources")
@@ -94,7 +95,7 @@ function StudentSideBar() {
         // Silently handle errors (e.g., no resources pages exist yet)
         setChapters([]);
       });
-  }, []);
+  }, [pathname]);
 
   return (
     <>
@@ -182,6 +183,11 @@ const adminSidebarLinks = [
     id: "create-exercise",
   },
   {
+    title: "Alle Übungen anzeigen",
+    link: "/grammar/exercises",
+    id: "all-exercises",
+  },
+  {
     title: "Glossareinträge",
     link: "/admin/glossary",
     id: "glossary",
@@ -216,13 +222,14 @@ function AdminSideBar({ showUsers }) {
     ? adminSidebarLinks
     : adminSidebarLinks.filter((l) => l.id !== "users");
 
-  return <SidebarGroup title="Admin" sublinks={links} topLink="/admin" />;
+  return <SidebarGroup title="Admin" sublinks={links} topLink={null} />;
 }
 
 function SidebarGroup({ title, sublinks, topLink, collapsible = false }) {
   const pathname = usePathname();
   const isUnderSection =
-    pathname === topLink || pathname.startsWith(topLink + "/");
+    topLink != null &&
+    (pathname === topLink || pathname.startsWith(topLink + "/"));
   const [open, setOpen] = useState(isUnderSection);
 
   if (collapsible) {
@@ -270,15 +277,19 @@ function SidebarGroup({ title, sublinks, topLink, collapsible = false }) {
 
   return (
     <div className={styles.sidebarGroup}>
-      <Link
-        href={topLink}
-        className={[
-          styles.sidebarLink,
-          pathname === topLink ? styles.active : "",
-        ].join(" ")}
-      >
-        {title}
-      </Link>
+      {topLink ? (
+        <Link
+          href={topLink}
+          className={[
+            styles.sidebarLink,
+            pathname === topLink ? styles.active : "",
+          ].join(" ")}
+        >
+          {title}
+        </Link>
+      ) : (
+        <span className={styles.sidebarLink}>{title}</span>
+      )}
       <div className={styles.sublinkContainer}>
         {sublinks.map((sublink) => (
           <Link

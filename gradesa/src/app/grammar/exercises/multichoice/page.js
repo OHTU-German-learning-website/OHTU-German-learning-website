@@ -4,13 +4,39 @@ import Link from "next/link";
 import { Container, Column, Row } from "@/components/ui/layout/container";
 import useQuery from "@/shared/hooks/useQuery";
 import { ExerciseLinkButton } from "@/components/ui/button/exercise-link-button";
+import { Button } from "@/components/ui/button";
 
 export default function MultichoiceExercisesPage() {
   const {
     data: exercises,
     isLoading,
     error,
+    refetch,
   } = useQuery("/exercises/multichoice");
+
+  const handleDelete = async (exerciseId) => {
+    const confirmed = confirm("Möchten Sie diese Übung wirklich löschen?");
+
+    if (!confirmed) return;
+
+    try {
+      const response = await fetch(
+        `/api/admin/exercises/multichoice/${exerciseId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Fehler beim Löschen der Übung.");
+      }
+
+      refetch();
+    } catch (deleteError) {
+      console.error("Error deleting exercise:", deleteError);
+      alert("Fehler beim Löschen der Übung.");
+    }
+  };
 
   if (isLoading) {
     return (
@@ -61,42 +87,69 @@ export default function MultichoiceExercisesPage() {
         mb="lg"
       >
         {exercises.map((exercise) => (
-          <Link
+          <Row
             key={exercise.multichoice_exercise_id}
-            href={`/grammar/exercises/multichoice/${exercise.multichoice_exercise_id}`}
+            p="md"
+            b={`1px solid var(--bg3)`}
+            br="md"
+            justify="space-between"
+            align="center"
+            boxShadow="0 1px 2px 0 rgba(0, 0, 0, 0.05)"
+            bg="var(--bg2)"
+            gap="md"
           >
-            <Row
-              p="md"
-              b={`1px solid var(--bg3)`}
-              br="md"
-              justify="space-between"
-              align="center"
-              boxShadow="0 1px 2px 0 rgba(0, 0, 0, 0.05)"
-              bg="var(--bg2)"
-            >
-              <Column>
-                <Container
-                  mb="sm"
-                  fontWeight="600"
-                  overflow="hidden"
-                  textOverflow="ellipsis"
-                  whiteSpace="nowrap"
+            <Column flex="1">
+              <Container
+                mb="sm"
+                fontWeight="600"
+                overflow="hidden"
+                textOverflow="ellipsis"
+                whiteSpace="nowrap"
+              >
+                <Link
+                  href={`/grammar/exercises/multichoice/${exercise.multichoice_exercise_id}`}
+                  style={{ fontSize: "var(--font-lg)" }}
                 >
                   {exercise.title.length > 30
                     ? `${exercise.title.substring(0, 30)}...`
                     : exercise.title}
-                </Container>
-                <Container fontSize="sm" color="var(--fg4)">
-                  Erstellt: {new Date(exercise.created_at).toLocaleDateString()}
-                </Container>
-              </Column>
+                </Link>
+              </Container>
+              <Container fontSize="sm" color="var(--fg4)">
+                Erstellt: {new Date(exercise.created_at).toLocaleDateString()}
+              </Container>
+            </Column>
+            <Column gap="sm" align="flex-end">
               <ExerciseLinkButton
                 href={`/grammar/exercises/multichoice/${exercise.multichoice_exercise_id}`}
+                size="sm"
               >
                 Link kopieren
               </ExerciseLinkButton>
-            </Row>
-          </Link>
+
+              <Link
+                href={`/admin/create-exercise/multichoice/${exercise.multichoice_exercise_id}/edit`}
+              >
+                <Button type="button" variant="outline" size="sm">
+                  Bearbeiten
+                </Button>
+              </Link>
+
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                style={{
+                  color: "#fff5f5",
+                  borderColor: "#d85a5a",
+                  backgroundColor: "#d85a5a",
+                }}
+                onClick={() => handleDelete(exercise.multichoice_exercise_id)}
+              >
+                Löschen
+              </Button>
+            </Column>
+          </Row>
         ))}
       </Container>
 

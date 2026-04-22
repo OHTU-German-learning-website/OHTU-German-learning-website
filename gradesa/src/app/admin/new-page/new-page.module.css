@@ -1,61 +1,69 @@
 .title {
-    margin: 0;
-    font-size: clamp(1.6rem, 2.5vw, 2.1rem);
-    letter-spacing: 0.01em;
+  margin: 0;
+  font-size: clamp(1.6rem, 2.5vw, 2.1rem);
+  letter-spacing: 0.01em;
 }
 
 .form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    width: 100%;
-    max-width: 44rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 44rem;
 }
 
 .fieldRow {
-    display: grid;
-    grid-template-columns: 11rem minmax(0, 1fr);
-    align-items: center;
-    column-gap: 1rem;
-    width: 100%;
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr);
+  align-items: center;
+  column-gap: 1rem;
+  width: 100%;
 }
 
 .label {
-    font-weight: 600;
-    color: #213547;
-    letter-spacing: 0.01em;
-    font-size: larger;
+  font-weight: 600;
+  color: var(--fg2);
+  letter-spacing: 0.01em;
+  font-size: larger;
 }
 
 .control {
-    width: 100%;
-    min-height: 2.65rem;
-    padding: 0.55rem 0.75rem;
-    border: 1px solid #c9d2df;
-    border-radius: 10px;
-    background: #fff;
-    font-size: 0.98rem;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  min-height: 2.65rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--fg4) 65%, transparent);
+  border-radius: 10px;
+  background: var(--bg3);
+  color: var(--fg1);
+  caret-color: var(--fg1);
+  font-size: 0.98rem;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.control::placeholder {
+  color: var(--fg4);
 }
 
 .control:focus {
-    outline: none;
-    border-color: #1f6feb;
-    box-shadow: 0 0 0 3px rgba(31, 111, 235, 0.16);
+  outline: none;
+  border-color: var(--blue1);
+  box-shadow: 0 0 0 3px rgba(31, 111, 235, 0.16);
 }
 
 .actions {
-    padding-top: 0.5rem;
-    padding-left: 12rem;
+  padding-top: 0.5rem;
+  padding-left: 12rem;
 }
 
 @media (max-width: 760px) {
-    .form {
-        max-width: 100%;
-    }
+  .form {
+    max-width: 100%;
+  }
 
-    .fieldRow {
-        grid-template-columns: 1fr;
-        row-gap: 0.45rem;
-    }
+  .fieldRow {
+    grid-template-columns: 1fr;
+    row-gap: 0.45rem;
+  }
 }

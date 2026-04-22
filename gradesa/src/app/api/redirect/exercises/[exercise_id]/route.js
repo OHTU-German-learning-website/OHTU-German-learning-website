@@ -32,5 +32,17 @@ export async function GET(request, { params }) {
       new URL(`/grammar/exercises/freeform/${free_form_id.rows[0].id}`, baseUrl)
     );
   }
+  if (category.rows[0].category === "fillinthegap") {
+    const fill_gap_id = await DB.pool(
+      "SELECT id FROM fill_gap_exercises WHERE exercise_id = $1",
+      [exercise_id]
+    );
+    return Response.redirect(
+      new URL(
+        `/grammar/exercises/fillinthegap/${fill_gap_id.rows[0].id}`,
+        baseUrl
+      )
+    );
+  }
   return Response.redirect(new URL(`/grammar/exercises`, baseUrl));
 }

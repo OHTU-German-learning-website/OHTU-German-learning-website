@@ -70,6 +70,34 @@ describe("redirect exercises API", () => {
     );
   });
 
+  it("should redirect to the correct fillinthegap exercise URL", async () => {
+    const user = await TestFactory.user();
+    const { mockGet, mockParams } = useTestRequest(user);
+
+    const exercise = await DB.pool(
+      `INSERT INTO exercises (category, created_at, updated_at)
+       VALUES ($1, NOW(), NOW()) RETURNING id`,
+      ["fillinthegap"]
+    );
+
+    const fillGapExercise = await DB.pool(
+      `INSERT INTO fill_gap_exercises (exercise_id, title, source_text, created_at, updated_at)
+       VALUES ($1, $2, $3, NOW(), NOW()) RETURNING id`,
+      [exercise.rows[0].id, "Lückentext", "Das ist ein Beispieltext"]
+    );
+
+    const response = await GET(
+      mockGet(`/api/redirect/exercises/${exercise.rows[0].id}`),
+      mockParams({ exercise_id: exercise.rows[0].id })
+    );
+
+    expect(response).toBeDefined();
+    expect(response.status).toBe(302);
+    expect(response.headers.get("Location")).toBe(
+      `http://localhost:3000/grammar/exercises/fillinthegap/${fillGapExercise.rows[0].id}`
+    );
+  });
+
   it("should return 404 if the exercise does not exist", async () => {
     const user = await TestFactory.user();
     const { mockGet, mockParams } = useTestRequest(user);
