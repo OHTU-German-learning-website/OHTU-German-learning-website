@@ -174,10 +174,6 @@ export const grammarTopics = [
         link: "/grammar/themes/rektion-der-verben",
       },
       {
-        name: "Mit reinem Kasus: Verben mit dem Dativ, Verben mit dem Akkusativ, Verben mit dem Genitiv, Verben mit dem Nominativ",
-        link: "/grammar/themes/mit-reinem-kasus",
-      },
-      {
         name: "Mit Präpositionalkasus",
         link: "/grammar/themes/mit-prapositionalkasus",
       },
