@@ -30,7 +30,7 @@ function normalizePageDescription(description) {
   - The route requires an authenticated admin (`withAuth(..., { requireAdmin: true })`).
 */
 
-export const DELETE = withAuth(
+export const PATCH = withAuth(
   async (req, { params }) => {
     try {
       const { type, slug } = await params;
@@ -42,6 +42,32 @@ export const DELETE = withAuth(
         return NextResponse.json({ error: "Not found" }, { status: 404 });
 
       return NextResponse.json({ message: "Cleared" }, { status: 200 });
+    } catch (error) {
+      console.error("PATCH page failed", error);
+      return NextResponse.json(
+        { error: error?.message || "Reset failed" },
+        { status: 500 }
+      );
+    }
+  },
+  {
+    requireAdmin: true,
+    requireAuth: true,
+  }
+);
+
+export const DELETE = withAuth(
+  async (req, { params }) => {
+    try {
+      const { type, slug } = await params;
+
+      const query = `DELETE FROM html_pages WHERE slug = $1 AND page_group = $2 RETURNING *`;
+      const result = await DB.pool(query, [slug, type]);
+
+      if (result.rowCount === 0)
+        return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+      return NextResponse.json({ message: "Deleted" }, { status: 200 });
     } catch (error) {
       console.error("DELETE page failed", error);
       return NextResponse.json(

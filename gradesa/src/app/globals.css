@@ -387,7 +387,7 @@ h2 {
 }
 
 ul {
-  list-style-type: circle;
+  /* list-style-type: circle; */
   padding-left: 1rem;
 }
 
@@ -475,6 +475,16 @@ label {
   margin-top: var(--u-lg);
 }
 
+.rendered-html {
+  overflow: visible !important;
+}
+
+.rendered-html::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
 .rendered-html p {
   margin-bottom: 1em;
   white-space: pre-wrap;
@@ -490,16 +500,21 @@ label {
 
 .rendered-html ul,
 .rendered-html ol {
-  padding-left: 3rem;
+  padding-left: 2rem;
   margin-bottom: 1em;
 }
 
-.rendered-html li[data-list="bullet"] {
-  list-style-type: disc;
+.rendered-html ul {
+  list-style: disc outside;
 }
 
-.rendered-html li[data-list="ordered"] {
-  list-style-type: decimal;
+.rendered-html ol {
+  list-style: decimal outside;
+}
+
+.ql-editor.rendered-html li[data-list="bullet"],
+.ql-editor.rendered-html li[data-list="ordered"] {
+  list-style-type: none !important;
 }
 
 .rendered-html .ql-size-small {
@@ -514,9 +529,44 @@ label {
   font-size: 2.5em;
 }
 
+.rendered-html .ql-indent-1{
+  padding-left: 3em;
+}
+
+.rendered-html .ql-indent-2{
+  padding-left: 6em;
+}
+
+.rendered-html .ql-indent-3{
+  padding-left: 9em;
+}
+
+.rendered-html .ql-indent-4{
+  padding-left: 12em;
+}
+
 .rendered-html img {
   max-width: 100%;
   height: auto;
+}
+
+.ql-editor.rendered-html {
+  display: flow-root;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  overflow: visible;
+  padding: 0;
+  margin-bottom: 2rem;
+  color: var(--fg1);
+  line-height: 1.7;
+}
+
+.ql-editor.rendered-html::after {
+  content: "";
+  display: block;
+  clear: both;
 }
 
 .ql-table-menus,

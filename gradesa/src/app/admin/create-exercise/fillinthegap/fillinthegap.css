@@ -1,0 +1,69 @@
+.fitg-admin-page {
+  max-width: 960px;
+}
+
+.fitg-block {
+  padding: var(--u-md);
+  border: 1px solid var(--bg3);
+  border-radius: var(--u-sm);
+  background: var(--bg2);
+}
+
+.fitg-block label {
+  display: block;
+  margin-bottom: var(--u-xs);
+  color: var(--fg2);
+  font-weight: 600;
+}
+
+.fitg-help-text {
+  color: var(--fg3);
+  margin-bottom: var(--u-sm);
+}
+
+.fitg-input {
+  width: 100%;
+  font: inherit;
+}
+
+.fitg-token-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--u-xs);
+}
+
+.fitg-token {
+  border: 1px solid var(--bg4);
+  border-radius: 999px;
+  background: var(--bg1);
+  color: var(--fg1);
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.fitg-token.selected {
+  border-color: var(--primary3);
+  background: var(--primary1);
+}
+
+.fitg-gap-card {
+  border: 1px solid var(--bg3);
+  border-radius: var(--u-sm);
+  padding: var(--u-md);
+  background: var(--bg1);
+}
+
+.fitg-answer-row {
+  border: 1px dashed var(--bg4);
+  border-radius: var(--u-xs);
+  padding: var(--u-sm);
+}
+
+.fitg-error {
+  color: var(--tertiary2);
+  background: var(--tertiary1);
+  border: 1px solid var(--tertiary2);
+  padding: var(--u-sm);
+  border-radius: var(--u-xs);
+}
+

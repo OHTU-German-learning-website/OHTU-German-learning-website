@@ -34,6 +34,7 @@
   display: flex;
   gap: var(--u-md);
   margin: 0 auto;
+  margin-top: auto;
 }
 
 .stepSelectorButton {
@@ -129,7 +130,7 @@
   top: 0;
   left: 0;
 
-  .questionRadioInput:checked+.questionFieldset {
+  .questionRadioInput:checked + .questionFieldset {
     color: var(--bg1) !important;
   }
 }

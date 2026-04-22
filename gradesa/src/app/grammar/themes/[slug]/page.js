@@ -123,7 +123,7 @@ export default async function GrammarPage({ params, searchParams }) {
         <h1>{pageData.title}</h1>
         <RenderHTML data={pageData.content} />
 
-        <Row pb="xl" justify="space-between">
+        <Row mt="auto" pb="xl" justify="space-between">
           {previousLink ? (
             <Container>
               <LinkButton href={previousLink}>Zurück</LinkButton>
@@ -149,7 +149,7 @@ export default async function GrammarPage({ params, searchParams }) {
         <h1>{chapter?.title || decodedSlug}</h1>
         <p>Noch kein Inhalt vorhanden.</p>
 
-        <Row pb="xl" justify="space-between">
+        <Row mt="auto" pb="xl" justify="space-between">
           {previousLink ? (
             <Container>
               <LinkButton href={previousLink}>Zurück</LinkButton>

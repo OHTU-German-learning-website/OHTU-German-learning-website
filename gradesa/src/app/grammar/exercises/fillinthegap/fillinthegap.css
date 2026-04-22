@@ -1,0 +1,158 @@
+.fitg-source-html {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.fitg-student-flow {
+  line-height: 2.2;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
+}
+
+.fitg-student-token {
+  margin-right: 6px;
+}
+
+.fitg-student-input {
+  min-width: 4ch;
+  width: clamp(4ch, 14ch, 18ch);
+  max-width: 100%;
+  box-sizing: border-box;
+  border: 2px solid var(--primary4);
+  border-radius: var(--radius-sm);
+  font: inherit;
+  line-height: inherit;
+  color: inherit;
+  background: var(--bg2);
+  padding: 0.1em 0.4em;
+  vertical-align: baseline;
+  caret-color: currentColor;
+}
+
+.fitg-student-input::placeholder {
+  color: var(--fg4);
+}
+
+.fitg-student-input:focus {
+  outline: none;
+  border-color: var(--primary1);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary1) 35%, transparent);
+}
+
+.fitg-rendered-content :where(
+  p, li, strong, em, span, a,
+  h1, h2, h3, h4, h5, h6
+):not([style*="color"]) {
+  color: var(--fg1);
+}
+
+.fitg-rendered-content {
+  padding: 0;
+  line-height: 1.7;
+  color: var(--fg1);
+}
+
+.fitg-rendered-content p {
+  margin: 0 0 1em;
+}
+
+.fitg-rendered-content p:last-child {
+  margin-bottom: 0;
+}
+
+.fitg-rendered-content ul,
+.fitg-rendered-content ol {
+  margin: 0 0 1em;
+  padding-left: 2rem;
+}
+
+.fitg-rendered-content li {
+  margin: 0.25em 0;
+}
+
+.fitg-rendered-content li::marker {
+  color: currentColor;
+}
+
+.fitg-rendered-content h1,
+.fitg-rendered-content h2,
+.fitg-rendered-content h3,
+.fitg-rendered-content h4,
+.fitg-rendered-content h5,
+.fitg-rendered-content h6 {
+  margin: 0.5em 0;
+}
+
+.fitg-rendered-content .ql-indent-1 {
+  padding-left: 3em;
+}
+
+.fitg-rendered-content .ql-indent-2 {
+  padding-left: 6em;
+}
+
+.fitg-rendered-content .ql-indent-3 {
+  padding-left: 9em;
+}
+
+.fitg-rendered-content .ql-indent-4 {
+  padding-left: 12em;
+}
+
+.ql-editor.rendered-html ul,
+.ql-editor.rendered-html ol {
+  padding-left: 1.5em;
+}
+
+.ql-editor.rendered-html li {
+  list-style: none;
+  position: relative;
+}
+
+/* Quill editor in dark/light theme */
+.ql-snow .ql-editor {
+  color: var(--fg1);
+}
+
+.ql-snow .ql-editor p,
+.ql-snow .ql-editor li,
+.ql-snow .ql-editor h1,
+.ql-snow .ql-editor h2,
+.ql-snow .ql-editor h3,
+.ql-snow .ql-editor h4,
+.ql-snow .ql-editor h5,
+.ql-snow .ql-editor h6 {
+  color: inherit;
+}
+
+.ql-snow .ql-editor.ql-blank::before {
+  color: var(--fg4);
+}
+
+.ql-snow {
+  color: var(--fg1);
+}
+
+.ql-snow .ql-toolbar,
+.ql-snow .ql-container {
+  border-color: var(--bg4);
+}
+
+.ql-snow .ql-stroke {
+  stroke: var(--fg1);
+}
+
+.ql-snow .ql-fill {
+  fill: var(--fg1);
+}
+
+.ql-snow .ql-picker {
+  color: var(--fg1);
+}
+
+.ql-snow .ql-picker-options {
+  background: var(--bg2);
+  color: var(--fg1);
+  border-color: var(--bg4);
+}

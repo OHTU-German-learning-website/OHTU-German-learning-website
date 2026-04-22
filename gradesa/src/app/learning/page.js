@@ -26,7 +26,7 @@ export default function Learning() {
   );
   const { data, refetch } = useQuery("/forms/learning_type");
   const makeRequest = useRequest();
-  const [isLoading, setIsLoading] = useState(false);
+  const [_isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const submitAnswer = async (form, part, question, answer) => {
     try {

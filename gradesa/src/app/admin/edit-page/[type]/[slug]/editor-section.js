@@ -13,7 +13,7 @@ export default function EditorSection({
   type,
   slug,
   title,
-  page_order,
+  page_order: _page_order,
   pageExists,
 }) {
   const [editorContent, setEditorContent] = useState(initialContent);
@@ -131,7 +131,7 @@ export default function EditorSection({
       )}
       <Row justify="space-between" pb="xl">
         <Editor
-          defaultContent={editorContent}
+          defaultContent={initialContent}
           updateEditorContent={(content) => {
             setEditorContent(content);
           }}

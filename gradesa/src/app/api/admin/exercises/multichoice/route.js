@@ -6,7 +6,7 @@ export const POST = withAuth(
     try {
       const json = await request.json();
       // We extract description but ignore it for the DB save
-      const { title, description, content } = json;
+      const { title, content } = json;
 
       // Validation
       if (!title || !Array.isArray(content) || content.length === 0) {

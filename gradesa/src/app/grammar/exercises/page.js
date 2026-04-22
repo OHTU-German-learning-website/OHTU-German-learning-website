@@ -6,7 +6,7 @@ import "./exercises.css";
 
 const exerciseTypes = [
   {
-    title: "Freie Übungen",
+    title: "Freie-Übungen",
     description: "Üben mit offenen Fragen",
     link: "/grammar/exercises/freeform",
     image: "📝",
@@ -28,6 +28,12 @@ const exerciseTypes = [
     description: "Üben mit Drag-and-Drop-Interaktionen",
     link: "/grammar/exercises/dragdrop/1",
     image: "📦",
+  },
+  {
+    title: "Fill-in-the-Gap-Übungen",
+    description: "Üben mit Fill-in-the-Gap-Texten",
+    link: "/grammar/exercises/fillinthegap",
+    image: "🧩",
   },
   // Add other exercise types here
 ];

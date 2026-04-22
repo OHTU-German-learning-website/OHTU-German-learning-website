@@ -112,8 +112,13 @@ test.describe("Grammar Pages", () => {
 
     const weiterButton = page.getByRole("link", { name: "Weiter" });
     if (await weiterButton.isVisible()) {
-      await weiterButton.click();
-      await expect(page).toHaveURL(/view=alphabetical/);
+      await expect(weiterButton).toHaveAttribute("href", /view=alphabetical/);
+      await Promise.all([
+        page.waitForURL(/view=alphabetical/, {
+          timeout: 60000,
+        }),
+        weiterButton.click(),
+      ]);
     }
   });
 

@@ -22,7 +22,7 @@
 
 .label {
     font-weight: 600;
-    color: #213547;
+    color: var(--fg2);
     letter-spacing: 0.01em;
     font-size: larger;
 }
@@ -31,16 +31,22 @@
     width: 100%;
     min-height: 2.65rem;
     padding: 0.55rem 0.75rem;
-    border: 1px solid #c9d2df;
+    border: 1px solid color-mix(in srgb, var(--fg4) 65%, transparent);
     border-radius: 10px;
-    background: #fff;
+    background: var(--bg3);
+    color: var(--fg1);
+    caret-color: var(--fg1);
     font-size: 0.98rem;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+.control::placeholder {
+    color: var(--fg4);
+}
+
 .control:focus {
     outline: none;
-    border-color: #1f6feb;
+    border-color: var(--blue1);
     box-shadow: 0 0 0 3px rgba(31, 111, 235, 0.16);
 }
 

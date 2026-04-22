@@ -183,7 +183,51 @@ const clickExercise = modelFactory(
     target_words: [faker.lorem.word(), faker.lorem.word()],
     all_words: [faker.lorem.word(), faker.lorem.word()],
   },
-  async (base) => {}
+  async (_base) => {}
+);
+
+const fillGapExercise = modelFactory(
+  "fill_gap_exercises",
+  {
+    title: faker.lorem.sentence(),
+    source_text: faker.lorem.paragraph(),
+  },
+  async (base) => {
+    if (!base.exercise_id) {
+      const exercise = await TestFactory.exercise({ category: "fillinthegap" });
+      base.exercise_id = exercise.id;
+    }
+  }
+);
+
+const fillGapGap = modelFactory(
+  "fill_gap_gaps",
+  {
+    token_index: 0,
+    token_text: faker.lorem.word(),
+    gap_order: 1,
+  },
+  async (base) => {
+    if (!base.fill_gap_exercise_id) {
+      const exercise = await TestFactory.fillGapExercise();
+      base.fill_gap_exercise_id = exercise.id;
+    }
+  }
+);
+
+const fillGapAnswer = modelFactory(
+  "fill_gap_answers",
+  {
+    answer: faker.lorem.word(),
+    is_correct: true,
+    feedback: faker.lorem.sentence(),
+  },
+  async (base) => {
+    if (!base.fill_gap_gap_id) {
+      const gap = await TestFactory.fillGapGap();
+      base.fill_gap_gap_id = gap.id;
+    }
+  }
 );
 
 const dragDropExercise = modelFactory(
@@ -198,7 +242,7 @@ const dragDropExercise = modelFactory(
       },
     ],
   },
-  async (base) => {}
+  async (_base) => {}
 );
 
 export const TestFactory = {
@@ -213,5 +257,8 @@ export const TestFactory = {
   multichoiceContent,
   multichoiceOption,
   clickExercise,
+  fillGapExercise,
+  fillGapGap,
+  fillGapAnswer,
   dragDropExercise,
 };
