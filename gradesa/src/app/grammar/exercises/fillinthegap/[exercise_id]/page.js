@@ -138,18 +138,18 @@ export default function FillInTheGapExercisePage() {
   //     ),
   //   [exercise?.source_html, gapsByTokenIndex]
   // );
-  
-const htmlWithPlaceholders = useMemo(() => {
-  const html = buildHtmlWithGapPlaceholders(
-    exercise?.source_html || "",
-    gapsByTokenIndex
-  );
 
-  return html
-    .replace(/color:\s*rgb\(0,\s*0,\s*0\)\s*;?/gi, "")
-    .replace(/color:\s*#000000\s*;?/gi, "")
-    .replace(/color:\s*black\s*;?/gi, "");
-}, [exercise?.source_html, gapsByTokenIndex]);
+  const htmlWithPlaceholders = useMemo(() => {
+    const html = buildHtmlWithGapPlaceholders(
+      exercise?.source_html || "",
+      gapsByTokenIndex
+    );
+
+    return html
+      .replace(/color:\s*rgb\(0,\s*0,\s*0\)\s*;?/gi, "")
+      .replace(/color:\s*#000000\s*;?/gi, "")
+      .replace(/color:\s*black\s*;?/gi, "");
+  }, [exercise?.source_html, gapsByTokenIndex]);
 
   const handleAnswerChange = (gapId, value) => {
     setAnswers((current) => ({

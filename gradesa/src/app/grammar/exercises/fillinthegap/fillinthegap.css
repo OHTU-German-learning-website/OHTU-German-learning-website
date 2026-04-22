@@ -40,10 +40,10 @@
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary1) 35%, transparent);
 }
 
-.fitg-rendered-content :where(
-  p, li, strong, em, span, a,
-  h1, h2, h3, h4, h5, h6
-):not([style*="color"]) {
+.fitg-rendered-content
+  :where(p, li, strong, em, span, a, h1, h2, h3, h4, h5, h6):not(
+    [style*="color"]
+  ) {
   color: var(--fg1);
 }
 

@@ -33,14 +33,10 @@ export default async function Chapters({ params }) {
       <h1>{pageData.title}</h1>
 
       <Container className="chapter-rendered-content">
-      <RenderHTML data={transformedContent} />
+        <RenderHTML data={transformedContent} />
       </Container>
-      
-      <Row
-        pb="xl"
-        className="chapter-nav-row"
-        justify="space-between"
-      >
+
+      <Row pb="xl" className="chapter-nav-row" justify="space-between">
         <Container className="chapter-nav-left">
           {previousLink && <LinkButton href={previousLink}>Zurück</LinkButton>}
         </Container>

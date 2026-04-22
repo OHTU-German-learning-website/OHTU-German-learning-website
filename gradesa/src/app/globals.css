@@ -22,10 +22,12 @@
   --bg3: hsl(213, 20%, 98%);
   --bg4: hsl(213, 20%, 99%);
 
-  --linear-gradient: linear-gradient(120deg,
-      var(--primary1) 12%,
-      var(--primary3) 47%,
-      var(--primary4) 75%);
+  --linear-gradient: linear-gradient(
+    120deg,
+    var(--primary1) 12%,
+    var(--primary3) 47%,
+    var(--primary4) 75%
+  );
 
   --site-bg: var(--bg1);
 
@@ -133,10 +135,12 @@
     --bg3: hsl(216, 49%, 20%);
     --bg4: hsl(212, 84%, 17%);
 
-    --linear-gradient: linear-gradient(120deg,
-        var(--primary3) 12%,
-        var(--primary4) 47%,
-        var(--primary2) 75%);
+    --linear-gradient: linear-gradient(
+      120deg,
+      var(--primary3) 12%,
+      var(--primary4) 47%,
+      var(--primary2) 75%
+    );
 
     --site-bg: var(--bg2);
 
@@ -290,7 +294,7 @@ h1 {
   margin: 0;
 }
 
-.feature-card>a {
+.feature-card > a {
   margin-top: auto;
 }
 
@@ -529,19 +533,19 @@ label {
   font-size: 2.5em;
 }
 
-.rendered-html .ql-indent-1{
+.rendered-html .ql-indent-1 {
   padding-left: 3em;
 }
 
-.rendered-html .ql-indent-2{
+.rendered-html .ql-indent-2 {
   padding-left: 6em;
 }
 
-.rendered-html .ql-indent-3{
+.rendered-html .ql-indent-3 {
   padding-left: 9em;
 }
 
-.rendered-html .ql-indent-4{
+.rendered-html .ql-indent-4 {
   padding-left: 12em;
 }
 

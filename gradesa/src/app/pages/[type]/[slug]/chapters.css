@@ -109,7 +109,7 @@ table th {
 
 .chapter-nav-left,
 .chapter-nav-right {
-   display: flex;
+  display: flex;
   align-items: center;
 }
 
