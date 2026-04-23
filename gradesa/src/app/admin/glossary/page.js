@@ -6,6 +6,7 @@ import { useState } from "react";
 import "./glossary.css";
 import { LinkButton } from "@/components/ui/linkbutton";
 import { Button } from "@/components/ui/button";
+import RenderHTML from "@/components/ui/render-html/render-html";
 
 export default function GlossaryList() {
   const {
@@ -77,7 +78,7 @@ export default function GlossaryList() {
               <Container key={entry.id} className="glossary-card">
                 <Column gap="sm">
                   <h4 className="glossary-word">{entry.word}</h4>
-                  <p className="glossary-definition">{entry.word_definition}</p>
+                  <RenderHTML data={entry.word_definition} />
                   <Row justify="space-between" className="glossary-meta">
                     <span>
                       Erstellt:{" "}

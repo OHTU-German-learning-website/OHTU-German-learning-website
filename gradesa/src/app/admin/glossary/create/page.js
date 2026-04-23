@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useRequest } from "@/shared/hooks/useRequest";
 import { useRouter, useSearchParams } from "next/navigation";
 import { zodErrorToFormErrors } from "@/shared/schemas/schema-utils";
+import Editor from "@/components/ui/editor";
 
 const defaultFormErrors = {
   word: "",
@@ -55,16 +56,6 @@ export default function CreateGlossaryEntry() {
     // Clear word error when user starts typing
     if (formErrors.word) {
       setFormErrors((prev) => ({ ...prev, word: "" }));
-    }
-  };
-
-  const handleDefinitionChange = (e) => {
-    const val = e.target.value;
-    setWordDefinition(val);
-
-    // Clear definition error when user starts typing
-    if (formErrors.word_definition) {
-      setFormErrors((prev) => ({ ...prev, word_definition: "" }));
     }
   };
 
@@ -144,18 +135,21 @@ export default function CreateGlossaryEntry() {
         />
         {formErrors.word && <p className="error">{formErrors.word}</p>}
       </label>
-      <label>
-        Definition
-        <textarea
-          value={wordDefinition}
-          onChange={handleDefinitionChange}
-          placeholder="Geben Sie hier die Definition ein"
-          className={formErrors.word_definition ? "error-input" : ""}
+      <Column gap="sm">
+        <label htmlFor="definition">Definition</label>
+        <Editor
+          defaultContent={wordDefinition}
+          updateEditorContent={(content) => {
+            setWordDefinition(content);
+            if (formErrors.word_definition) {
+              setFormErrors((prev) => ({ ...prev, word_definition: "" }));
+            }
+          }}
         />
         {formErrors.word_definition && (
           <p className="error">{formErrors.word_definition}</p>
         )}
-      </label>
+      </Column>
       <Row justify={"space-between"} gap="md" mt={"xl"} mb={"xl"}>
         <Button variant="outline" onClick={handleCancel}>
           Abbrechen
