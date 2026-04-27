@@ -2,6 +2,7 @@
 import { useGlossary } from "@/context/glossary.context";
 import { useState, useRef, useEffect } from "react";
 import styles from "./GlossaryTooltip.module.css";
+import RenderHTML from "@/components/ui/render-html/render-html";
 import { createPortal } from "react-dom";
 
 export default function GlossaryTooltip({ word, children }) {
@@ -117,7 +118,9 @@ export default function GlossaryTooltip({ word, children }) {
             }}
           >
             <h4 className={styles.tooltipTitle}>{entry.word}</h4>
-            <p className={styles.tooltipDefinition}>{entry.word_definition}</p>
+            <div className={styles.tooltipDefinition}>
+              <RenderHTML data={entry.word_definition} disableGlossary />
+            </div>
           </div>,
           portalElement
         )}
