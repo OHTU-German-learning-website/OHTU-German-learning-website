@@ -38,9 +38,20 @@ export const Dustbin = memo(function Dustbin({
           {droppedItems.map((item, index) => {
             let itemStyle = { color: `var(--${color})` };
             if (isSubmitted) {
-              itemStyle = item.type === correctType
-                ? { backgroundColor: "#b3f0b3", color: "#1a5c1a", borderRadius: "4px", padding: "2px 6px" }
-                : { backgroundColor: "#ffb3b3", color: "#7a0000", borderRadius: "4px", padding: "2px 6px" };
+              itemStyle =
+                item.type === correctType
+                  ? {
+                      backgroundColor: "#b3f0b3",
+                      color: "#1a5c1a",
+                      borderRadius: "4px",
+                      padding: "2px 6px",
+                    }
+                  : {
+                      backgroundColor: "#ffb3b3",
+                      color: "#7a0000",
+                      borderRadius: "4px",
+                      padding: "2px 6px",
+                    };
             }
             return (
               <div

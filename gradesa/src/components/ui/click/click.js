@@ -77,7 +77,8 @@ const WordSelectionExercise = ({
   }, [allWords]);
 
   const slotToWord = useMemo(
-    () => Object.fromEntries(wordSlots.map(({ slotKey, word }) => [slotKey, word])),
+    () =>
+      Object.fromEntries(wordSlots.map(({ slotKey, word }) => [slotKey, word])),
     [wordSlots]
   );
 
@@ -94,7 +95,9 @@ const WordSelectionExercise = ({
     setSelectedSlotKeys(updatedKeys);
 
     if (isPreviewMode && onSelectionChange) {
-      onSelectionChange(updatedKeys.map((key) => slotToWord[key]).filter(Boolean));
+      onSelectionChange(
+        updatedKeys.map((key) => slotToWord[key]).filter(Boolean)
+      );
     }
   };
 
@@ -117,7 +120,7 @@ const WordSelectionExercise = ({
         missedCorrectAnswers.length -
         incorrectSelections.length) /
         correctAnswers.length) *
-      100
+        100
     );
 
     let feedbackMessage = "";
@@ -229,7 +232,9 @@ const WordSelectionExercise = ({
       <i>{`Wähle alle ${targetCategory} aus dem untenstehenden Text aus.`}</i>
       <Container className="word-container">
         {allWords?.map((token, index) => (
-          <React.Fragment key={index}>{renderToken(token, index)}</React.Fragment>
+          <React.Fragment key={index}>
+            {renderToken(token, index)}
+          </React.Fragment>
         ))}
       </Container>
       {feedback && !isPreviewMode && (

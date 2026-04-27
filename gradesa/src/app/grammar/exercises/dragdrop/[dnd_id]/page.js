@@ -10,7 +10,7 @@ import "../../../../globals.css";
 import useQuery from "@/shared/hooks/useQuery";
 import { LinkButton } from "@/components/ui/linkbutton";
 
-export default function Dragdrop({ }) {
+export default function Dragdrop({}) {
   const params = useParams();
   const router = useRouter();
   const { dnd_id } = params;

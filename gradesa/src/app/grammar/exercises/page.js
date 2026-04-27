@@ -38,7 +38,7 @@ const exerciseTypes = [
   // Add other exercise types here
 ];
 
-export default function ExercisePage({ }) {
+export default function ExercisePage({}) {
   return (
     <LessonsLayout>
       <Column>

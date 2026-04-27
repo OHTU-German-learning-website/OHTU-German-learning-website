@@ -2,7 +2,10 @@ import { MailerSend, EmailParams, Sender, Recipient } from "mailersend";
 import { z } from "zod";
 
 const talkbackSchema = z.object({
-  email: z.string().trim().email("Bitte geben Sie eine gültige E-Mail-Adresse des Empfängers ein."),
+  email: z
+    .string()
+    .trim()
+    .email("Bitte geben Sie eine gültige E-Mail-Adresse des Empfängers ein."),
   subject: z
     .string()
     .trim()
@@ -62,7 +65,9 @@ export async function POST(req) {
     });
   } catch (error) {
     const message =
-      error instanceof Error ? error.message : "Feedback konnte nicht gesendet werden.";
+      error instanceof Error
+        ? error.message
+        : "Feedback konnte nicht gesendet werden.";
 
     return Response.json(
       {

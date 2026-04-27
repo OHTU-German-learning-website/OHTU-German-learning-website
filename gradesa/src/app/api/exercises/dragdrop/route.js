@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import { DB } from "@/backend/db";
 
 export async function GET() {
-    try {
-        const { rows } = await DB.pool(`
+  try {
+    const { rows } = await DB.pool(`
       SELECT
         dnd.id AS dnd_id,
         dnd.title,
@@ -13,12 +13,12 @@ export async function GET() {
       ORDER BY e.created_at DESC
     `);
 
-        return NextResponse.json(rows);
-    } catch (error) {
-        console.error("Error fetching dragdrop exercises:", error);
-        return NextResponse.json(
-            { error: "Internal server error" },
-            { status: 500 }
-        );
-    }
+    return NextResponse.json(rows);
+  } catch (error) {
+    console.error("Error fetching dragdrop exercises:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
 }

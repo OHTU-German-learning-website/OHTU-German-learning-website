@@ -98,4 +98,3 @@ describe("POST /api/auth/admin/exercises/dragdrop", () => {
     expect(json.error).toBe("No fields provided");
   });
 });
-

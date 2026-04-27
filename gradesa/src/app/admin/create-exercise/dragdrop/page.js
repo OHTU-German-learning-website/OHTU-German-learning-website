@@ -59,7 +59,9 @@ export default function DragdropAdminPage() {
     if (!isEditMode || !exerciseData) return;
 
     setTitle(exerciseData.title || "");
-    setInputFields(Array.isArray(exerciseData.fields) ? exerciseData.fields : []);
+    setInputFields(
+      Array.isArray(exerciseData.fields) ? exerciseData.fields : []
+    );
     setNumberOfFields(
       Array.isArray(exerciseData.fields) ? exerciseData.fields.length : null
     );
@@ -82,14 +84,17 @@ export default function DragdropAdminPage() {
       setGeneralError("");
 
       if (isEditMode) {
-        const response = await fetch(`/api/admin/exercises/dragdrop/${dnd_id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            title: title.trim(),
-            fields: inputFields,
-          }),
-        });
+        const response = await fetch(
+          `/api/admin/exercises/dragdrop/${dnd_id}`,
+          {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              title: title.trim(),
+              fields: inputFields,
+            }),
+          }
+        );
 
         const data = await response.json();
         if (!response.ok) {
@@ -117,7 +122,9 @@ export default function DragdropAdminPage() {
       router.push("/grammar/exercises/dragdrop");
     } catch (e) {
       console.error("Error creating dragdrop exercise:", e);
-      setGeneralError(e?.response?.data?.error || e.message || "Ein Fehler ist aufgetreten");
+      setGeneralError(
+        e?.response?.data?.error || e.message || "Ein Fehler ist aufgetreten"
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -265,9 +272,9 @@ export default function DragdropAdminPage() {
                         style={
                           field.color
                             ? {
-                              backgroundColor: `var(--${field.color})`,
-                              transition: "background-color 0.2s",
-                            }
+                                backgroundColor: `var(--${field.color})`,
+                                transition: "background-color 0.2s",
+                              }
                             : {}
                         }
                       >
@@ -293,9 +300,7 @@ export default function DragdropAdminPage() {
                     className="form-input"
                     placeholder={`Woerter eingeben (z.B. gehen, laufen, sprechen)`}
                   />
-                  <small>
-                    Mehrere Woerter pro Box: mit Komma trennen.
-                  </small>
+                  <small>Mehrere Woerter pro Box: mit Komma trennen.</small>
                 </div>
               ))}
           </Row>

@@ -42,12 +42,16 @@ export default function CreateExercise() {
       (token) => token === "\n" || /^[^\S\n]+$/u.test(token)
     );
 
-    const text = hasExplicitSpacing ? storedWords.join("") : storedWords.join(" ");
+    const text = hasExplicitSpacing
+      ? storedWords.join("")
+      : storedWords.join(" ");
 
     setTitle(exerciseData.title || "");
     setTargetCategory(exerciseData.category || "");
     setAllWordsText(text);
-    setSelectedWords(Array.isArray(exerciseData.target_words) ? exerciseData.target_words : []);
+    setSelectedWords(
+      Array.isArray(exerciseData.target_words) ? exerciseData.target_words : []
+    );
   }, [exerciseData, isEditMode]);
 
   // Preserve user-entered spacing and line breaks so preview and saved exercise match.
@@ -105,7 +109,11 @@ export default function CreateExercise() {
   const successMessage = () => {
     return (
       <div className="success-message">
-        <p>{isEditMode ? "Übung erfolgreich aktualisiert." : "Übung erfolgreich erstellt."}</p>
+        <p>
+          {isEditMode
+            ? "Übung erfolgreich aktualisiert."
+            : "Übung erfolgreich erstellt."}
+        </p>
       </div>
     );
   };
@@ -132,7 +140,11 @@ export default function CreateExercise() {
 
   return (
     <div>
-      <h1>{isEditMode ? "Wortauswahl-Übung bearbeiten" : "Wortauswahl-Übung erstellen"}</h1>
+      <h1>
+        {isEditMode
+          ? "Wortauswahl-Übung bearbeiten"
+          : "Wortauswahl-Übung erstellen"}
+      </h1>
       {submitted ? (
         successMessage() // Show only the success message if submitted
       ) : !previewMode ? (

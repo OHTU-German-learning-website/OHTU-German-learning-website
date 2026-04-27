@@ -36,10 +36,9 @@ export const POST = withAuth(async (request, { params }) => {
     );
 
     if (exerciseResult.rows.length === 0) {
-      return new Response(
-        JSON.stringify({ error: "Übung nicht gefunden." }),
-        { status: 404 }
-      );
+      return new Response(JSON.stringify({ error: "Übung nicht gefunden." }), {
+        status: 404,
+      });
     }
 
     const target_words = exerciseResult.rows[0].target_words;

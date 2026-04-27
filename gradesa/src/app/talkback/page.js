@@ -30,7 +30,9 @@ export default function TalkbackPage() {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailPattern.test(trimmedEmail)) {
-      setError("Bitte geben Sie eine gültige E-Mail-Adresse des Empfängers ein.");
+      setError(
+        "Bitte geben Sie eine gültige E-Mail-Adresse des Empfängers ein."
+      );
       return;
     }
 
@@ -57,7 +59,9 @@ export default function TalkbackPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Nachricht konnte nicht gesendet werden.");
+        throw new Error(
+          data.message || "Nachricht konnte nicht gesendet werden."
+        );
       }
 
       setMessage("");
