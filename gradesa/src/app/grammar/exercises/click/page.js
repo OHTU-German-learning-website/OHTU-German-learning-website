@@ -2,14 +2,38 @@
 
 import Link from "next/link";
 import { Container, Row, Column } from "@/components/ui/layout/container";
-import { useRequest } from "@/shared/hooks/useRequest";
 import useQuery from "@/shared/hooks/useQuery";
 import { ExerciseLinkButton } from "@/components/ui/button/exercise-link-button";
+import { Button } from "@/components/ui/button";
 
 export default function ClickExercisesPage() {
-  const makeRequest = useRequest();
+  const {
+    data: exercises,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery("/exercises/click");
 
-  const { data: exercises, isLoading, error } = useQuery("/exercises/click");
+  const handleDelete = async (exerciseId) => {
+    const confirmed = confirm("Möchten Sie diese Übung wirklich löschen?");
+
+    if (!confirmed) return;
+
+    try {
+      const response = await fetch(`/api/admin/exercises/click/${exerciseId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Fehler beim Löschen der Übung.");
+      }
+
+      refetch();
+    } catch (deleteError) {
+      console.error("Error deleting exercise:", deleteError);
+      alert("Fehler beim Löschen der Übung.");
+    }
+  };
 
   if (isLoading) {
     return (
@@ -60,42 +84,69 @@ export default function ClickExercisesPage() {
         mb="lg"
       >
         {exercises.map((exercise) => (
-          <Link
-            key={exercise.id}
-            href={`/grammar/exercises/click/${exercise.click_id}`}
+          <Row
+            key={exercise.click_id}
+            p="md"
+            b={`1px solid var(--bg3)`}
+            br="md"
+            justify="space-between"
+            align="center"
+            boxShadow="0 1px 2px 0 rgba(0, 0, 0, 0.05)"
+            bg="var(--bg2)"
+            gap="md"
           >
-            <Row
-              p="md"
-              b={`1px solid var(--bg3)`}
-              br="md"
-              justify="space-between"
-              align="center"
-              boxShadow="0 1px 2px 0 rgba(0, 0, 0, 0.05)"
-              bg="var(--bg2)"
-            >
-              <Column>
-                <Container
-                  mb="sm"
-                  fontWeight="600"
-                  overflow="hidden"
-                  textOverflow="ellipsis"
-                  whiteSpace="nowrap"
+            <Column flex="1">
+              <Container
+                mb="sm"
+                fontWeight="600"
+                overflow="hidden"
+                textOverflow="ellipsis"
+                whiteSpace="nowrap"
+              >
+                <Link
+                  href={`/grammar/exercises/click/${exercise.click_id}`}
+                  style={{ fontSize: "var(--font-lg)" }}
                 >
                   {exercise.title.length > 30
                     ? `${exercise.title.substring(0, 30)}...`
                     : exercise.title}
-                </Container>
-                <Container fontSize="sm" color="var(--fg4)">
-                  Erstellt: {new Date(exercise.created_at).toLocaleDateString()}
-                </Container>
-              </Column>
+                </Link>
+              </Container>
+              <Container fontSize="sm" color="var(--fg4)">
+                Erstellt: {new Date(exercise.created_at).toLocaleDateString()}
+              </Container>
+            </Column>
+            <Column gap="sm" align="flex-end">
               <ExerciseLinkButton
                 href={`/grammar/exercises/click/${exercise.click_id}`}
+                size="sm"
               >
                 Link kopieren
               </ExerciseLinkButton>
-            </Row>
-          </Link>
+
+              <Link
+                href={`/admin/create-exercise/click/${exercise.click_id}/edit`}
+              >
+                <Button type="button" variant="outline" size="sm">
+                  Bearbeiten
+                </Button>
+              </Link>
+
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                style={{
+                  color: "#fff5f5",
+                  borderColor: "#d85a5a",
+                  backgroundColor: "#d85a5a",
+                }}
+                onClick={() => handleDelete(exercise.click_id)}
+              >
+                Löschen
+              </Button>
+            </Column>
+          </Row>
         ))}
       </Container>
 

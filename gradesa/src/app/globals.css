@@ -22,12 +22,10 @@
   --bg3: hsl(213, 20%, 98%);
   --bg4: hsl(213, 20%, 99%);
 
-  --linear-gradient: linear-gradient(
-    120deg,
-    var(--primary1) 12%,
-    var(--primary3) 47%,
-    var(--primary4) 75%
-  );
+  --linear-gradient: linear-gradient(120deg,
+      var(--primary1) 12%,
+      var(--primary3) 47%,
+      var(--primary4) 75%);
 
   --site-bg: var(--bg1);
 
@@ -81,6 +79,9 @@
   --red: hsl(0, 69%, 56%);
   --yellow: hsl(50, 86%, 74%);
   --yellow-border: hsl(43, 65%, 51%);
+  --click-selected-bg: hsl(210, 88%, 74%);
+  --click-missed-bg: hsl(50, 86%, 74%);
+  --click-missed-border: hsl(43, 65%, 51%);
   --purple: hsl(270, 86%, 47%);
 
   --masculine: hsl(240, 80%, 77%);
@@ -135,12 +136,10 @@
     --bg3: hsl(216, 49%, 20%);
     --bg4: hsl(212, 84%, 17%);
 
-    --linear-gradient: linear-gradient(
-      120deg,
-      var(--primary3) 12%,
-      var(--primary4) 47%,
-      var(--primary2) 75%
-    );
+    --linear-gradient: linear-gradient(120deg,
+        var(--primary3) 12%,
+        var(--primary4) 47%,
+        var(--primary2) 75%);
 
     --site-bg: var(--bg2);
 
@@ -192,8 +191,10 @@
     --blue: hsl(240, 66%, 53%);
     --red: hsl(0, 69%, 56%);
     --yellow: hsl(50, 86%, 74%);
-
     --yellow-border: hsl(43, 65%, 51%);
+    --click-selected-bg: hsl(240, 66%, 53%);
+    --click-missed-bg: hsl(44, 58%, 42%);
+    --click-missed-border: hsl(42, 68%, 30%);
     --purple: hsl(270, 86%, 47%);
 
     --masculine: hsl(240, 80%, 22%);
@@ -294,7 +295,7 @@ h1 {
   margin: 0;
 }
 
-.feature-card > a {
+.feature-card>a {
   margin-top: auto;
 }
 
@@ -391,7 +392,6 @@ h2 {
 }
 
 ul {
-  /* list-style-type: circle; */
   padding-left: 1rem;
 }
 
@@ -516,9 +516,12 @@ label {
   list-style: decimal outside;
 }
 
-.ql-editor.rendered-html li[data-list="bullet"],
-.ql-editor.rendered-html li[data-list="ordered"] {
-  list-style-type: none !important;
+.rendered-html li[data-list="bullet"] {
+  list-style-type: disc;
+}
+
+.rendered-html li[data-list="ordered"] {
+  list-style-type: decimal;
 }
 
 .rendered-html .ql-size-small {
@@ -554,7 +557,7 @@ label {
   height: auto;
 }
 
-.ql-editor.rendered-html {
+.rendered-html {
   display: flow-root;
   width: 100%;
   height: auto;
@@ -567,7 +570,7 @@ label {
   line-height: 1.7;
 }
 
-.ql-editor.rendered-html::after {
+.rendered-html::after {
   content: "";
   display: block;
   clear: both;
@@ -595,4 +598,14 @@ label {
 .ql-table-tooltip path {
   fill: #000 !important;
   stroke: #000 !important;
+}
+
+.ql-table-input,
+.ql-table-color-container .label-field-view-color .property-input,
+.ql-table-properties-form .property-input,
+.ql-table-dropdown-text,
+.ql-table-dropdown-properties-text,
+.ql-table-dropdown-list li,
+.ql-table-dropdown-properties-list li {
+  color: #000;
 }

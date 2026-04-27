@@ -1,110 +1,83 @@
 import { MailerSend, EmailParams, Sender, Recipient } from "mailersend";
-import { DB } from "../../../backend/db";
-import { checkSession } from "@/backend/auth/session";
+import { z } from "zod";
+
+const talkbackSchema = z.object({
+  email: z.string().trim().email("Bitte geben Sie eine gültige E-Mail-Adresse des Empfängers ein."),
+  subject: z
+    .string()
+    .trim()
+    .min(1, "Betreff ist erforderlich.")
+    .max(200, "Betreff ist zu lang."),
+  message: z
+    .string()
+    .trim()
+    .min(1, "Nachricht ist erforderlich.")
+    .max(2000, "Nachricht ist zu lang."),
+});
 
 export async function POST(req) {
   try {
-    const { email, message } = await req.json();
+    const body = await req.json();
+    const result = talkbackSchema.safeParse(body);
 
-    if (!email || !message) {
-      return new Response(
-        JSON.stringify({ message: "Email and message are required" }),
+    if (!result.success) {
+      return Response.json(
         {
-          status: 400,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-    }
-    const user = await checkSession();
-    const userId = user.id;
-
-    if (!userId) {
-      return new Response(
-        JSON.stringify({ message: "User not authenticated" }),
-        {
-          status: 401, // Unauthorized
-          headers: { "Content-Type": "application/json" },
-        }
+          message: result.error.issues[0]?.message || "Ungültige Eingabe.",
+        },
+        { status: 400 }
       );
     }
 
-    const lastFeedback = await DB.pool(
-      `SELECT timestamp FROM feedbacks WHERE user_id = $1 ORDER BY timestamp DESC LIMIT 1`,
-      [userId]
-    );
+    const { email, subject, message } = result.data;
 
-    const now = new Date();
-    const lastFeedbackTime = lastFeedback.rows[0]?.timestamp;
+    const apiKey = process.env.MAILERSEND_API_KEY;
+    const fromEmail = process.env.TALKBACK_FROM_EMAIL;
+    const fromName = process.env.TALKBACK_FROM_NAME || "GRADESA 2.0";
 
-    if (lastFeedbackTime) {
-      const timeDiff = (now - new Date(lastFeedbackTime)) / 1000; // Convert ms to seconds
-      const oneHourInSeconds = 3600; // 60 * 60 = 3600 seconds
-
-      if (timeDiff < oneHourInSeconds) {
-        console.log("Please wait one hour before submitting another message");
-        // User has sent a feedback within the last hour, rate limit applied
-        return new Response(
-          JSON.stringify({
-            message: `Please wait before submitting feedback again. You can try again in ${Math.floor(
-              oneHourInSeconds - timeDiff
-            )} seconds.`,
-          }),
-          {
-            status: 429, // Too Many Requests
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-      }
+    if (!apiKey || !fromEmail) {
+      return Response.json(
+        {
+          message: "Der E-Mail-Dienst ist nicht konfiguriert.",
+        },
+        { status: 500 }
+      );
     }
-    await DB.pool(
-      `INSERT INTO feedbacks (user_id, email, message, timestamp) VALUES ($1,$2,$3,$4)`,
-      [userId, email, message, now]
-    );
 
-    // Initialize MailerSend securely
-    const mailersend = new MailerSend({
-      apiKey: process.env.MAILERSEND_API_KEY, // changed to env
-    });
+    const mailersend = new MailerSend({ apiKey });
+    const sentFrom = new Sender(fromEmail, fromName);
+    const recipients = [new Recipient(email, "Talkback Empfänger")];
 
-    // Set up sender (must be from a verified domain)
-    const sentFrom = new Sender(
-      "MS_rkmRze@trial-p7kx4xw1w08g9yjr.mlsender.net",
-      "Test Sender"
-    );
-
-    // Set up recipient
-    const recipients = [new Recipient("firelyx47@gmail.com", "Recipient")];
-
-    // Create email parameters
     const emailParams = new EmailParams()
       .setFrom(sentFrom)
       .setTo(recipients)
-      .setReplyTo(sentFrom)
-      .setSubject("New Feedback Received")
-      .setHtml(`<p>New feedback from: ${email}</p><p>message: ${message}</p>`)
-      .setText(`New feedback from: ${email}\nmessage: ${message}`);
+      .setSubject(subject)
+      .setText(message)
+      .setHtml(`<p>${escapeHtml(message).replace(/\n/g, "<br />")}</p>`);
 
-    // Send the email
     await mailersend.email.send(emailParams);
 
-    return new Response(
-      JSON.stringify({ message: "Feedback received and email sent" }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    return Response.json({
+      message: "Feedback erfolgreich gesendet.",
+    });
   } catch (error) {
-    console.error("Error processing feedback:", error);
-    return new Response(
-      JSON.stringify({
-        message: "Error processing feedback, check if you are signed in",
-        error: error.message,
-      }),
+    const message =
+      error instanceof Error ? error.message : "Feedback konnte nicht gesendet werden.";
+
+    return Response.json(
       {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      }
+        message,
+      },
+      { status: 500 }
     );
   }
+}
+
+function escapeHtml(value) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }

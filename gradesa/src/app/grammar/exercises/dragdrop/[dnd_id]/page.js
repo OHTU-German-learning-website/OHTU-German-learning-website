@@ -10,7 +10,7 @@ import "../../../../globals.css";
 import useQuery from "@/shared/hooks/useQuery";
 import { LinkButton } from "@/components/ui/linkbutton";
 
-export default function Dragdrop({}) {
+export default function Dragdrop({ }) {
   const params = useParams();
   const router = useRouter();
   const { dnd_id } = params;
@@ -48,8 +48,12 @@ export default function Dragdrop({}) {
 
       <br />
       <div>
-        <LinkButton size="sm" variant="secondary" href="/grammar/exercises">
-          Zurück zum Dashboard
+        <LinkButton
+          size="sm"
+          variant="secondary"
+          href="/grammar/exercises/dragdrop"
+        >
+          Zurück zu allen Drag-und-Drop-Übungen
         </LinkButton>
       </div>
     </div>

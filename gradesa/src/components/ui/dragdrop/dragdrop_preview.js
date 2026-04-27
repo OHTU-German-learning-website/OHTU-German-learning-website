@@ -11,12 +11,6 @@ export default function PreviewDragDrop({ title, fields }) {
       .filter(Boolean);
   };
 
-  const getRandomWords = (words, max) => {
-    const count = Math.floor(Math.random() * max) + 1;
-    const shuffled = [...words].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, count);
-  };
-
   const allWords = fields
     .flatMap((field) =>
       getWords(field.content).map((word) => ({
@@ -24,7 +18,8 @@ export default function PreviewDragDrop({ title, fields }) {
         color: field.color,
       }))
     )
-    .slice(0, 5);
+    .slice(0, 5)
+    .sort(() => 0.5 - Math.random());
 
   return (
     <div className="previewContainer">
@@ -42,19 +37,6 @@ export default function PreviewDragDrop({ title, fields }) {
         {fields.map((field, index) => (
           <div key={index} className="dustbin">
             {field.category}
-            <div className="dropped-items">
-              {getRandomWords(getWords(field.content), 3).map(
-                (word, wordIndex) => (
-                  <div
-                    key={wordIndex}
-                    className="dropped-item"
-                    style={{ color: `var(--${field.color})` }}
-                  >
-                    {word}
-                  </div>
-                )
-              )}
-            </div>
           </div>
         ))}
       </Row>

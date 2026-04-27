@@ -3,10 +3,10 @@ import { withAuth } from "@/backend/middleware/withAuth";
 
 export const POST = withAuth(async (request, { params }) => {
   const { click_id } = await params;
-  const { selected_words, target_words } = await request.json();
+  const { selected_words } = await request.json();
   const user_id = request.user.id;
 
-  if (!click_id || !user_id || !selected_words || !target_words) {
+  if (!click_id || !user_id || !selected_words) {
     return new Response(
       JSON.stringify({ error: "Fehlende erforderliche Felder." }),
       {
@@ -16,6 +16,34 @@ export const POST = withAuth(async (request, { params }) => {
   }
 
   try {
+    const userResult = await DB.pool("SELECT 1 FROM users WHERE id = $1", [
+      user_id,
+    ]);
+
+    if (userResult.rowCount === 0) {
+      return new Response(
+        JSON.stringify({ error: "Sitzung ungültig. Bitte erneut anmelden." }),
+        {
+          status: 401,
+        }
+      );
+    }
+
+    // Look up target_words from the exercise (authoritative source, satisfies FK constraint).
+    const exerciseResult = await DB.pool(
+      "SELECT target_words FROM click_exercises WHERE id = $1",
+      [click_id]
+    );
+
+    if (exerciseResult.rows.length === 0) {
+      return new Response(
+        JSON.stringify({ error: "Übung nicht gefunden." }),
+        { status: 404 }
+      );
+    }
+
+    const target_words = exerciseResult.rows[0].target_words;
+
     await DB.pool(
       `INSERT INTO click_answers (user_id, click_exercise_id, answer, target_words, created_at, updated_at)
        VALUES ($1, $2, $3, $4, NOW(), NOW())
@@ -33,7 +61,8 @@ export const POST = withAuth(async (request, { params }) => {
         status: 201,
       }
     );
-  } catch {
+  } catch (error) {
+    console.error("Error saving click answers:", error);
     return new Response(JSON.stringify({ error: "Interner Serverfehler." }), {
       status: 500,
     });

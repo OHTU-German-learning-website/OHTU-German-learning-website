@@ -6,10 +6,13 @@ import { Dropdown } from "@/components/ui/dropdown";
 import { Button } from "@/components/ui/button";
 import { Row } from "@/components/ui/layout/container";
 import { useRequest } from "@/shared/hooks/useRequest";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import useQuery from "@/shared/hooks/useQuery";
 import PreviewDragDrop from "@/components/ui/dragdrop/dragdrop_preview";
 
 export default function DragdropAdminPage() {
+  const { dnd_id } = useParams();
+  const isEditMode = Boolean(dnd_id);
   const [numberOfFields, setNumberOfFields] = useState(null);
   const [inputFields, setInputFields] = useState([]);
   const [title, setTitle] = useState("");
@@ -18,23 +21,49 @@ export default function DragdropAdminPage() {
   const [showPreview, setShowPreview] = useState(false);
   const makeRequest = useRequest();
   const router = useRouter();
+  const {
+    data: exerciseData,
+    isLoading: isExerciseLoading,
+    error: exerciseError,
+  } = useQuery(`/admin/exercises/dragdrop/${dnd_id || ""}`, null, {
+    enabled: isEditMode,
+  });
+
+  const parseWords = (content) =>
+    content
+      .split(",")
+      .map((word) => word.trim())
+      .filter(Boolean);
 
   useEffect(() => {
-    if (numberOfFields) {
-      if (numberOfFields > inputFields.length) {
-        const additionalFields = Array(numberOfFields - inputFields.length)
+    if (!numberOfFields) return;
+
+    setInputFields((prevFields) => {
+      if (numberOfFields > prevFields.length) {
+        const additionalFields = Array(numberOfFields - prevFields.length)
           .fill("")
           .map(() => ({
             color: "",
             category: "",
             content: "",
           }));
-        setInputFields([...inputFields, ...additionalFields]);
-      } else {
-        setInputFields(inputFields.slice(0, numberOfFields));
+
+        return [...prevFields, ...additionalFields];
       }
-    }
+
+      return prevFields.slice(0, numberOfFields);
+    });
   }, [numberOfFields]);
+
+  useEffect(() => {
+    if (!isEditMode || !exerciseData) return;
+
+    setTitle(exerciseData.title || "");
+    setInputFields(Array.isArray(exerciseData.fields) ? exerciseData.fields : []);
+    setNumberOfFields(
+      Array.isArray(exerciseData.fields) ? exerciseData.fields.length : null
+    );
+  }, [exerciseData, isEditMode]);
 
   const handleInputChange = (index, field, value) => {
     const newInputFields = [...inputFields];
@@ -45,38 +74,50 @@ export default function DragdropAdminPage() {
     setInputFields(newInputFields);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event) => {
+    event?.preventDefault();
+
     try {
       setIsSubmitting(true);
       setGeneralError("");
 
-      const res = await makeRequest("/admin/exercises/dragdrop", {
-        title: title.trim(),
-        fields: inputFields,
-      });
+      if (isEditMode) {
+        const response = await fetch(`/api/admin/exercises/dragdrop/${dnd_id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: title.trim(),
+            fields: inputFields,
+          }),
+        });
 
-      if (res.status === 200) {
-        router.push("/admin/create-exercise");
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data?.error || "Fehler beim Speichern der Übung.");
+        }
+      } else {
+        const res = await makeRequest("/admin/exercises/dragdrop", {
+          title: title.trim(),
+          fields: inputFields,
+        });
+
+        if (res.status !== 200) {
+          throw new Error("Fehler beim Erstellen der Übung.");
+        }
+
+        const createdDndId = res?.data?.dndId;
+        if (!createdDndId) {
+          throw new Error("Übung wurde erstellt, aber die ID fehlt.");
+        }
+
+        router.push(`/grammar/exercises/dragdrop/${createdDndId}`);
+        return;
       }
+
+      router.push("/grammar/exercises/dragdrop");
     } catch (e) {
       console.error("Error creating dragdrop exercise:", e);
-
-      if (e.response?.data?.error) {
-        setGeneralError(e.response.data.error);
-      } else {
-        setGeneralError("Ein Fehler ist aufgetreten");
-      }
-      if (e.response?.status === 422) {
-        try {
-          const zodErrors = e.response?.data?.zodError;
-
-          const newErrors = zodErrorToFormErrors(zodErrors, formErrors);
-
-          setFormErrors(newErrors);
-        } catch (parseError) {
-          console.error("Error parsing validation results:", parseError);
-        }
-      }
+      setGeneralError(e?.response?.data?.error || e.message || "Ein Fehler ist aufgetreten");
     } finally {
       setIsSubmitting(false);
     }
@@ -90,10 +131,22 @@ export default function DragdropAdminPage() {
     router.push("/admin/create-exercise");
   };
 
+  if (isEditMode && isExerciseLoading) {
+    return <div>Übung wird geladen...</div>;
+  }
+
+  if (isEditMode && exerciseError) {
+    return <div>{exerciseError.message || "Fehler beim Laden der Übung."}</div>;
+  }
+
   return (
     <div className={styles.page}>
       <div className="admin-container">
-        <h1>Eine Drag-und-Drop-Übung erstellen</h1>
+        <h1>
+          {isEditMode
+            ? "Eine Drag-und-Drop-Übung bearbeiten"
+            : "Eine Drag-und-Drop-Übung erstellen"}
+        </h1>
         {generalError && (
           <p className="error" role="alert">
             {generalError}
@@ -212,9 +265,9 @@ export default function DragdropAdminPage() {
                         style={
                           field.color
                             ? {
-                                backgroundColor: `var(--${field.color})`,
-                                transition: "background-color 0.2s",
-                              }
+                              backgroundColor: `var(--${field.color})`,
+                              transition: "background-color 0.2s",
+                            }
                             : {}
                         }
                       >
@@ -238,8 +291,11 @@ export default function DragdropAdminPage() {
                       handleInputChange(index, "content", e.target.value)
                     }
                     className="form-input"
-                    placeholder={`Wörter eingeben`}
+                    placeholder={`Woerter eingeben (z.B. gehen, laufen, sprechen)`}
                   />
+                  <small>
+                    Mehrere Woerter pro Box: mit Komma trennen.
+                  </small>
                 </div>
               ))}
           </Row>
@@ -248,17 +304,25 @@ export default function DragdropAdminPage() {
               type="submit"
               size="sm"
               variant="outline"
-              onClick={handleSubmit}
               disabled={
                 isSubmitting ||
                 !title.trim() ||
                 !numberOfFields ||
                 inputFields.some(
-                  (field) => !field.color || !field.category || !field.content
+                  (field) =>
+                    !field.color ||
+                    !field.category ||
+                    parseWords(field.content).length === 0
                 )
               }
             >
-              {isSubmitting ? "Wird erstellt..." : "Erstellen"}
+              {isSubmitting
+                ? isEditMode
+                  ? "Wird gespeichert..."
+                  : "Wird erstellt..."
+                : isEditMode
+                  ? "Speichern"
+                  : "Erstellen"}
             </Button>
             <Button
               type="button"

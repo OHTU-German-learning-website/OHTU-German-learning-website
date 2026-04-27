@@ -24,21 +24,21 @@ const exerciseTypes = [
     image: "📋",
   },
   {
-    title: "Drag-and-Drop-Übungen",
-    description: "Üben mit Drag-and-Drop-Interaktionen",
-    link: "/grammar/exercises/dragdrop/1",
+    title: "Drag-und-Drop-Übungen",
+    description: "Üben mit Drag-und-Drop-Interaktionen",
+    link: "/grammar/exercises/dragdrop",
     image: "📦",
   },
   {
-    title: "Fill-in-the-Gap-Übungen",
-    description: "Üben mit Fill-in-the-Gap-Texten",
+    title: "Lückentext-Übungen",
+    description: "Üben mit Lückentexten",
     link: "/grammar/exercises/fillinthegap",
     image: "🧩",
   },
   // Add other exercise types here
 ];
 
-export default function ExercisePage({}) {
+export default function ExercisePage({ }) {
   return (
     <LessonsLayout>
       <Column>

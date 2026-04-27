@@ -130,15 +130,6 @@ export default function FillInTheGapExercisePage() {
     return map;
   }, [exercise?.gaps]);
 
-  // const htmlWithPlaceholders = useMemo(
-  //   () =>
-  //     buildHtmlWithGapPlaceholders(
-  //       exercise?.source_html || "",
-  //       gapsByTokenIndex
-  //     ),
-  //   [exercise?.source_html, gapsByTokenIndex]
-  // );
-
   const htmlWithPlaceholders = useMemo(() => {
     const html = buildHtmlWithGapPlaceholders(
       exercise?.source_html || "",
@@ -334,5 +325,3 @@ export default function FillInTheGapExercisePage() {
     </Container>
   );
 }
-
-//({gap.token_text})

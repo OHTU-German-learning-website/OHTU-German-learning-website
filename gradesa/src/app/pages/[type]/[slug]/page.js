@@ -7,6 +7,8 @@ import { transformHtmlToGlossaryTags } from "@/backend/html-transform";
 import AdminButtons from "./admin-buttons";
 import { LinkButton } from "@/components/ui/linkbutton";
 
+export const dynamic = "force-dynamic";
+
 export default async function Chapters({ params }) {
   const { type, slug } = await params;
   const pageData = await getPageData(type, slug);

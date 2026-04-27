@@ -11,7 +11,7 @@ function isOnLogin(url) {
   return url.includes("/auth/login");
 }
 
-test.describe("Fill-in-the-gap exercises", () => {
+test.describe("Lückentext-Übungen", () => {
   test("should load the exercises list page", async ({ page }) => {
     test.setTimeout(60000);
 
@@ -41,7 +41,7 @@ test.describe("Fill-in-the-gap exercises", () => {
     }
 
     await expect(
-      page.getByRole("heading", { name: /Fill-in-the-gap Übungen/i })
+      page.getByRole("heading", { name: /Lückentext-Übungen/i })
     ).toBeVisible();
   });
 

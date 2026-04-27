@@ -1,114 +1,135 @@
 "use client";
-import "../auth/auth.css";
+
+import "./talkback.css";
 import { useState } from "react";
-import { useRequest } from "@/shared/hooks/useRequest";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-export default function Feedback() {
+export default function TalkbackPage() {
+  const defaultSubject = "Rückmeldung von GRADESA 2.0";
+
   const [email, setEmail] = useState("");
-  const [message, setmessage] = useState("");
-
-  const [submitted, setSubmitted] = useState(false);
+  const [subject, setSubject] = useState(defaultSubject);
+  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const router = useRouter();
-
-  const makeRequest = useRequest();
+  const [isSending, setIsSending] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    setError("");
+
+    const trimmedEmail = email.trim();
+    const trimmedSubject = subject.trim() || defaultSubject;
+    const trimmedMessage = message.trim();
+
+    if (!trimmedEmail) {
+      setError("Die E-Mail-Adresse des Empfängers ist erforderlich.");
+      return;
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailPattern.test(trimmedEmail)) {
+      setError("Bitte geben Sie eine gültige E-Mail-Adresse des Empfängers ein.");
+      return;
+    }
+
+    if (!trimmedMessage) {
+      setError("Nachricht ist erforderlich.");
+      return;
+    }
+
     try {
+      setIsSending(true);
+
       const response = await fetch("/api/talkback", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, message }),
+        body: JSON.stringify({
+          email: trimmedEmail,
+          subject: trimmedSubject,
+          message: trimmedMessage,
+        }),
       });
 
-      const data = await response.json(); // Extract JSON response
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "An unexpected error occurred.");
+        throw new Error(data.message || "Nachricht konnte nicht gesendet werden.");
       }
 
-      setSubmitted(true);
-      setEmail("");
-      setmessage("");
-
-      setTimeout(() => {
-        router.push("/talkback");
-      }, 2000);
-      setError("");
-    } catch (error) {
-      setError(error.message);
-      setSubmitted(false);
+      setMessage("");
+      alert("Feedback erfolgreich gesendet.");
+    } catch (requestError) {
+      setError(requestError.message || "Etwas ist schief gelaufen.");
+    } finally {
+      setIsSending(false);
     }
   };
 
-  const successMessage = () => {
-    return (
-      <div className="success-message">
-        <p>Feedback erfolgreich gesendet</p>
-      </div>
-    );
-  };
-
-  const errorMessage = () => {
-    return (
-      <div className="error-message">
-        <p>{error}</p>
-      </div>
-    );
-  };
-
   return (
-    <>
-      <h1 className="auth-title">Talk back</h1>
-      {!!error && errorMessage()}
-      {submitted && successMessage()}
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label className="form-label" htmlFor="email">
-            E-Mail-Adresse
-          </label>
-          <input
-            className="form-input"
-            type="email"
-            id="email"
-            name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
+    <section className="talkback-container">
+      <div className="talkback-box">
+        <h1 className="auth-title">Rückmeldekanal-Feedback geben</h1>
 
-        <div className="form-group">
-          <label className="form-label" htmlFor="message">
-            Feedback/talkback
-          </label>
-          <textarea
-            className="form-input"
-            type="message"
-            id="message"
-            name="message"
-            value={message}
-            onChange={(e) => setmessage(e.target.value)}
-            required
-          />
-        </div>
+        {error && <p className="error">{error}</p>}
 
-        <Button
-          className="form-button"
-          onClick={handleSubmit}
-          type="submit"
-          size="md"
-          width={"full"}
-        >
-          Send message
-        </Button>
-      </form>
-    </>
+        <form className="talkback-form" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label className="form-label" htmlFor="talkback-email">
+              E-Mail-Adresse des Empfängers
+            </label>
+            <input
+              className="form-input"
+              id="talkback-email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label" htmlFor="talkback-subject">
+              Betreff
+            </label>
+            <input
+              className="form-input"
+              id="talkback-subject"
+              type="text"
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label" htmlFor="talkback-message">
+              Nachricht
+            </label>
+            <textarea
+              className="form-input talkback-message-input"
+              id="talkback-message"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              required
+              rows={8}
+            />
+          </div>
+
+          <Button
+            className="form-button"
+            type="submit"
+            size="md"
+            width="full"
+            disabled={isSending}
+          >
+            {isSending ? "Senden..." : "Nachricht senden"}
+          </Button>
+        </form>
+      </div>
+    </section>
   );
 }

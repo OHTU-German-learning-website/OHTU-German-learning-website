@@ -18,7 +18,7 @@ export default function CreateExercise() {
         Multiple choice
       </LinkButton>
       <LinkButton href="/admin/create-exercise/fillinthegap">
-        Fill in the gap
+        Lückentext
       </LinkButton>
     </Column>
   );

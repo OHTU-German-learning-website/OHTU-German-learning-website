@@ -40,10 +40,7 @@
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary1) 35%, transparent);
 }
 
-.fitg-rendered-content
-  :where(p, li, strong, em, span, a, h1, h2, h3, h4, h5, h6):not(
-    [style*="color"]
-  ) {
+.fitg-rendered-content :where(p, li, strong, em, span, a, h1, h2, h3, h4, h5, h6):not([style*="color"]) {
   color: var(--fg1);
 }
 
@@ -100,14 +97,17 @@
   padding-left: 12em;
 }
 
-.ql-editor.rendered-html ul,
-.ql-editor.rendered-html ol {
+.rendered-html ul,
+.rendered-html ol {
   padding-left: 1.5em;
 }
 
-.ql-editor.rendered-html li {
-  list-style: none;
-  position: relative;
+.rendered-html li[data-list="bullet"] {
+  list-style-type: disc;
+}
+
+.rendered-html li[data-list="ordered"] {
+  list-style-type: decimal;
 }
 
 /* Quill editor in dark/light theme */

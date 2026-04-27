@@ -23,11 +23,10 @@ export default function StudentExercisePage() {
 
   const exercise = data?.exercise || null;
 
-  const handleSaveAnswers = async (selectedWords, targetWords) => {
+  const handleSaveAnswers = async (selectedWords) => {
     try {
       await makeRequest(`/exercises/click/${click_id}/answers`, {
         selected_words: selectedWords,
-        target_words: targetWords,
       });
     } catch (error) {
       console.error("Error saving answers:", error);
@@ -39,7 +38,7 @@ export default function StudentExercisePage() {
     setIsSubmitted(true);
 
     // Save answers to the database
-    await handleSaveAnswers(selectedWords, exercise.target_words);
+    await handleSaveAnswers(selectedWords);
   };
 
   if (isLoading) {

@@ -79,7 +79,9 @@ export default function EditorSection({
 
     if (res.status == 200) {
       setEditorMessage({ error: false, msg: "Updated successfully" });
-      router.push(getViewPath(type, slug));
+      const destination = getViewPath(type, slug);
+      router.push(destination);
+      router.refresh();
     } else {
       const errorText = await res.text();
       setEditorMessage({
