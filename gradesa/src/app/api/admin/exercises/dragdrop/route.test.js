@@ -28,9 +28,10 @@ describe("POST /api/auth/admin/exercises/dragdrop", () => {
 
     expect(response.status).toBe(200);
     expect(responseData.success).toBe(true);
-    expect(responseData.exerciseId).toBeTypeOf("number");
-    expect(responseData.dndId).toBeTypeOf("number");
-    const { exerciseId, dndId } = responseData;
+    expect(Number.isFinite(Number(responseData.exerciseId))).toBe(true);
+    expect(Number.isFinite(Number(responseData.dndId))).toBe(true);
+    const exerciseId = Number(responseData.exerciseId);
+    const dndId = Number(responseData.dndId);
 
     // Verify the created exercise row by returned id.
     const exerciseResult = await DB.pool(
@@ -40,7 +41,7 @@ describe("POST /api/auth/admin/exercises/dragdrop", () => {
 
     expect(exerciseResult.rows.length).toBe(1);
     const createdExercise = exerciseResult.rows[0];
-    expect(createdExercise.id).toBe(exerciseId);
+    expect(Number(createdExercise.id)).toBe(exerciseId);
     expect(createdExercise.category).toBe("dnd");
 
     // Verify the dnd_exercises row links to the created exercise and payload title.
@@ -50,8 +51,8 @@ describe("POST /api/auth/admin/exercises/dragdrop", () => {
     );
 
     expect(dndExercise.rows.length).toBe(1);
-    expect(dndExercise.rows[0].id).toBe(dndId);
-    expect(dndExercise.rows[0].exercise_id).toBe(exerciseId);
+    expect(Number(dndExercise.rows[0].id)).toBe(dndId);
+    expect(Number(dndExercise.rows[0].exercise_id)).toBe(exerciseId);
     expect(dndExercise.rows[0].title).toBe("Substantiv");
 
     // Verify categories were created for each provided field.
