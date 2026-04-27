@@ -36,6 +36,11 @@ vi.mock("@/components/ui/glossary/GlossaryText", () => ({
       </li>
     );
   },
+  GlossaryOccurrenceProvider: function GlossaryOccurrenceProvider({
+    children,
+  }) {
+    return <>{children}</>;
+  },
 }));
 
 describe("RenderHTML Component", () => {

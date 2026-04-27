@@ -34,7 +34,7 @@ export default function GlossaryPage() {
               <Container key={entry.id} className="glossary-card">
                 <Column gap="sm">
                   <h4 className="glossary-word">{entry.word}</h4>
-                  <RenderHTML data={entry.word_definition} />
+                  <RenderHTML data={entry.word_definition} disableGlossary />
                 </Column>
               </Container>
             ))}

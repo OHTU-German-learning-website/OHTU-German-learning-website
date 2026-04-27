@@ -78,7 +78,7 @@ export default function GlossaryList() {
               <Container key={entry.id} className="glossary-card">
                 <Column gap="sm">
                   <h4 className="glossary-word">{entry.word}</h4>
-                  <RenderHTML data={entry.word_definition} />
+                  <RenderHTML data={entry.word_definition} disableGlossary />
                   <Row justify="space-between" className="glossary-meta">
                     <span>
                       Erstellt:{" "}
