@@ -111,6 +111,9 @@ function StudentSideBar() {
       <Link className={styles.sidebarLink} href="/grammar/themes">
         Themen der Grammatik
       </Link>
+      <Link className={styles.sidebarLink} href="/glossary">
+        Glossar
+      </Link>
       <Link className={styles.sidebarLink} href="/talkback">
         Rückmeldekanal-Feedback geben
       </Link>
