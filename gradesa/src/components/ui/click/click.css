@@ -1,3 +1,27 @@
 .message {
     width: fit-content;
 }
+
+h2 {
+    color: var(--tertiary1);
+}
+
+.word-container {
+    line-height: 2.2;
+    white-space: pre-wrap;
+    background: var(--bg3);
+}
+
+.word-punct {
+    display: inline;
+    user-select: none;
+}
+
+.word-space {
+    white-space: pre-wrap;
+}
+
+.word-line-break {
+    display: block;
+    height: 0.75rem;
+}

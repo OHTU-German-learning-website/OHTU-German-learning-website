@@ -1,15 +1,19 @@
 "use client";
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { useRequest } from "@/shared/hooks/useRequest";
 import { Container } from "@/components/ui/layout/container";
 import { Column } from "@/components/ui/layout/container";
 import { Button } from "@/components/ui/button";
+import useQuery from "@/shared/hooks/useQuery";
 import "./click.css";
 import WordSelectionExercise from "@/components/ui/click/click.js";
 
 export default function CreateExercise() {
   const router = useRouter();
+  const { click_id } = useParams();
+  const isEditMode = Boolean(click_id);
+
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(null);
   const [title, setTitle] = useState("");
@@ -19,11 +23,40 @@ export default function CreateExercise() {
   const [previewMode, setPreviewMode] = useState(false);
   const makeRequest = useRequest();
 
-  // Process all words into an array
-  const allWords = allWordsText
-    .split(" ")
-    .map((word) => word.trim())
-    .filter((word) => word !== "");
+  const {
+    data: exerciseData,
+    isLoading: isExerciseLoading,
+    error: exerciseError,
+  } = useQuery(`/admin/exercises/click/${click_id || ""}`, null, {
+    enabled: isEditMode,
+  });
+
+  useEffect(() => {
+    if (!isEditMode || !exerciseData) return;
+
+    const storedWords = Array.isArray(exerciseData.all_words)
+      ? exerciseData.all_words
+      : [];
+
+    const hasExplicitSpacing = storedWords.some(
+      (token) => token === "\n" || /^[^\S\n]+$/u.test(token)
+    );
+
+    const text = hasExplicitSpacing
+      ? storedWords.join("")
+      : storedWords.join(" ");
+
+    setTitle(exerciseData.title || "");
+    setTargetCategory(exerciseData.category || "");
+    setAllWordsText(text);
+    setSelectedWords(
+      Array.isArray(exerciseData.target_words) ? exerciseData.target_words : []
+    );
+  }, [exerciseData, isEditMode]);
+
+  // Preserve user-entered spacing and line breaks so preview and saved exercise match.
+  const allWords =
+    allWordsText.replace(/\r\n/g, "\n").match(/[^\S\n]+|\n|[^\s]+/g) ?? [];
 
   const handlePreview = (e) => {
     e.preventDefault();
@@ -32,15 +65,40 @@ export default function CreateExercise() {
 
   const handleSaveExercise = async () => {
     try {
-      const response = await makeRequest("/admin/exercises/click", {
-        title,
-        targetCategory,
-        targetWords: selectedWords,
-        allWords,
-      });
+      if (isEditMode) {
+        const response = await fetch(`/api/admin/exercises/click/${click_id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title,
+            targetCategory,
+            targetWords: selectedWords,
+            allWords,
+          }),
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data?.error || "Fehler beim Speichern der Übung.");
+        }
+      } else {
+        const response = await makeRequest("/admin/exercises/click", {
+          title,
+          targetCategory,
+          targetWords: selectedWords,
+          allWords,
+        });
+
+        setSubmitted(true);
+        setTimeout(() => {
+          router.push(`/grammar/exercises/click/${response.data.id}`);
+        }, 2000);
+        return;
+      }
+
       setSubmitted(true);
       setTimeout(() => {
-        router.push(`/grammar/exercises/click/${response.data.id}`);
+        router.push(`/grammar/exercises/click/${click_id}`);
       }, 2000);
     } catch (error) {
       setError(error.message);
@@ -51,7 +109,11 @@ export default function CreateExercise() {
   const successMessage = () => {
     return (
       <div className="success-message">
-        <p>Übung erfolgreich erstellt.</p>
+        <p>
+          {isEditMode
+            ? "Übung erfolgreich aktualisiert."
+            : "Übung erfolgreich erstellt."}
+        </p>
       </div>
     );
   };
@@ -68,9 +130,21 @@ export default function CreateExercise() {
     setPreviewMode(false);
   };
 
+  if (isEditMode && isExerciseLoading) {
+    return <div>Übung wird geladen...</div>;
+  }
+
+  if (isEditMode && exerciseError) {
+    return <div>{exerciseError.message || "Fehler beim Laden der Übung."}</div>;
+  }
+
   return (
     <div>
-      <h1>Wortauswahl-Übung erstellen</h1>
+      <h1>
+        {isEditMode
+          ? "Wortauswahl-Übung bearbeiten"
+          : "Wortauswahl-Übung erstellen"}
+      </h1>
       {submitted ? (
         successMessage() // Show only the success message if submitted
       ) : !previewMode ? (
@@ -122,6 +196,8 @@ export default function CreateExercise() {
             Klicken Sie auf die Wörter, um die richtigen auszuwählen (
             {targetCategory}).
           </p>
+          <br />
+          <br />
           <h2>Die Übung wird so aussehen:</h2>
           <Container>
             <WordSelectionExercise

@@ -21,7 +21,6 @@ describe("click_answers API", () => {
 
     const requestBody = {
       selected_words: ["laufen", "springen"],
-      target_words: ["laufen", "springen", "schwimmen"],
     };
 
     const response = await POST(
@@ -78,7 +77,6 @@ describe("click_answers API", () => {
 
     const updatedRequestBody = {
       selected_words: ["springen", "schwimmen"],
-      target_words: ["laufen", "springen", "schwimmen"],
     };
 
     const response = await POST(
@@ -130,7 +128,6 @@ describe("click_answers API", () => {
     // Simulate a database error by passing invalid data
     const invalidRequestBody = {
       selected_words: ["laufen", "springen"],
-      target_words: ["laufen", "springen", "schwimmen"],
     };
 
     const response = await POST(
@@ -142,5 +139,30 @@ describe("click_answers API", () => {
     expect(response.status).toBe(500);
     const json = await response.json();
     expect(json.error).toBe("Interner Serverfehler.");
+  });
+
+  it("should return 401 when the session user no longer exists", async () => {
+    const user = await TestFactory.user();
+    const { mockPost, mockParams } = useTestRequest(user);
+
+    const exercise = await TestFactory.clickExercise({
+      title: "Verben identifizieren",
+      category: "Verben",
+      target_words: ["laufen"],
+      all_words: ["Sie", "laufen"],
+    });
+
+    await DB.pool("DELETE FROM users WHERE id = $1", [user.id]);
+
+    const response = await POST(
+      mockPost(`/api/exercises/click/${exercise.id}/answers`, {
+        selected_words: ["laufen"],
+      }),
+      mockParams({ click_id: exercise.id })
+    );
+
+    expect(response.status).toBe(401);
+    const json = await response.json();
+    expect(json.error).toBe("Sitzung ungültig. Bitte erneut anmelden.");
   });
 });

@@ -2,6 +2,15 @@ import React, { useEffect, useRef } from "react";
 import "quill/dist/quill.snow.css";
 import "quill-table-better/dist/quill-table-better.css";
 
+function setHtmlContent(quill, html) {
+  const content = String(html || "");
+  quill.setContents([], "silent");
+  if (!content) {
+    return;
+  }
+  quill.clipboard.dangerouslyPasteHTML(0, content, "api");
+}
+
 const ClientEditor = (props) => {
   const containerRef = useRef(null);
   const updateEditorContentRef = useRef(props.updateEditorContent);
@@ -71,8 +80,7 @@ const ClientEditor = (props) => {
         });
         quillRef.current = quill;
         if (props.defaultContent) {
-          const delta = quill.clipboard.convert({ html: props.defaultContent });
-          quill.setContents(delta, "api");
+          setHtmlContent(quill, props.defaultContent);
         }
       }
     };
@@ -102,8 +110,7 @@ const ClientEditor = (props) => {
       return;
     }
 
-    const delta = quill.clipboard.convert({ html: nextContent });
-    quill.setContents(delta, "api");
+    setHtmlContent(quill, nextContent);
   }, [props.defaultContent]);
 
   return (

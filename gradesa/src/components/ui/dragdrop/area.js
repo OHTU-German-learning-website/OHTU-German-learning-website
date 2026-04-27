@@ -7,6 +7,7 @@ const Area = ({ exerciseID }) => {
   const [dustbins, setDustbins] = useState([]);
   const [droppedBoxNames, setDroppedBoxNames] = useState([]);
   const [isExerciseComplete, setIsExerciseComplete] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [availableWords, setAvailableWords] = useState([]);
   const [visibleWords, setVisibleWords] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -130,16 +131,23 @@ const Area = ({ exerciseID }) => {
     [droppedBoxNames, dustbins, availableWords, visibleWords]
   );
 
+  const handleSubmit = () => {
+    setIsSubmitted(true);
+  };
+
   const reset = () => {
     setDustbins(initialDustbins);
     setDroppedBoxNames([]);
     setIsExerciseComplete(false);
+    setIsSubmitted(false);
     setAvailableWords([...allWords]);
     setVisibleWords(getRandomUnusedWords(5, allWords));
   };
 
-  if (isLoading) return <div>Loading exercise...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (isLoading) return <div>Lädt...</div>;
+  if (error) return <div>Fehler: {error}</div>;
+
+  const allAcceptedTypes = [...new Set(allWords.map((word) => word.type))];
 
   return (
     <div>
@@ -163,15 +171,18 @@ const Area = ({ exerciseID }) => {
       <div style={{ overflow: "hidden", clear: "both" }}>
         {dustbins.map(({ accepts, droppedItems, color }, index) => (
           <Dustbin
-            accept={accepts}
+            accept={allAcceptedTypes}
+            label={accepts[0]}
+            correctType={accepts[0]}
             droppedItems={droppedItems}
             color={color}
+            isSubmitted={isSubmitted}
             onDrop={(item) => handleDrop(index, item)}
             key={index}
           />
         ))}
       </div>
-      {isExerciseComplete && (
+      {isExerciseComplete && !isSubmitted && (
         <div className="success-message">
           Super! Du hast die Übung abgeschlossen.
         </div>
@@ -179,12 +190,18 @@ const Area = ({ exerciseID }) => {
       <div
         style={{
           display: "flex",
+          gap: "var(--u-md)",
           justifyContent: "left",
           width: "100%",
           marginTop: "var(--u-xl)",
         }}
       >
-        <Button variant="primary" onClick={reset}>
+        {!isSubmitted && (
+          <Button variant="primary" onClick={handleSubmit}>
+            Antworten einreichen
+          </Button>
+        )}
+        <Button variant="secondary" onClick={reset}>
           Erneut versuchen
         </Button>
       </div>

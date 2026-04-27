@@ -1,7 +1,7 @@
 const { test, expect } = require("@playwright/test");
 
-async function gotoFillInTheGapList(page) {
-  await page.goto("/grammar/exercises/fillinthegap", {
+async function gotoDragdropExerciseList(page) {
+  await page.goto("/grammar/exercises/dragdrop", {
     waitUntil: "domcontentloaded",
     timeout: 60000,
   });
@@ -11,11 +11,13 @@ function isOnLogin(url) {
   return url.includes("/auth/login");
 }
 
-test.describe("Lückentext-Übungen", () => {
-  test("should load the exercises list page", async ({ page }) => {
+test.describe("Drag-und-Drop-Übungen", () => {
+  test("should load dragdrop exercises list or redirect to login", async ({
+    page,
+  }) => {
     test.setTimeout(60000);
 
-    await gotoFillInTheGapList(page);
+    await gotoDragdropExerciseList(page);
 
     const currentUrl = page.url();
     if (isOnLogin(currentUrl)) {
@@ -24,42 +26,25 @@ test.describe("Lückentext-Übungen", () => {
       return;
     }
 
-    await expect(page).toHaveURL(/\/grammar\/exercises\/fillinthegap/);
-    await expect(page.getByRole("main").first()).toBeVisible();
-  });
-
-  test("should show the page heading", async ({ page }) => {
-    test.setTimeout(60000);
-
-    await gotoFillInTheGapList(page);
-
-    const currentUrl = page.url();
-    if (isOnLogin(currentUrl)) {
-      await expect(page).toHaveURL(/\/auth\/login\?redirect=/);
-      await expect(page.locator("form")).toBeVisible();
-      return;
-    }
-
+    await expect(page).toHaveURL(/\/grammar\/exercises\/dragdrop/);
     await expect(
-      page.getByRole("heading", { name: /Lückentext-Übungen/i })
+      page.getByRole("heading", { name: /Drag-und-Drop-Übungen/i })
     ).toBeVisible();
   });
 
-  test("should show exercises or an empty-state message", async ({ page }) => {
+  test("should show dragdrop links or empty state", async ({ page }) => {
     test.setTimeout(60000);
 
-    await gotoFillInTheGapList(page);
+    await gotoDragdropExerciseList(page);
 
     const currentUrl = page.url();
     if (isOnLogin(currentUrl)) {
-      await expect(page).toHaveURL(/\/auth\/login\?redirect=/);
-      await expect(page.locator("form")).toBeVisible();
+      test.skip();
       return;
     }
 
-    // After loading the page should either show exercise links or the empty state
     const exerciseLinks = page.locator(
-      'a[href*="/grammar/exercises/fillinthegap/"]'
+      'a[href*="/grammar/exercises/dragdrop/"]'
     );
     const emptyState = page.getByText("Zurzeit sind keine Übungen verfügbar.");
 
@@ -71,10 +56,12 @@ test.describe("Lückentext-Übungen", () => {
     }
   });
 
-  test("should navigate to an exercise when one exists", async ({ page }) => {
+  test("should open a dragdrop exercise detail page when available", async ({
+    page,
+  }) => {
     test.setTimeout(60000);
 
-    await gotoFillInTheGapList(page);
+    await gotoDragdropExerciseList(page);
 
     const currentUrl = page.url();
     if (isOnLogin(currentUrl)) {
@@ -83,12 +70,11 @@ test.describe("Lückentext-Übungen", () => {
     }
 
     const exerciseLinks = page.locator(
-      'a[href*="/grammar/exercises/fillinthegap/"]'
+      'a[href*="/grammar/exercises/dragdrop/"]'
     );
-
     const linkCount = await exerciseLinks.count();
+
     if (linkCount === 0) {
-      // No exercises seeded in this environment — skip interaction
       test.skip();
       return;
     }
@@ -101,6 +87,12 @@ test.describe("Lückentext-Übungen", () => {
     await expect(page).toHaveURL(
       new RegExp(href.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
     );
-    await expect(page.getByRole("main").first()).toBeVisible();
+    await expect(page.getByRole("heading").first()).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: /Antworten einreichen/i })
+    ).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: /Erneut versuchen/i })
+    ).toBeVisible();
   });
 });

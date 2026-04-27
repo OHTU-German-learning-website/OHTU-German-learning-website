@@ -3,6 +3,7 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { getConfig, isTest } from "../../backend/config";
 import { AUTH_COOKIE_NAME } from "@/shared/const";
+import { DB } from "@/backend/db";
 
 /**
  * Session management utilities using signed JWTs stored in HTTP-only cookies.
@@ -102,8 +103,19 @@ export async function checkSession(request) {
   const session = cookieStore.get(AUTH_COOKIE_NAME);
   if (session) {
     const payload = await verifySession(session.value);
-    if (payload) {
-      return payload.user;
+    if (payload?.user?.id) {
+      const userResult = await DB.pool(
+        `SELECT id, username, email, is_admin, is_superadmin
+         FROM users
+         WHERE id = $1`,
+        [payload.user.id]
+      );
+
+      if (userResult.rowCount > 0) {
+        return userResult.rows[0];
+      }
+
+      cookieStore.delete(AUTH_COOKIE_NAME);
     }
   }
   return null;

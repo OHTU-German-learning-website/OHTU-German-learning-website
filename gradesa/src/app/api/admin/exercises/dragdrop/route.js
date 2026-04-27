@@ -53,8 +53,15 @@ export const POST = withAuth(
             )
           ).rows[0].id;
 
-        // Insert words
-        const words = field.content.split(",").map((word) => word.trim());
+        // Insert words (comma-separated input).
+        const words = [
+          ...new Set(
+            field.content
+              .split(",")
+              .map((word) => word.trim())
+              .filter(Boolean)
+          ),
+        ];
         for (const word of words) {
           const wordRes = await DB.pool(
             `INSERT INTO draggable_words (word)
@@ -75,7 +82,11 @@ export const POST = withAuth(
         }
       }
 
-      return Response.json({ success: true, exerciseId: exercise_id });
+      return Response.json({
+        success: true,
+        exerciseId: exercise_id,
+        dndId: dnd_id,
+      });
     } catch (err) {
       console.error("Error creating dragdrop exercise:", err);
       return Response.json(

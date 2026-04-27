@@ -1,7 +1,7 @@
 import { DB } from "@/backend/db";
 
 export async function GET(request, { params }) {
-  const { dnd_id } = params;
+  const { dnd_id } = await params;
 
   if (!dnd_id || isNaN(parseInt(dnd_id, 10))) {
     return Response.json({ message: "Ungültige Übungs-ID." }, { status: 400 });

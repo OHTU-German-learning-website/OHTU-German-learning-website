@@ -277,8 +277,8 @@ export default function CreateFillInTheGapExercisePage() {
     <Column gap="md" className="fitg-admin-page">
       <h1>
         {isEditMode
-          ? "Fill-in-the-gap Übung bearbeiten"
-          : "Fill-in-the-gap Übung erstellen"}
+          ? "Lückentext-Übung bearbeiten"
+          : "Lückentext-Übung erstellen"}
       </h1>
 
       <Container className="fitg-block">

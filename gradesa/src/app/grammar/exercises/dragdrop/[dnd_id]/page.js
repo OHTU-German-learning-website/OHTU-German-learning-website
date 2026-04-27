@@ -48,8 +48,12 @@ export default function Dragdrop({}) {
 
       <br />
       <div>
-        <LinkButton size="sm" variant="secondary" href="/grammar/exercises">
-          Zurück zum Dashboard
+        <LinkButton
+          size="sm"
+          variant="secondary"
+          href="/grammar/exercises/dragdrop"
+        >
+          Zurück zu allen Drag-und-Drop-Übungen
         </LinkButton>
       </div>
     </div>

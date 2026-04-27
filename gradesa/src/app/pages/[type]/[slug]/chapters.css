@@ -97,7 +97,7 @@ table th {
 }
 
 .chapter-rendered-content .rendered-html,
-.chapter-rendered-content .ql-editor.rendered-html {
+.chapter-rendered-content .rendered-html {
   width: 100%;
   display: flow-root;
 }
