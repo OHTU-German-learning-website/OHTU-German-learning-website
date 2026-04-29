@@ -37,7 +37,11 @@ export const POST = withAuth(
       );
     }
     const existingExercise = await DB.pool(
-      "SELECT * FROM click_exercises WHERE title = $1",
+      `SELECT ce.id
+       FROM click_exercises ce
+       JOIN click_to_exercises cte ON cte.click_id = ce.id
+       WHERE LOWER(TRIM(ce.title)) = LOWER(TRIM($1))
+       LIMIT 1`,
       [title]
     );
     if (existingExercise.rows.length > 0) {

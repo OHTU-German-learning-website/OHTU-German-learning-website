@@ -6,7 +6,7 @@ export async function GET() {
     const { rows } = await DB.pool(`
       SELECT 
         ffe.id,
-        ffe.question,
+        ffe.title,
         ffe.exercise_id,
         e.created_at
       FROM 

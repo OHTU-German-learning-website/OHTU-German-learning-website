@@ -5,11 +5,13 @@ import { Column, Row } from "@/components/ui/layout/container";
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import useQuery from "@/shared/hooks/useQuery";
+import "../../../multichoice/multichoice.css";
 
 export default function EditFreeFormExercisePage() {
   const router = useRouter();
   const { exercise_id } = useParams();
 
+  const [title, setTitle] = useState("");
   const [questions, setQuestions] = useState([]);
   const [generalError, setGeneralError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -19,19 +21,24 @@ export default function EditFreeFormExercisePage() {
   );
 
   useEffect(() => {
-    if (data?.questions) {
-      console.log("Fetched questions:", data.questions);
-      console.log("Loaded full data for edit:", data);
-      setQuestions(
-        data.questions.map((q) => ({
-          question: q.question,
-          answers: q.answers.map((a) => ({
-            answer: a.answer,
-            feedback: a.feedback || "",
-            is_correct: a.is_correct,
-          })),
-        }))
-      );
+    if (data) {
+      if (data.title) {
+        setTitle(data.title);
+      }
+      if (data.questions) {
+        console.log("Fetched questions:", data.questions);
+        console.log("Loaded full data for edit:", data);
+        setQuestions(
+          data.questions.map((q) => ({
+            question: q.question,
+            answers: q.answers.map((a) => ({
+              answer: a.answer,
+              feedback: a.feedback || "",
+              is_correct: a.is_correct,
+            })),
+          }))
+        );
+      }
     }
   }, [data]);
 
@@ -129,7 +136,7 @@ export default function EditFreeFormExercisePage() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ questions }),
+          body: JSON.stringify({ title, questions }),
         }
       );
 
@@ -170,6 +177,16 @@ export default function EditFreeFormExercisePage() {
           {generalError}
         </p>
       )}
+
+      <div className="form-group">
+        <label>Titel</label>
+        <input
+          className="form-input"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Titel der Übung"
+        />
+      </div>
 
       {questions.map((q, questionIndex) => (
         <Column

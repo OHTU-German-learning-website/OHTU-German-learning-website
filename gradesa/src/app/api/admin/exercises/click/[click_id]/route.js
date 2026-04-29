@@ -105,7 +105,12 @@ export const PUT = withAuth(
       }
 
       const duplicateTitle = await DB.pool(
-        "SELECT id FROM click_exercises WHERE title = $1 AND id <> $2",
+        `SELECT ce.id
+         FROM click_exercises ce
+         JOIN click_to_exercises cte ON cte.click_id = ce.id
+         WHERE LOWER(TRIM(ce.title)) = LOWER(TRIM($1))
+           AND ce.id <> $2
+         LIMIT 1`,
         [title, click_id]
       );
 

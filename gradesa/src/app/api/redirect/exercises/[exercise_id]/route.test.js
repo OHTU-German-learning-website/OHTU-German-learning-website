@@ -53,9 +53,9 @@ describe("redirect exercises API", () => {
     );
 
     const freeFormExercise = await DB.pool(
-      `INSERT INTO free_form_exercises (exercise_id, question, created_at, updated_at)
-         VALUES ($1, $2, NOW(), NOW()) RETURNING id`,
-      [exercise.rows[0].id, "Was ist dein Lieblingssport?"]
+      `INSERT INTO free_form_exercises (exercise_id, title, created_at, updated_at)
+        VALUES ($1, $2, NOW(), NOW()) RETURNING id`,
+      [exercise.rows[0].id, "Lieblingssport"]
     );
 
     const response = await GET(

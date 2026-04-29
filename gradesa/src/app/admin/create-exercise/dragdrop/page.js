@@ -121,7 +121,7 @@ export default function DragdropAdminPage() {
 
       router.push("/grammar/exercises/dragdrop");
     } catch (e) {
-      console.error("Error creating dragdrop exercise:", e);
+      console.error("Error creating Sortieren/Gruppieren exercise:", e);
       setGeneralError(
         e?.response?.data?.error || e.message || "Ein Fehler ist aufgetreten"
       );
@@ -151,8 +151,8 @@ export default function DragdropAdminPage() {
       <div className="admin-container">
         <h1>
           {isEditMode
-            ? "Eine Drag-und-Drop-Übung bearbeiten"
-            : "Eine Drag-und-Drop-Übung erstellen"}
+            ? "Eine Sortieren/Gruppieren-Übung bearbeiten"
+            : "Eine Sortieren/Gruppieren-Übung erstellen"}
         </h1>
         {generalError && (
           <p className="error" role="alert">

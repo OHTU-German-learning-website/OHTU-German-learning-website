@@ -11,8 +11,8 @@ function isOnLogin(url) {
   return url.includes("/auth/login");
 }
 
-test.describe("Drag-und-Drop-Übungen", () => {
-  test("should load dragdrop exercises list or redirect to login", async ({
+test.describe("Sortieren/Gruppieren-Übungen", () => {
+  test("should load sortieren/gruppieren exercises list or redirect to login", async ({
     page,
   }) => {
     test.setTimeout(60000);
@@ -28,11 +28,13 @@ test.describe("Drag-und-Drop-Übungen", () => {
 
     await expect(page).toHaveURL(/\/grammar\/exercises\/dragdrop/);
     await expect(
-      page.getByRole("heading", { name: /Drag-und-Drop-Übungen/i })
+      page.getByRole("heading", { name: /Sortieren\/Gruppieren-Übungen/i })
     ).toBeVisible();
   });
 
-  test("should show dragdrop links or empty state", async ({ page }) => {
+  test("should show sortieren/gruppieren links or empty state", async ({
+    page,
+  }) => {
     test.setTimeout(60000);
 
     await gotoDragdropExerciseList(page);
@@ -56,7 +58,7 @@ test.describe("Drag-und-Drop-Übungen", () => {
     }
   });
 
-  test("should open a dragdrop exercise detail page when available", async ({
+  test("should open a sortieren/gruppieren exercise detail page when available", async ({
     page,
   }) => {
     test.setTimeout(60000);

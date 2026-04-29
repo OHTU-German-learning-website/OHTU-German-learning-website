@@ -7,7 +7,7 @@ import { NextResponse } from "next/server";
 export const POST = withAuth(
   withInputValidation(freeFormExerciseSchema, async (req) => {
     const body = await req.json();
-    const { questions } = body;
+    const { title, questions } = body;
 
     const hasValidAnswerBalance = questions.every(
       (q) =>
@@ -19,7 +19,7 @@ export const POST = withAuth(
       return NextResponse.json(
         {
           error:
-            "Each question must have at least one correct answer and one incorrect answer",
+            "Jede Frage muss mindestens eine richtige und eine falsche Antwort haben.",
         },
         { status: 422 }
       );
@@ -33,11 +33,11 @@ export const POST = withAuth(
       const exerciseId = exercise.rows[0].id;
       const freeFormExercise = await tx.query(
         `
-        INSERT INTO free_form_exercises (exercise_id, question)
+        INSERT INTO free_form_exercises (exercise_id, title)
         VALUES ($1, $2)
         RETURNING id
       `,
-        [exerciseId, questions[0].question]
+        [exerciseId, title]
       );
 
       const freeFormExerciseId = freeFormExercise.rows[0].id;

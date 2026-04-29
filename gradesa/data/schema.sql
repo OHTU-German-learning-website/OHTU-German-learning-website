@@ -367,7 +367,8 @@ CREATE TABLE public.free_form_exercises (
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   updated_at timestamp with time zone NOT NULL DEFAULT now(),
   exercise_id bigint NOT NULL,
-  question text NOT NULL
+  question text,
+  title text NOT NULL
 );
 
 ALTER TABLE public.free_form_answers
