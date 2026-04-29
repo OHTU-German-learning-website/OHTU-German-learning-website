@@ -21,7 +21,7 @@ describe("freeform answers", () => {
     const exerciseId = exercise.id;
     const freeFormExercise = await TestFactory.freeFormExercise({
       exercise_id: exerciseId,
-      question: "Test Question",
+      title: "Test Question Set",
     });
 
     const freeFormQuestion = await DB.pool(

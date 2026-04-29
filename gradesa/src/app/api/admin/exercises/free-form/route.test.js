@@ -13,6 +13,7 @@ describe("POST /api/auth/admin/exercises/free-form", () => {
     const { mockPost } = useTestRequest(admin);
 
     const validInput = {
+      title: "European Capitals",
       questions: [
         {
           question: "What is the capital of France?",
@@ -52,9 +53,7 @@ describe("POST /api/auth/admin/exercises/free-form", () => {
       [exercise_id]
     );
     expect(freeFormExerciseResult.rows.length).toBe(1);
-    expect(freeFormExerciseResult.rows[0].question).toBe(
-      validInput.questions[0].question
-    );
+    expect(freeFormExerciseResult.rows[0].title).toBe(validInput.title);
 
     const questionRows = await DB.pool(
       "SELECT * FROM free_form_questions WHERE free_form_exercise_id = $1 ORDER BY question_order ASC",
@@ -79,6 +78,7 @@ describe("POST /api/auth/admin/exercises/free-form", () => {
     const { mockPost } = useTestRequest(admin);
 
     const invalidInput = {
+      title: "European Capitals",
       questions: [
         {
           answers: [

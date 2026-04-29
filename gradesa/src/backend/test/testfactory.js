@@ -83,7 +83,7 @@ const exercise = modelFactory("exercises", () => ({
 const freeFormExercise = modelFactory(
   "free_form_exercises",
   {
-    question: faker.lorem.sentence(),
+    title: faker.lorem.sentence(),
   },
   async (base) => {
     if (!base.exercise_id) {
