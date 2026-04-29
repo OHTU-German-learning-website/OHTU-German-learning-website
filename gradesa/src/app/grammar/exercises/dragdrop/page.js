@@ -58,7 +58,7 @@ export default function DragdropExercisesPage() {
     return (
       <Container maxW="800px" m="0 auto" p="md">
         <Container mb="lg">
-          <h1>Drag-und-Drop-Übungen</h1>
+          <h1>Sortieren/Gruppieren-Übungen</h1>
         </Container>
         <Container color="var(--fg4)">
           Zurzeit sind keine Übungen verfügbar.
@@ -73,7 +73,7 @@ export default function DragdropExercisesPage() {
   return (
     <Container maxW="800px" m="0 auto" p="md">
       <Container mb="lg">
-        <h1>Drag-und-Drop-Übungen</h1>
+        <h1>Sortieren/Gruppieren-Übungen</h1>
       </Container>
 
       <Container

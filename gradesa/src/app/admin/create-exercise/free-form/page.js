@@ -5,12 +5,15 @@ import { useEffect, useRef, useState } from "react";
 import { useRequest } from "@/shared/hooks/useRequest";
 import { useRouter } from "next/navigation";
 import { zodErrorToFormErrors } from "@/shared/schemas/schema-utils";
+import "../multichoice/multichoice.css";
 
 const defaultFormErrors = {
+  title: "",
   questions: [],
 };
 
 export default function CreateFreeFormExercise() {
+  const [title, setTitle] = useState("");
   const [questions, setQuestions] = useState([
     {
       question: "",
@@ -115,7 +118,7 @@ export default function CreateFreeFormExercise() {
 
       const res = await makeRequest("/admin/exercises/free-form", {
         method: "POST",
-        body: { questions },
+        body: { title, questions },
       });
 
       if (res.status === 200) {
@@ -151,6 +154,7 @@ export default function CreateFreeFormExercise() {
 
   const handleSuccessOk = () => {
     setShowSuccessDialog(false);
+    setTitle("");
     setQuestions([
       {
         question: "",
@@ -179,7 +183,8 @@ export default function CreateFreeFormExercise() {
       <h2>Freitextübung erstellen</h2>
       <p>
         Um eine neue Freitextübung zu erstellen, fügen Sie eine Frage hinzu und
-        geben Sie einige mögliche richtige Antworten an. <br />
+        geben Sie einige mögliche richtige und mindestens eine falsche Antwort
+        an. <br />
         Wenn Sie den Schülern Feedback zu möglichen falschen Antworten geben
         möchten, können Sie dies tun, indem Sie Rückmeldungen hinzufügen.
       </p>
@@ -188,6 +193,18 @@ export default function CreateFreeFormExercise() {
           {generalError}
         </p>
       )}
+      <div className="form-group">
+        <label>Titel</label>
+        <input
+          className={`form-input${formErrors.title ? " input-error" : ""}`}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Titel der Übung"
+        />
+        {formErrors.title && (
+          <span className="field-error-hint">{formErrors.title}</span>
+        )}
+      </div>
       {questions.map((q, questionIndex) => (
         <Column
           key={questionIndex}

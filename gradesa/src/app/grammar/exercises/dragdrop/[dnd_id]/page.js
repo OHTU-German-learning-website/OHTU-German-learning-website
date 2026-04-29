@@ -53,7 +53,7 @@ export default function Dragdrop({}) {
           variant="secondary"
           href="/grammar/exercises/dragdrop"
         >
-          Zurück zu allen Drag-und-Drop-Übungen
+          Zurück zu allen Sortieren/Gruppieren-Übungen
         </LinkButton>
       </div>
     </div>

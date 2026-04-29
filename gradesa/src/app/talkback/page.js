@@ -76,7 +76,7 @@ export default function TalkbackPage() {
   return (
     <section className="talkback-container">
       <div className="talkback-box">
-        <h1 className="auth-title">Rückmeldekanal-Feedback geben</h1>
+        <h1 className="auth-title">Rückmeldekanal - Feedback geben</h1>
 
         {error && <p className="error">{error}</p>}
 

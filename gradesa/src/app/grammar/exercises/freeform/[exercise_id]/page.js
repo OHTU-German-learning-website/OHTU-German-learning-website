@@ -195,7 +195,7 @@ export default function FreeFormExercisePage() {
   return (
     <Container maxW="800px" m="0 auto" p="md">
       <Container mb="lg">
-        <h1>Freie Übung</h1>
+        <h1>{exercise.title}</h1>
       </Container>
 
       <Container mb="xl" p="md" bg="var(--bg2)" br="md">

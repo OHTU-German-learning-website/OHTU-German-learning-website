@@ -24,8 +24,8 @@ const exerciseTypes = [
     image: "📋",
   },
   {
-    title: "Drag-und-Drop-Übungen",
-    description: "Üben mit Drag-und-Drop-Interaktionen",
+    title: "Sortieren/Gruppieren-Übungen",
+    description: "Üben mit Sortieren/Gruppieren-Interaktionen",
     link: "/grammar/exercises/dragdrop",
     image: "📦",
   },

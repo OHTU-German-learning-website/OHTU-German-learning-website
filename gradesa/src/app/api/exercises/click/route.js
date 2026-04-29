@@ -14,7 +14,9 @@ export async function GET() {
       FROM 
         click_exercises ce
       JOIN 
-        exercises e ON ce.id = e.id
+        click_to_exercises cte ON cte.click_id = ce.id
+      JOIN
+        exercises e ON e.id = cte.exercise_id
       ORDER BY 
         e.created_at DESC
     `);

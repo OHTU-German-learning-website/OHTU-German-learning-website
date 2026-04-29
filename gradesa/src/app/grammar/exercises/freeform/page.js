@@ -109,9 +109,9 @@ export default function FreeFormExercisesPage() {
                   href={`/grammar/exercises/freeform/${exercise.id}`}
                   style={{ fontSize: "var(--font-lg)" }}
                 >
-                  {exercise.question.length > 30
-                    ? `${exercise.question.substring(0, 30)}...`
-                    : exercise.question}
+                  {exercise.title.length > 30
+                    ? `${exercise.title.substring(0, 30)}...`
+                    : exercise.title}
                 </Link>
               </Container>
               <Container fontSize="md" color="var(--fg4)">

@@ -10,6 +10,7 @@ export const GET = withAuth(async (request, { params }) => {
       `
       SELECT 
         id,
+        title,
         exercise_id
       FROM free_form_exercises 
       WHERE id = $1

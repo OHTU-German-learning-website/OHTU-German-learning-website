@@ -11,6 +11,7 @@ export const GET = withAuth(
         `
         SELECT 
           id,
+          title,
           exercise_id
         FROM free_form_exercises
         WHERE id = $1
@@ -89,7 +90,7 @@ export const PUT = withAuth(
     try {
       const { exercise_id } = await params;
       const body = await request.json();
-      const { questions } = body;
+      const { title, questions } = body;
 
       const hasValidAnswerBalance = questions.every(
         (q) =>
@@ -99,7 +100,7 @@ export const PUT = withAuth(
 
       if (!hasValidAnswerBalance) {
         return NextResponse.json(
-          { error: "Each question must have at least one correct answer" },
+          { error: "Jede Frage muss mindestens eine richtige Antwort haben." },
           { status: 422 }
         );
       }
@@ -121,10 +122,10 @@ export const PUT = withAuth(
         await tx.query(
           `
           UPDATE free_form_exercises
-          SET question = $1, updated_at = NOW()
+          SET title = $1, updated_at = NOW()
           WHERE id = $2
         `,
-          [questions[0].question, exercise_id]
+          [title, exercise_id]
         );
 
         await tx.query(
