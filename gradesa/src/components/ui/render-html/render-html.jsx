@@ -50,24 +50,30 @@ const normalizeAttribs = (attributes = {}) => {
  * @param {{data: string}} props - Component props containing raw HTML string.
  * @returns {JSX.Element|null} Parsed React nodes wrapped in a `div`, or `null`.
  */
-export default function RenderHTML({ data }) {
+export default function RenderHTML({ data, disableGlossary = false }) {
   if (!data) return null;
+
+  const renderParagraph = (attributes, children) =>
+    disableGlossary ? (
+      <p {...attributes}>{children}</p>
+    ) : (
+      <GlossaryParagraph {...attributes}>{children}</GlossaryParagraph>
+    );
+
+  const renderListItem = (attributes, children) =>
+    disableGlossary ? (
+      <li {...attributes}>{children}</li>
+    ) : (
+      <GlossaryListItem {...attributes}>{children}</GlossaryListItem>
+    );
 
   // Handlers for specific custom tags. Each handler receives normalized
   // attributes and the already-converted children (as React nodes).
   const handlers = {
-    p: (attributes, children) => (
-      <GlossaryParagraph {...attributes}>{children}</GlossaryParagraph>
-    ),
-    li: (attributes, children) => (
-      <GlossaryListItem {...attributes}>{children}</GlossaryListItem>
-    ),
-    glossaryparagraph: (attributes, children) => (
-      <GlossaryParagraph {...attributes}>{children}</GlossaryParagraph>
-    ),
-    glossarylistitem: (attributes, children) => (
-      <GlossaryListItem {...attributes}>{children}</GlossaryListItem>
-    ),
+    p: renderParagraph,
+    li: renderListItem,
+    glossaryparagraph: renderParagraph,
+    glossarylistitem: renderListItem,
     column: (attributes, children) => {
       const safeAttribs = { ...attributes };
       safeAttribs.className = [safeAttribs.className, "glossary-column"]
