@@ -91,12 +91,13 @@ export default function MultichoicePage({ exerciseId }) {
       }
     );
 
-    const hasIncorrectAnswers = newCheckedAnswers.some(
-      (isCorrect, index) =>
-        shuffledExerciseData.content[index].content_type === "multichoice" ||
-        (shuffledExerciseData.content[index].content_type === "gap" &&
-          !isCorrect)
-    );
+    const hasIncorrectAnswers = newCheckedAnswers.some((isCorrect, index) => {
+      const contentType = shuffledExerciseData.content[index].content_type;
+      const isAnswerField =
+        contentType === "multichoice" || contentType === "gap";
+
+      return isAnswerField && !isCorrect;
+    });
 
     // Set error state if there are missing or incorrect answers
     setHasErrors(hasMissingAnswers || hasIncorrectAnswers);

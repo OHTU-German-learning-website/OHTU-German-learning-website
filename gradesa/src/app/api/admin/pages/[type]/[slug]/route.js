@@ -189,7 +189,9 @@ export const POST = withAuth(
 function sanitize(data) {
   const window = new JSDOM("").window;
   const purify = DOMPurify(window);
-  const cleaned = purify.sanitize(data, { ADD_ATTR: ["target"] });
+  const cleaned = purify.sanitize(data, {
+    ADD_ATTR: ["target", "width", "height", "data-size"],
+  });
   return cleaned;
 }
 

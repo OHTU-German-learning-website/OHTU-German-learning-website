@@ -28,6 +28,8 @@
 }
 
 .control {
+  box-sizing: border-box;
+  display: block;
   width: 100%;
   min-height: 2.65rem;
   padding: 0.55rem 0.75rem;
@@ -37,9 +39,15 @@
   color: var(--fg1);
   caret-color: var(--fg1);
   font-size: 0.98rem;
+  line-height: 1.25;
+  text-align: left;
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease;
+}
+
+select.control {
+  padding-right: 2.1rem;
 }
 
 .control::placeholder {

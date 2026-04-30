@@ -10,9 +10,10 @@
   color: hsla(0, 100%, 50%, 1);
 }
 
-h1,
-h2,
-h3 {
+.chapter-page-title,
+.chapter-rendered-content h1,
+.chapter-rendered-content h2,
+.chapter-rendered-content h3 {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   margin-top: 1.5rem;
   margin-bottom: 1rem;
@@ -20,18 +21,19 @@ h3 {
   line-height: 1.3;
 }
 
-h1 {
+.chapter-page-title,
+.chapter-rendered-content h1 {
   font-size: 2rem;
   padding-bottom: 0.5rem;
   color: var(--fg1);
 }
 
-h2 {
+.chapter-rendered-content h2 {
   font-size: 1.75rem;
   color: var(--fg1);
 }
 
-h3 {
+.chapter-rendered-content h3 {
   font-size: 1.35rem;
   color: var(--fg1);
 }

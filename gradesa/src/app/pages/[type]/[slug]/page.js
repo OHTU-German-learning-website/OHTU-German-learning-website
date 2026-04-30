@@ -32,7 +32,7 @@ export default async function Chapters({ params }) {
   return (
     <Column className={layout.viewContent}>
       <AdminButtons type={type} slug={slug} />
-      <h1>{pageData.title}</h1>
+      <h1 className="chapter-page-title">{pageData.title}</h1>
 
       <Container className="chapter-rendered-content">
         <RenderHTML data={transformedContent} />
