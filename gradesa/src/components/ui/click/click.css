@@ -2,10 +2,6 @@
     width: fit-content;
 }
 
-h2 {
-    color: var(--tertiary1);
-}
-
 .word-container {
     line-height: 2.2;
     white-space: pre-wrap;

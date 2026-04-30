@@ -93,6 +93,9 @@
   color: var(--red);
 }
 
-h2 {
+.themes-title h2,
+.lessons-content h2,
+.lessons-container h2,
+.flex-child-element h2 {
   color: var(--fg2);
 }

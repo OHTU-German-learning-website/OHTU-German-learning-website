@@ -536,25 +536,72 @@ label {
   font-size: 2.5em;
 }
 
-.rendered-html .ql-indent-1 {
+.rendered-html :not(li).ql-indent-1 {
   padding-left: 3em;
 }
 
-.rendered-html .ql-indent-2 {
+.rendered-html :not(li).ql-indent-2 {
   padding-left: 6em;
 }
 
-.rendered-html .ql-indent-3 {
+.rendered-html :not(li).ql-indent-3 {
   padding-left: 9em;
 }
 
-.rendered-html .ql-indent-4 {
+.rendered-html :not(li).ql-indent-4 {
   padding-left: 12em;
+}
+
+.rendered-html :not(li).ql-indent-5 {
+  padding-left: 15em;
+}
+
+.rendered-html :not(li).ql-indent-6 {
+  padding-left: 18em;
+}
+
+.rendered-html :not(li).ql-indent-7 {
+  padding-left: 21em;
+}
+
+.rendered-html :not(li).ql-indent-8 {
+  padding-left: 24em;
+}
+
+.rendered-html li.ql-indent-1 {
+  margin-left: 3em;
+}
+
+.rendered-html li.ql-indent-2 {
+  margin-left: 6em;
+}
+
+.rendered-html li.ql-indent-3 {
+  margin-left: 9em;
+}
+
+.rendered-html li.ql-indent-4 {
+  margin-left: 12em;
+}
+
+.rendered-html li.ql-indent-5 {
+  margin-left: 15em;
+}
+
+.rendered-html li.ql-indent-6 {
+  margin-left: 18em;
+}
+
+.rendered-html li.ql-indent-7 {
+  margin-left: 21em;
+}
+
+.rendered-html li.ql-indent-8 {
+  margin-left: 24em;
 }
 
 .rendered-html img {
   max-width: 100%;
-  height: auto;
 }
 
 .rendered-html {
@@ -608,4 +655,18 @@ label {
 .ql-table-dropdown-list li,
 .ql-table-dropdown-properties-list li {
   color: #000;
+}
+
+/* Image resize UX: use a single bottom-right handle, similar to table resizing. */
+.ql-resize-handle.tl,
+.ql-resize-handle.tr,
+.ql-resize-handle.bl {
+  display: none !important;
+}
+
+.ql-resize-handle.br {
+  width: 14px;
+  height: 14px;
+  right: -7px;
+  bottom: -7px;
 }

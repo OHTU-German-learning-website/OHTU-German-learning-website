@@ -97,6 +97,34 @@ describe("PUT /api/admin/pages/[type]/[slug]", () => {
 
     expect(response.status).toBe(404);
   });
+
+  it("should preserve resize attributes and remove unsafe ones in content", async () => {
+    const admin = await TestFactory.user({ is_admin: true });
+    const { mockPut, mockParams } = useTestRequest(admin);
+
+    const updateData = {
+      content:
+        '<p><img src="/example.png" width="320" height="180" data-size="320x180" onerror="alert(1)"></p>',
+    };
+
+    const response = await PUT(
+      mockPut("/api/admin/pages/resources/test-page", updateData),
+      mockParams({ type: "resources", slug: "test-page" })
+    );
+
+    expect(response.status).toBe(200);
+
+    const result = await DB.pool(
+      "SELECT content FROM html_pages WHERE page_group = $1 AND slug = $2",
+      ["resources", "test-page"]
+    );
+
+    expect(result.rows.length).toBe(1);
+    expect(result.rows[0].content).toContain('width="320"');
+    expect(result.rows[0].content).toContain('height="180"');
+    expect(result.rows[0].content).toContain('data-size="320x180"');
+    expect(result.rows[0].content).not.toContain("onerror");
+  });
 });
 
 describe("DELETE /api/admin/pages/[type]/[slug]", () => {

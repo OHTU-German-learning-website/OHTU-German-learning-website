@@ -91,44 +91,48 @@ export default function CreateMultichoicePage() {
 
   // --- Actions ---
 
+  const insertSection = (newSection, { selectInserted = false } = {}) => {
+    const insertIndex =
+      activeSectionIndex === null ? sections.length : activeSectionIndex + 1;
+    const newSections = [...sections];
+    newSections.splice(insertIndex, 0, newSection);
+    setSections(newSections);
+
+    if (selectInserted) {
+      setActiveSectionIndex(insertIndex);
+    }
+  };
+
   const addTextSection = () => {
-    setSections([
-      ...sections,
-      { id: crypto.randomUUID(), type: "text", value: "" },
-    ]);
+    insertSection({ id: crypto.randomUUID(), type: "text", value: "" });
   };
 
   const addMultiChoiceSection = () => {
-    const newIndex = sections.length;
-    setSections([
-      ...sections,
+    insertSection(
       {
         id: crypto.randomUUID(),
         type: "multichoice",
         options: ["Option 1", "Option 2"],
         correct: 0, // Index of the correct answer
       },
-    ]);
-    // Automatically select the new dropdown for editing
-    setActiveSectionIndex(newIndex);
+      { selectInserted: true }
+    );
   };
 
   const addGapSection = () => {
-    const newIndex = sections.length;
-    setSections([
-      ...sections,
+    insertSection(
       {
         id: crypto.randomUUID(),
         type: "gap",
         value: "___",
         correct: "",
       },
-    ]);
-    setActiveSectionIndex(newIndex);
+      { selectInserted: true }
+    );
   };
 
   const addLineBreakSection = () => {
-    setSections([...sections, { id: crypto.randomUUID(), type: "linebreak" }]);
+    insertSection({ id: crypto.randomUUID(), type: "linebreak" });
   };
 
   const handleTextChange = (index, newValue) => {
@@ -140,7 +144,13 @@ export default function CreateMultichoicePage() {
   const removeSection = (index) => {
     const newSections = sections.filter((_, i) => i !== index);
     setSections(newSections);
-    if (activeSectionIndex === index) setActiveSectionIndex(null);
+    if (activeSectionIndex === index) {
+      setActiveSectionIndex(null);
+      return;
+    }
+    if (activeSectionIndex !== null && activeSectionIndex > index) {
+      setActiveSectionIndex(activeSectionIndex - 1);
+    }
   };
 
   // --- Backend Submission ---
@@ -235,15 +245,35 @@ export default function CreateMultichoicePage() {
       {/* --- The Sentence Builder (Inline Flow) --- */}
       <div className="sentence-builder-container">
         <h3>Satz bauen:</h3>
+        <p className="builder-hint">
+          Neue Elemente werden nach dem markierten Abschnitt eingefügt. Ohne
+          Auswahl werden sie am Ende angehängt.
+        </p>
+        {activeSectionIndex !== null && (
+          <button
+            type="button"
+            className="clear-selection-button"
+            onClick={() => setActiveSectionIndex(null)}
+          >
+            Auswahl aufheben und am Ende einfügen
+          </button>
+        )}
         <div className="sentence-flow">
           {sections.map((section, index) => {
             if (section.type === "text") {
               return (
-                <div key={section.id} className="inline-block-wrapper">
+                <div
+                  key={section.id}
+                  className={`inline-block-wrapper ${
+                    activeSectionIndex === index ? "active" : ""
+                  }`}
+                >
                   <input
                     type="text"
                     value={section.value}
                     onChange={(e) => handleTextChange(index, e.target.value)}
+                    onFocus={() => setActiveSectionIndex(index)}
+                    onClick={() => setActiveSectionIndex(index)}
                     className="text-block-input"
                     placeholder="..."
                   />
@@ -260,9 +290,19 @@ export default function CreateMultichoicePage() {
               return (
                 <div
                   key={section.id}
-                  className="inline-block-wrapper linebreak-block"
+                  className={`inline-block-wrapper linebreak-block ${
+                    activeSectionIndex === index ? "active" : ""
+                  }`}
                 >
-                  <span className="linebreak-indicator">↵</span>
+                  <button
+                    type="button"
+                    onClick={() => setActiveSectionIndex(index)}
+                    className={`linebreak-button ${
+                      activeSectionIndex === index ? "active" : ""
+                    }`}
+                  >
+                    <span className="linebreak-indicator">↵</span>
+                  </button>
                   <button
                     onClick={() => removeSection(index)}
                     className="delete-x"
@@ -276,7 +316,10 @@ export default function CreateMultichoicePage() {
               const isActive = activeSectionIndex === index;
 
               return (
-                <div key={section.id} className="inline-block-wrapper">
+                <div
+                  key={section.id}
+                  className={`inline-block-wrapper ${isActive ? "active" : ""}`}
+                >
                   <button
                     onClick={() => setActiveSectionIndex(index)}
                     className={`dropdown-placeholder ${isActive ? "active" : ""}`}
@@ -295,7 +338,10 @@ export default function CreateMultichoicePage() {
             // Multichoice Block
             const isActive = activeSectionIndex === index;
             return (
-              <div key={section.id} className="inline-block-wrapper">
+              <div
+                key={section.id}
+                className={`inline-block-wrapper ${isActive ? "active" : ""}`}
+              >
                 <button
                   onClick={() => setActiveSectionIndex(index)}
                   className={`dropdown-placeholder ${isActive ? "active" : ""}`}

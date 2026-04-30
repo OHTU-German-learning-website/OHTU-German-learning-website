@@ -4,7 +4,7 @@
   flex-direction: column;
   flex-grow: 1;
   align-items: center;
-  padding-top: 100px;
+  padding-top: 10px;
 }
 
 .talkback-box {
@@ -21,7 +21,7 @@
   max-width: max-content;
   background-color: var(--bg3);
   border-radius: var(--radius-2xl);
-  padding: var(--u-3xl);
+  padding: var(--u-xl);
   display: flex;
   flex-direction: column;
   gap: var(--u-lg);
@@ -48,7 +48,7 @@
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.2rem;
 }
 
 .form-label {

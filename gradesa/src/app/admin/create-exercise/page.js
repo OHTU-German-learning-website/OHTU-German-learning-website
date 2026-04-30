@@ -13,11 +13,11 @@ export default function CreateExercise() {
         Freie Übung
       </LinkButton>
       <LinkButton href="/admin/create-exercise/click">Klick Übung</LinkButton>
-      <LinkButton href="/admin/create-exercise/dragdrop">
-        Sortieren/Gruppieren
-      </LinkButton>
       <LinkButton href="/admin/create-exercise/multichoice">
         Multiple choice
+      </LinkButton>
+      <LinkButton href="/admin/create-exercise/dragdrop">
+        Sortieren/Gruppieren
       </LinkButton>
       <LinkButton href="/admin/create-exercise/fillinthegap">
         Lückentext

@@ -38,7 +38,7 @@ export default function EditorSection({
   const submitEditorContent = async () => {
     // A naive approach with string replacement is used here.
     const requestBody = {
-      content: editorContent.replace(/&nbsp;/g, " "),
+      content: editorContent,
       title: titleInput,
     };
 

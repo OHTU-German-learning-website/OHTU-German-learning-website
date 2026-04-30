@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import "quill/dist/quill.snow.css";
 import "quill-table-better/dist/quill-table-better.css";
+import "quill-resize-module/dist/resize.css";
 
 function setHtmlContent(quill, html) {
   const content = String(html || "");
@@ -26,12 +27,25 @@ const ClientEditor = (props) => {
     const load = async () => {
       const Quill = (await import("quill")).default;
       const TableBetter = (await import("quill-table-better")).default;
+      let QuillResize = null;
+
+      try {
+        const QuillResizeModule = await import("quill-resize-module");
+        QuillResize = QuillResizeModule?.default || QuillResizeModule || null;
+      } catch (error) {
+        // Keep editor functional even if the resize plugin is unavailable.
+        console.warn("Resize plugin could not be loaded", error);
+      }
+
       Quill.register(
         {
           "modules/table-better": TableBetter,
         },
         true
       );
+      if (QuillResize) {
+        Quill.register("modules/resize", QuillResize, true);
+      }
       if (containerRef.current && containerRef.current.children.length === 0) {
         const toolbarOptions = [
           [{ header: [false, 1, 2, 3] }],
@@ -43,26 +57,45 @@ const ClientEditor = (props) => {
           [{ script: "sub" }, { script: "super" }],
           [{ indent: "-1" }, { indent: "+1" }],
         ];
+        const modules = {
+          toolbar: toolbarOptions,
+          table: false,
+          "table-better": {
+            language: "en_US",
+            menus: [
+              "column",
+              "row",
+              "merge",
+              "table",
+              "cell",
+              "wrap",
+              "copy",
+              "delete",
+            ],
+            toolbarTable: true,
+          },
+        };
+
+        if (QuillResize) {
+          modules.resize = {
+            modules: ["Resize", "DisplaySize", "Toolbar"],
+            parchment: {
+              image: {
+                attribute: ["width", "height"],
+              },
+            },
+            onChangeSize: (_blot, _activeEle, _size) => {
+              // Capture resized image HTML and send to parent immediately.
+              const html = quill.root.innerHTML;
+              lastUserHtmlRef.current = html;
+              updateEditorContentRef.current?.(html);
+            },
+          };
+        }
+
         quill = new Quill(containerRef.current, {
           theme: "snow",
-          modules: {
-            toolbar: toolbarOptions,
-            table: false,
-            "table-better": {
-              language: "en_US",
-              menus: [
-                "column",
-                "row",
-                "merge",
-                "table",
-                "cell",
-                "wrap",
-                "copy",
-                "delete",
-              ],
-              toolbarTable: true,
-            },
-          },
+          modules,
           keyboard: {
             bindings: TableBetter.keyboardBindings,
           },
@@ -71,7 +104,7 @@ const ClientEditor = (props) => {
         quill.root.style.fontSize = "1.125rem";
         quill.root.style.lineHeight = "1.7";
         quill.on(Quill.events.TEXT_CHANGE, (_delta, _oldDelta, source) => {
-          if (source !== Quill.sources.USER) {
+          if (source === Quill.sources.SILENT) {
             return;
           }
           const html = quill.root.innerHTML;
