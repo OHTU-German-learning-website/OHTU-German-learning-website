@@ -35,6 +35,12 @@ const exerciseTypes = [
     link: "/grammar/exercises/fillinthegap",
     image: "🧩",
   },
+  {
+    title: "Zuordnungs-Übungen",
+    description: "Üben mit Drag-und-Drop Zuordnung",
+    link: "/grammar/exercises/dnd-match",
+    image: "🔗",
+  },
   // Add other exercise types here
 ];
 

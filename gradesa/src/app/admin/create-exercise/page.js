@@ -22,6 +22,9 @@ export default function CreateExercise() {
       <LinkButton href="/admin/create-exercise/fillinthegap">
         Lückentext
       </LinkButton>
+      <LinkButton href="/admin/create-exercise/dnd-match">
+        Zuordnungsübung
+      </LinkButton>
     </Column>
   );
 }

@@ -1,0 +1,141 @@
+/* ── Two-column layout ───────────────────────────────────────────────────── */
+.dnd-match-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--u-xl);
+    margin-top: var(--u-xl);
+}
+
+@media (max-width: 600px) {
+    .dnd-match-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+.dnd-match-column__title {
+    font-weight: 600;
+    font-size: var(--font-lg);
+    margin-bottom: var(--u-sm);
+    color: var(--fg1);
+    border-bottom: 2px solid var(--bg3);
+    padding-bottom: var(--u-sm);
+}
+
+/* ── Left column: drop slots ─────────────────────────────────────────────── */
+.match-slot {
+    display: flex;
+    align-items: center;
+    gap: var(--u-md);
+    margin-bottom: var(--u-sm);
+}
+
+.match-slot__label {
+    min-width: 17rem;
+    max-width: 20rem;
+    font-weight: 500;
+    color: var(--fg1);
+    padding: var(--u-sm) var(--u-md);
+    background-color: var(--bg2);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--bg3);
+    word-break: break-word;
+}
+
+.match-slot__arrow {
+    color: var(--fg3);
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.match-slot__drop {
+    flex: 1;
+    min-height: 2.6rem;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    padding: var(--u-sm) var(--u-md);
+    transition: background-color 0.15s;
+}
+
+.match-slot__dropped-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: var(--u-sm);
+}
+
+.match-slot__remove-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--fg3);
+    font-size: 0.75rem;
+    padding: 2px 5px;
+    border-radius: var(--radius-xs);
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.match-slot__remove-btn:hover {
+    background-color: var(--bg3);
+    color: var(--fg1);
+}
+
+.match-slot__placeholder {
+    color: var(--fg4);
+    font-style: italic;
+    font-size: var(--font-sm);
+}
+
+/* ── Right column: draggable cards ───────────────────────────────────────── */
+.match-card {
+    max-width: 20rem;
+    padding: var(--u-md) var(--u-lg);
+    background-color: var(--fg3);
+    color: var(--secondary1);
+    border: var(--radius-2xs) dashed;
+    border-radius: var(--radius-sm);
+    cursor: move;
+    user-select: none;
+    text-align: center;
+    margin-bottom: var(--u-sm);
+    word-break: break-word;
+}
+
+/* ── Result / feedback ───────────────────────────────────────────────────── */
+.dnd-match-result {
+    margin-top: var(--u-lg);
+    padding: var(--u-lg);
+    border-radius: var(--radius-sm);
+    text-align: center;
+    font-weight: 600;
+    animation: dndMatchFadeIn 0.3s ease-in-out;
+}
+
+.dnd-match-result--success {
+    background-color: #b3f0b3;
+    color: #1a5c1a;
+}
+
+.dnd-match-result--fail {
+    background-color: #ffb3b3;
+    color: #7a0000;
+}
+
+@keyframes dndMatchFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* ── Action buttons row ──────────────────────────────────────────────────── */
+.dnd-match-actions {
+    display: flex;
+    gap: var(--u-md);
+    margin-top: var(--u-xl);
+}
