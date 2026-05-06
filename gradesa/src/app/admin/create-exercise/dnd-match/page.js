@@ -35,9 +35,9 @@ export default function DndMatchAdminPage() {
     setPairs(
       Array.isArray(exerciseData.pairs) && exerciseData.pairs.length >= 2
         ? exerciseData.pairs.map((p) => ({
-            leftItem: p.left_item,
-            rightItem: p.right_item,
-          }))
+          leftItem: p.left_item,
+          rightItem: p.right_item,
+        }))
         : [EMPTY_PAIR(), EMPTY_PAIR()]
     );
   }, [exerciseData, isEditMode]);
@@ -148,7 +148,7 @@ export default function DndMatchAdminPage() {
           />
         </div>
 
-        {/* Description */}
+        {/* Descriptionnn */}
         <div className="form-group">
           <label htmlFor="description">Beschreibung *</label>
           <textarea
