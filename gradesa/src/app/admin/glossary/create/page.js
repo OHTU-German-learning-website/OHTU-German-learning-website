@@ -150,7 +150,14 @@ export default function CreateGlossaryEntry() {
           <p className="error">{formErrors.word_definition}</p>
         )}
       </Column>
-      <Row justify={"space-between"} gap="md" mt={"xl"} mb={"xl"}>
+      <Row
+        justify={"space-between"}
+        align="center"
+        wrap="wrap"
+        gap="md"
+        mt={"xl"}
+        mb={"xl"}
+      >
         <Button variant="outline" onClick={handleCancel}>
           Abbrechen
         </Button>
