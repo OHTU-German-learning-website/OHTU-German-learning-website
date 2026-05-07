@@ -41,6 +41,12 @@ const exerciseTypes = [
     link: "/grammar/exercises/dnd-match",
     image: "🔗",
   },
+  {
+    title: "Memory Game",
+    description: "Üben mit Memory-Paaren",
+    link: "/grammar/exercises/memory-game",
+    image: "🧠",
+  },
   // Add other exercise types here
 ];
 
