@@ -25,6 +25,9 @@ export default function CreateExercise() {
       <LinkButton href="/admin/create-exercise/dnd-match">
         Zuordnungsübung
       </LinkButton>
+      <LinkButton href="/admin/create-exercise/memory-game">
+        Memory Game
+      </LinkButton>
     </Column>
   );
 }
