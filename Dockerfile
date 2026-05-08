@@ -38,7 +38,7 @@ ENV SESSION_SECRET=$SESSION_SECRET \
     DB_USER=$DB_USER \
     DB_PASSWORD=$DB_PASSWORD \
     DB_NAME=$DB_NAME \
-    NODE_ENV=$NODE_ENV \
+    NODE_ENV=$NODE_ENV
 
 # Install ALL dependencies (including dev) for build
 RUN npm ci
