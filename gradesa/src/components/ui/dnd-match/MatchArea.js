@@ -7,7 +7,6 @@ import { MatchCard } from "./MatchCard";
 import { MatchSlot } from "./MatchSlot";
 import { Button } from "@/components/ui/button";
 import "./dnd-match.css";
-import { withBasePath } from "@/shared/utils/basePath";
 
 function shuffle(arr) {
   const a = [...arr];
@@ -110,7 +109,7 @@ const MatchAreaInner = ({ exercise, exerciseId }) => {
       }));
 
       const res = await fetch(
-        withBasePath(`/api/exercises/dnd-match/${exerciseId}/answers`),
+        `/api/exercises/dnd-match/${exerciseId}/answers`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

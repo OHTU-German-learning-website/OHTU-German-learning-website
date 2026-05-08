@@ -6,7 +6,6 @@ import styles from "../page.module.css";
 import { Container } from "@/components/ui/layout/container";
 import { LinkButton } from "@/components/ui/linkbutton";
 import { Grid } from "@radix-ui/themes";
-import { withBasePath } from "@/shared/utils/basePath";
 
 export default function EditInfo() {
   const [user, setUser] = useState(null);
@@ -14,7 +13,7 @@ export default function EditInfo() {
 
   useEffect(() => {
     const getUser = async () => {
-      const res = await fetch(withBasePath("/api/edit_info"));
+      const res = await fetch("/api/edit_info");
 
       if (res.status === 401) {
         router.replace("/auth/login");

@@ -5,7 +5,6 @@ import { Container, Column, Row } from "@/components/ui/layout/container";
 import useQuery from "@/shared/hooks/useQuery";
 import { ExerciseLinkButton } from "@/components/ui/button/exercise-link-button";
 import { Button } from "@/components/ui/button";
-import { withBasePath } from "@/shared/utils/basePath";
 
 export default function MultichoiceExercisesPage() {
   const {
@@ -22,7 +21,7 @@ export default function MultichoiceExercisesPage() {
 
     try {
       const response = await fetch(
-        withBasePath(`/api/admin/exercises/multichoice/${exerciseId}`),
+        `/api/admin/exercises/multichoice/${exerciseId}`,
         {
           method: "DELETE",
         }
