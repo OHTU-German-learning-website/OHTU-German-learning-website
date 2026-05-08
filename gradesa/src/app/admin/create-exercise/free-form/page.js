@@ -235,9 +235,6 @@ export default function CreateFreeFormExercise() {
                 handleQuestionChange(questionIndex, e.target.value)
               }
               placeholder="Geben Sie hier Ihre Frage ein"
-              //   className={formErrors.question ? "error-input" : ""}
-              // />
-              // {formErrors.question && <p className="error">{formErrors.question}</p>}
             />
           </label>
 

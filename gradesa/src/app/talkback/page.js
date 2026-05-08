@@ -3,6 +3,7 @@
 import "./talkback.css";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { withBasePath } from "@/shared/utils/basePath";
 
 export default function TalkbackPage() {
   const defaultSubject = "Rückmeldung von GRADESA 2.0";
@@ -44,7 +45,7 @@ export default function TalkbackPage() {
     try {
       setIsSending(true);
 
-      const response = await fetch("/api/talkback", {
+      const response = await fetch(withBasePath("/api/talkback"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

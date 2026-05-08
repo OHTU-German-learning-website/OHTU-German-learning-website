@@ -5,6 +5,7 @@ import { Container, Row, Column } from "@/components/ui/layout/container";
 import useQuery from "@/shared/hooks/useQuery";
 import { ExerciseLinkButton } from "@/components/ui/button/exercise-link-button";
 import { Button } from "@/components/ui/button";
+import { withBasePath } from "@/shared/utils/basePath";
 
 export default function FreeFormExercisesPage() {
   const {
@@ -21,7 +22,7 @@ export default function FreeFormExercisesPage() {
 
     try {
       const response = await fetch(
-        `/api/admin/exercises/free-form/${exerciseId}`,
+        withBasePath(`/api/admin/exercises/free-form/${exerciseId}`),
         {
           method: "DELETE",
         }
