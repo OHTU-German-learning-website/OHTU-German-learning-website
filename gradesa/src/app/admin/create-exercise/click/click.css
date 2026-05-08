@@ -16,8 +16,8 @@
     margin-right: 0.5em;
     padding: 0.5em 1em;
     border-radius: 0.5em;
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
+    background-color: var(--tertiary1);
+    border: 1px solid var(--tertiary1);
     display: inline-block;
     max-width: 100%;
     word-wrap: break-word;

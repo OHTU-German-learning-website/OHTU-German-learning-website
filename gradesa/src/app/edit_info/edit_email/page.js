@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Container } from "@/components/ui/layout/container";
 import { Button } from "@/components/ui/button";
+import { withBasePath } from "@/shared/utils/basePath";
 
 export default function EditEmail() {
   const [user, setUser] = useState("");
@@ -16,7 +17,9 @@ export default function EditEmail() {
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        const res = await fetch("/api/edit_email", { method: "GET" });
+        const res = await fetch(withBasePath("/api/edit_email"), {
+          method: "GET",
+        });
         if (res.ok) {
           const data = await res.json();
           setUser(data);
@@ -41,7 +44,7 @@ export default function EditEmail() {
       return;
     }
 
-    const res = await fetch("/api/edit_email", {
+    const res = await fetch(withBasePath("/api/edit_email"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

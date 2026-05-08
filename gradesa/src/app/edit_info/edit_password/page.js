@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Container } from "@/components/ui/layout/container";
 import { Button } from "@/components/ui/button";
+import { withBasePath } from "@/shared/utils/basePath";
 
 export default function EditPassword() {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -24,7 +25,7 @@ export default function EditPassword() {
       return;
     }
 
-    const res = await fetch("/api/edit_password", {
+    const res = await fetch(withBasePath("/api/edit_password"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -42,7 +43,7 @@ export default function EditPassword() {
       }, 2000);
     } else {
       const data = await res.json();
-      setError(data.message || "Failed to change password.");
+      setError(data.message || "Passwort konnte nicht geändert werden");
     }
   };
 

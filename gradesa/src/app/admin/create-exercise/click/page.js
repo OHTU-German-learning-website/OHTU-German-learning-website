@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import useQuery from "@/shared/hooks/useQuery";
 import "./click.css";
 import WordSelectionExercise from "@/components/ui/click/click.js";
+import { withBasePath } from "@/shared/utils/basePath";
 
 export default function CreateExercise() {
   const router = useRouter();
@@ -66,16 +67,19 @@ export default function CreateExercise() {
   const handleSaveExercise = async () => {
     try {
       if (isEditMode) {
-        const response = await fetch(`/api/admin/exercises/click/${click_id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            title,
-            targetCategory,
-            targetWords: selectedWords,
-            allWords,
-          }),
-        });
+        const response = await fetch(
+          withBasePath(`/api/admin/exercises/click/${click_id}`),
+          {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              title,
+              targetCategory,
+              targetWords: selectedWords,
+              allWords,
+            }),
+          }
+        );
 
         const data = await response.json();
         if (!response.ok) {
