@@ -9,7 +9,6 @@ import { useRequest } from "@/shared/hooks/useRequest";
 import { useParams, useRouter } from "next/navigation";
 import useQuery from "@/shared/hooks/useQuery";
 import PreviewDragDrop from "@/components/ui/dragdrop/dragdrop_preview";
-import { withBasePath } from "@/shared/utils/basePath";
 
 export default function DragdropAdminPage() {
   const { dnd_id } = useParams();
@@ -86,7 +85,7 @@ export default function DragdropAdminPage() {
 
       if (isEditMode) {
         const response = await fetch(
-          withBasePath(`/api/admin/exercises/dragdrop/${dnd_id}`),
+          `/api/admin/exercises/dragdrop/${dnd_id}`,
           {
             method: "PUT",
             headers: { "Content-Type": "application/json" },

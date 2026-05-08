@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import useQuery from "@/shared/hooks/useQuery";
 import "../../../multichoice/multichoice.css";
-import { withBasePath } from "@/shared/utils/basePath";
 
 export default function EditFreeFormExercisePage() {
   const router = useRouter();
@@ -131,7 +130,7 @@ export default function EditFreeFormExercisePage() {
       }
 
       const response = await fetch(
-        withBasePath(`/api/admin/exercises/free-form/${exercise_id}`),
+        `/api/admin/exercises/free-form/${exercise_id}`,
         {
           method: "PUT",
           headers: {

@@ -5,7 +5,6 @@ import { Container, Row, Column } from "@/components/ui/layout/container";
 import useQuery from "@/shared/hooks/useQuery";
 import { ExerciseLinkButton } from "@/components/ui/button/exercise-link-button";
 import { Button } from "@/components/ui/button";
-import { withBasePath } from "@/shared/utils/basePath";
 
 export default function ClickExercisesPage() {
   const {
@@ -21,12 +20,9 @@ export default function ClickExercisesPage() {
     if (!confirmed) return;
 
     try {
-      const response = await fetch(
-        withBasePath(`/api/admin/exercises/click/${exerciseId}`),
-        {
-          method: "DELETE",
-        }
-      );
+      const response = await fetch(`/api/admin/exercises/click/${exerciseId}`, {
+        method: "DELETE",
+      });
 
       if (!response.ok) {
         throw new Error("Fehler beim Löschen der Übung.");
