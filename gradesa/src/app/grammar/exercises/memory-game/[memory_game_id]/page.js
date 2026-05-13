@@ -7,6 +7,7 @@ import useQuery from "@/shared/hooks/useQuery";
 import { Column, Container, Row } from "@/components/ui/layout/container";
 import { Button } from "@/components/ui/button";
 import { MemoryGame } from "@/components/ui/memory-game/MemoryGame";
+import { withBasePath } from "@/shared/utils/basePath";
 
 export default function MemoryGamePlayerPage() {
   const { memory_game_id } = useParams();
@@ -27,7 +28,7 @@ export default function MemoryGamePlayerPage() {
 
       try {
         const response = await fetch(
-          `/api/exercises/memory-game/${memory_game_id}/answers`,
+          withBasePath(`/api/exercises/memory-game/${memory_game_id}/answers`),
           {
             method: "POST",
             headers: {

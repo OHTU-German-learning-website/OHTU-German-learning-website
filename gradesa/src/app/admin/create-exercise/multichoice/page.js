@@ -4,6 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import useQuery from "@/shared/hooks/useQuery";
 import "./multichoice.css";
+import { withBasePath } from "@/shared/utils/basePath";
 
 export default function CreateMultichoicePage() {
   const router = useRouter();
@@ -173,8 +174,8 @@ export default function CreateMultichoicePage() {
       });
 
       const endpoint = isEditMode
-        ? `/api/admin/exercises/multichoice/${exercise_id}`
-        : `/api/admin/exercises/multichoice`;
+        ? withBasePath(`/api/admin/exercises/multichoice/${exercise_id}`)
+        : withBasePath(`/api/admin/exercises/multichoice`);
 
       const res = await fetch(endpoint, {
         method: isEditMode ? "PUT" : "POST",
