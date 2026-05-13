@@ -35,6 +35,75 @@ function createDefaultAnswers() {
   ];
 }
 
+function normalizeTokenKey(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase();
+}
+
+function takeClosestIndex(indices, targetIndex) {
+  if (!indices.length) {
+    return undefined;
+  }
+
+  let bestArrayIndex = 0;
+  let bestDistance = Math.abs(indices[0] - targetIndex);
+
+  for (let i = 1; i < indices.length; i++) {
+    const distance = Math.abs(indices[i] - targetIndex);
+    if (distance < bestDistance) {
+      bestDistance = distance;
+      bestArrayIndex = i;
+    }
+  }
+
+  const [chosen] = indices.splice(bestArrayIndex, 1);
+  return chosen;
+}
+
+function remapGapsToTokens(existingGaps, nextTokens) {
+  const indicesByWord = new Map();
+
+  nextTokens.forEach((token, index) => {
+    const key = normalizeTokenKey(token.word || token.raw);
+    if (!key) {
+      return;
+    }
+
+    if (!indicesByWord.has(key)) {
+      indicesByWord.set(key, []);
+    }
+    indicesByWord.get(key).push(index);
+  });
+
+  const remapped = [];
+  const orderedGaps = [...existingGaps].sort(
+    (a, b) => a.tokenIndex - b.tokenIndex
+  );
+
+  orderedGaps.forEach((gap) => {
+    const key = normalizeTokenKey(gap.tokenText);
+    const indices = indicesByWord.get(key) || [];
+    if (!indices.length) {
+      return;
+    }
+
+    const nextIndex = takeClosestIndex(indices, gap.tokenIndex);
+    if (nextIndex === undefined) {
+      return;
+    }
+
+    remapped.push({
+      ...gap,
+      tokenIndex: nextIndex,
+      tokenText:
+        nextTokens[nextIndex]?.word || nextTokens[nextIndex]?.raw || key,
+    });
+  });
+
+  return remapped.sort((a, b) => a.tokenIndex - b.tokenIndex);
+}
+
 function escapeHtml(value) {
   return String(value || "")
     .replace(/&/g, "&amp;")
@@ -68,6 +137,35 @@ export default function CreateFillInTheGapExercisePage() {
   });
 
   const tokens = useMemo(() => tokenizeText(text), [text]);
+
+  const syncGapsWithSelection = (nextSelectedIndices) => {
+    const normalized = [...new Set(nextSelectedIndices)].sort((a, b) => a - b);
+
+    setSelectedIndices(normalized);
+    setGaps((current) =>
+      normalized.map((tokenIndex) => {
+        const existingGap = current.find(
+          (gap) => gap.tokenIndex === tokenIndex
+        );
+
+        if (existingGap) {
+          return {
+            ...existingGap,
+            tokenText:
+              tokens[tokenIndex]?.word ||
+              tokens[tokenIndex]?.raw ||
+              existingGap.tokenText,
+          };
+        }
+
+        return {
+          tokenIndex,
+          tokenText: tokens[tokenIndex]?.word || tokens[tokenIndex]?.raw || "",
+          answers: createDefaultAnswers(),
+        };
+      })
+    );
+  };
 
   useEffect(() => {
     if (!isEditMode || !exerciseData) {
@@ -105,22 +203,24 @@ export default function CreateFillInTheGapExercisePage() {
       return;
     }
 
+    const nextTokens = tokenizeText(normalizedText);
+    const remappedGaps = remapGapsToTokens(gaps, nextTokens);
+
     setTextHtml(html);
     setText(normalizedText);
-    setSelectedIndices([]);
-    if (step === "configure") {
+    setGaps(remappedGaps);
+    setSelectedIndices(remappedGaps.map((gap) => gap.tokenIndex));
+    if (step === "configure" && remappedGaps.length === 0) {
       setStep("select");
-      setGaps([]);
     }
   };
 
   const toggleGapIndex = (index) => {
-    setSelectedIndices((current) => {
-      if (current.includes(index)) {
-        return current.filter((item) => item !== index);
-      }
-      return [...current, index].sort((a, b) => a - b);
-    });
+    const nextSelected = selectedIndices.includes(index)
+      ? selectedIndices.filter((item) => item !== index)
+      : [...selectedIndices, index];
+
+    syncGapsWithSelection(nextSelected);
   };
 
   const moveToGapConfiguration = () => {
@@ -138,13 +238,7 @@ export default function CreateFillInTheGapExercisePage() {
       return;
     }
 
-    const mappedGaps = selectedIndices.map((tokenIndex) => ({
-      tokenIndex,
-      tokenText: tokens[tokenIndex]?.word || tokens[tokenIndex]?.raw || "",
-      answers: createDefaultAnswers(),
-    }));
-
-    setGaps(mappedGaps);
+    syncGapsWithSelection(selectedIndices);
     setStep("configure");
   };
 
@@ -190,6 +284,13 @@ export default function CreateFillInTheGapExercisePage() {
       };
       return next;
     });
+  };
+
+  const removeGap = (tokenIndex) => {
+    const nextSelected = selectedIndices.filter(
+      (index) => index !== tokenIndex
+    );
+    syncGapsWithSelection(nextSelected);
   };
 
   const validateConfiguration = () => {
@@ -300,9 +401,13 @@ export default function CreateFillInTheGapExercisePage() {
         />
       </Container>
 
-      {tokens.length > 0 && step === "select" && (
+      {tokens.length > 0 && (
         <Container className="fitg-block">
-          <h3>Wörter anklicken, die als Lücken markiert werden sollen</h3>
+          <h3>
+            {step === "configure"
+              ? "Wörter anklicken, um Lücken hinzuzufügen/zu entfernen"
+              : "Wörter anklicken, die als Lücken markiert werden sollen"}
+          </h3>
           <p className="fitg-help-text">Ausgewählt: {selectedIndices.length}</p>
           <div className="fitg-token-grid">
             {tokens.map((token, index) => {
@@ -340,9 +445,20 @@ export default function CreateFillInTheGapExercisePage() {
                 key={`${gap.tokenIndex}-${gap.tokenText}`}
                 className="fitg-gap-card"
               >
-                <h4>
-                  Lücke {gapIndex + 1}: "{gap.tokenText}"
-                </h4>
+                <Row justify="space-between" align="center" wrap="wrap">
+                  <h4>
+                    Lücke {gapIndex + 1}: "{gap.tokenText}"
+                  </h4>
+                  <button
+                    type="button"
+                    className="fitg-gap-remove"
+                    onClick={() => removeGap(gap.tokenIndex)}
+                    aria-label={`Lücke ${gapIndex + 1} entfernen`}
+                    title="Lücke entfernen"
+                  >
+                    x
+                  </button>
+                </Row>
 
                 <Column gap="md">
                   {gap.answers.map((answer, answerIndex) => (
@@ -448,7 +564,7 @@ export default function CreateFillInTheGapExercisePage() {
               variant="outline"
               onClick={() => setStep("select")}
             >
-              Zurück zur Lückenauswahl
+              Wörter auswählen/ändern
             </Button>
             <Button type="button" onClick={handleSave} disabled={saving}>
               {saving

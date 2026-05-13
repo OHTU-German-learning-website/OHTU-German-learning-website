@@ -10,10 +10,9 @@
 .talkback-box {
   background-color: var(--bg3);
   border-radius: var(--radius-2xl);
-  padding: var(--u-3xl);
+  padding: var(--u-xl);
   box-shadow: 0 10px 24px rgb(0 0 0 / 10%);
-  width: max-content;
-  max-width: fit-content;
+  width: 570px;
 }
 
 .auth-box {
@@ -51,9 +50,13 @@
   gap: 0.2rem;
 }
 
+.form-group label {
+  margin-top: 0;
+}
+
 .form-label {
   display: block;
-  margin-bottom: var(--u-md);
+  /* margin-bottom: var(--u-md); */
 }
 
 .form-input {

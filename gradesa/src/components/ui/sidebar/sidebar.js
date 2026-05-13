@@ -115,7 +115,7 @@ function StudentSideBar() {
         Glossar
       </Link>
       <Link className={styles.sidebarLink} href="/talkback">
-        Rückmeldekanal - Feedback geben
+        Brauchen Sie Hilfe?
       </Link>
       <SidebarGroup
         title="Links zu anderen Webseiten"

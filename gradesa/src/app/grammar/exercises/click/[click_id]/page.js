@@ -60,6 +60,7 @@ export default function StudentExercisePage() {
         targetCategory={exercise.category}
         targetWords={exercise.target_words}
         allWords={exercise.all_words}
+        sourceHtml={exercise.source_html}
         previousAnswers={data.userAnswers?.answer || []}
         isPreviewMode={false}
         onSubmit={handleSubmit} // Pass the submit handler as a prop

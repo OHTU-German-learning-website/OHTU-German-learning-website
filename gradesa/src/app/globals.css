@@ -387,7 +387,7 @@ h1 {
 h2 {
   font-size: 1.2em;
   font-weight: bold;
-  color: var(--tertiary1);
+  color: var(--fg1);
   margin-bottom: 15px;
 }
 
@@ -490,22 +490,35 @@ label {
 }
 
 .rendered-html p {
-  margin-bottom: 1em;
+  margin: 0;
   white-space: pre-wrap;
 }
 
-.rendered-html p:last-child {
-  margin-bottom: 0;
+.rendered-html h1,
+.rendered-html h2,
+.rendered-html h3,
+.rendered-html h4,
+.rendered-html h5,
+.rendered-html h6,
+.rendered-html li {
+  margin: 0;
 }
 
+.rendered-html h1,
+.rendered-html h2,
+.rendered-html h3,
+.rendered-html h4,
+.rendered-html h5,
+.rendered-html h6,
+.rendered-html p,
 .rendered-html li {
-  margin-bottom: 0.35em;
+  line-height: inherit;
 }
 
 .rendered-html ul,
 .rendered-html ol {
-  padding-left: 2rem;
-  margin-bottom: 1em;
+  padding-left: 1.5em;
+  margin: 0;
 }
 
 .rendered-html ul {
@@ -669,4 +682,9 @@ label {
   height: 14px;
   right: -7px;
   bottom: -7px;
+}
+
+.ql-table-dropdown-label,
+.ql-table-dropdown-properties-label {
+  color: var(--bg1);
 }

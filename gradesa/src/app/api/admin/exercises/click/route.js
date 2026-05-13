@@ -1,10 +1,19 @@
 import { DB } from "@/backend/db";
 import { withAuth } from "@/backend/middleware/withAuth";
+import DOMPurify from "dompurify";
+import { JSDOM } from "jsdom";
+
+function sanitizeHtml(html) {
+  const window = new JSDOM("").window;
+  const purify = DOMPurify(window);
+  return purify.sanitize(String(html || ""), { ADD_ATTR: ["target"] });
+}
 
 export const POST = withAuth(
   async (request) => {
     const json = await request.json();
-    const { title, targetCategory, targetWords, allWords } = json;
+    const { title, targetCategory, targetWords, allWords, sourceHtml } = json;
+    const sanitizedSourceHtml = sanitizeHtml(sourceHtml || "");
 
     if (!title || !targetCategory || !targetWords || !allWords) {
       return Response.json(
@@ -51,9 +60,9 @@ export const POST = withAuth(
       );
     }
     const id = await DB.pool(
-      `INSERT INTO click_exercises (title, category, target_words, all_words)
-     VALUES ($1, $2, $3, $4) returning id`,
-      [title, targetCategory, targetWords, allWords]
+      `INSERT INTO click_exercises (title, category, target_words, all_words, source_html)
+     VALUES ($1, $2, $3, $4, $5) returning id`,
+      [title, targetCategory, targetWords, allWords, sanitizedSourceHtml]
     );
     return Response.json({ id: id.rows[0].id }, { status: 201 });
   },

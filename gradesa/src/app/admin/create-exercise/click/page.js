@@ -8,6 +8,17 @@ import { Button } from "@/components/ui/button";
 import useQuery from "@/shared/hooks/useQuery";
 import "./click.css";
 import WordSelectionExercise from "@/components/ui/click/click.js";
+import Editor from "@/components/ui/editor";
+import { htmlToPlainText } from "@/shared/utils/normalizeEditorText";
+
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
 
 export default function CreateExercise() {
   const router = useRouter();
@@ -18,6 +29,7 @@ export default function CreateExercise() {
   const [error, setError] = useState(null);
   const [title, setTitle] = useState("");
   const [targetCategory, setTargetCategory] = useState("");
+  const [allWordsHtml, setAllWordsHtml] = useState("");
   const [allWordsText, setAllWordsText] = useState("");
   const [selectedWords, setSelectedWords] = useState([]);
   const [previewMode, setPreviewMode] = useState(false);
@@ -45,14 +57,26 @@ export default function CreateExercise() {
     const text = hasExplicitSpacing
       ? storedWords.join("")
       : storedWords.join(" ");
+    const sourceHtml =
+      typeof exerciseData.source_html === "string"
+        ? exerciseData.source_html
+        : text
+          ? `<p>${escapeHtml(text)}</p>`
+          : "";
 
     setTitle(exerciseData.title || "");
     setTargetCategory(exerciseData.category || "");
+    setAllWordsHtml(sourceHtml);
     setAllWordsText(text);
     setSelectedWords(
       Array.isArray(exerciseData.target_words) ? exerciseData.target_words : []
     );
   }, [exerciseData, isEditMode]);
+
+  const handleEditorContentChange = (html) => {
+    setAllWordsHtml(html);
+    setAllWordsText(htmlToPlainText(html));
+  };
 
   // Preserve user-entered spacing and line breaks so preview and saved exercise match.
   const allWords =
@@ -74,6 +98,7 @@ export default function CreateExercise() {
             targetCategory,
             targetWords: selectedWords,
             allWords,
+            sourceHtml: allWordsHtml,
           }),
         });
 
@@ -87,6 +112,7 @@ export default function CreateExercise() {
           targetCategory,
           targetWords: selectedWords,
           allWords,
+          sourceHtml: allWordsHtml,
         });
 
         setSubmitted(true);
@@ -139,7 +165,7 @@ export default function CreateExercise() {
   }
 
   return (
-    <div>
+    <div className="click-admin-page">
       <h1>
         {isEditMode
           ? "Wortauswahl-Übung bearbeiten"
@@ -148,9 +174,9 @@ export default function CreateExercise() {
       {submitted ? (
         successMessage() // Show only the success message if submitted
       ) : !previewMode ? (
-        <form onSubmit={handlePreview}>
+        <form onSubmit={handlePreview} className="click-form">
           <Column gap="md">
-            <Container className="exercise-click">
+            <Container className="exercise-click click-block">
               <label>Übungstitel</label>
               <input
                 className="click-input"
@@ -162,7 +188,7 @@ export default function CreateExercise() {
               />
             </Container>
 
-            <Container className="exercise-click">
+            <Container className="exercise-click click-block">
               <label>Zielkategorie</label>
               <input
                 className="click-input"
@@ -174,21 +200,20 @@ export default function CreateExercise() {
               />
             </Container>
 
-            <Container className="exercise-click">
+            <Container className="exercise-click click-block">
               <label>Übungstext</label>
-              <textarea
-                className="click-input"
-                value={allWordsText}
-                onChange={(e) => setAllWordsText(e.target.value)}
-                placeholder="Z. B. Ich mag laufen und schwimmen."
-                rows={4}
-                required
+              <Editor
+                key="click-editor"
+                defaultContent={allWordsHtml}
+                updateEditorContent={handleEditorContentChange}
               />
             </Container>
           </Column>
-          <Button size="md" type="submit">
-            Zielwörter auswählen
-          </Button>
+          <Container className="click-form-actions">
+            <Button size="md" type="submit">
+              Zielwörter auswählen
+            </Button>
+          </Container>
         </form>
       ) : (
         <div>
@@ -205,6 +230,7 @@ export default function CreateExercise() {
               targetCategory={targetCategory}
               targetWords={selectedWords}
               allWords={allWords}
+              sourceHtml={allWordsHtml}
               isPreviewMode={true}
               onSelectionChange={(updatedSelectedWords) =>
                 setSelectedWords(updatedSelectedWords)

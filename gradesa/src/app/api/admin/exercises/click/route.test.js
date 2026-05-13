@@ -209,6 +209,55 @@ describe("create click_exercises API", () => {
       "Es müssen zwischen 1 und 1000 Wörter vorhanden sein."
     );
   });
+  it("should store sourceHtml in the database when provided", async () => {
+    const admin = await TestFactory.user({ is_admin: true });
+    const { mockPost } = useTestRequest(admin);
+
+    const sourceHtml = "<p>Die Kinder <b>laufen</b> schnell.</p>";
+
+    const response = await POST(
+      mockPost("api/exercises/create/click", {
+        title: "Verben identifizieren",
+        targetCategory: "Verben",
+        targetWords: ["laufen"],
+        allWords: ["Die", "Kinder", "laufen", "schnell"],
+        sourceHtml,
+      })
+    );
+
+    expect(response.status).toBe(201);
+    const json = await response.json();
+
+    const exercise = await DB.pool(
+      `SELECT source_html FROM click_exercises WHERE id = $1`,
+      [json.id]
+    );
+    expect(exercise.rows[0].source_html).toBe(sourceHtml);
+  });
+  it("should sanitize malicious HTML in sourceHtml", async () => {
+    const admin = await TestFactory.user({ is_admin: true });
+    const { mockPost } = useTestRequest(admin);
+
+    const response = await POST(
+      mockPost("api/exercises/create/click", {
+        title: "Verben identifizieren",
+        targetCategory: "Verben",
+        targetWords: ["laufen"],
+        allWords: ["Die", "Kinder", "laufen"],
+        sourceHtml: '<p>Hallo</p><script>alert("xss")</script>',
+      })
+    );
+
+    expect(response.status).toBe(201);
+    const json = await response.json();
+
+    const exercise = await DB.pool(
+      `SELECT source_html FROM click_exercises WHERE id = $1`,
+      [json.id]
+    );
+    expect(exercise.rows[0].source_html).not.toContain("<script>");
+    expect(exercise.rows[0].source_html).toContain("<p>Hallo</p>");
+  });
   it("should return 409 if exercise with the same title already exists", async () => {
     const admin = await TestFactory.user({ is_admin: true });
     const { mockPost } = useTestRequest(admin);

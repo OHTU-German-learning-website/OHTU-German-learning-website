@@ -85,7 +85,8 @@ CREATE TABLE public.click_exercises (
   title text NOT NULL,
   category text NOT NULL,
   target_words text[] NOT NULL,
-  all_words text[] NOT NULL
+  all_words text[] NOT NULL,
+  source_html text
 );
 
 ALTER TABLE public.click_exercises
