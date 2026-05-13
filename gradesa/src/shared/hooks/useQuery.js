@@ -4,9 +4,10 @@ import { useState, useEffect, useRef, useMemo, memo } from "react";
 import { useIsMounted } from "./useIsMounted";
 import { useUser } from "@/context/user.context";
 import { useSessionId } from "./useSessionId";
+import { withBasePath } from "../utils/basePath";
 
 export const axiosInstance = axios.create({
-  baseURL: "/api",
+  baseURL: withBasePath("/api"),
 });
 
 /**

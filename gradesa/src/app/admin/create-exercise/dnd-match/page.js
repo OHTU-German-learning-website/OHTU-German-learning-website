@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Row } from "@/components/ui/layout/container";
 import useQuery from "@/shared/hooks/useQuery";
 import "./admin.css";
+import { withBasePath } from "@/shared/utils/basePath";
 
 const EMPTY_PAIR = () => ({ leftItem: "", rightItem: "" });
 
@@ -90,20 +91,26 @@ export default function DndMatchAdminPage() {
       setIsSubmitting(true);
 
       if (isEditMode) {
-        const res = await fetch(`/api/admin/exercises/dnd-match/${match_id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
+        const res = await fetch(
+          withBasePath(`/api/admin/exercises/dnd-match/${match_id}`),
+          {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          }
+        );
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Fehler beim Speichern.");
         router.push("/grammar/exercises/dnd-match");
       } else {
-        const res = await fetch(`/api/admin/exercises/dnd-match`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
+        const res = await fetch(
+          withBasePath(`/api/admin/exercises/dnd-match`),
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          }
+        );
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Fehler beim Erstellen.");
         router.push(`/grammar/exercises/dnd-match/${data.id}`);

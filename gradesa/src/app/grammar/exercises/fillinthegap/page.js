@@ -5,6 +5,7 @@ import { Container, Row, Column } from "@/components/ui/layout/container";
 import useQuery from "@/shared/hooks/useQuery";
 import { ExerciseLinkButton } from "@/components/ui/button/exercise-link-button";
 import { Button } from "@/components/ui/button";
+import { withBasePath } from "@/shared/utils/basePath";
 
 export default function FillInTheGapExercisesPage() {
   const {
@@ -21,7 +22,7 @@ export default function FillInTheGapExercisesPage() {
 
     try {
       const response = await fetch(
-        `/api/admin/exercises/fillinthegap/${exerciseId}`,
+        withBasePath(`/api/admin/exercises/fillinthegap/${exerciseId}`),
         {
           method: "DELETE",
         }
