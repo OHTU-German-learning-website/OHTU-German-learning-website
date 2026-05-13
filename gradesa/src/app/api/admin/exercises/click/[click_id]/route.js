@@ -1,6 +1,14 @@
 import { NextResponse } from "next/server";
 import { DB } from "@/backend/db";
 import { withAuth } from "@/backend/middleware/withAuth";
+import DOMPurify from "dompurify";
+import { JSDOM } from "jsdom";
+
+function sanitizeHtml(html) {
+  const window = new JSDOM("").window;
+  const purify = DOMPurify(window);
+  return purify.sanitize(String(html || ""), { ADD_ATTR: ["target"] });
+}
 
 function validatePayload({ title, targetCategory, targetWords, allWords }) {
   if (!title || !targetCategory || !targetWords || !allWords) {
@@ -44,7 +52,7 @@ export const GET = withAuth(
       const { click_id } = await params;
 
       const result = await DB.pool(
-        `SELECT id, title, category, target_words, all_words, created_at, updated_at
+        `SELECT id, title, category, target_words, all_words, source_html, created_at, updated_at
          FROM click_exercises
          WHERE id = $1`,
         [click_id]
@@ -77,7 +85,8 @@ export const PUT = withAuth(
     try {
       const { click_id } = await params;
       const body = await request.json();
-      const { title, targetCategory, targetWords, allWords } = body;
+      const { title, targetCategory, targetWords, allWords, sourceHtml } = body;
+      const sanitizedSourceHtml = sanitizeHtml(sourceHtml || "");
 
       const validationError = validatePayload({
         title,
@@ -127,9 +136,17 @@ export const PUT = withAuth(
              category = $2,
              target_words = $3,
              all_words = $4,
+             source_html = $5,
              updated_at = NOW()
-         WHERE id = $5`,
-        [title, targetCategory, targetWords, allWords, click_id]
+         WHERE id = $6`,
+        [
+          title,
+          targetCategory,
+          targetWords,
+          allWords,
+          sanitizedSourceHtml,
+          click_id,
+        ]
       );
 
       return NextResponse.json({ success: true });

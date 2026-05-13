@@ -53,6 +53,22 @@
   background: var(--bg1);
 }
 
+.fitg-gap-remove {
+  border: 1px solid var(--tertiary2);
+  background: transparent;
+  color: var(--tertiary2);
+  border-radius: 999px;
+  width: 1.75rem;
+  height: 1.75rem;
+  cursor: pointer;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.fitg-gap-remove:hover {
+  background: var(--tertiary1);
+}
+
 .fitg-answer-row {
   border: 1px dashed var(--bg4);
   border-radius: var(--u-xs);

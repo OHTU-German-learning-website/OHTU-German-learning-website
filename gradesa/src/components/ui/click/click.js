@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import { Button } from "../button";
 import { Container } from "../layout/container";
 import { Column } from "@/components/ui/layout/container";
+import parse from "html-react-parser";
 import "./click.css";
 
 const WORD_REGEX = /\p{L}+(?:['’-]\p{L}+)*/gu;
@@ -38,11 +39,77 @@ const splitTokenToParts = (token) => {
 
 const isWhitespaceToken = (token) => /^[^\S\n]+$/u.test(token);
 
+function buildHtmlWithWordSlots(sourceHtml) {
+  if (!sourceHtml || typeof window === "undefined") {
+    return { html: "", slots: [] };
+  }
+
+  const doc = new window.DOMParser().parseFromString(
+    `<div id="click-root">${sourceHtml}</div>`,
+    "text/html"
+  );
+  const root = doc.getElementById("click-root");
+
+  if (!root) {
+    return { html: "", slots: [] };
+  }
+
+  const walker = doc.createTreeWalker(root, window.NodeFilter.SHOW_TEXT);
+  const textNodes = [];
+  let current;
+
+  while ((current = walker.nextNode())) {
+    textNodes.push(current);
+  }
+
+  let wordIndex = 0;
+  const slots = [];
+
+  for (const textNode of textNodes) {
+    const rawText = textNode.nodeValue || "";
+    const chunks = rawText.match(/\s+|[^\s]+/g) || [];
+    const fragment = doc.createDocumentFragment();
+
+    for (const chunk of chunks) {
+      if (/^\s+$/.test(chunk)) {
+        fragment.appendChild(doc.createTextNode(chunk));
+        continue;
+      }
+
+      const parts = splitTokenToParts(chunk);
+      for (const part of parts) {
+        if (part.type === "word") {
+          const slotKey = `w-${wordIndex}`;
+          const wordNode = doc.createElement("click-word");
+
+          wordNode.setAttribute("data-slot-key", slotKey);
+          wordNode.setAttribute("data-word", part.value);
+          wordNode.textContent = part.value;
+
+          slots.push({
+            slotKey,
+            word: part.value,
+          });
+          wordIndex += 1;
+          fragment.appendChild(wordNode);
+        } else {
+          fragment.appendChild(doc.createTextNode(part.value));
+        }
+      }
+    }
+
+    textNode.parentNode?.replaceChild(fragment, textNode);
+  }
+
+  return { html: root.innerHTML, slots };
+}
+
 const WordSelectionExercise = ({
   title,
   targetCategory,
   targetWords,
   allWords,
+  sourceHtml,
   previousAnswers,
   onSelectionChange,
   onSubmit,
@@ -56,7 +123,16 @@ const WordSelectionExercise = ({
   const [selectedSlotKeys, setSelectedSlotKeys] = useState([]);
   const [message, setMessage] = useState("");
 
-  const wordSlots = useMemo(() => {
+  const normalizedSourceHtml = useMemo(() => {
+    return String(sourceHtml || "");
+  }, [sourceHtml]);
+
+  const htmlSlotsData = useMemo(
+    () => buildHtmlWithWordSlots(normalizedSourceHtml),
+    [normalizedSourceHtml]
+  );
+
+  const fallbackWordSlots = useMemo(() => {
     const slots = [];
 
     allWords?.forEach((token, tokenIndex) => {
@@ -76,11 +152,62 @@ const WordSelectionExercise = ({
     return slots;
   }, [allWords]);
 
+  const wordSlots = useMemo(
+    () =>
+      htmlSlotsData.slots.length > 0 ? htmlSlotsData.slots : fallbackWordSlots,
+    [htmlSlotsData.slots, fallbackWordSlots]
+  );
+
   const slotToWord = useMemo(
     () =>
       Object.fromEntries(wordSlots.map(({ slotKey, word }) => [slotKey, word])),
     [wordSlots]
   );
+
+  const targetSlotKeys = useMemo(() => {
+    const rawTargets = Array.isArray(targetWords) ? targetWords : [];
+    const slotKeySet = new Set(wordSlots.map(({ slotKey }) => slotKey));
+
+    // New format: target words are stored as unique slot keys.
+    const allAreSlotKeys =
+      rawTargets.length > 0 &&
+      rawTargets.every((target) => slotKeySet.has(target));
+    if (allAreSlotKeys) {
+      return rawTargets;
+    }
+
+    // Legacy format: map target words to the first unmatched occurrences.
+    const needed = {};
+    rawTargets.forEach((word) => {
+      needed[word] = (needed[word] || 0) + 1;
+    });
+
+    const used = {};
+    const mappedKeys = [];
+
+    wordSlots.forEach(({ slotKey, word }) => {
+      const remaining = (needed[word] || 0) - (used[word] || 0);
+      if (remaining > 0) {
+        mappedKeys.push(slotKey);
+        used[word] = (used[word] || 0) + 1;
+      }
+    });
+
+    return mappedKeys;
+  }, [targetWords, wordSlots]);
+
+  const targetSlotKeySet = useMemo(
+    () => new Set(targetSlotKeys),
+    [targetSlotKeys]
+  );
+
+  const usesSlotKeyTargets = useMemo(() => {
+    const rawTargets = Array.isArray(targetWords) ? targetWords : [];
+    return (
+      rawTargets.length > 0 &&
+      rawTargets.every((target) => targetSlotKeySet.has(target))
+    );
+  }, [targetWords, targetSlotKeySet]);
 
   const handleWordClick = (slotKey) => {
     if (isSubmitted && !isPreviewMode) return;
@@ -95,31 +222,33 @@ const WordSelectionExercise = ({
     setSelectedSlotKeys(updatedKeys);
 
     if (isPreviewMode && onSelectionChange) {
-      onSelectionChange(
-        updatedKeys.map((key) => slotToWord[key]).filter(Boolean)
-      );
+      // In preview/admin mode we persist exact selected occurrences.
+      onSelectionChange(updatedKeys);
     }
   };
 
   const checkAnswers = () => {
     if (isPreviewMode) return;
 
-    const selectedWordValues = selectedSlotKeys
-      .map((key) => slotToWord[key])
-      .filter(Boolean);
-    const correctAnswers = targetWords;
-    const incorrectSelections = selectedWordValues.filter(
-      (word) => !correctAnswers.includes(word)
+    const selectedSet = new Set(selectedSlotKeys);
+    const incorrectSelections = selectedSlotKeys.filter(
+      (slotKey) => !targetSlotKeySet.has(slotKey)
     );
-    const missedCorrectAnswers = correctAnswers.filter(
-      (word) => !selectedWordValues.includes(word)
+    const missedCorrectAnswers = targetSlotKeys.filter(
+      (slotKey) => !selectedSet.has(slotKey)
     );
+    const totalCorrectTargets = targetSlotKeys.length;
+
+    if (totalCorrectTargets === 0) {
+      onSubmit([], 0, "Diese Übung enthält keine markierten Zielwörter.");
+      return;
+    }
 
     const score = Math.round(
-      ((correctAnswers.length -
+      ((totalCorrectTargets -
         missedCorrectAnswers.length -
         incorrectSelections.length) /
-        correctAnswers.length) *
+        totalCorrectTargets) *
         100
     );
 
@@ -135,7 +264,11 @@ const WordSelectionExercise = ({
       feedbackMessage = "Weiter üben! Punktzahl: " + score + "%";
     }
 
-    onSubmit(selectedWordValues, score, feedbackMessage);
+    const selectedPayload = usesSlotKeyTargets
+      ? selectedSlotKeys
+      : selectedSlotKeys.map((key) => slotToWord[key]).filter(Boolean);
+
+    onSubmit(selectedPayload, score, feedbackMessage);
   };
 
   const resetExercise = () => {
@@ -150,35 +283,46 @@ const WordSelectionExercise = ({
       return;
     }
 
-    const needed = {};
-    previousAnswers.forEach((w) => {
-      needed[w] = (needed[w] || 0) + 1;
-    });
+    const availableSlotKeys = new Set(wordSlots.map(({ slotKey }) => slotKey));
+    const previousAreSlotKeys = previousAnswers.every((answer) =>
+      availableSlotKeys.has(answer)
+    );
 
-    const used = {};
-    const restoredKeys = [];
+    let restoredKeys = [];
 
-    wordSlots.forEach(({ slotKey, word }) => {
-      const remaining = (needed[word] || 0) - (used[word] || 0);
-      if (remaining > 0) {
-        restoredKeys.push(slotKey);
-        used[word] = (used[word] || 0) + 1;
-      }
-    });
+    if (previousAreSlotKeys) {
+      restoredKeys = previousAnswers.filter((answer) =>
+        availableSlotKeys.has(answer)
+      );
+    } else {
+      const needed = {};
+      previousAnswers.forEach((word) => {
+        needed[word] = (needed[word] || 0) + 1;
+      });
+
+      const used = {};
+      wordSlots.forEach(({ slotKey, word }) => {
+        const remaining = (needed[word] || 0) - (used[word] || 0);
+        if (remaining > 0) {
+          restoredKeys.push(slotKey);
+          used[word] = (used[word] || 0) + 1;
+        }
+      });
+    }
 
     setSelectedSlotKeys(restoredKeys);
   };
 
-  const getTokenStyle = (word, slotKey) => {
+  const getTokenStyle = (_word, slotKey) => {
     if (selectedSlotKeys.includes(slotKey)) {
       if (isSubmitted && !isPreviewMode) {
-        return targetWords.includes(word)
+        return targetSlotKeySet.has(slotKey)
           ? { backgroundColor: "var(--green)" }
           : { backgroundColor: "var(--red)" };
       }
       return { backgroundColor: "var(--click-selected-bg, var(--blue))" };
     } else {
-      if (isSubmitted && targetWords.includes(word) && !isPreviewMode) {
+      if (isSubmitted && targetSlotKeySet.has(slotKey) && !isPreviewMode) {
         return {
           backgroundColor: "var(--click-missed-bg, var(--yellow))",
           border: "1px solid var(--click-missed-border, var(--yellow-border))",
@@ -189,7 +333,7 @@ const WordSelectionExercise = ({
 
   const renderToken = (token, tokenIndex) => {
     if (token === "\n") {
-      return <span key={`${tokenIndex}-nl`} className="word-line-break" />;
+      return <br key={`${tokenIndex}-nl`} />;
     }
 
     if (isWhitespaceToken(token)) {
@@ -229,14 +373,47 @@ const WordSelectionExercise = ({
   return (
     <Column gap="md">
       <h1>{title}</h1>
-      <i>{`Wähle alle ${targetCategory} aus dem untenstehenden Text aus.`}</i>
-      <Container className="word-container">
-        {allWords?.map((token, index) => (
-          <React.Fragment key={index}>
-            {renderToken(token, index)}
-          </React.Fragment>
-        ))}
-      </Container>
+      <div className="click-instruction">
+        <i>{`Wähle alle ${targetCategory} aus dem untenstehenden Text aus.`}</i>
+      </div>
+      {htmlSlotsData.slots.length > 0 ? (
+        <Container className="word-container click-source-html">
+          <div className="rendered-html click-rendered-content">
+            {parse(htmlSlotsData.html, {
+              replace(domNode) {
+                if (
+                  domNode?.type === "tag" &&
+                  domNode.name === "click-word" &&
+                  domNode.attribs?.["data-slot-key"]
+                ) {
+                  const slotKey = domNode.attribs["data-slot-key"];
+                  const word = domNode.attribs["data-word"] || "";
+
+                  return (
+                    <Button
+                      key={slotKey}
+                      onClick={() => handleWordClick(slotKey)}
+                      variant="click"
+                      style={getTokenStyle(word, slotKey)}
+                    >
+                      {word}
+                    </Button>
+                  );
+                }
+                return undefined;
+              },
+            })}
+          </div>
+        </Container>
+      ) : (
+        <Container className="word-container">
+          {allWords?.map((token, index) => (
+            <React.Fragment key={index}>
+              {renderToken(token, index)}
+            </React.Fragment>
+          ))}
+        </Container>
+      )}
       {feedback && !isPreviewMode && (
         <>
           <div>{feedback}</div>

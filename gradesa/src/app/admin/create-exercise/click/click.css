@@ -1,10 +1,38 @@
+.click-admin-page {
+    max-width: 960px;
+}
+
+.click-form {
+    display: grid;
+    gap: var(--u-md);
+}
+
 .exercise-click {
-    display: flex;
-    justify-content: space-between;
+    display: block;
+}
+
+.click-block {
+    padding: var(--u-md);
+    border: 1px solid var(--bg3);
+    border-radius: var(--u-sm);
+    background: var(--bg2);
+}
+
+.click-block label {
+    display: block;
+    margin-bottom: var(--u-xs);
+    color: var(--fg2);
+    font-weight: 600;
 }
 
 .click-input {
-    width: 60%;
+    width: 100%;
+    font: inherit;
+}
+
+.click-form-actions {
+    display: flex;
+    justify-content: flex-start;
 }
 
 .error-message {

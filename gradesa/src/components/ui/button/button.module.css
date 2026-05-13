@@ -5,6 +5,8 @@
   padding: 0.5rem 1rem;
   border-radius: 0.25rem;
   cursor: pointer;
+  font: inherit;
+  line-height: inherit;
   transition:
     background-color 0.1s ease-in-out,
     border-color 0.1s ease-in-out,
@@ -138,6 +140,12 @@
   border: none;
   background-color: transparent;
   width: fit-content;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  text-decoration: inherit;
+  text-decoration-color: inherit;
+  text-decoration-thickness: inherit;
 
   &:hover {
     background-color: var(--bg2);

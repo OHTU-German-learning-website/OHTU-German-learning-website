@@ -3,9 +3,11 @@
 }
 
 .word-container {
-    line-height: 2.2;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    padding: 12px 15px;
     white-space: pre-wrap;
-    background: var(--bg3);
+    background: var(--bg1);
 }
 
 .word-punct {
@@ -19,5 +21,83 @@
 
 .word-line-break {
     display: block;
-    height: 0.75rem;
+    height: 0;
+}
+
+.click-instruction {
+    background: var(--bg3);
+    color: var(--fg1);
+    padding: 0.3em 1em;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-md);
+}
+
+.click-source-html {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.click-rendered-content {
+    /* Match Quill editor text box metrics so saved wrapping mirrors editing view. */
+    padding: 12px 15px;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--fg1);
+    white-space: pre-wrap;
+}
+
+.click-rendered-content br {
+    display: block;
+    line-height: inherit;
+}
+
+.click-rendered-content :where(p, li, strong, em, span, a, h1, h2, h3, h4, h5, h6):not([style*="color"]) {
+    color: var(--fg1);
+}
+
+.click-rendered-content p {
+    margin: 0;
+}
+
+.click-rendered-content ul,
+.click-rendered-content ol {
+    margin: 0;
+    padding-left: 2rem;
+}
+
+.click-rendered-content li {
+    margin: 0.25em 0;
+}
+
+.click-rendered-content li::marker {
+    color: currentColor;
+}
+
+.click-rendered-content .ql-indent-1 {
+    padding-left: 3em;
+}
+
+.click-rendered-content .ql-indent-2 {
+    padding-left: 6em;
+}
+
+.click-rendered-content .ql-indent-3 {
+    padding-left: 9em;
+}
+
+.click-rendered-content .ql-indent-4 {
+    padding-left: 12em;
+}
+
+.rendered-html ul,
+.rendered-html ol {
+    padding-left: 1.5em;
+}
+
+.rendered-html li[data-list="bullet"] {
+    list-style-type: disc;
+}
+
+.rendered-html li[data-list="ordered"] {
+    list-style-type: decimal;
 }

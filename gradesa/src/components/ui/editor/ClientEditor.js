@@ -24,6 +24,186 @@ const ClientEditor = (props) => {
 
   useEffect(() => {
     let quill;
+    let tableFormObserver;
+    let detachRepositionListeners;
+    let lastTableMenuRect = null;
+    let rafRepositionId = null;
+
+    const getActiveTable = () => {
+      if (!quill) {
+        return null;
+      }
+
+      const tableBetterModule = quill.getModule("table-better");
+      const tableFromModule = tableBetterModule?.tableMenus?.table;
+      if (tableFromModule instanceof HTMLElement) {
+        return tableFromModule;
+      }
+
+      const selectedCell = quill.root.querySelector(
+        "td.ql-cell-focused, td.ql-cell-selected, th.ql-cell-focused, th.ql-cell-selected"
+      );
+      if (selectedCell instanceof HTMLElement) {
+        return selectedCell.closest("table");
+      }
+
+      return null;
+    };
+
+    const getAnchorRect = () => {
+      const liveMenus = quill?.container?.querySelector(
+        ".ql-table-menus-container"
+      );
+      if (liveMenus instanceof HTMLElement) {
+        const rect = liveMenus.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          lastTableMenuRect = rect;
+          return rect;
+        }
+      }
+
+      if (lastTableMenuRect) {
+        return lastTableMenuRect;
+      }
+
+      const table = getActiveTable();
+      if (table instanceof HTMLElement) {
+        return table.getBoundingClientRect();
+      }
+
+      return null;
+    };
+
+    const repositionTablePropertiesForm = () => {
+      if (!quill) {
+        return;
+      }
+
+      const form = quill.container.querySelector(".ql-table-properties-form");
+      if (!(form instanceof HTMLElement)) {
+        return;
+      }
+
+      const anchorRect = getAnchorRect();
+      if (!anchorRect) {
+        return;
+      }
+
+      const formRect = form.getBoundingClientRect();
+      const viewportPadding = 8;
+
+      let nextTop = anchorRect.bottom + 10;
+      const nextTopIfAbove = anchorRect.top - formRect.height - 10;
+      if (nextTop + formRect.height > window.innerHeight - viewportPadding) {
+        nextTop = nextTopIfAbove;
+      }
+      if (nextTop < viewportPadding) {
+        nextTop = viewportPadding;
+      }
+
+      let nextLeft = anchorRect.left + (anchorRect.width - formRect.width) / 2;
+      const maxLeft = Math.max(
+        viewportPadding,
+        window.innerWidth - formRect.width - viewportPadding
+      );
+      nextLeft = Math.min(Math.max(viewportPadding, nextLeft), maxLeft);
+
+      form.style.position = "fixed";
+      form.style.left = `${Math.round(nextLeft)}px`;
+      form.style.top = `${Math.round(nextTop)}px`;
+      form.style.margin = "0";
+      form.style.zIndex = "9999";
+      form.classList.add("ql-table-triangle-none");
+    };
+
+    const scheduleReposition = () => {
+      if (rafRepositionId !== null) {
+        return;
+      }
+      rafRepositionId = requestAnimationFrame(() => {
+        rafRepositionId = null;
+        repositionTablePropertiesForm();
+      });
+    };
+
+    const setupTablePropertiesRepositioning = () => {
+      if (!quill?.container) {
+        return;
+      }
+
+      const onWindowResize = () => scheduleReposition();
+      const onEditorScroll = () => scheduleReposition();
+      const onEditorClick = () => scheduleReposition();
+      const onEditorPointerDown = (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) {
+          return;
+        }
+        const menus = target.closest(".ql-table-menus-container");
+        if (menus instanceof HTMLElement) {
+          const rect = menus.getBoundingClientRect();
+          if (rect.width > 0 && rect.height > 0) {
+            lastTableMenuRect = rect;
+          }
+        }
+      };
+      const onEditorClickCapture = (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) {
+          return;
+        }
+
+        // quill-table-better has click handlers that call getAttribute on possibly null nodes.
+        // Block only invalid clicks before plugin bubbling listeners execute.
+        const checkContainer = target.closest(".ql-table-check-container");
+        if (checkContainer && !target.closest("span.ql-table-tooltip-hover")) {
+          event.stopPropagation();
+          return;
+        }
+      };
+
+      window.addEventListener("resize", onWindowResize);
+      quill.root.addEventListener("scroll", onEditorScroll, true);
+      quill.root.addEventListener("click", onEditorClick, true);
+      quill.container.addEventListener(
+        "pointerdown",
+        onEditorPointerDown,
+        true
+      );
+      quill.container.addEventListener("click", onEditorClickCapture, true);
+
+      tableFormObserver = new MutationObserver(() => {
+        if (quill.container.querySelector(".ql-table-properties-form")) {
+          scheduleReposition();
+        }
+      });
+
+      tableFormObserver.observe(quill.container, {
+        childList: true,
+        subtree: true,
+      });
+
+      detachRepositionListeners = () => {
+        window.removeEventListener("resize", onWindowResize);
+        quill.root.removeEventListener("scroll", onEditorScroll, true);
+        quill.root.removeEventListener("click", onEditorClick, true);
+        quill.container.removeEventListener(
+          "pointerdown",
+          onEditorPointerDown,
+          true
+        );
+        quill.container.removeEventListener(
+          "click",
+          onEditorClickCapture,
+          true
+        );
+        if (rafRepositionId !== null) {
+          cancelAnimationFrame(rafRepositionId);
+          rafRepositionId = null;
+        }
+      };
+    };
+
     const load = async () => {
       const Quill = (await import("quill")).default;
       const TableBetter = (await import("quill-table-better")).default;
@@ -112,6 +292,7 @@ const ClientEditor = (props) => {
           updateEditorContentRef.current?.(html);
         });
         quillRef.current = quill;
+        setupTablePropertiesRepositioning();
         if (props.defaultContent) {
           setHtmlContent(quill, props.defaultContent);
         }
@@ -120,6 +301,10 @@ const ClientEditor = (props) => {
     load();
 
     return () => {
+      tableFormObserver?.disconnect();
+      tableFormObserver = null;
+      detachRepositionListeners?.();
+      detachRepositionListeners = null;
       if (containerRef.current) {
         containerRef.current.innerHTML = "";
       }
