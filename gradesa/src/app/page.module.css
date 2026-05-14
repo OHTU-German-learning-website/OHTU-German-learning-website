@@ -72,7 +72,7 @@
 
 .creditsList {
   display: grid;
-  gap: 0.9rem;
+  /* gap: 0.9rem; */
 }
 
 .creditsItem {

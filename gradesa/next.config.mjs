@@ -1,4 +1,4 @@
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '/gradesa';
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "/gradesa";
 
 /** @type {import('next').NextConfig} */
 const nextConfig =
@@ -6,7 +6,6 @@ const nextConfig =
     output: 'standalone',
 
     basePath,
-    assetPrefix: basePath,
 
     eslint: {
         ignoreDuringBuilds: true,
