@@ -11,9 +11,9 @@
 }
 
 .chapter-page-title,
-.chapter-rendered-content>h1,
-.chapter-rendered-content>h2,
-.chapter-rendered-content>h3 {
+.chapter-rendered-content > h1,
+.chapter-rendered-content > h2,
+.chapter-rendered-content > h3 {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   margin-top: 1.5rem;
   margin-bottom: 1rem;
@@ -22,18 +22,18 @@
 }
 
 .chapter-page-title,
-.chapter-rendered-content>h1 {
+.chapter-rendered-content > h1 {
   font-size: 2rem;
   padding-bottom: 0.5rem;
   color: var(--fg1);
 }
 
-.chapter-rendered-content>h2 {
+.chapter-rendered-content > h2 {
   font-size: 1.75rem;
   color: var(--fg1);
 }
 
-.chapter-rendered-content>h3 {
+.chapter-rendered-content > h3 {
   font-size: 1.35rem;
   color: var(--fg1);
 }
@@ -48,3 +48,57 @@
 
 .ql-size-large {
   font-size: 1.5em;
+}
+
+.ql-size-huge {
+  font-size: 2.5em;
+}
+
+.chapter-rendered-content {
+  width: 100%;
+  display: block;
+}
+
+.chapter-rendered-content .rendered-html {
+  color: var(--fg2);
+  font-size: 1rem;
+}
+
+.chapter-rendered-content .rendered-html a {
+  color: var(--primary2);
+  text-decoration: underline;
+}
+
+.chapter-rendered-content .rendered-html table td,
+.chapter-rendered-content .rendered-html table th {
+  border: none;
+  padding: 0;
+  vertical-align: top;
+}
+
+.chapter-rendered-content .rendered-html table img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.chapter-rendered-content .rendered-html,
+.chapter-rendered-content .rendered-html {
+  width: 100%;
+  display: flow-root;
+}
+
+.chapter-nav-row {
+  width: 100%;
+  margin-top: 2rem;
+}
+
+.chapter-nav-left,
+.chapter-nav-right {
+  display: flex;
+  align-items: center;
+}
+
+.chapter-nav-right {
+  gap: 0.75rem;
+}
