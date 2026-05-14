@@ -101,3 +101,78 @@ export const PATCH = withAuth(
     requireAuth: true,
   }
 );
+
+/**
+ * DELETE /api/admin/users?id=<userId>
+ *
+ * Deletes a user from the system.
+ *
+ * Before deleting the user row, any exercises created by that user are detached
+ * by clearing `exercises.created_by`. Most answer tables already cascade on
+ * user deletion, so this keeps the delete operation reliable for old and active
+ * accounts alike.
+ */
+export const DELETE = withAuth(
+  async (req) => {
+    if (!req.user?.is_superadmin) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "User id is required" },
+        { status: 400 }
+      );
+    }
+
+    if (String(req.user.id) === String(id)) {
+      return NextResponse.json(
+        { error: "You cannot delete your own account" },
+        { status: 400 }
+      );
+    }
+
+    try {
+      const deletedUser = await DB.transaction(async (tx) => {
+        await tx.query(
+          `
+          UPDATE exercises
+          SET created_by = NULL
+          WHERE created_by = $1
+          `,
+          [id]
+        );
+
+        const result = await tx.query(
+          `
+          DELETE FROM users
+          WHERE id = $1
+          RETURNING id, username, email, is_admin, is_superadmin
+          `,
+          [id]
+        );
+
+        return result.rows[0] || null;
+      });
+
+      if (!deletedUser) {
+        return NextResponse.json({ error: "User not found" }, { status: 404 });
+      }
+
+      return NextResponse.json({ success: true, user: deletedUser });
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      return NextResponse.json(
+        { error: "Failed to delete user" },
+        { status: 500 }
+      );
+    }
+  },
+  {
+    requireAdmin: true,
+    requireAuth: true,
+  }
+);
