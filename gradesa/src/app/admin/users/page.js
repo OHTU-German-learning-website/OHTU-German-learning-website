@@ -27,6 +27,7 @@ export default function UsersPage() {
 
   const makeRequest = useRequest();
   const [updatingId, setUpdatingId] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
   const [search, setSearch] = useState("");
 
   /**
@@ -108,6 +109,28 @@ export default function UsersPage() {
     }
   };
 
+  const handleDeleteUser = async (user) => {
+    if (!confirm(`Möchten Sie ${user.username} wirklich löschen?`)) {
+      return;
+    }
+
+    try {
+      setDeletingId(user.id);
+
+      await makeRequest(null, null, {
+        method: "DELETE",
+        url: `/admin/users?id=${encodeURIComponent(user.id)}`,
+      });
+
+      await refetch();
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      alert(error.message || "Fehler beim Löschen des Benutzers");
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   /**
    * Return the display role used in the current UI model.
    */
@@ -171,26 +194,50 @@ export default function UsersPage() {
                     <td style={{ padding: "12px" }}>{user.email}</td>
                     <td style={{ padding: "12px" }}>{getRoleLabel(user)}</td>
                     <td style={{ padding: "12px" }}>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleRoleChange(user)}
-                        disabled={
-                          updatingId === user.id ||
-                          user.is_superadmin ||
-                          ownAccount
-                        }
-                      >
-                        {ownAccount
-                          ? "Eigener Account"
-                          : user.is_superadmin
-                            ? "Administrator"
-                            : updatingId === user.id
-                              ? "Wird aktualisiert..."
-                              : user.is_admin
-                                ? "Zu Student machen"
-                                : "Zu Lehrer machen"}
-                      </Button>
+                      <Row gap="sm" align="center">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleRoleChange(user)}
+                          disabled={
+                            updatingId === user.id ||
+                            deletingId === user.id ||
+                            user.is_superadmin ||
+                            ownAccount
+                          }
+                        >
+                          {ownAccount
+                            ? "Eigener Account"
+                            : user.is_superadmin
+                              ? "Administrator"
+                              : updatingId === user.id
+                                ? "Wird aktualisiert..."
+                                : user.is_admin
+                                  ? "Zu Student machen"
+                                  : "Zu Lehrer machen"}
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleDeleteUser(user)}
+                          disabled={
+                            deletingId === user.id ||
+                            updatingId === user.id ||
+                            ownAccount
+                          }
+                          style={{
+                            color: "#fff5f5",
+                            borderColor: "#d85a5a",
+                            backgroundColor: "#d85a5a",
+                          }}
+                        >
+                          {ownAccount
+                            ? "Nicht löschbar"
+                            : deletingId === user.id
+                              ? "Löschen..."
+                              : "Löschen"}
+                        </Button>
+                      </Row>
                     </td>
                   </tr>
                 );
