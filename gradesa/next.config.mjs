@@ -6,7 +6,6 @@ const nextConfig =
     output: 'standalone',
 
     basePath,
-    assetPrefix: basePath,
 
     eslint: {
         ignoreDuringBuilds: true,
