@@ -1,42 +1,27 @@
-"use client";
+import { Column, Container } from "@/components/ui/layout/container";
+import "./chapters.css";
+import layout from "@/shared/styles/layout.module.css";
+import RenderHTML from "@/components/ui/render-html/render-html";
+import { getPageData } from "@/backend/html-services";
+import { transformHtmlToGlossaryTags } from "@/backend/html-transform";
+import AdminButtons from "./admin-buttons";
 
-import styles from "../page.module.css";
+export const dynamic = "force-dynamic";
 
-export default function Credits() {
+export default async function Credits() {
+  const pageData = await getPageData("system", "impressum");
+
+  // Transform HTML to include glossary tags
+  const transformedContent = transformHtmlToGlossaryTags(pageData.content);
+
   return (
-    <div className="container">
-      <section className={styles.creditsSection}>
-        <h1>Credits</h1>
-        <div className={styles.creditsList}>
-          <p className={styles.creditsItem}>
-            Diese Webseiten entstanden in einem Autorenkollektiv der
-            Universitäten Helsinki, Oulu und Turku unter der Leitung von{" "}
-            <a href="mailto:michi@dlc.fi" className={styles.creditsLink}>
-              Dr. Michael Möbius
-            </a>
-            .
-          </p>
-          <br></br>
-          <p className={styles.creditsItem}>
-            Die Entwicklung wurde gefördert durch die{" "}
-            <a
-              href="https://foundationhollo.fi/"
-              target="_blank"
-              rel="noreferrer"
-              className={styles.creditsLink}
-            >
-              Stiftung Erkki J. Hollo
-            </a>
-            .
-          </p>
-          <p className={styles.creditsItem}>
-            Programmierung durch IT-Studierende der Universität Helsinki
-          </p>
-          <p className={styles.creditsItem}>
-            Technischer Support und Hosting: Universität Helsinki
-          </p>
-        </div>
-      </section>
-    </div>
+    <Column className={layout.viewContent}>
+      <AdminButtons type="system" slug="impressum" />
+      <h1 className="chapter-page-title">{pageData.title}</h1>
+
+      <Container className="chapter-rendered-content">
+        <RenderHTML data={transformedContent} />
+      </Container>
+    </Column>
   );
 }

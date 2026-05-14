@@ -1,3 +1,23 @@
+.glossary-index {
+  background-color: var(--bg2);
+  padding: var(--u-md);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--bg3);
+}
+
+.glossary-index h3 {
+  margin: 0 0 var(--u-sm);
+}
+
+.glossary-index-item {
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-sm);
+  background-color: var(--bg3);
+  color: var(--fg1);
+  font-size: 0.95rem;
+}
+
 .glossary-card {
   background-color: var(--bg3);
   padding: var(--u-md);
