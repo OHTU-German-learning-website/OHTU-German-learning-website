@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Button } from "../button";
 import { Container } from "../layout/container";
 import { Column } from "@/components/ui/layout/container";
@@ -208,6 +208,14 @@ const WordSelectionExercise = ({
       rawTargets.every((target) => targetSlotKeySet.has(target))
     );
   }, [targetWords, targetSlotKeySet]);
+
+  // Initialize selected words in admin preview mode with the target words
+  // so they display as pre-selected when editing an exercise
+  useEffect(() => {
+    if (isPreviewMode && targetSlotKeys.length > 0) {
+      setSelectedSlotKeys(targetSlotKeys);
+    }
+  }, [targetSlotKeys, isPreviewMode]);
 
   const handleWordClick = (slotKey) => {
     if (isSubmitted && !isPreviewMode) return;
