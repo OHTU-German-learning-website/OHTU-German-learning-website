@@ -4,7 +4,6 @@ import { useRouter, useSearchParams, useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Column, Row } from "@/components/ui/layout/container";
 import { useRequest } from "@/shared/hooks/useRequest";
-import { withBasePath } from "@/shared/utils/basePath";
 
 const emptyPair = { left_item: "", right_item: "" };
 
@@ -31,7 +30,7 @@ export default function CreateMemoryGame() {
       setIsLoading(true);
       try {
         const response = await fetch(
-          withBasePath(`/api/admin/exercises/memory-game/${gameId}`)
+          `/api/admin/exercises/memory-game/${gameId}`
         );
         const data = await response.json();
         if (!response.ok) {

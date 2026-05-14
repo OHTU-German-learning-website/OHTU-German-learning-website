@@ -14,7 +14,6 @@ import {
 import { Button } from "../button";
 import { useEffect, useState } from "react";
 import { useIsMounted } from "@/shared/hooks/useIsMounted";
-import { withBasePath } from "@/shared/utils/basePath";
 
 const Sidebar = () => {
   const { auth, setActAs, actAs } = useUser();
@@ -80,7 +79,7 @@ function StudentSideBar() {
   const pathname = usePathname();
 
   useEffect(() => {
-    fetch(withBasePath("/api/pages/resources"))
+    fetch("/api/pages/resources")
       .then((res) => res.json())
       .then((data) => {
         setChapters(

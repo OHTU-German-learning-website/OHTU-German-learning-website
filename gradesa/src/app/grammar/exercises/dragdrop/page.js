@@ -5,7 +5,6 @@ import { Container, Row, Column } from "@/components/ui/layout/container";
 import useQuery from "@/shared/hooks/useQuery";
 import { ExerciseLinkButton } from "@/components/ui/button/exercise-link-button";
 import { Button } from "@/components/ui/button";
-import { withBasePath } from "@/shared/utils/basePath";
 
 export default function DragdropExercisesPage() {
   const {
@@ -22,7 +21,7 @@ export default function DragdropExercisesPage() {
 
     try {
       const response = await fetch(
-        withBasePath(`/api/admin/exercises/dragdrop/${exerciseId}`),
+        `/api/admin/exercises/dragdrop/${exerciseId}`,
         {
           method: "DELETE",
         }

@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@/context/user.context";
 import { Row } from "@/components/ui/layout/container";
 import { useSearchParams } from "next/navigation";
-import { withBasePath } from "@/shared/utils/basePath";
 
 export default function AdminButtons({ type, slug, pageExists = true }) {
   const { setActAs } = useUser();
@@ -18,7 +17,7 @@ export default function AdminButtons({ type, slug, pageExists = true }) {
   const handleReset = async () => {
     if (!confirm("Möchten Sie den Inhalt dieser Seite wirklich leeren?"))
       return;
-    const res = await fetch(withBasePath(`/api/admin/pages/${type}/${slug}`), {
+    const res = await fetch(`/api/admin/pages/${type}/${slug}`, {
       method: "PATCH",
     });
 
@@ -64,7 +63,7 @@ export default function AdminButtons({ type, slug, pageExists = true }) {
     } else if (type === "resources") {
       redirectPath = "/learning"; // fallback
       try {
-        const listRes = await fetch(withBasePath(`/api/pages/${type}`));
+        const listRes = await fetch(`/api/pages/${type}`);
         if (listRes.ok) {
           const data = await listRes.json();
           const pages = Array.isArray(data?.pages) ? data.pages : [];
@@ -83,7 +82,7 @@ export default function AdminButtons({ type, slug, pageExists = true }) {
       redirectPath = getFallbackPath(type);
     }
 
-    const res = await fetch(withBasePath(`/api/admin/pages/${type}/${slug}`), {
+    const res = await fetch(`/api/admin/pages/${type}/${slug}`, {
       method: "DELETE",
     });
 

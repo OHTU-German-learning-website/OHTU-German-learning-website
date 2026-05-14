@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import Editor from "@/components/ui/editor";
 import layout from "@/shared/styles/layout.module.css";
 import { useRouter, useSearchParams } from "next/navigation";
-import { withBasePath } from "@/shared/utils/basePath";
 
 export default function EditorSection({
   initialContent,
@@ -50,19 +49,16 @@ export default function EditorSection({
     const jsonData = JSON.stringify(requestBody);
 
     if (!pageExists && type === "grammar") {
-      const createRes = await fetch(
-        withBasePath(`/api/admin/pages/${type}/${slug}`),
-        {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          method: "POST",
-          body: JSON.stringify({
-            title: titleInput,
-          }),
-        }
-      );
+      const createRes = await fetch(`/api/admin/pages/${type}/${slug}`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({
+          title: titleInput,
+        }),
+      });
 
       if (!createRes.ok && createRes.status !== 200) {
         setEditorMessage({
@@ -72,7 +68,7 @@ export default function EditorSection({
         return;
       }
     }
-    const res = await fetch(withBasePath(`/api/admin/pages/${type}/${slug}`), {
+    const res = await fetch(`/api/admin/pages/${type}/${slug}`, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",

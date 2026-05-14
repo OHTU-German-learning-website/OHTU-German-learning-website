@@ -10,7 +10,6 @@ import "./click.css";
 import WordSelectionExercise from "@/components/ui/click/click.js";
 import Editor from "@/components/ui/editor";
 import { htmlToPlainText } from "@/shared/utils/normalizeEditorText";
-import { withBasePath } from "@/shared/utils/basePath";
 
 function escapeHtml(value) {
   return String(value || "")
@@ -91,20 +90,17 @@ export default function CreateExercise() {
   const handleSaveExercise = async () => {
     try {
       if (isEditMode) {
-        const response = await fetch(
-          withBasePath(`/api/admin/exercises/click/${click_id}`),
-          {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              title,
-              targetCategory,
-              targetWords: selectedWords,
-              allWords,
-              sourceHtml: allWordsHtml,
-            }),
-          }
-        );
+        const response = await fetch(`/api/admin/exercises/click/${click_id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title,
+            targetCategory,
+            targetWords: selectedWords,
+            allWords,
+            sourceHtml: allWordsHtml,
+          }),
+        });
 
         const data = await response.json();
         if (!response.ok) {

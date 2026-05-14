@@ -6,7 +6,6 @@ import { useRequest } from "@/shared/hooks/useRequest";
 import { useRouter, useSearchParams } from "next/navigation";
 import { zodErrorToFormErrors } from "@/shared/schemas/schema-utils";
 import Editor from "@/components/ui/editor";
-import { withBasePath } from "@/shared/utils/basePath";
 
 const defaultFormErrors = {
   word: "",
@@ -32,9 +31,7 @@ export default function CreateGlossaryEntry() {
     const loadEntry = async () => {
       try {
         setIsLoadingEntry(true);
-        const response = await fetch(
-          withBasePath(`/api/admin/glossary?id=${entryId}`)
-        );
+        const response = await fetch(`/api/admin/glossary?id=${entryId}`);
         if (!response.ok) {
           throw new Error("Failed to load glossary entry");
         }

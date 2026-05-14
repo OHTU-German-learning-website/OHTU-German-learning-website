@@ -2,7 +2,6 @@ import { memo, useCallback, useState, useEffect } from "react";
 import { WordBox } from "./wordbox.js";
 import { Dustbin } from "./dustbin.js";
 import { Button } from "@/components/ui/button";
-import { withBasePath } from "@/shared/utils/basePath.js";
 
 const Area = ({ exerciseID }) => {
   const [dustbins, setDustbins] = useState([]);
@@ -23,9 +22,7 @@ const Area = ({ exerciseID }) => {
       if (!exerciseID) return;
 
       try {
-        const response = await fetch(
-          withBasePath(`/api/exercises/dragdrop/${exerciseID}`)
-        );
+        const response = await fetch(`/api/exercises/dragdrop/${exerciseID}`);
         if (!response.ok) throw new Error("Fehler beim Laden der Übung.");
 
         const data = await response.json();

@@ -44,7 +44,7 @@ export default function TalkbackPage() {
     try {
       setIsSending(true);
 
-      const response = await fetch(withBasePath("/api/talkback"), {
+      const response = await fetch("/api/talkback", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

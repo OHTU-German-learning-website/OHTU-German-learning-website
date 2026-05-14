@@ -1,11 +1,7 @@
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
-
 /** @type {import('next').NextConfig} */
 const nextConfig =
 {
     output: 'standalone',
-
-    basePath,
 
     eslint: {
         ignoreDuringBuilds: true,
@@ -18,8 +14,7 @@ const nextConfig =
         DB_PORT: process.env.DB_PORT || '5432',
         DB_USER: process.env.DB_USER || 'postgres',
         DB_PASSWORD: process.env.DB_PASSWORD || 'password',
-        DB_NAME: process.env.DB_NAME || 'postgres',
-        NEXT_PUBLIC_BASE_PATH: basePath
+        DB_NAME: process.env.DB_NAME || 'postgres'
     }
 };
 

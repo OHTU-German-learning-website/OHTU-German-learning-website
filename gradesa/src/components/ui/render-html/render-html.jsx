@@ -5,7 +5,6 @@ import {
   GlossaryParagraph,
   GlossaryListItem,
 } from "@/components/ui/glossary/GlossaryText";
-import { BASE_PATH, withBasePath } from "@/shared/utils/basePath";
 
 /**
  * Normalize HTML attributes for use in React elements.
@@ -33,15 +32,6 @@ const normalizeAttribs = (attributes = {}) => {
     delete normalized.class;
   }
   return normalized;
-};
-
-const prefixRootRelativePath = (value) => {
-  if (typeof value !== "string") return value;
-  if (!value.startsWith("/") || value.startsWith("//")) return value;
-  if (BASE_PATH && (value === BASE_PATH || value.startsWith(`${BASE_PATH}/`))) {
-    return value;
-  }
-  return withBasePath(value);
 };
 
 /**
@@ -94,27 +84,11 @@ export default function RenderHTML({ data, disableGlossary = false }) {
     // Legacy DB content can contain <Container> tags from old React markup.
     // Render only children to preserve previous look without invalid tag warnings.
     container: (_attributes, children) => <Fragment>{children}</Fragment>,
-
-    a: (attributes, children) => {
-      const safeAttribs = { ...attributes };
-      if (safeAttribs.href) {
-        safeAttribs.href = prefixRootRelativePath(safeAttribs.href);
-      }
-      return <a {...safeAttribs}>{children}</a>;
-    },
-    img: (attributes) => {
-      const safeAttribs = { ...attributes };
-      if (safeAttribs.src) {
-        safeAttribs.src = prefixRootRelativePath(safeAttribs.src);
-      }
-      return <img {...safeAttribs} />;
-    },
-
     anchor: (attributes, children) => {
       const safeAttribs = { ...attributes };
       const href = safeAttribs.href || safeAttribs["data-href"];
       if (href) {
-        safeAttribs["data-href"] = prefixRootRelativePath(href);
+        safeAttribs["data-href"] = href;
         delete safeAttribs.href;
       }
       safeAttribs.className = [safeAttribs.className, "glossary-anchor"]

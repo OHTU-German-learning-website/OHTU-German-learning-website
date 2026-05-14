@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import layout from "@/shared/styles/layout.module.css";
 import styles from "./new-page.module.css";
 import { useRouter } from "next/navigation";
-import { withBasePath } from "@/shared/utils/basePath";
 
 export default function NewPage() {
   const [type, setType] = useState("resources");
@@ -18,7 +17,7 @@ export default function NewPage() {
 
   useEffect(() => {
     if (type !== "grammar") return;
-    fetch(withBasePath("/api/admin/grammar-topics"))
+    fetch("/api/admin/grammar-topics")
       .then((res) => res.json())
       .then((data) => {
         setGrammarTopics(data);
@@ -50,7 +49,7 @@ export default function NewPage() {
       }
     }
 
-    const response = await fetch(withBasePath(`/api/admin/pages`), {
+    const response = await fetch(`/api/admin/pages`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
