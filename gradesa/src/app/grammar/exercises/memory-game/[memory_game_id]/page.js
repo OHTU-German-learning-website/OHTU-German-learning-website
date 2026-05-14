@@ -13,6 +13,7 @@ export default function MemoryGamePlayerPage() {
   const { memory_game_id } = useParams();
   const [result, setResult] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [resetSignal, setResetSignal] = useState(0);
 
   const {
     data: exercise,
@@ -90,6 +91,7 @@ export default function MemoryGamePlayerPage() {
         pairs={exercise.pairs || []}
         onComplete={handleComplete}
         onReset={() => setResult(null)}
+        resetSignal={resetSignal}
       />
 
       {isSubmitting && <p>Ergebnisse werden gespeichert...</p>}
@@ -113,7 +115,14 @@ export default function MemoryGamePlayerPage() {
         <Link href="/grammar/exercises/memory-game">
           <Button variant="outline">Zurück zur Liste</Button>
         </Link>
-        <Button type="button" onClick={() => refetch()}>
+        <Button
+          type="button"
+          onClick={() => {
+            setResult(null);
+            setResetSignal((prev) => prev + 1);
+            refetch();
+          }}
+        >
           Übung neu laden
         </Button>
       </Row>
