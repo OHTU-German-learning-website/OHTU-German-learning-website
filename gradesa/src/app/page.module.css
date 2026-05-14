@@ -57,7 +57,7 @@
 .creditsSection {
   width: min(100%, 1080px);
   margin: 0 auto;
-  padding: 1.75rem 2rem;
+  padding: 1rem 2rem 1.75rem;
   border-radius: 24px;
   box-shadow: 0 14px 32px rgba(0, 0, 0, 0.08);
   text-align: center;
@@ -73,6 +73,7 @@
 .creditsList {
   display: grid;
   gap: 0.9rem;
+  margin-bottom: 1.5rem;
 }
 
 .creditsItem {
@@ -96,7 +97,7 @@
 
 @media (max-width: 768px) {
   .creditsSection {
-    padding: 1.25rem;
+    padding: 0.75rem 1.25rem 1.25rem;
     border-radius: 18px;
   }
 

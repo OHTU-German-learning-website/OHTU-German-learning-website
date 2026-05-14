@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Container, Column, Row } from "@/components/ui/layout/container";
 import useQuery from "@/shared/hooks/useQuery";
 import { Button } from "@/components/ui/button";
+import { ExerciseLinkButton } from "@/components/ui/button/exercise-link-button";
 
 export default function MemoryGameExercisesPage() {
   const {
@@ -90,6 +91,12 @@ export default function MemoryGameExercisesPage() {
               </Container>
             </Column>
             <Column gap="sm" align="flex-end">
+              <ExerciseLinkButton
+                href={`/grammar/exercises/memory-game/${exercise.memory_game_exercise_id}`}
+                size="sm"
+              >
+                Link kopieren
+              </ExerciseLinkButton>
               <Link
                 href={`/grammar/exercises/memory-game/${exercise.memory_game_exercise_id}`}
               >

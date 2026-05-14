@@ -8,7 +8,7 @@ function shuffle(items) {
   return [...items].sort(() => Math.random() - 0.5);
 }
 
-export function MemoryGame({ pairs, onComplete, onReset }) {
+export function MemoryGame({ pairs, onComplete, onReset, resetSignal }) {
   const [cards, setCards] = useState([]);
   const [flipped, setFlipped] = useState(new Set());
   const [selectedIds, setSelectedIds] = useState([]);
@@ -119,6 +119,13 @@ export function MemoryGame({ pairs, onComplete, onReset }) {
     lastFlippedRef.current = null;
     onReset?.();
   };
+
+  useEffect(() => {
+    if (typeof resetSignal === "number") {
+      resetGame();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resetSignal]);
 
   return (
     <div className="memory-game-shell">

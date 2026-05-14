@@ -2,7 +2,12 @@ import { DB } from "@/backend/db";
 import { withAuth } from "@/backend/middleware/withAuth";
 import { NextResponse } from "next/server";
 
-const VALID_PAGE_GROUPS = new Set(["resources", "communications", "grammar"]);
+const VALID_PAGE_GROUPS = new Set([
+  "resources",
+  "communications",
+  "grammar",
+  "system",
+]);
 
 function normalizePageDescription(description) {
   if (typeof description !== "string") return null;
