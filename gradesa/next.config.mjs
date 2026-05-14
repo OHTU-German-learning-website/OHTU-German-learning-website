@@ -1,11 +1,11 @@
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "/gradesa";
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 
 /** @type {import('next').NextConfig} */
 const nextConfig =
 {
     output: 'standalone',
 
-    basePath,
+    ...(basePath ? { basePath } : {}),
 
     eslint: {
         ignoreDuringBuilds: true,
