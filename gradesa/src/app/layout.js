@@ -5,6 +5,7 @@ import Navbar from "@/components/ui/navbar/navigation";
 import Sidebar from "@/components/ui/sidebar/sidebar";
 import { UserProvider } from "@/context/user.context";
 import { GlossaryProvider } from "@/context/glossary.context";
+import { withBasePath } from "@/shared/utils/basePath";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,9 +21,9 @@ export const metadata = {
   title: "Gradesa",
   description: "Gradesa — deutsch lernen",
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-    apple: "/favicon.ico",
+    icon: withBasePath("/favicon.ico"),
+    shortcut: withBasePath("/favicon.ico"),
+    apple: withBasePath("/favicon.ico"),
   },
 };
 
