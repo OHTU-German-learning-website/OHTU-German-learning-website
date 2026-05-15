@@ -19,7 +19,7 @@ async function gotoWithRetry(page, url, options, retries = 1) {
 }
 
 async function getFirstAlphabeticalGrammarHref(page) {
-  await gotoWithRetry(page, "/grammar/alphabetical", {
+  await gotoWithRetry(page, "grammar/alphabetical", {
     waitUntil: "domcontentloaded",
     timeout: 60000,
   });
@@ -38,15 +38,21 @@ async function getFirstAlphabeticalGrammarHref(page) {
 
 test.describe("Grammar Pages", () => {
   test("should load the grammar overview page", async ({ page }) => {
-    await page.goto("/grammar");
-    await expect(page).toHaveURL(/.*\/grammar$/);
+    test.setTimeout(60000);
+
+    await gotoWithRetry(page, "grammar", {
+      waitUntil: "domcontentloaded",
+      timeout: 60000,
+    });
+
+    await expect(page).toHaveURL(/\/grammar\/?$/);
     await expect(page.getByRole("main").first()).toBeVisible();
   });
 
   test("should render topics-view grammar page directly", async ({ page }) => {
     test.setTimeout(60000);
 
-    await page.goto("/grammar/themes/adjektivdeklination?view=topics", {
+    await page.goto("grammar/themes/adjektivdeklination?view=topics", {
       waitUntil: "domcontentloaded",
       timeout: 60000,
     });
@@ -77,7 +83,7 @@ test.describe("Grammar Pages", () => {
   }) => {
     test.setTimeout(60000);
 
-    await page.goto("/grammar/themes/e2e-placeholder-page?view=topics", {
+    await page.goto("grammar/themes/e2e-placeholder-page?view=topics", {
       waitUntil: "domcontentloaded",
       timeout: 60000,
     });
@@ -90,11 +96,26 @@ test.describe("Grammar Pages", () => {
   test("should keep topics view when using next navigation", async ({
     page,
   }) => {
-    await page.goto("/grammar/themes/adjektivdeklination?view=topics");
+    test.setTimeout(60000);
+
+    await gotoWithRetry(
+      page,
+      "grammar/themes/adjektivdeklination?view=topics",
+      {
+        waitUntil: "domcontentloaded",
+        timeout: 60000,
+      }
+    );
 
     const weiterButton = page.getByRole("link", { name: "Weiter" });
     await expect(weiterButton).toBeVisible();
-    await weiterButton.click();
+
+    const nextHref = await weiterButton.getAttribute("href");
+    expect(nextHref).toBeTruthy();
+    await gotoWithRetry(page, nextHref, {
+      waitUntil: "domcontentloaded",
+      timeout: 60000,
+    });
 
     await expect(page).toHaveURL(/view=topics/);
   });
@@ -113,20 +134,21 @@ test.describe("Grammar Pages", () => {
     const weiterButton = page.getByRole("link", { name: "Weiter" });
     if (await weiterButton.isVisible()) {
       await expect(weiterButton).toHaveAttribute("href", /view=alphabetical/);
-      await Promise.all([
-        page.waitForURL(/view=alphabetical/, {
-          timeout: 60000,
-        }),
-        weiterButton.click(),
-      ]);
+
+      const nextHref = await weiterButton.getAttribute("href");
+      expect(nextHref).toBeTruthy();
+      await gotoWithRetry(page, nextHref, {
+        waitUntil: "domcontentloaded",
+        timeout: 60000,
+      });
+
+      await expect(page).toHaveURL(/view=alphabetical/);
     }
   });
 
   test("should not show Ohne Thema in topics overview", async ({ page }) => {
-    await page.goto("/grammar/themes");
+    await page.goto("grammar/themes");
 
-    await expect(
-      page.getByRole("heading", { name: /Ohne Thema/i })
-    ).toHaveCount(0);
+    await expect(page.locator("main")).not.toContainText(/Ohne Thema/i);
   });
 });

@@ -2,13 +2,13 @@ const { test, expect } = require("@playwright/test");
 
 test.describe("Learning Page", () => {
   test("should load the learning page", async ({ page }) => {
-    await page.goto("/learning");
+    await page.goto("learning");
     await expect(page).toHaveURL(/.*learning/);
     await expect(page.getByRole("main").first()).toBeVisible();
   });
 
   test("should show language toggle options", async ({ page }) => {
-    await page.goto("/learning", { waitUntil: "domcontentloaded" });
+    await page.goto("learning", { waitUntil: "domcontentloaded" });
 
     await expect(
       page.getByRole("group", { name: "Choose language" })
@@ -18,7 +18,7 @@ test.describe("Learning Page", () => {
   });
 
   test("should switch language selection", async ({ page }) => {
-    await page.goto("/learning");
+    await page.goto("learning");
 
     const englishButton = page.getByRole("button", { name: "English" });
     const deutschButton = page.getByRole("button", { name: "Deutsch" });
@@ -43,7 +43,7 @@ test.describe("Learning Page", () => {
   });
 
   test("should show learning form when data is loaded", async ({ page }) => {
-    await page.goto("/learning", { waitUntil: "domcontentloaded" });
+    await page.goto("learning", { waitUntil: "domcontentloaded" });
 
     const formContainer = page.locator(
       '.LearningForm, [data-test="learning-form"]'

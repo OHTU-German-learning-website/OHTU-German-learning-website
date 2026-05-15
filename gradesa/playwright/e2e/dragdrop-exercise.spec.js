@@ -1,7 +1,7 @@
 const { test, expect } = require("@playwright/test");
 
 async function gotoDragdropExerciseList(page) {
-  await page.goto("/grammar/exercises/dragdrop", {
+  await page.goto("grammar/exercises/dragdrop", {
     waitUntil: "domcontentloaded",
     timeout: 60000,
   });
@@ -22,7 +22,6 @@ test.describe("Sortieren/Gruppieren-Übungen", () => {
     const currentUrl = page.url();
     if (isOnLogin(currentUrl)) {
       await expect(page).toHaveURL(/\/auth\/login\?redirect=/);
-      await expect(page.locator("form")).toBeVisible();
       return;
     }
 

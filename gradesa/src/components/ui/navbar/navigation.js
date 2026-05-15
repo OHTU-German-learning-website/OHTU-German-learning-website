@@ -5,6 +5,7 @@ import "./navbar.css";
 import { useUser } from "@/context/user.context";
 import { Column } from "../layout/container";
 import { useRouter } from "next/navigation";
+import { withBasePath } from "@/shared/utils/basePath";
 
 function Navbar() {
   const { auth, logout } = useUser();
@@ -17,7 +18,7 @@ function Navbar() {
           <div className="logo">
             <Link href="/">
               <Image
-                src="/logo_placeholder2.png"
+                src={withBasePath("/logo_placeholder2.png")}
                 width={50}
                 height={50}
                 alt="Logo placeholder"

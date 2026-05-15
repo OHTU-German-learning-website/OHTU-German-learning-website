@@ -30,12 +30,16 @@ const unauthRequired = ["/auth/login", "/auth/register"];
  */
 export async function middleware(request) {
   const { pathname } = request.nextUrl;
+  const basePath = (process.env.NEXT_PUBLIC_BASE_PATH || "/gradesa").replace(
+    /\/$/,
+    ""
+  );
   const sessionCookie = request.cookies.get(AUTH_COOKIE_NAME);
   const hasCookie = !!sessionCookie && sessionCookie.value !== "";
 
   // Redirect logged-out users trying to access protected paths
   if (!hasCookie && authRequired.some((path) => pathname.startsWith(path))) {
-    const loginUrl = new URL("/auth/login", request.url);
+    const loginUrl = new URL(`${basePath}/auth/login`, request.url);
     loginUrl.searchParams.set("redirect", pathname); // Add the original path as a query parameter
     return NextResponse.redirect(loginUrl);
   }

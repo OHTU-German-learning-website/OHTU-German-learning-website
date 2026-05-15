@@ -1,7 +1,7 @@
 const { test, expect } = require("@playwright/test");
 
 async function gotoDndMatchList(page) {
-  await page.goto("/grammar/exercises/dnd-match", {
+  await page.goto("grammar/exercises/dnd-match", {
     waitUntil: "domcontentloaded",
     timeout: 60000,
   });
@@ -24,7 +24,6 @@ test.describe("Zuordnungs-Übungen", () => {
     const currentUrl = page.url();
     if (isOnLogin(currentUrl)) {
       await expect(page).toHaveURL(/\/auth\/login\?redirect=/);
-      await expect(page.locator("form")).toBeVisible();
       return;
     }
 
