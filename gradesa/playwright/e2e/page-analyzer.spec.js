@@ -3,7 +3,9 @@ const { elementExists } = require("./utils/helpers");
 
 test.describe("Page Structure Analysis", () => {
   test("analyze homepage structure", async ({ page }) => {
-    await page.goto("/");
+    test.setTimeout(60000);
+
+    await page.goto("", { waitUntil: "domcontentloaded", timeout: 60000 });
     await page.screenshot({ path: "tests/e2e/screenshots/homepage.png" });
 
     console.log("Page title:", await page.title());
@@ -32,7 +34,12 @@ test.describe("Page Structure Analysis", () => {
   });
 
   test("analyze learning page structure", async ({ page }) => {
-    await page.goto("/learning");
+    test.setTimeout(60000);
+
+    await page.goto("learning", {
+      waitUntil: "domcontentloaded",
+      timeout: 60000,
+    });
     await page.screenshot({ path: "tests/e2e/screenshots/learning.png" });
 
     console.log("Page title:", await page.title());

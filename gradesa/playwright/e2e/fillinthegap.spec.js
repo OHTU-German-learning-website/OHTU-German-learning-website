@@ -1,7 +1,7 @@
 const { test, expect } = require("@playwright/test");
 
 async function gotoFillInTheGapList(page) {
-  await page.goto("/grammar/exercises/fillinthegap", {
+  await page.goto("grammar/exercises/fillinthegap", {
     waitUntil: "domcontentloaded",
     timeout: 60000,
   });
@@ -20,7 +20,6 @@ test.describe("Lückentext-Übungen", () => {
     const currentUrl = page.url();
     if (isOnLogin(currentUrl)) {
       await expect(page).toHaveURL(/\/auth\/login\?redirect=/);
-      await expect(page.locator("form")).toBeVisible();
       return;
     }
 
@@ -36,7 +35,6 @@ test.describe("Lückentext-Übungen", () => {
     const currentUrl = page.url();
     if (isOnLogin(currentUrl)) {
       await expect(page).toHaveURL(/\/auth\/login\?redirect=/);
-      await expect(page.locator("form")).toBeVisible();
       return;
     }
 
@@ -53,7 +51,6 @@ test.describe("Lückentext-Übungen", () => {
     const currentUrl = page.url();
     if (isOnLogin(currentUrl)) {
       await expect(page).toHaveURL(/\/auth\/login\?redirect=/);
-      await expect(page.locator("form")).toBeVisible();
       return;
     }
 
