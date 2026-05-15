@@ -2,7 +2,12 @@ const { test, expect } = require("@playwright/test");
 
 test.describe("Form Interactions", () => {
   test("should navigate to register page", async ({ page }) => {
-    await page.goto("/auth/register");
+    test.setTimeout(60000);
+
+    await page.goto("auth/register", {
+      waitUntil: "domcontentloaded",
+      timeout: 60000,
+    });
     await expect(page).toHaveURL(/.*register/);
     await page.screenshot({ path: "tests/e2e/screenshots/register-page.png" });
     await expect(page.locator("form")).toBeVisible();
@@ -11,7 +16,7 @@ test.describe("Form Interactions", () => {
   test.skip("form submission - to be implemented after analyzing actual form structure", async ({
     page,
   }) => {
-    await page.goto("/auth/register");
+    await page.goto("auth/register");
     await expect(page).toHaveURL(/.*register/);
   });
 });

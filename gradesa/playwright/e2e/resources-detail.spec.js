@@ -4,7 +4,7 @@ test.describe("Resources Detail Pages", () => {
   test("should display chapter content", async ({ page }) => {
     test.setTimeout(60000);
 
-    await page.goto("/pages/resources/1", { waitUntil: "domcontentloaded" });
+    await page.goto("pages/resources/1", { waitUntil: "domcontentloaded" });
     await expect(page).toHaveURL(/.*pages\/resources\/1/);
     await expect(page.getByRole("main").first()).toBeVisible();
 
@@ -15,7 +15,7 @@ test.describe("Resources Detail Pages", () => {
   test("should navigate between chapters", async ({ page }) => {
     test.setTimeout(90000);
 
-    await page.goto("/pages/resources/1", {
+    await page.goto("pages/resources/1", {
       waitUntil: "domcontentloaded",
       timeout: 60000,
     });
@@ -23,7 +23,7 @@ test.describe("Resources Detail Pages", () => {
 
     const nextLink = page.getByRole("link", { name: /^Weiter$/ }).last();
     await expect(nextLink).toBeVisible();
-    await expect(nextLink).toHaveAttribute("href", "/pages/resources/2");
+    await expect(nextLink).toHaveAttribute("href", /\/pages\/resources\/2$/);
 
     const href = await nextLink.getAttribute("href");
     await expect(href).toBeTruthy();
@@ -39,7 +39,7 @@ test.describe("Resources Detail Pages", () => {
   }) => {
     test.setTimeout(60000);
 
-    await page.goto("/pages/resources/1", { waitUntil: "domcontentloaded" });
+    await page.goto("pages/resources/1", { waitUntil: "domcontentloaded" });
 
     const resourcesLink = page.getByRole("link", {
       name: "Effektiv online lernen",
@@ -61,7 +61,7 @@ test.describe("Resources Detail Pages", () => {
   }) => {
     test.setTimeout(60000);
 
-    await page.goto("/pages/resources/1", { waitUntil: "domcontentloaded" });
+    await page.goto("pages/resources/1", { waitUntil: "domcontentloaded" });
 
     const paragraphs = page.locator("p");
     await expect(paragraphs.first()).toBeVisible();

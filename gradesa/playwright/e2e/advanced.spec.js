@@ -3,7 +3,7 @@ const { elementExists } = require("./utils/helpers");
 
 test.describe("Advanced Interactions", () => {
   test("should display grammar content", async ({ page }) => {
-    await page.goto("/grammar/themes", { waitUntil: "domcontentloaded" });
+    await page.goto("grammar/themes", { waitUntil: "domcontentloaded" });
     await expect(page.locator("main")).toBeVisible();
 
     const headings = await page.locator("h1, h2, h3").all();
@@ -21,10 +21,10 @@ test.describe("Advanced Interactions", () => {
     );
     test.setTimeout(60000);
 
-    await page.goto("/pages/resources/1", { waitUntil: "domcontentloaded" });
+    await page.goto("pages/resources/1", { waitUntil: "domcontentloaded" });
     const chapter1Url = page.url();
 
-    await page.goto("/pages/resources/2", { waitUntil: "domcontentloaded" });
+    await page.goto("pages/resources/2", { waitUntil: "domcontentloaded" });
 
     expect(page.url()).not.toEqual(chapter1Url);
   });
@@ -32,7 +32,7 @@ test.describe("Advanced Interactions", () => {
   test("should have interactive UI elements", async ({ page }) => {
     test.setTimeout(60000);
 
-    await page.goto("/pages/resources", {
+    await page.goto("pages/resources", {
       waitUntil: "domcontentloaded",
       timeout: 60000,
     });
