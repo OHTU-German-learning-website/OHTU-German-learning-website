@@ -7,7 +7,6 @@ import { Column } from "../layout/container";
 import { useRouter } from "next/navigation";
 import { withBasePath } from "@/shared/utils/basePath";
 
-
 function Navbar() {
   const { auth, logout } = useUser();
   const router = useRouter();
