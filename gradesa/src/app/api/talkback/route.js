@@ -34,7 +34,7 @@ export async function POST(req) {
 
     const { email, subject, message } = result.data;
 
-    await sendEmail({ to: email, subject, body: message });
+    await sendEmail(email, subject, message);
 
     return Response.json({
       message: "Nachricht erfolgreich gesendet.",
