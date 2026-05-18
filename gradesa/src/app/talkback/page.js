@@ -3,6 +3,7 @@
 import "./talkback.css";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { withBasePath } from "shared/utils/withBasePath";
 
 export default function TalkbackPage() {
   const defaultSubject = "Rückmeldung von GRADESA 2.0";
