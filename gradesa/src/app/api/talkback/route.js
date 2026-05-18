@@ -1,5 +1,5 @@
-import { MailerSend, EmailParams, Sender, Recipient } from "mailersend";
 import { z } from "zod";
+import { sendEmail } from "@/backend/mailService";
 
 const talkbackSchema = z.object({
   email: z
@@ -34,55 +34,17 @@ export async function POST(req) {
 
     const { email, subject, message } = result.data;
 
-    const apiKey = process.env.MAILERSEND_API_KEY;
-    const fromEmail = process.env.TALKBACK_FROM_EMAIL;
-    const fromName = process.env.TALKBACK_FROM_NAME || "GRADESA 2.0";
-
-    if (!apiKey || !fromEmail) {
-      return Response.json(
-        {
-          message: "Der E-Mail-Dienst ist nicht konfiguriert.",
-        },
-        { status: 500 }
-      );
-    }
-
-    const mailersend = new MailerSend({ apiKey });
-    const sentFrom = new Sender(fromEmail, fromName);
-    const recipients = [new Recipient(email, "Talkback Empfänger")];
-
-    const emailParams = new EmailParams()
-      .setFrom(sentFrom)
-      .setTo(recipients)
-      .setSubject(subject)
-      .setText(message)
-      .setHtml(`<p>${escapeHtml(message).replace(/\n/g, "<br />")}</p>`);
-
-    await mailersend.email.send(emailParams);
+    await sendEmail({ to: email, subject, body: message });
 
     return Response.json({
-      message: "Feedback erfolgreich gesendet.",
+      message: "Nachricht erfolgreich gesendet.",
     });
-  } catch (error) {
-    const message =
-      error instanceof Error
-        ? error.message
-        : "Feedback konnte nicht gesendet werden.";
-
+  } catch {
     return Response.json(
       {
-        message,
+        message: "Nachricht konnte nicht gesendet werden.",
       },
       { status: 500 }
     );
   }
-}
-
-function escapeHtml(value) {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
 }
