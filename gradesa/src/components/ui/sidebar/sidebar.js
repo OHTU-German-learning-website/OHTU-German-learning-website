@@ -115,8 +115,8 @@ function StudentSideBar() {
       <Link className={styles.sidebarLink} href="/glossary">
         Glossar
       </Link>
-      <Link className={styles.sidebarLink} href="/talkback">
-        Brauchen Sie Hilfe?
+      <Link className={styles.sidebarLink} href="/contact">
+        Kontaktieren Sie unser Team
       </Link>
       <SidebarGroup
         title="Links zu anderen Webseiten"
