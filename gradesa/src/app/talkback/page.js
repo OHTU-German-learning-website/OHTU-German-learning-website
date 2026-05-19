@@ -2,10 +2,26 @@
 
 import "./talkback.css";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { withBasePath } from "@/shared/utils/basePath";
+import { useIsAdmin } from "@/context/user.context";
 
 export default function TalkbackPage() {
+  const isAdmin = useIsAdmin();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isAdmin === false) {
+      router.replace(withBasePath("/"));
+    }
+  }, [isAdmin, router]);
+
+  if (isAdmin !== true) {
+    return null;
+  }
+
   const defaultSubject = "Rückmeldung von GRADESA 2.0";
 
   const [email, setEmail] = useState("");
