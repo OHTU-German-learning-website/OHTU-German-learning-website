@@ -98,7 +98,7 @@ function sanitize(data) {
   const window = new JSDOM("").window;
   const purify = DOMPurify(window);
   const cleaned = purify.sanitize(data, { ADD_ATTR: ["target"] });
-  return cleaned;
+  return cleaned.replace(/\s+style=""/g, "");
 }
 
 async function slugIsInUse(type, slug) {
