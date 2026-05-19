@@ -63,6 +63,10 @@ const prefixRootRelativePath = (value) => {
 export default function RenderHTML({ data, disableGlossary = false }) {
   if (!data) return null;
 
+  // Strip empty style attributes before parsing so React does not receive
+  // an invalid string value for the style prop.
+  const cleanedData = data.replace(/\s+style=""/g, "");
+
   const renderParagraph = (attributes, children) =>
     disableGlossary ? (
       <p {...attributes}>{children}</p>
@@ -135,6 +139,6 @@ export default function RenderHTML({ data, disableGlossary = false }) {
     return handler ? handler(normalizedAttributes, children) : undefined;
   };
 
-  const parsedContent = parse(data, { replace: replacer });
+  const parsedContent = parse(cleanedData, { replace: replacer });
   return <div className="rendered-html">{parsedContent}</div>;
 }
