@@ -1,38 +1,65 @@
-import axios from "axios";
-
-const pateClient = axios.create({
-  baseURL: "https://api-toska.apps.ocp-prod-0.k8s.it.helsinki.fi/pate/",
-  params: {
-    token: process.env.PATE_TOKEN,
-  },
-});
-
-const template = {
-  from: "Gradesa",
-};
+const PATE_URL = "https://api-toska.apps.ocp-prod-0.k8s.it.helsinki.fi/pate/";
+const isDevelopment = process.env.NODE_ENV === "development";
+const isCI = process.env.CI === "true";
 
 const settings = {
-  color: "orange",
-  header: "Sent by Gradesa",
-  dryrun: false,
-  hideToska: true,
-  disableToska: true,
+    hideToska: false,
+    disableToska: true,
+    color: "orange",
+    header: "GRADESA",
+    headerFontColor: "white",
+    dryrun: false,
 };
 
-export async function sendEmail(to, subject, body) {
-  if (!process.env.PATE_TOKEN) {
-    throw new Error("PATE token missing");
-  }
+const sendEmail = async ({ to, subject, text }) => {
+    if (!to || !subject || !text) {
+        throw new Error("Missing email fields: to, subject and text are required");
+    }
 
-  return pateClient.post("/", {
-    template,
-    emails: [
-      {
-        to,
-        subject,
-        body,
-      },
-    ],
-    settings,
-  });
-}
+    const mail = {
+        template: {
+            from: "GRADESA",
+            text,
+        },
+        emails: [
+            {
+                to,
+                subject,
+            },
+        ],
+        settings,
+    };
+
+    if (isCI || isDevelopment) {
+        console.info("Skipping email sending in CI/development", {
+            to,
+            subject,
+            nodeEnv: process.env.NODE_ENV,
+        });
+        return;
+    }
+
+    if (!process.env.PATE_TOKEN) {
+        throw new Error("PATE_TOKEN missing");
+    }
+
+    try {
+        const response = await fetch(`${PATE_URL}?token=${process.env.PATE_TOKEN}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(mail),
+        });
+
+        if (!response.ok) {
+            const errorBody = await response.text();
+            throw new Error(`PATE email sending failed with status ${response.status}: ${errorBody}`);
+        }
+    } catch (error) {
+        console.error("PATE fetch error:", error);
+        throw error;
+    }
+};
+
+export default sendEmail;
