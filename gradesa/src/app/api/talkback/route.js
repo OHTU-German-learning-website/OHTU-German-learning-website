@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { sendEmail } from "@/backend/mailService";
+import sendEmail from "@/backend/mailService";
 
 const talkbackSchema = z.object({
   email: z
@@ -34,7 +34,11 @@ export async function POST(req) {
 
     const { email, subject, message } = result.data;
 
-    await sendEmail(email, subject, message);
+    await sendEmail({
+      to: email,
+      subject,
+      text: message,
+    });
 
     return Response.json({
       message: "Nachricht erfolgreich gesendet.",
