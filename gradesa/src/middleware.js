@@ -8,7 +8,7 @@ import { AUTH_COOKIE_NAME } from "@/shared/const";
  * to the login page when attempting to access these paths).
  * @type {string[]}
  */
-const authRequired = ["/grammar/exercises", "/edit_info"];
+const authRequired = ["/grammar/exercises", "/edit_info", "/contact"];
 
 // Restricted paths logged-in users cannot access
 /**
@@ -34,13 +34,19 @@ export async function middleware(request) {
     /\/$/,
     ""
   );
+  const pathnameWithoutBasePath = pathname.startsWith(basePath)
+    ? pathname.slice(basePath.length) || "/"
+    : pathname;
   const sessionCookie = request.cookies.get(AUTH_COOKIE_NAME);
   const hasCookie = !!sessionCookie && sessionCookie.value !== "";
 
   // Redirect logged-out users trying to access protected paths
-  if (!hasCookie && authRequired.some((path) => pathname.startsWith(path))) {
+  if (
+    !hasCookie &&
+    authRequired.some((path) => pathnameWithoutBasePath.startsWith(path))
+  ) {
     const loginUrl = new URL(`${basePath}/auth/login`, request.url);
-    loginUrl.searchParams.set("redirect", pathname); // Add the original path as a query parameter
+    loginUrl.searchParams.set("redirect", pathnameWithoutBasePath); // Add the original path as a query parameter
     return NextResponse.redirect(loginUrl);
   }
   // Otherwise, allow the request to proceed and prevent caching of the response
