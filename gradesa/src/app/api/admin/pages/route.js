@@ -105,6 +105,10 @@ export const POST = withAuth(
       return new NextResponse("Invalid input", { status: 400 });
     }
 
+    if (type === "system" && !req.user?.is_superadmin) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
     const trimmedTitle = title.trim();
     if (!trimmedTitle) {
       return new NextResponse("Invalid input", { status: 400 });

@@ -16,6 +16,13 @@ const VALID_PAGE_GROUPS = new Set([
   "system",
 ]);
 
+function requireSystemSuperAdmin(request, type) {
+  if (type === "system" && !request.user?.is_superadmin) {
+    return new NextResponse("Unauthorized", { status: 401 });
+  }
+  return null;
+}
+
 /*
   Route behavior (summary):
   - The `type` route param maps to the `page_group` value stored in the
@@ -57,6 +64,8 @@ export const PUT = withAuth(
   async (req, { params }) => {
     const data = await req.json();
     const { type, slug } = await params;
+    const authError = requireSystemSuperAdmin(req, type);
+    if (authError) return authError;
 
     let newData;
     try {
@@ -98,7 +107,8 @@ function sanitize(data) {
   const window = new JSDOM("").window;
   const purify = DOMPurify(window);
   const cleaned = purify.sanitize(data, { ADD_ATTR: ["target"] });
-  return cleaned;
+  // Remove empty style attributes that cause React errors
+  return cleaned.replace(/\s+style=""/g, "");
 }
 
 async function slugIsInUse(type, slug) {

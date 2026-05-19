@@ -8,6 +8,13 @@ import { DB } from "@/backend/db";
 // Allowed page_group values stored in the consolidated `html_pages` table.
 const VALID_PAGE_GROUPS = new Set(["resources", "communications", "grammar"]);
 
+function requireSystemSuperAdmin(request, type) {
+  if (type === "system" && !request.user?.is_superadmin) {
+    return new NextResponse("Unauthorized", { status: 401 });
+  }
+  return null;
+}
+
 function normalizePageDescription(description) {
   if (typeof description !== "string") return null;
 
@@ -34,6 +41,8 @@ export const PATCH = withAuth(
   async (req, { params }) => {
     try {
       const { type, slug } = await params;
+      const authError = requireSystemSuperAdmin(req, type);
+      if (authError) return authError;
 
       const query = `UPDATE html_pages SET content = '' WHERE slug = $1 AND page_group = $2 RETURNING *`;
       const result = await DB.pool(query, [slug, type]);
@@ -60,6 +69,8 @@ export const DELETE = withAuth(
   async (req, { params }) => {
     try {
       const { type, slug } = await params;
+      const authError = requireSystemSuperAdmin(req, type);
+      if (authError) return authError;
 
       const query = `DELETE FROM html_pages WHERE slug = $1 AND page_group = $2 RETURNING *`;
       const result = await DB.pool(query, [slug, type]);
@@ -86,6 +97,8 @@ export const PUT = withAuth(
   async (req, { params }) => {
     const data = await req.json();
     const { type, slug } = await params;
+    const authError = requireSystemSuperAdmin(req, type);
+    if (authError) return authError;
 
     let newData;
     try {

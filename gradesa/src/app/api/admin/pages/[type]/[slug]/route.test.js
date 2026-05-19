@@ -125,6 +125,55 @@ describe("PUT /api/admin/pages/[type]/[slug]", () => {
     expect(result.rows[0].content).toContain('data-size="320x180"');
     expect(result.rows[0].content).not.toContain("onerror");
   });
+
+  it("should deny non-superadmin admin from editing a system page", async () => {
+    const admin = await TestFactory.user({
+      is_admin: true,
+      is_superadmin: false,
+    });
+    await DB.pool(
+      `INSERT INTO html_pages (page_group, slug, title, content, page_order)
+        VALUES ($1, $2, $3, $4, $5)`,
+      ["system", "impressum", "Impressum", "<p>Impressum</p>", null]
+    );
+    const { mockPut, mockParams } = useTestRequest(admin);
+
+    const response = await PUT(
+      mockPut("/api/admin/pages/system/impressum", {
+        content: "<p>Changed</p>",
+      }),
+      mockParams({ type: "system", slug: "impressum" })
+    );
+
+    expect(response.status).toBe(401);
+  });
+
+  it("should allow superadmin to edit a system page", async () => {
+    const superadmin = await TestFactory.user({
+      is_admin: true,
+      is_superadmin: true,
+    });
+    await DB.pool(
+      `INSERT INTO html_pages (page_group, slug, title, content, page_order)
+        VALUES ($1, $2, $3, $4, $5)`,
+      ["system", "impressum", "Impressum", "<p>Impressum</p>", null]
+    );
+    const { mockPut, mockParams } = useTestRequest(superadmin);
+
+    const response = await PUT(
+      mockPut("/api/admin/pages/system/impressum", {
+        content: "<p>Updated Impressum</p>",
+      }),
+      mockParams({ type: "system", slug: "impressum" })
+    );
+
+    expect(response.status).toBe(200);
+    const result = await DB.pool(
+      "SELECT content FROM html_pages WHERE page_group = $1 AND slug = $2",
+      ["system", "impressum"]
+    );
+    expect(result.rows[0].content).toContain("Updated Impressum");
+  });
 });
 
 describe("DELETE /api/admin/pages/[type]/[slug]", () => {

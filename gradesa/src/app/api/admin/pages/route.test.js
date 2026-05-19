@@ -160,4 +160,45 @@ describe("POST /api/admin/pages", () => {
 
     expect(response.status).toBe(400);
   });
+
+  it("denies admin users from creating a system page", async () => {
+    const admin = await TestFactory.user({
+      is_admin: true,
+      is_superadmin: false,
+    });
+    const { mockPost } = useTestRequest(admin);
+
+    const response = await POST(
+      mockPost("/api/admin/pages", {
+        title: "Impressum",
+        type: "system",
+      })
+    );
+
+    expect(response.status).toBe(401);
+  });
+
+  it("allows superadmin users to create a system page", async () => {
+    const superadmin = await TestFactory.user({
+      is_admin: true,
+      is_superadmin: true,
+    });
+    const { mockPost } = useTestRequest(superadmin);
+
+    const response = await POST(
+      mockPost("/api/admin/pages", {
+        title: "Impressum",
+        type: "system",
+      })
+    );
+
+    expect(response.status).toBe(200);
+
+    const inserted = await DB.pool(
+      `SELECT slug, title, page_group FROM html_pages
+       WHERE page_group = 'system' AND slug = 'impressum'`
+    );
+    expect(inserted.rowCount).toBe(1);
+    expect(inserted.rows[0].title).toBe("Impressum");
+  });
 });
