@@ -4,11 +4,28 @@ const isCI = process.env.CI === "true";
 
 const settings = {
   hideToska: false,
-  disableToska: true,
+  // Keep disabled only when explicitly requested via env.
+  disableToska: process.env.PATE_DISABLE_TOSKA === "true",
   color: "orange",
   header: "GRADESA",
   headerFontColor: "white",
-  dryrun: false,
+  dryrun: process.env.PATE_DRYRUN === "true",
+};
+
+const looksLikeProviderFailure = (payload) => {
+  if (!payload || typeof payload !== "object") {
+    return false;
+  }
+
+  if (payload.ok === false || payload.success === false) {
+    return true;
+  }
+
+  if (payload.error || payload.errors || payload.messageType === "error") {
+    return true;
+  }
+
+  return false;
 };
 
 const sendEmail = async ({ to, subject, text }) => {
@@ -55,10 +72,30 @@ const sendEmail = async ({ to, subject, text }) => {
       }
     );
 
+    const responseText = await response.text();
+
     if (!response.ok) {
-      const errorBody = await response.text();
       throw new Error(
-        `PATE email sending failed with status ${response.status}: ${errorBody}`
+        `PATE email sending failed with status ${response.status}: ${responseText}`
+      );
+    }
+
+    let payload;
+    try {
+      payload = responseText ? JSON.parse(responseText) : null;
+    } catch {
+      payload = null;
+    }
+
+    if (looksLikeProviderFailure(payload)) {
+      throw new Error(
+        `PATE reported email failure: ${payload.message || responseText}`
+      );
+    }
+
+    if (settings.dryrun) {
+      throw new Error(
+        "Email sending is configured as dry-run (PATE_DRYRUN=true)."
       );
     }
   } catch (error) {
