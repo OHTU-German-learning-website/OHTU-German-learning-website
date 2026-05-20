@@ -33,15 +33,23 @@
 }
 
 .auth-title {
-  text-align: left;
+  text-align: center;
   margin-bottom: var(--u-lg);
   color: var(--fg1);
+  font-size: 1.9em;
 }
 
 .talkback-message-input {
   resize: none;
   min-height: 220px;
   max-width: 100%;
+}
+
+.talkback-description {
+  color: var(--fg1);
+  margin-top: 0;
+  margin-bottom: var(--u-lg);
+  font-style: italic;
 }
 
 .form-group {
@@ -56,7 +64,6 @@
 
 .form-label {
   display: block;
-  /* margin-bottom: var(--u-md); */
 }
 
 .form-input {

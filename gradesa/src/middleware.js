@@ -10,6 +10,9 @@ import { AUTH_COOKIE_NAME } from "@/shared/const";
  */
 const authRequired = ["/grammar/exercises", "/edit_info", "/contact"];
 
+// Protected paths that should send logged-out users to registration first.
+const registerFirstPaths = ["/contact"];
+
 // Restricted paths logged-in users cannot access
 /**
  * unauthRequired - array of path prefixes that should not be accessible
@@ -45,9 +48,16 @@ export async function middleware(request) {
     !hasCookie &&
     authRequired.some((path) => pathnameWithoutBasePath.startsWith(path))
   ) {
-    const loginUrl = new URL(`${basePath}/auth/login`, request.url);
-    loginUrl.searchParams.set("redirect", pathnameWithoutBasePath); // Add the original path as a query parameter
-    return NextResponse.redirect(loginUrl);
+    const shouldRedirectToRegister = registerFirstPaths.some((path) =>
+      pathnameWithoutBasePath.startsWith(path)
+    );
+    const targetPath = shouldRedirectToRegister
+      ? "/auth/register"
+      : "/auth/login";
+
+    const authUrl = new URL(`${basePath}${targetPath}`, request.url);
+    authUrl.searchParams.set("redirect", pathnameWithoutBasePath); // Add the original path as a query parameter
+    return NextResponse.redirect(authUrl);
   }
   // Otherwise, allow the request to proceed and prevent caching of the response
   const response = NextResponse.next();
