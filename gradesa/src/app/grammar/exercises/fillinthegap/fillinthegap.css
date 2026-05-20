@@ -110,6 +110,10 @@
   list-style-type: decimal;
 }
 
+.rendered-html li>.ql-ui {
+  display: none;
+}
+
 /* Quill editor in dark/light theme */
 .ql-snow .ql-editor {
   color: var(--fg1);

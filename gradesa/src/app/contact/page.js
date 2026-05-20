@@ -15,7 +15,7 @@ export default function ContactPage() {
   const [isSending, setIsSending] = useState(false);
 
   // Show nothing while session is being resolved, or if not logged in.
-  // Middleware already redirects unauthenticated requests to /auth/login.
+  // Middleware already redirects unauthenticated requests to /auth/register.
   if (!isAuthResolved || !isLoggedIn) return null;
 
   const handleSubmit = async (event) => {
@@ -61,18 +61,25 @@ export default function ContactPage() {
   return (
     <section className="talkback-container">
       <div className="talkback-box">
-        <h1 className="auth-title">Kontaktieren Sie unser Team</h1>
+        <h2 className="auth-title talkback-title">
+          Kontaktieren Sie unser Team
+        </h2>
+        <p className="talkback-description">
+          Bitte vergessen Sie Ihre <strong>eigene E-Mail-Adresse</strong> nicht,
+          damit wir Ihnen antworten können.
+        </p>
 
         {error && <p className="error">{error}</p>}
 
         <form className="talkback-form" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label className="form-label" htmlFor="contact-message">
+            {/* <label className="form-label" htmlFor="contact-message">
               Nachricht
-            </label>
+            </label> */}
             <textarea
               className="form-input talkback-message-input"
               id="contact-message"
+              placeholder="Nachricht eingeben..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               required
