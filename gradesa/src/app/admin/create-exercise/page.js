@@ -28,6 +28,9 @@ export default function CreateExercise() {
       <LinkButton href="/admin/create-exercise/memory-game">
         Memory Game
       </LinkButton>
+      <LinkButton href="/admin/create-exercise/jumbled-sentence">
+        Jumbled Sentence
+      </LinkButton>
     </Column>
   );
 }
