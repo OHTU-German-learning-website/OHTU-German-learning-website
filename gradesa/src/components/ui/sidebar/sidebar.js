@@ -221,7 +221,9 @@ function AdminSideBar({ showUsers }) {
     ? adminSidebarLinks
     : adminSidebarLinks.filter((l) => l.id !== "users");
 
-  return <SidebarGroup title="Admin" sublinks={links} topLink={null} />;
+  const title = showUsers ? "Admin" : "Lehrer";
+
+  return <SidebarGroup title={title} sublinks={links} topLink={null} />;
 }
 
 function SidebarGroup({ title, sublinks, topLink, collapsible = false }) {

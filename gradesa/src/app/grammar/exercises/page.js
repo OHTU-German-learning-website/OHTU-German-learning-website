@@ -47,6 +47,12 @@ const exerciseTypes = [
     link: "/grammar/exercises/memory-game",
     image: "🧠",
   },
+  {
+    title: "Jumbled Sentence",
+    description: "Üben mit Satzordnungen.",
+    link: "/grammar/exercises/jumbled-sentence",
+    image: "↔️",
+  },
   // Add other exercise types here
 ];
 
