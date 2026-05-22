@@ -9,13 +9,51 @@
   margin: 0 0 var(--u-sm);
 }
 
-.glossary-index-item {
-  display: inline-block;
-  padding: 0.35rem 0.75rem;
+.glossary-index-letter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 0.75rem;
   border-radius: var(--radius-sm);
   background-color: var(--bg3);
   color: var(--fg1);
-  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.glossary-index-letter:hover,
+.glossary-index-letter:focus {
+  background-color: var(--bg4);
+  border-color: var(--bg5);
+}
+
+.glossary-index-group {
+  padding: var(--u-sm);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg3);
+  display: grid;
+  gap: var(--u-2xs);
+}
+
+.glossary-index-group-title {
+  margin: 0 0 var(--u-xs);
+  font-size: 1rem;
+}
+
+.glossary-index-entry {
+  display: inline-block;
+  color: var(--fg1);
+  text-decoration: none;
+  padding: 0.35rem 0.5rem;
+  border-radius: var(--radius-sm);
+  transition: background-color 0.2s;
+}
+
+.glossary-index-entry:hover,
+.glossary-index-entry:focus {
+  background-color: var(--bg4);
 }
 
 .glossary-card {
@@ -25,10 +63,21 @@
   border: 1px solid var(--bg3);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.2s;
+  scroll-margin-top: 100px;
 }
 
 .glossary-card:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.glossary-letter-group {
+  border-top: 1px solid var(--bg3);
+  padding-top: var(--u-md);
+}
+
+.glossary-letter-title {
+  margin: 0 0 var(--u-sm);
+  font-size: 1.35rem;
 }
 
 .glossary-word {
