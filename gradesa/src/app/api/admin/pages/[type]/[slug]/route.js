@@ -192,7 +192,65 @@ function sanitize(data) {
   const cleaned = purify.sanitize(data, {
     ADD_ATTR: ["target", "width", "height", "data-size"],
   });
-  return cleaned;
+  return normalizeTableSpacing(cleaned);
+}
+
+function isEffectivelyEmptyBlock(node) {
+  if (!node || node.nodeType !== 1) {
+    return false;
+  }
+
+  const tagName = String(node.tagName || "").toUpperCase();
+  if (tagName !== "P" && tagName !== "DIV") {
+    return false;
+  }
+
+  const text = String(node.textContent || "")
+    .replace(/[\u00a0\u200b\ufeff]/g, " ")
+    .trim();
+  if (text.length > 0) {
+    return false;
+  }
+
+  const meaningfulChildren = Array.from(node.children || []).filter(
+    (child) => String(child.tagName || "").toUpperCase() !== "BR"
+  );
+  return meaningfulChildren.length === 0;
+}
+
+function normalizeTableSpacing(html) {
+  const dom = new JSDOM(`<div id="root">${String(html || "")}</div>`);
+  const { document } = dom.window;
+  const root = document.getElementById("root");
+  if (!root) {
+    return String(html || "");
+  }
+
+  const tables = root.querySelectorAll("table");
+  tables.forEach((table) => {
+    let prev = table.previousElementSibling;
+    while (isEffectivelyEmptyBlock(prev)) {
+      const toRemove = prev;
+      prev = prev.previousElementSibling;
+      toRemove.remove();
+    }
+
+    let next = table.nextElementSibling;
+    while (isEffectivelyEmptyBlock(next)) {
+      const toRemove = next;
+      next = next.nextElementSibling;
+      toRemove.remove();
+    }
+  });
+
+  while (isEffectivelyEmptyBlock(root.firstElementChild)) {
+    root.firstElementChild.remove();
+  }
+  while (isEffectivelyEmptyBlock(root.lastElementChild)) {
+    root.lastElementChild.remove();
+  }
+
+  return root.innerHTML;
 }
 
 async function slugIsInUse(type, slug) {
