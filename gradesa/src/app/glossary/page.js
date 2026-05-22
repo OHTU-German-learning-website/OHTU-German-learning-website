@@ -19,24 +19,63 @@ export default function GlossaryPage() {
     a.word.localeCompare(b.word)
   );
 
+  const entriesByLetter = sortedEntries.reduce((map, entry) => {
+    const letter = (entry.word?.[0] || "").toUpperCase();
+    if (!map[letter]) {
+      map[letter] = [];
+    }
+    map[letter].push(entry);
+    return map;
+  }, {});
+
+  const letters = Object.keys(entriesByLetter).sort();
+
   return (
     <Column gap="md" width="100%">
       <Row justify="space-between" gap="xl" width="100%" align="center">
         <h2>Glossar</h2>
       </Row>
 
-      {sortedEntries.length > 0 && (
+      {letters.length > 0 && (
         <Container className="glossary-index" mb="md">
           <h3>Register</h3>
+          <Container display="flex" flexWrap="wrap" gap="xs" mb="sm">
+            {letters.map((letter) => (
+              <a
+                key={letter}
+                className="glossary-index-letter"
+                href={`#letter-${letter}-section`}
+              >
+                {letter}
+              </a>
+            ))}
+          </Container>
+
           <Container
             display="grid"
             templateColumns="repeat(auto-fit, minmax(160px, 1fr))"
             gap="sm"
           >
-            {sortedEntries.map((entry) => (
-              <span key={entry.id} className="glossary-index-item">
-                {entry.word}
-              </span>
+            {letters.map((letter) => (
+              <Container key={letter} className="glossary-index-group">
+                <h4
+                  id={`letter-${letter}`}
+                  className="glossary-index-group-title"
+                >
+                  {letter}
+                </h4>
+                <Column gap="xs">
+                  {entriesByLetter[letter].map((entry) => (
+                    <a
+                      key={entry.id}
+                      href={`#entry-${entry.id}`}
+                      className="glossary-index-entry"
+                    >
+                      {entry.word}
+                    </a>
+                  ))}
+                </Column>
+              </Container>
             ))}
           </Container>
         </Container>
@@ -45,17 +84,36 @@ export default function GlossaryPage() {
       {sortedEntries.length === 0 ? (
         <p>Keine Einträge gefunden.</p>
       ) : (
-        <Container
-          display="grid"
-          templateColumns="repeat(auto-fill, minmax(300px, 1fr))"
-          gap="md"
-        >
-          {sortedEntries.map((entry) => (
-            <Container key={entry.id} className="glossary-card">
-              <Column gap="sm">
-                <h4 className="glossary-word">{entry.word}</h4>
-                <RenderHTML data={entry.word_definition} disableGlossary />
-              </Column>
+        <Container display="grid" gap="md">
+          {letters.map((letter) => (
+            <Container key={letter} className="glossary-letter-group">
+              <h3
+                id={`letter-${letter}-section`}
+                className="glossary-letter-title"
+              >
+                {letter}
+              </h3>
+              <Container
+                display="grid"
+                templateColumns="repeat(auto-fill, minmax(300px, 1fr))"
+                gap="md"
+              >
+                {entriesByLetter[letter].map((entry) => (
+                  <Container
+                    key={entry.id}
+                    id={`entry-${entry.id}`}
+                    className="glossary-card"
+                  >
+                    <Column gap="sm">
+                      <h4 className="glossary-word">{entry.word}</h4>
+                      <RenderHTML
+                        data={entry.word_definition}
+                        disableGlossary
+                      />
+                    </Column>
+                  </Container>
+                ))}
+              </Container>
             </Container>
           ))}
         </Container>

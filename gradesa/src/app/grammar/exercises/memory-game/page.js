@@ -5,13 +5,36 @@ import { Container, Column, Row } from "@/components/ui/layout/container";
 import useQuery from "@/shared/hooks/useQuery";
 import { Button } from "@/components/ui/button";
 import { ExerciseLinkButton } from "@/components/ui/button/exercise-link-button";
+import { withBasePath } from "@/shared/utils/basePath";
 
 export default function MemoryGameExercisesPage() {
   const {
     data: exercises,
     isLoading,
     error,
+    refetch,
   } = useQuery("/exercises/memory-game");
+
+  const handleDelete = async (exerciseId) => {
+    const confirmed = confirm("Möchten Sie diese Übung wirklich löschen?");
+    if (!confirmed) return;
+
+    try {
+      const response = await fetch(
+        withBasePath(`/api/admin/exercises/memory-game/${exerciseId}`),
+        { method: "DELETE" }
+      );
+
+      if (!response.ok) {
+        throw new Error("Fehler beim Löschen der Übung.");
+      }
+
+      refetch();
+    } catch (deleteError) {
+      console.error("Error deleting exercise:", deleteError);
+      alert("Fehler beim Löschen der Übung.");
+    }
+  };
 
   if (isLoading) {
     return (
@@ -98,19 +121,25 @@ export default function MemoryGameExercisesPage() {
                 Link kopieren
               </ExerciseLinkButton>
               <Link
-                href={`/grammar/exercises/memory-game/${exercise.memory_game_exercise_id}`}
-              >
-                <Button type="button" variant="secondary" size="sm">
-                  Spielen
-                </Button>
-              </Link>
-              <Link
                 href={`/admin/create-exercise/memory-game/${exercise.memory_game_exercise_id}/edit`}
               >
                 <Button type="button" variant="outline" size="sm">
                   Bearbeiten
                 </Button>
               </Link>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                style={{
+                  color: "#fff5f5",
+                  borderColor: "#d85a5a",
+                  backgroundColor: "#d85a5a",
+                }}
+                onClick={() => handleDelete(exercise.memory_game_exercise_id)}
+              >
+                Löschen
+              </Button>
             </Column>
           </Row>
         ))}
