@@ -218,6 +218,14 @@ function isEffectivelyEmptyBlock(node) {
   return meaningfulChildren.length === 0;
 }
 
+function hasExplicitBorderStyle(node) {
+  if (!node || typeof node.getAttribute !== "function") {
+    return false;
+  }
+  const style = String(node.getAttribute("style") || "");
+  return /(^|;)\s*border(?:-(top|right|bottom|left))?\s*:/i.test(style);
+}
+
 function normalizeTableSpacing(html) {
   const dom = new JSDOM(`<div id="root">${String(html || "")}</div>`);
   const { document } = dom.window;
@@ -225,6 +233,14 @@ function normalizeTableSpacing(html) {
   if (!root) {
     return String(html || "");
   }
+
+  // Keep user-intended border styles, but remove implicit border attributes
+  // (for example border="1") when no explicit CSS border was set.
+  root.querySelectorAll("table, td, th").forEach((node) => {
+    if (node.hasAttribute("border") && !hasExplicitBorderStyle(node)) {
+      node.removeAttribute("border");
+    }
+  });
 
   const tables = root.querySelectorAll("table");
   tables.forEach((table) => {

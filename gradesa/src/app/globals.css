@@ -617,18 +617,18 @@ label {
   max-width: 100%;
 }
 
-/* Keep published editor tables borderless unless explicitly restyled by page-specific CSS. */
-.rendered-html table,
-.rendered-html table tbody,
-.rendered-html table thead,
-.rendered-html table tr,
-.rendered-html table td,
-.rendered-html table th {
-  border: none !important;
-}
-
+/* Default to borderless tables, but keep any explicit per-cell/table border styling. */
 .rendered-html table {
   border-collapse: collapse;
+}
+
+.rendered-html table:not([style*="border"]) {
+  border: none;
+}
+
+.rendered-html table td:not([style*="border"]),
+.rendered-html table th:not([style*="border"]) {
+  border: none;
 }
 
 .rendered-html {
