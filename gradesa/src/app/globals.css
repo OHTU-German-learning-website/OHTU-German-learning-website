@@ -617,6 +617,20 @@ label {
   max-width: 100%;
 }
 
+/* Keep published editor tables borderless unless explicitly restyled by page-specific CSS. */
+.rendered-html table,
+.rendered-html table tbody,
+.rendered-html table thead,
+.rendered-html table tr,
+.rendered-html table td,
+.rendered-html table th {
+  border: none !important;
+}
+
+.rendered-html table {
+  border-collapse: collapse;
+}
+
 .rendered-html {
   display: flow-root;
   width: 100%;
@@ -687,4 +701,9 @@ label {
 .ql-table-dropdown-label,
 .ql-table-dropdown-properties-label {
   color: var(--bg1);
+}
+
+/* Keep the insertion caret readable when text color is auto-adjusted. */
+.ql-editor {
+  caret-color: currentColor;
 }

@@ -137,7 +137,7 @@ export default function EditorSection({
       )}
       <Row justify="space-between" pb="xl">
         <Editor
-          defaultContent={initialContent}
+          defaultContent={editorContent}
           updateEditorContent={(content) => {
             setEditorContent(content);
           }}
