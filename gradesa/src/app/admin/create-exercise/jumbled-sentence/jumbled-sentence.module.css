@@ -23,6 +23,18 @@
     box-sizing: border-box;
 }
 
+.sentenceHint {
+    font-size: 0.9rem;
+    font-style: italic;
+    font-weight: 500;
+    color: var(--fg4);
+}
+
+.sentenceTextarea {
+    resize: vertical;
+    line-height: 1.4;
+}
+
 .sentenceCard {
     border: 1px solid #ccc;
     padding: 0.5rem;
@@ -30,10 +42,31 @@
     width: 40rem;
 }
 
+.alternateGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-top: 0;
+}
+
+.alternateGroup+.alternateGroup {
+    margin-top: 0.4rem;
+}
+
 .alternateRow {
     position: relative;
     width: min(100%, var(--jumbled-input-max-width));
     margin-top: 0.5rem;
+}
+
+.alternateGroup>.alternateRow {
+    margin-top: 0;
+}
+
+.alternateRowNoGapTop {
+    position: relative;
+    width: min(100%, var(--jumbled-input-max-width));
+    margin-top: 0;
 }
 
 .alternateInput {
@@ -56,12 +89,48 @@
 }
 
 .addAlternateButton {
-    min-width: 14rem;
+    width: fit-content;
     white-space: nowrap;
+}
+
+.fitContentButton {
+    width: auto;
+    min-width: 18rem;
+    white-space: nowrap;
+    justify-content: center;
 }
 
 .inlineActionsRow {
     width: min(100%, var(--jumbled-input-max-width));
+    margin-top: 0.5rem;
+}
+
+.feedbackSection {
+    width: min(100%, var(--jumbled-input-max-width));
+    margin-top: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.sectionTitle {
+    margin-bottom: 0;
+    font-weight: 600;
+}
+
+.sectionTitle+.alternateRowNoGapTop {
+    margin-top: 0;
+}
+
+.alternateRowNoGapTop+.alternateRowNoGapTop {
+    margin-top: 0.4rem;
+}
+
+.feedbackSection>.fitContentButton {
+    margin-top: 0.5rem;
+}
+
+.feedbackSection>.sectionTitle+.sectionTitle {
     margin-top: 0.5rem;
 }
 

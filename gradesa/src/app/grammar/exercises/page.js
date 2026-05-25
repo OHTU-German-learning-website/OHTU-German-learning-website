@@ -48,7 +48,7 @@ const exerciseTypes = [
     image: "🧠",
   },
   {
-    title: "Jumbled Sentence",
+    title: "Satzmix-Übungen",
     description: "Üben mit Satzordnungen.",
     link: "/grammar/exercises/jumbled-sentence",
     image: "↔️",

@@ -12,7 +12,7 @@ export const POST = withAuth(
         {
           error:
             parseResult.error.issues[0]?.message ||
-            "Ungültige Eingabe für Jumbled Sentence.",
+            "Ungültige Eingabe für Satzmix-Übung.",
           issues: parseResult.error.issues,
         },
         { status: 400 }
@@ -34,8 +34,16 @@ export const POST = withAuth(
         const jumbled_id = jumbledRes.rows[0].id;
         for (const s of sentences) {
           await client.query(
-            `INSERT INTO jumbled_sentence_sentences (jumbled_exercise_id, sentence, alternates) VALUES ($1, $2, $3)`,
-            [jumbled_id, s.sentence, s.alternates?.filter(Boolean) || []]
+            `INSERT INTO jumbled_sentence_sentences (jumbled_exercise_id, sentence, alternates, correct_feedback, alternate_feedbacks, incorrect_feedbacks, incorrect_alternates) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+            [
+              jumbled_id,
+              s.sentence,
+              s.alternates?.filter(Boolean) || [],
+              s.correctSentenceFeedback || null,
+              s.alternateFeedbacks || [],
+              s.incorrectFeedbacks || [],
+              s.incorrectAlternates || [],
+            ]
           );
         }
         return { id: jumbled_id };
