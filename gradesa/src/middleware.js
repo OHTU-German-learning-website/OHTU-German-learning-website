@@ -11,7 +11,7 @@ import { AUTH_COOKIE_NAME } from "@/shared/const";
 const authRequired = ["/grammar/exercises", "/edit_info", "/contact"];
 
 // Protected paths that should send logged-out users to registration first.
-const registerFirstPaths = ["/contact"];
+const registerFirstPaths = ["/contact", "/grammar/exercises"];
 
 // Restricted paths logged-in users cannot access
 /**

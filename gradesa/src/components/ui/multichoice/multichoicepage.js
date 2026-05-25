@@ -6,6 +6,7 @@ import { Row } from "../layout/container";
 import "./multichoice.css";
 import { Button } from "@/components/ui/button";
 import useQuery from "@/shared/hooks/useQuery";
+import { useRequest } from "@/shared/hooks/useRequest";
 
 function shuffleOptions(array) {
   return array
@@ -15,6 +16,7 @@ function shuffleOptions(array) {
 }
 
 export default function MultichoicePage({ exerciseId }) {
+  const makeRequest = useRequest();
   // Fetch exercise data using the useQuery hook
   const {
     data: exerciseData,
@@ -75,37 +77,65 @@ export default function MultichoicePage({ exerciseId }) {
   };
 
   const handleSubmit = () => {
-    const hasMissingAnswers = userAnswers.some((answer) => answer === "");
-    const newCheckedAnswers = shuffledExerciseData.content.map(
-      (item, index) => {
-        if (
-          item.content_type === "multichoice" ||
-          item.content_type === "gap"
-        ) {
-          return (
-            userAnswers[index]?.trim().toLowerCase() ===
-            item.correct_answer.toLowerCase()
-          );
-        }
-        return true;
+    (async () => {
+      try {
+        const answerEntries = shuffledExerciseData.content
+          .map((item, index) => ({ item, index }))
+          .filter(
+            ({ item }) =>
+              item.content_type === "multichoice" || item.content_type === "gap"
+          )
+          .map(({ item, index }) => ({
+            contentId: item.id,
+            answer: userAnswers[index] || "",
+          }));
+
+        const response = await makeRequest(
+          `/exercises/multichoice/${exerciseId}/answers`,
+          {
+            answers: answerEntries,
+          }
+        );
+
+        const resultByContentId = new Map(
+          (response.data?.results || []).map((entry) => [
+            String(entry.contentId),
+            entry,
+          ])
+        );
+
+        const newCheckedAnswers = shuffledExerciseData.content.map((item) => {
+          if (
+            item.content_type === "multichoice" ||
+            item.content_type === "gap"
+          ) {
+            return !!resultByContentId.get(String(item.id))?.isCorrect;
+          }
+          return true;
+        });
+
+        const hasMissingAnswers = !!response.data?.hasMissing;
+        const hasIncorrectAnswers = newCheckedAnswers.some(
+          (isCorrect, index) => {
+            const contentType =
+              shuffledExerciseData.content[index].content_type;
+            const isAnswerField =
+              contentType === "multichoice" || contentType === "gap";
+
+            return isAnswerField && !isCorrect;
+          }
+        );
+
+        setHasErrors(hasMissingAnswers || hasIncorrectAnswers);
+        setCheckedAnswers(newCheckedAnswers);
+        setIsSubmitted(true);
+        setDropdownSubmittedStates(newCheckedAnswers.map(() => true));
+      } catch (submitError) {
+        console.error("Error validating multichoice answers:", submitError);
+        setHasErrors(true);
+        setIsSubmitted(true);
       }
-    );
-
-    const hasIncorrectAnswers = newCheckedAnswers.some((isCorrect, index) => {
-      const contentType = shuffledExerciseData.content[index].content_type;
-      const isAnswerField =
-        contentType === "multichoice" || contentType === "gap";
-
-      return isAnswerField && !isCorrect;
-    });
-
-    // Set error state if there are missing or incorrect answers
-    setHasErrors(hasMissingAnswers || hasIncorrectAnswers);
-    setCheckedAnswers(newCheckedAnswers);
-    setIsSubmitted(true);
-
-    // Mark all dropdowns as submitted
-    setDropdownSubmittedStates(newCheckedAnswers.map(() => true));
+    })();
   };
 
   const handleReset = () => {

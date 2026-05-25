@@ -183,6 +183,8 @@ export function useIsAdmin() {
   const { auth, actAs } = useUser();
 
   useEffect(() => {
+    if (!auth.isAuthResolved) return;
+
     if (!auth.user?.id) return;
 
     const isAllowedAdminView =
@@ -194,7 +196,9 @@ export function useIsAdmin() {
     }
   }, [auth, router, pathname]);
 
-  return auth?.user?.id ? auth.user.is_admin : undefined;
+  if (!auth.isAuthResolved) return undefined;
+
+  return auth.isLoggedIn && !!auth.user?.is_admin;
 }
 
 /**

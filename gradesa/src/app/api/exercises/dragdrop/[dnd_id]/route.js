@@ -1,6 +1,7 @@
 import { DB } from "@/backend/db";
+import { withAuth } from "@/backend/middleware/withAuth";
 
-export async function GET(request, { params }) {
+export const GET = withAuth(async (request, { params }) => {
   const { dnd_id } = await params;
 
   if (!dnd_id || isNaN(parseInt(dnd_id, 10))) {
@@ -64,4 +65,4 @@ export async function GET(request, { params }) {
       { status: 500 }
     );
   }
-}
+});

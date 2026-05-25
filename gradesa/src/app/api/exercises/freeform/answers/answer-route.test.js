@@ -80,6 +80,7 @@ describe("freeform answers", () => {
     expect(result.similarity).toBe(1);
     expect(result.perfectAnswer).toBe(true);
     expect(result.feedback).toBe("Great job!");
+    expect(result.answer).toBeUndefined();
   });
 
   it("should evaluate similar but not exact answers", async () => {

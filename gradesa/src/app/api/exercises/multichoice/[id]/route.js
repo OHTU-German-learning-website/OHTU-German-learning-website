@@ -1,7 +1,7 @@
 import { DB } from "@/backend/db";
+import { withAuth } from "@/backend/middleware/withAuth";
 
-export async function GET(request, { params }) {
-  // --- FIX IS HERE ---
+export const GET = withAuth(async (request, { params }) => {
   // In Next.js 15, params is a Promise, so you must await it.
   const { id } = await params;
 
@@ -23,7 +23,15 @@ export async function GET(request, { params }) {
 
     // Fetch exercise content
     const contentResult = await DB.pool(
-      "SELECT * FROM multichoice_content WHERE multichoice_exercise_id = $1 ORDER BY content_order",
+      `SELECT
+         id,
+         multichoice_exercise_id,
+         content_type,
+         content_value,
+         content_order
+       FROM multichoice_content
+       WHERE multichoice_exercise_id = $1
+       ORDER BY content_order`,
       [id]
     );
     const content = contentResult.rows;
@@ -61,4 +69,4 @@ export async function GET(request, { params }) {
       { status: 500 }
     );
   }
-}
+});

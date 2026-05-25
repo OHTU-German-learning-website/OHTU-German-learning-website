@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { DB } from "@/backend/db";
+import { withAuth } from "@/backend/middleware/withAuth";
 
-export async function GET(request, { params }) {
+export const GET = withAuth(async (request, { params }) => {
   const { id } = await params;
 
   if (!id || Number.isNaN(Number(id))) {
@@ -48,4 +49,4 @@ export async function GET(request, { params }) {
       { status: 500 }
     );
   }
-}
+});

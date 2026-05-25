@@ -260,7 +260,6 @@ export const POST = withAuth(
 
           return NextResponse.json({
             is_correct: false,
-            answer: "",
             feedback:
               "Your answer doesn't match any of the expected answers. Please try again.",
             similarity: bestMatch.similarity,
@@ -307,7 +306,6 @@ export const POST = withAuth(
 
         return NextResponse.json({
           is_correct: isAnswerCorrect,
-          answer: bestMatch.answer,
           similarity: bestMatch.similarity,
           perfectAnswer,
           comparisonDetails,

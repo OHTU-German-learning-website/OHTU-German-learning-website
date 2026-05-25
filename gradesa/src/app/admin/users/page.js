@@ -3,10 +3,9 @@
 import { Column, Row } from "@/components/ui/layout/container";
 import useQuery from "@/shared/hooks/useQuery";
 import { useRequest } from "@/shared/hooks/useRequest";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { useIsSuperAdmin, useUser } from "@/context/user.context";
-import { useRouter } from "next/navigation";
+import { useUser } from "@/context/user.context";
 
 /**
  * UsersPage
@@ -19,29 +18,23 @@ import { useRouter } from "next/navigation";
  * - only superadmins may access it
  */
 export default function UsersPage() {
-  const router = useRouter();
   const { auth } = useUser();
-  const isSuperAdmin = useIsSuperAdmin();
+  const canViewUsers =
+    auth.isAuthResolved && auth.isLoggedIn && auth.user?.is_superadmin;
 
-  const { data: users, error, isLoading, refetch } = useQuery("/admin/users");
+  const {
+    data: users,
+    error,
+    isLoading,
+    refetch,
+  } = useQuery("/admin/users", undefined, {
+    enabled: canViewUsers,
+  });
 
   const makeRequest = useRequest();
   const [updatingId, setUpdatingId] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
   const [search, setSearch] = useState("");
-
-  /**
-   * Redirect unauthorized users away from this page.
-   *
-   * The `useIsSuperAdmin` hook already performs route protection logic,
-   * but this extra redirect keeps the page behavior explicit and prevents
-   * the user from remaining on `/admin/users` after losing access.
-   */
-  useEffect(() => {
-    if (isSuperAdmin === false) {
-      router.replace("/");
-    }
-  }, [isSuperAdmin, router]);
 
   /**
    * Filter users by username or email.
@@ -62,9 +55,13 @@ export default function UsersPage() {
     });
   }, [users, search]);
 
-  // Wait until the superadmin check has resolved before rendering the page.
-  if (isSuperAdmin === undefined) {
+  // Wait until the auth check has resolved before rendering the page.
+  if (!auth.isAuthResolved) {
     return <p>Wird geladen...</p>;
+  }
+
+  if (!auth.isLoggedIn || !auth.user?.is_superadmin) {
+    return <p className="error">Sie haben keinen Zugriff auf diese Seite.</p>;
   }
 
   if (isLoading) {
