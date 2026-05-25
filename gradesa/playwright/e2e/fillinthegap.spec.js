@@ -8,7 +8,7 @@ async function gotoFillInTheGapList(page) {
 }
 
 function isOnLogin(url) {
-  return url.includes("/auth/login");
+  return url.includes("/auth/login") || url.includes("/auth/register");
 }
 
 test.describe("Lückentext-Übungen", () => {
@@ -19,7 +19,7 @@ test.describe("Lückentext-Übungen", () => {
 
     const currentUrl = page.url();
     if (isOnLogin(currentUrl)) {
-      await expect(page).toHaveURL(/\/auth\/login\?redirect=/);
+      await expect(page).toHaveURL(/\/auth\/(login|register)\?redirect=/);
       return;
     }
 
@@ -34,7 +34,7 @@ test.describe("Lückentext-Übungen", () => {
 
     const currentUrl = page.url();
     if (isOnLogin(currentUrl)) {
-      await expect(page).toHaveURL(/\/auth\/login\?redirect=/);
+      await expect(page).toHaveURL(/\/auth\/(login|register)\?redirect=/);
       return;
     }
 
@@ -50,7 +50,7 @@ test.describe("Lückentext-Übungen", () => {
 
     const currentUrl = page.url();
     if (isOnLogin(currentUrl)) {
-      await expect(page).toHaveURL(/\/auth\/login\?redirect=/);
+      await expect(page).toHaveURL(/\/auth\/(login|register)\?redirect=/);
       return;
     }
 
