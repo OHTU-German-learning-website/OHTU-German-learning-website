@@ -40,32 +40,47 @@ const validateFields = ({ title, fields }) => {
 };
 
 const upsertCategory = async (tx, category, color) => {
-  const catRes = await tx.query(
+  const existingCategory = await tx.query(
+    `SELECT id
+     FROM dnd_categories
+     WHERE category = $1 AND color = $2
+     ORDER BY id ASC
+     LIMIT 1`,
+    [category, color]
+  );
+
+  if (existingCategory.rows[0]?.id) return existingCategory.rows[0].id;
+
+  const insertedCategory = await tx.query(
     `INSERT INTO dnd_categories (category, color)
      VALUES ($1, $2)
-     ON CONFLICT (category, color) DO NOTHING
      RETURNING id`,
     [category, color]
   );
 
-  if (catRes.rows[0]?.id) return catRes.rows[0].id;
-
-  const existing = await tx.query(
-    `SELECT id FROM dnd_categories WHERE category = $1 AND color = $2`,
-    [category, color]
-  );
-  return existing.rows[0].id;
+  return insertedCategory.rows[0].id;
 };
 
 const upsertWord = async (tx, word) => {
-  const wordRes = await tx.query(
+  const existingWord = await tx.query(
+    `SELECT id
+     FROM draggable_words
+     WHERE word = $1
+     ORDER BY id ASC
+     LIMIT 1`,
+    [word]
+  );
+
+  if (existingWord.rows[0]?.id) return existingWord.rows[0].id;
+
+  const insertedWord = await tx.query(
     `INSERT INTO draggable_words (word)
      VALUES ($1)
-     ON CONFLICT (word) DO UPDATE SET word = EXCLUDED.word
      RETURNING id`,
     [word]
   );
-  return wordRes.rows[0].id;
+
+  return insertedWord.rows[0].id;
 };
 
 export const GET = withAuth(

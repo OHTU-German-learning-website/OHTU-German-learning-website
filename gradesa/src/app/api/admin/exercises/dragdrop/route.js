@@ -1,6 +1,54 @@
 import { DB } from "@/backend/db";
 import { withAuth } from "@/backend/middleware/withAuth";
 
+const findOrCreateCategory = async (category, color) => {
+  const existingCategory = await DB.pool(
+    `SELECT id
+     FROM dnd_categories
+     WHERE category = $1 AND color = $2
+     ORDER BY id ASC
+     LIMIT 1`,
+    [category, color]
+  );
+
+  if (existingCategory.rows[0]?.id) {
+    return existingCategory.rows[0].id;
+  }
+
+  const insertedCategory = await DB.pool(
+    `INSERT INTO dnd_categories (category, color)
+     VALUES ($1, $2)
+     RETURNING id`,
+    [category, color]
+  );
+
+  return insertedCategory.rows[0].id;
+};
+
+const findOrCreateWord = async (word) => {
+  const existingWord = await DB.pool(
+    `SELECT id
+     FROM draggable_words
+     WHERE word = $1
+     ORDER BY id ASC
+     LIMIT 1`,
+    [word]
+  );
+
+  if (existingWord.rows[0]?.id) {
+    return existingWord.rows[0].id;
+  }
+
+  const insertedWord = await DB.pool(
+    `INSERT INTO draggable_words (word)
+     VALUES ($1)
+     RETURNING id`,
+    [word]
+  );
+
+  return insertedWord.rows[0].id;
+};
+
 export const POST = withAuth(
   async (request) => {
     try {
@@ -8,12 +56,16 @@ export const POST = withAuth(
       const body = rawBody.body ?? rawBody;
       const title = body.title;
       const fields = body.fields;
+      const created_by = request.user?.id;
+
+      if (!created_by) {
+        return Response.json({ error: "Unauthorized" }, { status: 401 });
+      }
 
       if (!fields || !Array.isArray(fields) || fields.length === 0) {
         return Response.json({ error: "No fields provided" }, { status: 400 });
       }
 
-      const created_by = 1;
       const exerciseCategory = "dnd";
 
       // 1. Insert into exercises
@@ -36,22 +88,10 @@ export const POST = withAuth(
       // Process fields
       for (const field of fields) {
         // Insert category
-        const catRes = await DB.pool(
-          `INSERT INTO dnd_categories (category, color)
-        VALUES ($1, $2)
-        ON CONFLICT (category, color) DO NOTHING
-        RETURNING id`,
-          [field.category, field.color]
+        const category_id = await findOrCreateCategory(
+          field.category,
+          field.color
         );
-
-        const category_id =
-          catRes.rows[0]?.id ||
-          (
-            await DB.pool(
-              `SELECT id FROM dnd_categories WHERE category = $1 AND color = $2`,
-              [field.category, field.color]
-            )
-          ).rows[0].id;
 
         // Insert words (comma-separated input).
         const words = [
@@ -63,15 +103,7 @@ export const POST = withAuth(
           ),
         ];
         for (const word of words) {
-          const wordRes = await DB.pool(
-            `INSERT INTO draggable_words (word)
-          VALUES ($1)
-          ON CONFLICT (word) DO UPDATE SET word = EXCLUDED.word
-          RETURNING id`,
-            [word]
-          );
-
-          const word_id = wordRes.rows[0]?.id;
+          const word_id = await findOrCreateWord(word);
 
           // Insert mapping
           await DB.pool(
