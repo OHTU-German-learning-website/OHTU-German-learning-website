@@ -9,6 +9,7 @@ describe("GET /api/exercises/multichoice/:id", () => {
   useTestDatabase();
 
   let exercise;
+  let user;
 
   async function setupExercise() {
     // Create a base exercise entry
@@ -56,11 +57,12 @@ describe("GET /api/exercises/multichoice/:id", () => {
 
   beforeEach(async () => {
     // Set up the exercise and store it for use in tests
+    user = await TestFactory.user();
     exercise = await setupExercise();
   });
 
   const getRequest = async (id) => {
-    const { mockGet } = useTestRequest();
+    const { mockGet } = useTestRequest(user);
     const request = mockGet(`/api/exercises/multichoice/${id}`);
     const response = await GET(request, { params: { id } });
     const result = await response.json();

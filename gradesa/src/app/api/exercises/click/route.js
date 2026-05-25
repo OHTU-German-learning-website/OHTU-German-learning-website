@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { DB } from "@/backend/db";
+import { withAuth } from "@/backend/middleware/withAuth";
 
-export async function GET() {
+export const GET = withAuth(async () => {
   try {
     const { rows } = await DB.pool(`
       SELECT 
@@ -29,4 +30,4 @@ export async function GET() {
       { status: 500 }
     );
   }
-}
+});

@@ -18,8 +18,6 @@ For the future:
 - The following things could be improved in the GitHub Actions pipeline:
   - Make the tests faster by for example making e2e-tests run at the same time as other tests.
   - Modify the tests so that the e2e-tests test the built container, not just the code. This way the tests catch if there are problems with for example dependencies marked only as dev-dependencies (since they are removed when the image is built).
-- Fix this bug: If you go to the front page and select 'Übungen' from the 'Grammatik' box while you are not logged in you are brought to the login page. If you input valid credentials there and try to log in, you will see that nothing happens.
-- Fix this: If you want to see the correct answers to some exercises, you can get the correct answers straight from the API by for example opening https://gradesa-ohtuprojekti-staging.ext.ocp-prod-0.k8s.it.helsinki.fi/api/exercises/dragdrop/1 in your browser. You do not even have to be logged in.
 
 !!! ADHERE TO THE DEFINITION OF DONE !!!
 

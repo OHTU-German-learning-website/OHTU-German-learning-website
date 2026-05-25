@@ -8,7 +8,7 @@ async function gotoClickExerciseList(page) {
 }
 
 function isOnLogin(url) {
-  return url.includes("/auth/login");
+  return url.includes("/auth/login") || url.includes("/auth/register");
 }
 
 test.describe("Klick-Übungen", () => {
@@ -21,7 +21,7 @@ test.describe("Klick-Übungen", () => {
 
     const currentUrl = page.url();
     if (isOnLogin(currentUrl)) {
-      await expect(page).toHaveURL(/\/auth\/login\?redirect=/);
+      await expect(page).toHaveURL(/\/auth\/(login|register)\?redirect=/);
       return;
     }
 

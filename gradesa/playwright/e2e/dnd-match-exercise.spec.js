@@ -8,7 +8,7 @@ async function gotoDndMatchList(page) {
 }
 
 function isOnLogin(url) {
-  return url.includes("/auth/login");
+  return url.includes("/auth/login") || url.includes("/auth/register");
 }
 
 test.describe("Zuordnungs-Übungen", () => {
@@ -23,7 +23,7 @@ test.describe("Zuordnungs-Übungen", () => {
 
     const currentUrl = page.url();
     if (isOnLogin(currentUrl)) {
-      await expect(page).toHaveURL(/\/auth\/login\?redirect=/);
+      await expect(page).toHaveURL(/\/auth\/(login|register)\?redirect=/);
       return;
     }
 

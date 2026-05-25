@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { DB } from "@/backend/db";
+import { withAuth } from "@/backend/middleware/withAuth";
 
-export async function GET() {
+export const GET = withAuth(async () => {
   try {
     // Fetch multichoice exercises
     const { rows: exercises } = await DB.pool(`
@@ -30,8 +31,7 @@ export async function GET() {
         mc.multichoice_exercise_id,
         mc.content_type,
         mc.content_value,
-        mc.content_order,
-        mc.correct_answer
+        mc.content_order
       FROM 
         multichoice_content mc
       WHERE 
@@ -83,4 +83,4 @@ export async function GET() {
       { status: 500 }
     );
   }
-}
+});

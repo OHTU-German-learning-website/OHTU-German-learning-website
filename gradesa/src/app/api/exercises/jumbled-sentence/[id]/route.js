@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { jumbledSentenceExerciseSchema } from "@/shared/schemas/jumbled-sentence.schemas";
 import { DB } from "@/backend/db";
+import { withAuth } from "@/backend/middleware/withAuth";
 
-export async function GET(request, { params }) {
+export const GET = withAuth(async (request, { params }) => {
   const { id } = await params;
   try {
     const exRes = await DB.pool(
@@ -29,65 +30,71 @@ export async function GET(request, { params }) {
   } catch (err) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
-}
+});
 
-export async function PUT(request, { params }) {
-  const { id } = await params;
-  const body = await request.json();
-  const parseResult = jumbledSentenceExerciseSchema.safeParse(body);
-  if (!parseResult.success) {
-    return NextResponse.json(
-      { error: parseResult.error.errors },
-      { status: 400 }
-    );
-  }
-  const { title, sentences } = body;
-  try {
-    await DB.transaction(async (client) => {
-      await client.query(
-        `UPDATE jumbled_sentence_exercises SET title = $1, updated_at = NOW() WHERE id = $2`,
-        [title, id]
+export const PUT = withAuth(
+  async (request, { params }) => {
+    const { id } = await params;
+    const body = await request.json();
+    const parseResult = jumbledSentenceExerciseSchema.safeParse(body);
+    if (!parseResult.success) {
+      return NextResponse.json(
+        { error: parseResult.error.errors },
+        { status: 400 }
       );
-      await client.query(
-        `DELETE FROM jumbled_sentence_sentences WHERE jumbled_exercise_id = $1`,
-        [id]
-      );
-      for (const s of sentences) {
+    }
+    const { title, sentences } = body;
+    try {
+      await DB.transaction(async (client) => {
         await client.query(
-          `INSERT INTO jumbled_sentence_sentences (jumbled_exercise_id, sentence, alternates, correct_feedback, alternate_feedbacks, incorrect_feedbacks, incorrect_alternates) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-          [
-            id,
-            s.sentence,
-            s.alternates?.filter(Boolean) || [],
-            s.correctSentenceFeedback || null,
-            s.alternateFeedbacks || [],
-            s.incorrectFeedbacks || [],
-            s.incorrectAlternates || [],
-          ]
+          `UPDATE jumbled_sentence_exercises SET title = $1, updated_at = NOW() WHERE id = $2`,
+          [title, id]
         );
-      }
-    });
-    return NextResponse.json({ success: true });
-  } catch (err) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
-  }
-}
+        await client.query(
+          `DELETE FROM jumbled_sentence_sentences WHERE jumbled_exercise_id = $1`,
+          [id]
+        );
+        for (const s of sentences) {
+          await client.query(
+            `INSERT INTO jumbled_sentence_sentences (jumbled_exercise_id, sentence, alternates, correct_feedback, alternate_feedbacks, incorrect_feedbacks, incorrect_alternates) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+            [
+              id,
+              s.sentence,
+              s.alternates?.filter(Boolean) || [],
+              s.correctSentenceFeedback || null,
+              s.alternateFeedbacks || [],
+              s.incorrectFeedbacks || [],
+              s.incorrectAlternates || [],
+            ]
+          );
+        }
+      });
+      return NextResponse.json({ success: true });
+    } catch (err) {
+      return NextResponse.json({ error: err.message }, { status: 500 });
+    }
+  },
+  { requireAdmin: true }
+);
 
-export async function DELETE(request, { params }) {
-  const { id } = await params;
-  try {
-    await DB.transaction(async (client) => {
-      await client.query(
-        `DELETE FROM jumbled_sentence_sentences WHERE jumbled_exercise_id = $1`,
-        [id]
-      );
-      await client.query(
-        `DELETE FROM jumbled_sentence_exercises WHERE id = $1`,
-        [id]
-      );
-    });
-    return NextResponse.json({ success: true });
-  } catch (err) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
-  }
-}
+export const DELETE = withAuth(
+  async (request, { params }) => {
+    const { id } = await params;
+    try {
+      await DB.transaction(async (client) => {
+        await client.query(
+          `DELETE FROM jumbled_sentence_sentences WHERE jumbled_exercise_id = $1`,
+          [id]
+        );
+        await client.query(
+          `DELETE FROM jumbled_sentence_exercises WHERE id = $1`,
+          [id]
+        );
+      });
+      return NextResponse.json({ success: true });
+    } catch (err) {
+      return NextResponse.json({ error: err.message }, { status: 500 });
+    }
+  },
+  { requireAdmin: true }
+);
