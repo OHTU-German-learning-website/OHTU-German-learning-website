@@ -29,7 +29,7 @@ export default function CreateExercise() {
         Memory Game
       </LinkButton>
       <LinkButton href="/admin/create-exercise/jumbled-sentence">
-        Jumbled Sentence
+        Satzmix
       </LinkButton>
     </Column>
   );

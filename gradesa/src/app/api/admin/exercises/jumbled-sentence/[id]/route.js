@@ -15,12 +15,16 @@ export const GET = withAuth(async (request, { params }) => {
     }
     const exercise = exRes.rows[0];
     const sRes = await DB.pool(
-      `SELECT sentence, alternates FROM jumbled_sentence_sentences WHERE jumbled_exercise_id = $1 ORDER BY id ASC`,
+      `SELECT sentence, alternates, correct_feedback, alternate_feedbacks, incorrect_feedbacks, incorrect_alternates FROM jumbled_sentence_sentences WHERE jumbled_exercise_id = $1 ORDER BY id ASC`,
       [id]
     );
     exercise.sentences = sRes.rows.map((row) => ({
       sentence: row.sentence,
       alternates: row.alternates || [],
+      correctSentenceFeedback: row.correct_feedback || "",
+      alternateFeedbacks: row.alternate_feedbacks || [],
+      incorrectFeedbacks: row.incorrect_feedbacks || [],
+      incorrectAlternates: row.incorrect_alternates || [],
     }));
     return NextResponse.json({ exercise });
   } catch (err) {
@@ -38,7 +42,7 @@ export const PUT = withAuth(
         {
           error:
             parseResult.error.issues[0]?.message ||
-            "Ungültige Eingabe für Jumbled Sentence.",
+            "Ungültige Eingabe für Satzmix-Übung.",
           issues: parseResult.error.issues,
         },
         { status: 400 }
@@ -57,8 +61,16 @@ export const PUT = withAuth(
         );
         for (const s of sentences) {
           await client.query(
-            `INSERT INTO jumbled_sentence_sentences (jumbled_exercise_id, sentence, alternates) VALUES ($1, $2, $3)`,
-            [id, s.sentence, s.alternates?.filter(Boolean) || []]
+            `INSERT INTO jumbled_sentence_sentences (jumbled_exercise_id, sentence, alternates, correct_feedback, alternate_feedbacks, incorrect_feedbacks, incorrect_alternates) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+            [
+              id,
+              s.sentence,
+              s.alternates?.filter(Boolean) || [],
+              s.correctSentenceFeedback || null,
+              s.alternateFeedbacks || [],
+              s.incorrectFeedbacks || [],
+              s.incorrectAlternates || [],
+            ]
           );
         }
       });

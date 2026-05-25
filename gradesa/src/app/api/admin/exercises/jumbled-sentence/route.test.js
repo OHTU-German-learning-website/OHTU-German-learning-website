@@ -18,6 +18,10 @@ describe("admin jumbled sentence exercises API", () => {
         {
           sentence: "Ich lerne jeden Tag Deutsch",
           alternates: ["Jeden Tag lerne ich Deutsch"],
+          alternateFeedbacks: ["Auch richtig."],
+          correctSentenceFeedback: "Perfekt!",
+          incorrectAlternates: ["Deutsch ich lerne jeden Tag"],
+          incorrectFeedbacks: ["Subjekt und Verb bitte prüfen."],
         },
       ],
     };
@@ -48,13 +52,25 @@ describe("admin jumbled sentence exercises API", () => {
     expect(linkedExercise.rows[0].created_by).toBe(admin.id);
 
     const sentences = await DB.pool(
-      "SELECT sentence, alternates FROM jumbled_sentence_sentences WHERE jumbled_exercise_id = $1",
+      "SELECT sentence, alternates, alternate_feedbacks, correct_feedback, incorrect_alternates, incorrect_feedbacks FROM jumbled_sentence_sentences WHERE jumbled_exercise_id = $1",
       [json.id]
     );
     expect(sentences.rows.length).toBe(1);
     expect(sentences.rows[0].sentence).toBe(payload.sentences[0].sentence);
     expect(sentences.rows[0].alternates).toEqual(
       payload.sentences[0].alternates
+    );
+    expect(sentences.rows[0].alternate_feedbacks).toEqual(
+      payload.sentences[0].alternateFeedbacks
+    );
+    expect(sentences.rows[0].correct_feedback).toBe(
+      payload.sentences[0].correctSentenceFeedback
+    );
+    expect(sentences.rows[0].incorrect_alternates).toEqual(
+      payload.sentences[0].incorrectAlternates
+    );
+    expect(sentences.rows[0].incorrect_feedbacks).toEqual(
+      payload.sentences[0].incorrectFeedbacks
     );
   });
 

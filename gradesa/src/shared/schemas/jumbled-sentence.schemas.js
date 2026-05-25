@@ -32,9 +32,35 @@ export const jumbledSentenceSchema = z
         .map((item) => (typeof item === "string" ? item.trim() : item))
         .filter((item) => typeof item === "string" && item.length > 0);
     }, z.array(z.string())),
+    alternateFeedbacks: z.preprocess((value) => {
+      if (!Array.isArray(value)) return [];
+      return value.map((item) => (typeof item === "string" ? item.trim() : ""));
+    }, z.array(z.string())),
+    correctSentenceFeedback: z.preprocess(
+      (value) => (typeof value === "string" ? value.trim() : ""),
+      z.string()
+    ),
+    incorrectFeedbacks: z.preprocess((value) => {
+      if (!Array.isArray(value)) return [];
+      return value.map((item) => (typeof item === "string" ? item.trim() : ""));
+    }, z.array(z.string())),
+    incorrectAlternates: z.preprocess((value) => {
+      if (!Array.isArray(value)) return [];
+      return value
+        .map((item) => (typeof item === "string" ? item.trim() : item))
+        .filter((item) => typeof item === "string" && item.length > 0);
+    }, z.array(z.string())),
   })
   .superRefine((data, ctx) => {
     const baseTokens = normalizeTokens(data.sentence);
+
+    if (data.alternateFeedbacks.length !== data.alternates.length) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["alternateFeedbacks"],
+        message: "Jeder Alternativ-Satz kann optional eigenes Feedback haben.",
+      });
+    }
 
     for (let index = 0; index < data.alternates.length; index++) {
       const alternate = data.alternates[index];
@@ -48,6 +74,29 @@ export const jumbledSentenceSchema = z
             "Alternativ-Satz muss genau die gleichen Wörter wie 'Satz (korrekt)' enthalten (nur Reihenfolge darf anders sein).",
         });
       }
+    }
+
+    for (let index = 0; index < data.incorrectAlternates.length; index++) {
+      const incorrectAlternate = data.incorrectAlternates[index];
+      const incorrectTokens = normalizeTokens(incorrectAlternate);
+
+      if (!sameWordSet(baseTokens, incorrectTokens)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["incorrectAlternates", index],
+          message:
+            "Falsche Alternativ-Antwort muss genau die gleichen Wörter wie 'Satz (korrekt)' enthalten (nur Reihenfolge darf anders sein).",
+        });
+      }
+    }
+
+    if (data.incorrectFeedbacks.length !== data.incorrectAlternates.length) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["incorrectFeedbacks"],
+        message:
+          "Jede falsche Alternative kann optional eigenes Feedback haben.",
+      });
     }
   });
 

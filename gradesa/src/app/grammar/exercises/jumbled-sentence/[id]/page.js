@@ -21,20 +21,31 @@ export default function JumbledSentenceExercisePage() {
   const [bankWords, setBankWords] = useState([]);
   const [answerWords, setAnswerWords] = useState([]);
   const [sentenceResults, setSentenceResults] = useState([]);
+  const [sentenceFeedbacks, setSentenceFeedbacks] = useState([]);
   const [feedback, setFeedback] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const cleanToken = (token) => token.replace(/[\p{P}]/gu, "").toLowerCase();
+  const stripIgnoredPunctuation = (token) =>
+    token.replace(/[\p{P}]/gu, (character) =>
+      character === "'" || character === "’" ? character : ""
+    );
 
-  const tokenizeSentence = (value) =>
-    value.trim().split(/\s+/).map(cleanToken).filter(Boolean);
+  const cleanTokenForComparison = (token) =>
+    stripIgnoredPunctuation(token).toLowerCase();
 
-  const normalizeSentence = (value) => tokenizeSentence(value).join(" ");
+  const tokenizeSentenceForDisplay = (value) =>
+    value.trim().split(/\s+/).map(stripIgnoredPunctuation).filter(Boolean);
+
+  const normalizeSentence = (value) =>
+    tokenizeSentenceForDisplay(value)
+      .map(cleanTokenForComparison)
+      .filter(Boolean)
+      .join(" ");
 
   const initializeExerciseState = (exerciseData) => {
     const sentenceTokenSets = (exerciseData?.sentences || []).map(
       (sentence) => {
-        const tokens = tokenizeSentence(sentence.sentence).map(
+        const tokens = tokenizeSentenceForDisplay(sentence.sentence).map(
           (text, index) => ({
             id: `${index}-${text}`,
             text,
@@ -49,6 +60,7 @@ export default function JumbledSentenceExercisePage() {
       sentenceTokenSets.map((tokens) => Array(tokens.length).fill(null))
     );
     setSentenceResults(sentenceTokenSets.map(() => null));
+    setSentenceFeedbacks(sentenceTokenSets.map(() => ""));
     setFeedback("");
   };
 
@@ -57,6 +69,13 @@ export default function JumbledSentenceExercisePage() {
       if (!prev.length || prev[sentenceIdx] === null) return prev;
       const next = [...prev];
       next[sentenceIdx] = null;
+      return next;
+    });
+
+    setSentenceFeedbacks((prev) => {
+      if (!prev.length || !prev[sentenceIdx]) return prev;
+      const next = [...prev];
+      next[sentenceIdx] = "";
       return next;
     });
   };
@@ -177,28 +196,73 @@ export default function JumbledSentenceExercisePage() {
 
   const checkAnswers = () => {
     if (!exercise) return;
-    const results = exercise.sentences.map((sentence, sentenceIdx) => {
+    const evaluation = exercise.sentences.map((sentence, sentenceIdx) => {
       if (answerWords[sentenceIdx].some((slot) => slot === null)) {
-        return false;
+        return {
+          isCorrect: false,
+          feedbackText: "",
+        };
       }
 
-      const acceptedAnswers = [
-        sentence.sentence,
-        ...(sentence.alternates || []),
-      ].map((value) => normalizeSentence(value));
+      const normalizedMainSentence = normalizeSentence(sentence.sentence);
+      const normalizedAlternates = (sentence.alternates || []).map((value) =>
+        normalizeSentence(value)
+      );
+      const normalizedAlternateFeedbacks = sentence.alternateFeedbacks || [];
+      const normalizedIncorrectAlternates = (
+        sentence.incorrectAlternates || []
+      ).map((value) => normalizeSentence(value));
+      const normalizedIncorrectFeedbacks = sentence.incorrectFeedbacks || [];
 
       const userAnswer = normalizeSentence(
         answerWords[sentenceIdx].map((token) => token?.text || "").join(" ")
       );
 
-      return acceptedAnswers.includes(userAnswer);
+      if (userAnswer === normalizedMainSentence) {
+        return {
+          isCorrect: true,
+          feedbackText: sentence.correctSentenceFeedback || "",
+        };
+      }
+
+      const alternateIndex = normalizedAlternates.findIndex(
+        (candidate) => candidate === userAnswer
+      );
+
+      if (alternateIndex !== -1) {
+        return {
+          isCorrect: true,
+          feedbackText: normalizedAlternateFeedbacks[alternateIndex] || "",
+        };
+      }
+
+      const incorrectAlternateIndex = normalizedIncorrectAlternates.findIndex(
+        (candidate) => candidate === userAnswer
+      );
+
+      if (incorrectAlternateIndex !== -1) {
+        return {
+          isCorrect: false,
+          feedbackText:
+            normalizedIncorrectFeedbacks[incorrectAlternateIndex] || "",
+        };
+      }
+
+      return {
+        isCorrect: false,
+        feedbackText: "",
+      };
     });
 
+    const results = evaluation.map((entry) => entry.isCorrect);
+    const perSentenceFeedbacks = evaluation.map((entry) => entry.feedbackText);
+
     setSentenceResults(results);
+    setSentenceFeedbacks(perSentenceFeedbacks);
 
     const allCorrect = results.every(Boolean);
 
-    setFeedback(allCorrect ? "Richtig!" : "Leider falsch, versuche es erneut.");
+    setFeedback(allCorrect ? "Alle Sätze sind richtig." : "");
   };
 
   if (loading) return <div>Lädt...</div>;
@@ -215,7 +279,7 @@ export default function JumbledSentenceExercisePage() {
           style={{ marginBottom: "var(--u-lg)" }}
         >
           <Row align="center" gap="sm">
-            <div>Ordne die Wörter richtig:</div>
+            <div>Ordnen Sie die Elemente richtig an:</div>
             {sentenceResults[sentenceIdx] === true && (
               <span style={{ color: "#1f9d55", fontWeight: 700 }}>Richtig</span>
             )}
@@ -223,6 +287,18 @@ export default function JumbledSentenceExercisePage() {
               <span style={{ color: "#d64545", fontWeight: 700 }}>Falsch</span>
             )}
           </Row>
+
+          {sentenceFeedbacks[sentenceIdx] && (
+            <div
+              style={{
+                color:
+                  sentenceResults[sentenceIdx] === true ? "#1f9d55" : "#d64545",
+                fontWeight: 600,
+              }}
+            >
+              {sentenceFeedbacks[sentenceIdx]}
+            </div>
+          )}
 
           <Row
             gap="sm"
@@ -322,11 +398,7 @@ export default function JumbledSentenceExercisePage() {
         </Button>
       </Row>
 
-      {feedback && (
-        <div style={{ color: feedback === "Richtig!" ? "green" : "red" }}>
-          {feedback}
-        </div>
-      )}
+      {feedback && <div style={{ color: "#1f9d55" }}>{feedback}</div>}
     </Column>
   );
 }
