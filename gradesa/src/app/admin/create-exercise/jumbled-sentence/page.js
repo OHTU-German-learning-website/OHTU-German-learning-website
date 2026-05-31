@@ -62,49 +62,51 @@ export default function CreateJumbledSentenceExercise() {
     setSentences(
       (loadedExercise.sentences || []).length
         ? loadedExercise.sentences.map((item) => ({
-          sentence: toElementPerLine(item.sentence || ""),
-          alternates:
-            item.alternates && item.alternates.length > 0
-              ? item.alternates.map((alternate) => toElementPerLine(alternate))
-              : [""],
-          alternateFeedbacks:
-            item.alternateFeedbacks &&
+            sentence: toElementPerLine(item.sentence || ""),
+            alternates:
+              item.alternates && item.alternates.length > 0
+                ? item.alternates.map((alternate) =>
+                    toElementPerLine(alternate)
+                  )
+                : [""],
+            alternateFeedbacks:
+              item.alternateFeedbacks &&
               item.alternateFeedbacks.length === item.alternates?.length
-              ? item.alternateFeedbacks
-              : new Array(
-                item.alternates && item.alternates.length > 0
-                  ? item.alternates.length
-                  : 1
-              ).fill(""),
-          correctSentenceFeedback: item.correctSentenceFeedback || "",
-          incorrectAlternates:
-            item.incorrectAlternates && item.incorrectAlternates.length > 0
-              ? item.incorrectAlternates.map((alternate) =>
-                toElementPerLine(alternate)
-              )
-              : [""],
-          incorrectFeedbacks:
-            item.incorrectFeedbacks &&
+                ? item.alternateFeedbacks
+                : new Array(
+                    item.alternates && item.alternates.length > 0
+                      ? item.alternates.length
+                      : 1
+                  ).fill(""),
+            correctSentenceFeedback: item.correctSentenceFeedback || "",
+            incorrectAlternates:
+              item.incorrectAlternates && item.incorrectAlternates.length > 0
+                ? item.incorrectAlternates.map((alternate) =>
+                    toElementPerLine(alternate)
+                  )
+                : [""],
+            incorrectFeedbacks:
+              item.incorrectFeedbacks &&
               item.incorrectFeedbacks.length ===
-              (item.incorrectAlternates?.length || 0)
-              ? item.incorrectFeedbacks
-              : new Array(
-                item.incorrectAlternates &&
-                  item.incorrectAlternates.length > 0
-                  ? item.incorrectAlternates.length
-                  : 1
-              ).fill(""),
-        }))
+                (item.incorrectAlternates?.length || 0)
+                ? item.incorrectFeedbacks
+                : new Array(
+                    item.incorrectAlternates &&
+                    item.incorrectAlternates.length > 0
+                      ? item.incorrectAlternates.length
+                      : 1
+                  ).fill(""),
+          }))
         : [
-          {
-            sentence: "",
-            alternates: [""],
-            alternateFeedbacks: [""],
-            correctSentenceFeedback: "",
-            incorrectAlternates: [""],
-            incorrectFeedbacks: [""],
-          },
-        ]
+            {
+              sentence: "",
+              alternates: [""],
+              alternateFeedbacks: [""],
+              correctSentenceFeedback: "",
+              incorrectAlternates: [""],
+              incorrectFeedbacks: [""],
+            },
+          ]
     );
   }, [isEditMode, data]);
 
@@ -273,7 +275,7 @@ export default function CreateJumbledSentenceExercise() {
     if (!parsed.success) {
       setError(
         parsed.error.issues[0]?.message ||
-        "Bitte alle Felder korrekt ausfüllen."
+          "Bitte alle Felder korrekt ausfüllen."
       );
       return;
     }
