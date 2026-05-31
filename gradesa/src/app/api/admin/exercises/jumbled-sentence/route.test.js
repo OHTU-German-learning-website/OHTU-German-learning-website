@@ -16,11 +16,11 @@ describe("admin jumbled sentence exercises API", () => {
       title: "Satzreihenfolge A1",
       sentences: [
         {
-          sentence: "Ich lerne jeden Tag Deutsch",
-          alternates: ["Jeden Tag lerne ich Deutsch"],
+          sentence: "Ich\nlerne jeden Tag\nDeutsch",
+          alternates: ["lerne jeden Tag\nIch\nDeutsch"],
           alternateFeedbacks: ["Auch richtig."],
           correctSentenceFeedback: "Perfekt!",
-          incorrectAlternates: ["Deutsch ich lerne jeden Tag"],
+          incorrectAlternates: ["Deutsch\nIch\nlerne jeden Tag"],
           incorrectFeedbacks: ["Subjekt und Verb bitte prüfen."],
         },
       ],

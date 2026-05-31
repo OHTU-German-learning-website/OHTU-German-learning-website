@@ -9,9 +9,21 @@ import { withBasePath } from "@/shared/utils/basePath";
 import useQuery from "@/shared/hooks/useQuery";
 import styles from "./jumbled-sentence.module.css";
 
-function toWordPerLine(value) {
+function toElementPerLine(value) {
   if (typeof value !== "string") return "";
-  return value.trim().split(/\s+/).filter(Boolean).join("\n");
+
+  const trimmedValue = value.trim();
+  if (!trimmedValue) return "";
+
+  if (trimmedValue.includes("\n")) {
+    return trimmedValue
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .join("\n");
+  }
+
+  return trimmedValue.split(/\s+/).filter(Boolean).join("\n");
 }
 
 export default function CreateJumbledSentenceExercise() {
@@ -50,10 +62,12 @@ export default function CreateJumbledSentenceExercise() {
     setSentences(
       (loadedExercise.sentences || []).length
         ? loadedExercise.sentences.map((item) => ({
-            sentence: toWordPerLine(item.sentence || ""),
+            sentence: toElementPerLine(item.sentence || ""),
             alternates:
               item.alternates && item.alternates.length > 0
-                ? item.alternates
+                ? item.alternates.map((alternate) =>
+                    toElementPerLine(alternate)
+                  )
                 : [""],
             alternateFeedbacks:
               item.alternateFeedbacks &&
@@ -67,7 +81,9 @@ export default function CreateJumbledSentenceExercise() {
             correctSentenceFeedback: item.correctSentenceFeedback || "",
             incorrectAlternates:
               item.incorrectAlternates && item.incorrectAlternates.length > 0
-                ? item.incorrectAlternates
+                ? item.incorrectAlternates.map((alternate) =>
+                    toElementPerLine(alternate)
+                  )
                 : [""],
             incorrectFeedbacks:
               item.incorrectFeedbacks &&
@@ -205,10 +221,10 @@ export default function CreateJumbledSentenceExercise() {
 
     const normalizedSentences = sentences.map((item) => ({
       ...item,
-      sentence: toWordPerLine(item.sentence),
+      sentence: toElementPerLine(item.sentence),
       alternates: item.alternates
         .map((alt, index) => ({
-          alt: typeof alt === "string" ? alt.trim() : "",
+          alt: toElementPerLine(alt),
           feedback:
             typeof item.alternateFeedbacks?.[index] === "string"
               ? item.alternateFeedbacks[index].trim()
@@ -232,7 +248,7 @@ export default function CreateJumbledSentenceExercise() {
           : "",
       incorrectAlternates: (item.incorrectAlternates || [])
         .map((alt, index) => ({
-          alt: typeof alt === "string" ? alt.trim() : "",
+          alt: toElementPerLine(alt),
           feedback:
             typeof item.incorrectFeedbacks?.[index] === "string"
               ? item.incorrectFeedbacks[index].trim()
@@ -346,15 +362,20 @@ export default function CreateJumbledSentenceExercise() {
             </label>
             <div>
               <div className={styles.sectionTitle}>Alternativ-Sätze:</div>
+              <div className={styles.sentenceHint}>
+                Schreiben Sie auch hier jedes Element in eine neue Zeile.
+              </div>
               {s.alternates.map((alt, altIdx) => (
                 <div key={altIdx} className={styles.alternateGroup}>
                   <div className={styles.alternateRow}>
-                    <input
+                    <textarea
                       value={alt}
                       onChange={(e) =>
                         handleAlternateChange(idx, altIdx, e.target.value)
                       }
-                      className={`${styles.fieldInput} ${styles.alternateInput}`}
+                      className={`${styles.fieldInput} ${styles.sentenceTextarea}`}
+                      rows={4}
+                      placeholder="Jeden Tag\nlerne ich\nDeutsch"
                     />
                     <Button
                       type="button"
@@ -410,10 +431,13 @@ export default function CreateJumbledSentenceExercise() {
               <div className={styles.sectionTitle}>
                 Alternativ-Sätze (Falsche):
               </div>
+              <div className={styles.sentenceHint}>
+                Schreiben Sie auch hier jedes Element in eine neue Zeile.
+              </div>
               {s.incorrectAlternates.map((alt, altIdx) => (
                 <div key={altIdx} className={styles.alternateGroup}>
                   <div className={styles.alternateRowNoGapTop}>
-                    <input
+                    <textarea
                       value={alt}
                       onChange={(e) =>
                         handleIncorrectAlternateChange(
@@ -422,8 +446,9 @@ export default function CreateJumbledSentenceExercise() {
                           e.target.value
                         )
                       }
-                      className={`${styles.fieldInput} ${styles.alternateInput}`}
-                      placeholder="Falsche Alternative (optional)"
+                      className={`${styles.fieldInput} ${styles.sentenceTextarea}`}
+                      rows={4}
+                      placeholder="Deutsch\nlerne ich\njeden Tag"
                     />
                     <Button
                       type="button"

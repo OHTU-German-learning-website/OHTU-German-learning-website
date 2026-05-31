@@ -33,8 +33,23 @@ export default function JumbledSentenceExercisePage() {
   const cleanTokenForComparison = (token) =>
     stripIgnoredPunctuation(token).toLowerCase();
 
+  const splitElements = (value) => {
+    const trimmedValue = value.trim();
+
+    if (!trimmedValue) return [];
+
+    if (trimmedValue.includes("\n")) {
+      return trimmedValue
+        .split(/\r?\n/)
+        .map((element) => element.trim())
+        .filter(Boolean);
+    }
+
+    return trimmedValue.split(/\s+/).filter(Boolean);
+  };
+
   const tokenizeSentenceForDisplay = (value) =>
-    value.trim().split(/\s+/).map(stripIgnoredPunctuation).filter(Boolean);
+    splitElements(value).map(stripIgnoredPunctuation).filter(Boolean);
 
   const normalizeSentence = (value) =>
     tokenizeSentenceForDisplay(value)

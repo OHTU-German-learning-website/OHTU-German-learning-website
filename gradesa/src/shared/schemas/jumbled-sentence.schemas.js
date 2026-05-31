@@ -11,8 +11,23 @@ function cleanToken(token) {
   return token.replace(/[\p{P}]/gu, "").toLowerCase();
 }
 
-function normalizeTokens(sentence) {
-  return sentence.trim().split(/\s+/).map(cleanToken).filter(Boolean).sort();
+function splitElements(sentence) {
+  const trimmedSentence = sentence.trim();
+
+  if (!trimmedSentence) return [];
+
+  if (trimmedSentence.includes("\n")) {
+    return trimmedSentence
+      .split(/\r?\n/)
+      .map((element) => element.trim())
+      .filter(Boolean);
+  }
+
+  return trimmedSentence.split(/\s+/).filter(Boolean);
+}
+
+function normalizeElements(sentence) {
+  return splitElements(sentence).map(cleanToken).filter(Boolean).sort();
 }
 
 function sameWordSet(a, b) {
@@ -52,7 +67,7 @@ export const jumbledSentenceSchema = z
     }, z.array(z.string())),
   })
   .superRefine((data, ctx) => {
-    const baseTokens = normalizeTokens(data.sentence);
+    const baseTokens = normalizeElements(data.sentence);
 
     if (data.alternateFeedbacks.length !== data.alternates.length) {
       ctx.addIssue({
@@ -64,7 +79,7 @@ export const jumbledSentenceSchema = z
 
     for (let index = 0; index < data.alternates.length; index++) {
       const alternate = data.alternates[index];
-      const alternateTokens = normalizeTokens(alternate);
+      const alternateTokens = normalizeElements(alternate);
 
       if (!sameWordSet(baseTokens, alternateTokens)) {
         ctx.addIssue({
@@ -78,7 +93,7 @@ export const jumbledSentenceSchema = z
 
     for (let index = 0; index < data.incorrectAlternates.length; index++) {
       const incorrectAlternate = data.incorrectAlternates[index];
-      const incorrectTokens = normalizeTokens(incorrectAlternate);
+      const incorrectTokens = normalizeElements(incorrectAlternate);
 
       if (!sameWordSet(baseTokens, incorrectTokens)) {
         ctx.addIssue({
