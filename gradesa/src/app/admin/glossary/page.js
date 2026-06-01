@@ -57,27 +57,66 @@ export default function GlossaryList() {
     a.word.localeCompare(b.word)
   );
 
+  const entriesByLetter = sortedEntries.reduce((map, entry) => {
+    const letter = (entry.word?.[0] || "").toUpperCase();
+    if (!map[letter]) {
+      map[letter] = [];
+    }
+    map[letter].push(entry);
+    return map;
+  }, {});
+
+  const letters = Object.keys(entriesByLetter).sort();
+
   return (
     <Column gap="md" width="100%">
       <Row justify="space-between" gap="xl" width="100%" align="center">
-        <h2>Glossareinträge</h2>
+        <h2 id="glossary-top">Glossareinträge</h2>
       </Row>
       <LinkButton href="/admin/glossary/create">
         Neuen Eintrag erstellen
       </LinkButton>
 
-      {sortedEntries.length > 0 && (
+      {letters.length > 0 && (
         <Container className="glossary-index" mb="md">
           <h3>Register</h3>
+          <Container display="flex" flexWrap="wrap" gap="xs" mb="sm">
+            {letters.map((letter) => (
+              <a
+                key={letter}
+                className="glossary-index-letter"
+                href={`#letter-${letter}-section`}
+              >
+                {letter}
+              </a>
+            ))}
+          </Container>
+
           <Container
             display="grid"
             templateColumns="repeat(auto-fit, minmax(160px, 1fr))"
             gap="sm"
           >
-            {sortedEntries.map((entry) => (
-              <span key={entry.id} className="glossary-index-item">
-                {entry.word}
-              </span>
+            {letters.map((letter) => (
+              <Container key={letter} className="glossary-index-group">
+                <h4
+                  id={`letter-${letter}`}
+                  className="glossary-index-group-title"
+                >
+                  {letter}
+                </h4>
+                <Column gap="xs">
+                  {entriesByLetter[letter].map((entry) => (
+                    <a
+                      key={entry.id}
+                      href={`#entry-${entry.id}`}
+                      className="glossary-index-entry"
+                    >
+                      {entry.word}
+                    </a>
+                  ))}
+                </Column>
+              </Container>
             ))}
           </Container>
         </Container>
@@ -89,46 +128,69 @@ export default function GlossaryList() {
           beginnen.
         </p>
       ) : (
-        <Container
-          display="grid"
-          templateColumns="repeat(auto-fill, minmax(300px, 1fr))"
-          gap="md"
-        >
-          {sortedEntries.map((entry) => (
-            <Container key={entry.id} className="glossary-card">
-              <Column gap="sm">
-                <h4 className="glossary-word">{entry.word}</h4>
-                <RenderHTML data={entry.word_definition} disableGlossary />
-                <Row justify="space-between" className="glossary-meta">
-                  <span>
-                    Erstellt: {new Date(entry.created_at).toLocaleDateString()}
-                  </span>
-                  <Row gap="sm">
-                    <LinkButton
-                      href={`/admin/glossary/create?id=${entry.id}`}
-                      variant="outline"
-                      size="sm"
-                    >
-                      Bearbeiten
-                    </LinkButton>
-                    <Button
-                      variant={
-                        confirmDelete === entry.id ? "danger" : "outline"
-                      }
-                      size="sm"
-                      width="fit"
-                      onClick={() => handleDelete(entry.id)}
-                      disabled={deleting === entry.id}
-                    >
-                      {deleting === entry.id
-                        ? "Löschen..."
-                        : confirmDelete === entry.id
-                          ? "Bestätigen"
-                          : "Löschen"}
-                    </Button>
-                  </Row>
-                </Row>
-              </Column>
+        <Container display="grid" gap="md">
+          {letters.map((letter) => (
+            <Container key={letter} className="glossary-letter-group">
+              <h3
+                id={`letter-${letter}-section`}
+                className="glossary-letter-title"
+              >
+                {letter}
+              </h3>
+              <Container
+                display="grid"
+                templateColumns="repeat(auto-fill, minmax(300px, 1fr))"
+                gap="md"
+              >
+                {entriesByLetter[letter].map((entry) => (
+                  <Container
+                    key={entry.id}
+                    id={`entry-${entry.id}`}
+                    className="glossary-card"
+                  >
+                    <Column gap="sm">
+                      <h4 className="glossary-word">{entry.word}</h4>
+                      <RenderHTML
+                        data={entry.word_definition}
+                        disableGlossary
+                      />
+                      <Row justify="space-between" className="glossary-meta">
+                        <span>
+                          Erstellt:{" "}
+                          {new Date(entry.created_at).toLocaleDateString()}
+                        </span>
+                        <Row gap="sm">
+                          <LinkButton
+                            href={`/admin/glossary/create?id=${entry.id}`}
+                            variant="outline"
+                            size="sm"
+                          >
+                            Bearbeiten
+                          </LinkButton>
+                          <Button
+                            variant={
+                              confirmDelete === entry.id ? "danger" : "outline"
+                            }
+                            size="sm"
+                            width="fit"
+                            onClick={() => handleDelete(entry.id)}
+                            disabled={deleting === entry.id}
+                          >
+                            {deleting === entry.id
+                              ? "Löschen..."
+                              : confirmDelete === entry.id
+                                ? "Bestätigen"
+                                : "Löschen"}
+                          </Button>
+                        </Row>
+                      </Row>
+                    </Column>
+                  </Container>
+                ))}
+              </Container>
+              <a href="#glossary-top" className="glossary-back-to-top">
+                Zurück nach oben
+              </a>
             </Container>
           ))}
         </Container>

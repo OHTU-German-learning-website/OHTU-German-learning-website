@@ -92,7 +92,7 @@ const getValue = (cssProp, value) => {
   return value;
 };
 
-export const Container = memo(({ children, className, ...props }) => {
+export const Container = memo(({ children, className, id, ...props }) => {
   const mediaQueries = {};
 
   const validLayoutPropsEntries = useMemo(
@@ -159,7 +159,7 @@ export const Container = memo(({ children, className, ...props }) => {
     };
   }, [validLayoutPropsEntries]);
   return (
-    <div style={style} className={className}>
+    <div id={id} style={style} className={className}>
       {children}
     </div>
   );
