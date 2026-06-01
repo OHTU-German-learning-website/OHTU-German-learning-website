@@ -33,7 +33,7 @@ export default function GlossaryPage() {
   return (
     <Column gap="md" width="100%">
       <Row justify="space-between" gap="xl" width="100%" align="center">
-        <h2>Glossar</h2>
+        <h2 id="glossary-top">Glossar</h2>
       </Row>
 
       {letters.length > 0 && (
@@ -114,6 +114,9 @@ export default function GlossaryPage() {
                   </Container>
                 ))}
               </Container>
+              <a href="#glossary-top" className="glossary-back-to-top">
+                Zurück nach oben
+              </a>
             </Container>
           ))}
         </Container>

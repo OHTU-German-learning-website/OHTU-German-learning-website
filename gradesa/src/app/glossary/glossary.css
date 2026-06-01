@@ -78,6 +78,22 @@
 .glossary-letter-title {
   margin: 0 0 var(--u-sm);
   font-size: 1.35rem;
+  scroll-margin-top: 100px;
+}
+
+.glossary-back-to-top {
+  display: inline-flex;
+  align-items: center;
+  color: var(--fg2);
+  text-decoration: none;
+  font-size: 0.95rem;
+  margin-top: var(--u-sm);
+}
+
+.glossary-back-to-top:hover,
+.glossary-back-to-top:focus {
+  color: var(--fg1);
+  text-decoration: underline;
 }
 
 .glossary-word {
@@ -85,6 +101,21 @@
   margin: 0;
   font-size: 1.2rem;
 }
+
+.glossary-word-link {
+  text-decoration: none;
+  display: block;
+  border-radius: var(--radius-sm);
+  transition: background-color 0.2s, padding 0.2s;
+  padding: 0.25rem 0.5rem;
+  margin: -0.25rem -0.5rem;
+}
+
+.glossary-word-link:hover,
+.glossary-word-link:focus {
+  background-color: var(--bg4);
+}
+
 
 .glossary-definition {
   color: var(--fg2);
