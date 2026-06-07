@@ -14,9 +14,16 @@ export const GET = withAuth(
     }
 
     const { rows: exerciseRows } = await DB.pool(
-      `SELECT id, title, description
-       FROM memory_game_exercises
-       WHERE id = $1`,
+      `SELECT
+         mge.id,
+         mge.title,
+         mge.description,
+         e.updated_at AS last_modified_at,
+         COALESCE(NULLIF(u.username, ''), u.email) AS last_modified_by
+       FROM memory_game_exercises mge
+       JOIN exercises e ON e.id = mge.exercise_id
+       LEFT JOIN users u ON u.id = COALESCE(e.updated_by, e.created_by)
+       WHERE mge.id = $1`,
       [id]
     );
 
@@ -88,6 +95,17 @@ export const PUT = withAuth(
            SET title = $1, description = $2, updated_at = NOW()
            WHERE id = $3`,
           [title, description, id]
+        );
+
+        await tx.query(
+          `UPDATE exercises
+           SET updated_by = $1
+           WHERE id = (
+             SELECT exercise_id
+             FROM memory_game_exercises
+             WHERE id = $2
+           )`,
+          [request.user?.id ?? null, id]
         );
 
         await tx.query(

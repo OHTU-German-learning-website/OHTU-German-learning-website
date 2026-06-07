@@ -21,9 +21,18 @@ export const GET = withAuth(
       const { exercise_id } = await params;
 
       const { rows: exerciseRows } = await DB.pool(
-        `SELECT id, exercise_id, title, source_text, source_html
-         FROM fill_gap_exercises
-         WHERE id = $1`,
+        `SELECT
+           fge.id,
+           fge.exercise_id,
+           fge.title,
+           fge.source_text,
+           fge.source_html,
+           e.updated_at AS last_modified_at,
+           COALESCE(NULLIF(u.username, ''), u.email) AS last_modified_by
+         FROM fill_gap_exercises fge
+         JOIN exercises e ON e.id = fge.exercise_id
+         LEFT JOIN users u ON u.id = COALESCE(e.updated_by, e.created_by)
+         WHERE fge.id = $1`,
         [exercise_id]
       );
 
@@ -65,6 +74,8 @@ export const GET = withAuth(
 
       return NextResponse.json({
         ...exerciseRows[0],
+        last_modified_at: exerciseRows[0].last_modified_at,
+        last_modified_by: exerciseRows[0].last_modified_by,
         gaps,
       });
     } catch (error) {
@@ -121,6 +132,17 @@ export const PUT = withAuth(
            SET title = $1, source_text = $2, source_html = $3, updated_at = NOW()
            WHERE id = $4`,
           [title, normalizedText, sourceHtml, exercise_id]
+        );
+
+        await tx.query(
+          `UPDATE exercises
+           SET updated_by = $1
+           WHERE id = (
+             SELECT exercise_id
+             FROM fill_gap_exercises
+             WHERE id = $2
+           )`,
+          [request.user?.id ?? null, exercise_id]
         );
 
         await tx.query(

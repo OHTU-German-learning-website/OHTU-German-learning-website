@@ -7,7 +7,15 @@ export const GET = withAuth(async (request, { params }) => {
   const { id } = await params;
   try {
     const exRes = await DB.pool(
-      `SELECT id, title FROM jumbled_sentence_exercises WHERE id = $1`,
+      `SELECT
+         jse.id,
+         jse.title,
+         e.updated_at AS last_modified_at,
+         COALESCE(NULLIF(u.username, ''), u.email) AS last_modified_by
+       FROM jumbled_sentence_exercises jse
+       JOIN exercises e ON e.id = jse.exercise_id
+       LEFT JOIN users u ON u.id = COALESCE(e.updated_by, e.created_by)
+       WHERE jse.id = $1`,
       [id]
     );
     if (!exRes.rows.length) {
@@ -54,6 +62,16 @@ export const PUT = withAuth(
         await client.query(
           `UPDATE jumbled_sentence_exercises SET title = $1, updated_at = NOW() WHERE id = $2`,
           [title, id]
+        );
+        await client.query(
+          `UPDATE exercises
+           SET updated_by = $1
+           WHERE id = (
+             SELECT exercise_id
+             FROM jumbled_sentence_exercises
+             WHERE id = $2
+           )`,
+          [request.user?.id ?? null, id]
         );
         await client.query(
           `DELETE FROM jumbled_sentence_sentences WHERE jumbled_exercise_id = $1`,

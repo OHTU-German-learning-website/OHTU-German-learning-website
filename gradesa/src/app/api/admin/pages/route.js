@@ -120,8 +120,17 @@ export const POST = withAuth(
     }
 
     await DB.pool(
-      "INSERT INTO html_pages (title, description, content, slug, page_group, page_order, grammar_topic_id) VALUES ($1, $2, $3, $4, $5, $6, $7)",
-      [trimmedTitle, pageDescription, "", slug, type, pageOrder, grammarTopicId]
+      "INSERT INTO html_pages (title, description, content, slug, page_group, page_order, grammar_topic_id, updated_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
+      [
+        trimmedTitle,
+        pageDescription,
+        "",
+        slug,
+        type,
+        pageOrder,
+        grammarTopicId,
+        req.user?.id ?? null,
+      ]
     );
 
     return NextResponse.json({ slug }, { status: 200 });

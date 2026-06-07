@@ -10,6 +10,7 @@ import { useParams, useRouter } from "next/navigation";
 import useQuery from "@/shared/hooks/useQuery";
 import PreviewDragDrop from "@/components/ui/dragdrop/dragdrop_preview";
 import { withBasePath } from "@/shared/utils/basePath";
+import AdminLastModified from "@/components/ui/admin-last-modified";
 
 export default function DragdropAdminPage() {
   const { dnd_id } = useParams();
@@ -17,6 +18,7 @@ export default function DragdropAdminPage() {
   const [numberOfFields, setNumberOfFields] = useState(null);
   const [inputFields, setInputFields] = useState([]);
   const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [generalError, setGeneralError] = useState("");
   const [showPreview, setShowPreview] = useState(false);
@@ -60,6 +62,7 @@ export default function DragdropAdminPage() {
     if (!isEditMode || !exerciseData) return;
 
     setTitle(exerciseData.title || "");
+    setDescription(exerciseData.description || "");
     setInputFields(
       Array.isArray(exerciseData.fields) ? exerciseData.fields : []
     );
@@ -92,6 +95,7 @@ export default function DragdropAdminPage() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               title: title.trim(),
+              description: description.trim(),
               fields: inputFields,
             }),
           }
@@ -104,6 +108,7 @@ export default function DragdropAdminPage() {
       } else {
         const res = await makeRequest("/admin/exercises/dragdrop", {
           title: title.trim(),
+          description: description.trim(),
           fields: inputFields,
         });
 
@@ -150,11 +155,17 @@ export default function DragdropAdminPage() {
   return (
     <div className={styles.page}>
       <div className="admin-container">
-        <h1>
+        <h1 className="dragdrop-admin-title">
           {isEditMode
             ? "Eine Sortieren/Gruppieren-Übung bearbeiten"
             : "Eine Sortieren/Gruppieren-Übung erstellen"}
         </h1>
+        {isEditMode && (
+          <AdminLastModified
+            updatedAt={exerciseData?.last_modified_at}
+            updatedBy={exerciseData?.last_modified_by}
+          />
+        )}
         {generalError && (
           <p className="error" role="alert">
             {generalError}
@@ -183,6 +194,17 @@ export default function DragdropAdminPage() {
               onChange={(e) => setTitle(e.target.value)}
               className="form-input"
               placeholder="Titel eingeben"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="description">Beschreibung/Anweisung:</label>
+            <textarea
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="form-input dragdrop-description-input"
+              placeholder="Kurze Anleitung für die Lernenden"
+              rows={8}
             />
           </div>
           <div className="form-group">

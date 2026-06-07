@@ -35,8 +35,8 @@ export const PATCH = withAuth(
     try {
       const { type, slug } = await params;
 
-      const query = `UPDATE html_pages SET content = '' WHERE slug = $1 AND page_group = $2 RETURNING *`;
-      const result = await DB.pool(query, [slug, type]);
+      const query = `UPDATE html_pages SET content = '', updated_by = $3 WHERE slug = $1 AND page_group = $2 RETURNING *`;
+      const result = await DB.pool(query, [slug, type, req.user?.id ?? null]);
 
       if (result.rowCount === 0)
         return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -113,12 +113,13 @@ export const PUT = withAuth(
       });
     }
 
+    newData.updated_by = req.user?.id ?? null;
     let updated = await setPageData(type, slug, newData);
 
     if (!updated && type === "grammar") {
       const insertQuery = `
-    INSERT INTO html_pages (title, description, content, slug, page_group)
-    VALUES ($1, $2, $3, $4, $5)
+    INSERT INTO html_pages (title, description, content, slug, page_group, updated_by)
+    VALUES ($1, $2, $3, $4, $5, $6)
     ON CONFLICT DO NOTHING
   `;
 
@@ -128,6 +129,7 @@ export const PUT = withAuth(
         newData.content ?? "",
         newData.slug,
         type,
+        req.user?.id ?? null,
       ]);
 
       updated = await setPageData(type, slug, newData);
@@ -166,13 +168,14 @@ export const POST = withAuth(
       });
     }
     const { title, description } = await req.json();
-    const query = `INSERT INTO html_pages (title, description, content, slug, page_group) VALUES ($1, $2, $3, $4, $5)`;
+    const query = `INSERT INTO html_pages (title, description, content, slug, page_group, updated_by) VALUES ($1, $2, $3, $4, $5, $6)`;
     const result = await DB.pool(query, [
       title,
       normalizePageDescription(description),
       "",
       slug,
       type,
+      req.user?.id ?? null,
     ]);
 
     if (result.rowCount === 0)

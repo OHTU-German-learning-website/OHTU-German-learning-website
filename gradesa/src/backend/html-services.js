@@ -18,7 +18,18 @@ import { DB } from "@/backend/db";
  */
 export async function getPageData(type, slug) {
   const result = await DB.pool(
-    "SELECT title, description, content, page_order, slug, page_group FROM html_pages WHERE page_group = $1 AND slug = $2",
+    `SELECT
+       hp.title,
+       hp.description,
+       hp.content,
+       hp.page_order,
+       hp.slug,
+       hp.page_group,
+       hp.updated_at,
+       COALESCE(NULLIF(u.username, ''), u.email) AS updated_by_username
+     FROM html_pages hp
+     LEFT JOIN users u ON u.id = hp.updated_by
+     WHERE hp.page_group = $1 AND hp.slug = $2`,
     [type, slug]
   );
 
@@ -48,12 +59,13 @@ export async function getPageData(type, slug) {
  */
 export async function setPageData(type, slug, newData) {
   const result = await DB.pool(
-    "UPDATE html_pages SET title = $1, description = $2, slug = $3, content = $4 WHERE page_group = $5 AND slug = $6",
+    "UPDATE html_pages SET title = $1, description = $2, slug = $3, content = $4, updated_by = $5 WHERE page_group = $6 AND slug = $7",
     [
       newData.title,
       newData.description ?? null,
       newData.slug,
       newData.content,
+      newData.updated_by ?? null,
       type,
       slug,
     ]

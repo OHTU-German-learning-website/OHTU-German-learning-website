@@ -10,11 +10,15 @@ export const GET = withAuth(
       const { rows: exerciseRows } = await DB.pool(
         `
         SELECT 
-          id,
-          title,
-          exercise_id
-        FROM free_form_exercises
-        WHERE id = $1
+          ffe.id,
+          ffe.title,
+          ffe.exercise_id,
+          e.updated_at AS last_modified_at,
+          COALESCE(NULLIF(u.username, ''), u.email) AS last_modified_by
+        FROM free_form_exercises ffe
+        JOIN exercises e ON e.id = ffe.exercise_id
+        LEFT JOIN users u ON u.id = COALESCE(e.updated_by, e.created_by)
+        WHERE ffe.id = $1
       `,
         [exercise_id]
       );
@@ -126,6 +130,17 @@ export const PUT = withAuth(
           WHERE id = $2
         `,
           [title, exercise_id]
+        );
+
+        await tx.query(
+          `UPDATE exercises
+           SET updated_by = $1
+           WHERE id = (
+             SELECT exercise_id
+             FROM free_form_exercises
+             WHERE id = $2
+           )`,
+          [request.user?.id ?? null, exercise_id]
         );
 
         await tx.query(

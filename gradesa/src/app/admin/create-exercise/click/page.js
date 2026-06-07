@@ -11,6 +11,7 @@ import WordSelectionExercise from "@/components/ui/click/click.js";
 import Editor from "@/components/ui/editor";
 import { htmlToPlainText } from "@/shared/utils/normalizeEditorText";
 import { withBasePath } from "@/shared/utils/basePath";
+import AdminLastModified from "@/components/ui/admin-last-modified";
 
 function escapeHtml(value) {
   return String(value || "")
@@ -175,6 +176,12 @@ export default function CreateExercise() {
           ? "Wortauswahl-Übung bearbeiten"
           : "Wortauswahl-Übung erstellen"}
       </h1>
+      {isEditMode && (
+        <AdminLastModified
+          updatedAt={exerciseData?.last_modified_at}
+          updatedBy={exerciseData?.last_modified_by}
+        />
+      )}
       {submitted ? (
         successMessage() // Show only the success message if submitted
       ) : !previewMode ? (

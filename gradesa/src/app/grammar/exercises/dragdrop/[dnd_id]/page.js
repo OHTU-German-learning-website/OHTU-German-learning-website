@@ -39,6 +39,7 @@ export default function Dragdrop({}) {
         <div className={styles.page}>
           <div className="exercise-container">
             <h1>{exercise.title}</h1>
+            {!!exercise.description && <p>{exercise.description}</p>}
             <DndProvider backend={HTML5Backend}>
               <Area exerciseID={dnd_id} />
             </DndProvider>

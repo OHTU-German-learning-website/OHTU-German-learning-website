@@ -7,6 +7,7 @@ import { useRouter, useParams } from "next/navigation";
 import useQuery from "@/shared/hooks/useQuery";
 import "../../../multichoice/multichoice.css";
 import { withBasePath } from "@/shared/utils/basePath";
+import AdminLastModified from "@/components/ui/admin-last-modified";
 
 export default function EditFreeFormExercisePage() {
   const router = useRouter();
@@ -171,6 +172,10 @@ export default function EditFreeFormExercisePage() {
   return (
     <Column gap="md">
       <h2>Freitextübung bearbeiten</h2>
+      <AdminLastModified
+        updatedAt={data?.last_modified_at}
+        updatedBy={data?.last_modified_by}
+      />
       <p>Geladene Fragen: {questions.length}</p>
 
       {generalError && (

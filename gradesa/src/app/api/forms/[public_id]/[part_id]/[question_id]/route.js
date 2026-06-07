@@ -26,16 +26,46 @@ export const PUT = withAuth(
 
     const { answer } = await request.json();
     logger.info(`Submitting answer: ${user_id}, ${question_id}, ${answer}`);
-    await DB.pool(
-      `
+    await DB.transaction(async (tx) => {
+      const updated = await tx.query(
+        `
+UPDATE user_question_answers
+SET answer = $3,
+    user_id = COALESCE($4, user_id),
+    updated_at = NOW()
+WHERE answerer_id = $1 AND part_question_id = $2
+RETURNING id
+`,
+        [answerer_id, question_id, answer, user_id]
+      );
+
+      if (updated.rows.length === 0) {
+        await tx.query(
+          `
 INSERT INTO user_question_answers (user_id, part_question_id, answer, answerer_id)
 VALUES ($1, $2, $3, $4)
-ON CONFLICT (user_id, part_question_id) DO UPDATE
-SET answer = $3
-RETURNING *
 `,
-      [user_id, question_id, answer, answerer_id]
-    );
+          [user_id, question_id, answer, answerer_id]
+        );
+        return;
+      }
+
+      if (updated.rows.length > 1) {
+        await tx.query(
+          `
+DELETE FROM user_question_answers
+WHERE answerer_id = $1
+  AND part_question_id = $2
+  AND id <> (
+    SELECT MAX(id)
+    FROM user_question_answers
+    WHERE answerer_id = $1 AND part_question_id = $2
+  )
+`,
+          [answerer_id, question_id]
+        );
+      }
+    });
 
     return NextResponse.json({ success: true });
   },

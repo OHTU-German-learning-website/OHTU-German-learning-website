@@ -94,7 +94,9 @@ function buildHtmlWithGapPlaceholders(sourceHtml, gapsByTokenIndex) {
         fragment.appendChild(doc.createTextNode(chunk));
       }
 
-      tokenIndex += 1;
+      if (tokenParts.word) {
+        tokenIndex += 1;
+      }
     }
 
     textNode.parentNode?.replaceChild(fragment, textNode);

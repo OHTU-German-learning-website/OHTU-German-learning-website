@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import useQuery from "@/shared/hooks/useQuery";
 import "./multichoice.css";
 import { withBasePath } from "@/shared/utils/basePath";
+import AdminLastModified from "@/components/ui/admin-last-modified";
 
 export default function CreateMultichoicePage() {
   const router = useRouter();
@@ -221,6 +222,12 @@ export default function CreateMultichoicePage() {
           ? "Multiple Choice Übung bearbeiten"
           : "Multiple Choice Übung erstellen"}
       </h1>
+      {isEditMode && (
+        <AdminLastModified
+          updatedAt={exerciseData?.last_modified_at}
+          updatedBy={exerciseData?.last_modified_by}
+        />
+      )}
 
       {error && <div className="error-message">{error}</div>}
 

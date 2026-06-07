@@ -77,7 +77,14 @@ export const GET = withAuth(
       const { exercise_id } = await params;
 
       const exerciseResult = await DB.pool(
-        "SELECT * FROM multichoice_exercises WHERE id = $1",
+        `SELECT
+           me.*,
+           e.updated_at AS last_modified_at,
+           COALESCE(NULLIF(u.username, ''), u.email) AS last_modified_by
+         FROM multichoice_exercises me
+         JOIN exercises e ON e.id = me.exercise_id
+         LEFT JOIN users u ON u.id = COALESCE(e.updated_by, e.created_by)
+         WHERE me.id = $1`,
         [exercise_id]
       );
       const exercise = exerciseResult.rows[0];
@@ -120,6 +127,8 @@ export const GET = withAuth(
 
       return NextResponse.json({
         ...exercise,
+        last_modified_at: exercise.last_modified_at,
+        last_modified_by: exercise.last_modified_by,
         content: contentWithOptions,
       });
     } catch (error) {
@@ -181,6 +190,17 @@ export const PUT = withAuth(
            SET title = $1, updated_at = NOW()
            WHERE id = $2`,
           [title, exercise_id]
+        );
+
+        await tx.query(
+          `UPDATE exercises
+           SET updated_by = $1
+           WHERE id = (
+             SELECT exercise_id
+             FROM multichoice_exercises
+             WHERE id = $2
+           )`,
+          [request.user?.id ?? null, exercise_id]
         );
 
         await tx.query(
