@@ -34,7 +34,8 @@ export const POST = withAuth(
       const exerciseResult = await tx.query(
         `INSERT INTO exercises (created_at, updated_at, created_by, updated_by, category)
          VALUES (NOW(), NOW(), $1, $1, 'fillinthegap')
-         RETURNING id`[userId]
+         RETURNING id`,
+        [userId]
       );
 
       const exerciseId = exerciseResult.rows[0].id;
