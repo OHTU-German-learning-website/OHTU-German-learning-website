@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { zodErrorToFormErrors } from "@/shared/schemas/schema-utils";
 import Editor from "@/components/ui/editor";
 import { withBasePath } from "@/shared/utils/basePath";
+import AdminLastModified from "@/components/ui/admin-last-modified";
 
 const defaultFormErrors = {
   word: "",
@@ -20,6 +21,8 @@ export default function CreateGlossaryEntry() {
   const [formErrors, setFormErrors] = useState(defaultFormErrors);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingEntry, setIsLoadingEntry] = useState(false);
+  const [lastModifiedAt, setLastModifiedAt] = useState(null);
+  const [lastModifiedBy, setLastModifiedBy] = useState(null);
   const makeRequest = useRequest();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -41,6 +44,8 @@ export default function CreateGlossaryEntry() {
         const entry = await response.json();
         setWord(entry.word);
         setWordDefinition(entry.word_definition);
+        setLastModifiedAt(entry.updated_at || null);
+        setLastModifiedBy(entry.last_modified_by || null);
       } catch (error) {
         console.error("Error loading glossary entry:", error);
         setGeneralError("Glossar-Eintrag konnte nicht geladen werden.");
@@ -117,6 +122,12 @@ export default function CreateGlossaryEntry() {
       <h2>
         {isEditing ? "Glossar-Eintrag bearbeiten" : "Glossar-Eintrag erstellen"}
       </h2>
+      {isEditing && (
+        <AdminLastModified
+          updatedAt={lastModifiedAt}
+          updatedBy={lastModifiedBy}
+        />
+      )}
       <p>
         {isEditing
           ? "Aktualisieren Sie den ausgewählten Glossar-Eintrag."

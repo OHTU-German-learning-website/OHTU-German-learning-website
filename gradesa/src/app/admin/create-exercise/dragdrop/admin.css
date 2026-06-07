@@ -5,6 +5,11 @@
   gap: 20px;
 }
 
+.dragdrop-admin-title {
+  white-space: nowrap;
+  font-size: clamp(1.35rem, 2vw, 2rem);
+}
+
 .admin-content {
   flex: 1;
   padding: 5px;
@@ -36,6 +41,12 @@
   width: 100%;
   max-width: 300px;
   background-color: var(--bg2);
+}
+
+.dragdrop-description-input {
+  min-height: 14rem;
+  max-width: 42rem;
+  resize: vertical;
 }
 
 .form-input::placeholder {

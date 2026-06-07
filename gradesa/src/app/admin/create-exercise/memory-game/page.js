@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Column, Row } from "@/components/ui/layout/container";
 import { useRequest } from "@/shared/hooks/useRequest";
 import { withBasePath } from "@/shared/utils/basePath";
+import AdminLastModified from "@/components/ui/admin-last-modified";
 
 const emptyPair = { left_item: "", right_item: "" };
 
@@ -15,6 +16,8 @@ export default function CreateMemoryGame() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [generalError, setGeneralError] = useState("");
+  const [lastModifiedAt, setLastModifiedAt] = useState(null);
+  const [lastModifiedBy, setLastModifiedBy] = useState(null);
   const router = useRouter();
   const params = useParams();
   const searchParams = useSearchParams();
@@ -45,6 +48,8 @@ export default function CreateMemoryGame() {
             right_item: pair.right_item,
           })) || [emptyPair]
         );
+        setLastModifiedAt(data.last_modified_at || null);
+        setLastModifiedBy(data.last_modified_by || null);
       } catch (error) {
         console.error(error);
         setGeneralError("Fehler beim Laden des Spiels");
@@ -101,6 +106,12 @@ export default function CreateMemoryGame() {
   return (
     <Column gap="md" width="100%">
       <h2>{isEditing ? "Memory Game bearbeiten" : "Memory Game erstellen"}</h2>
+      {isEditing && (
+        <AdminLastModified
+          updatedAt={lastModifiedAt}
+          updatedBy={lastModifiedBy}
+        />
+      )}
       {generalError && <p className="error">{generalError}</p>}
       <label>
         Titel

@@ -55,6 +55,7 @@ export const POST = withAuth(
       const rawBody = await request.json();
       const body = rawBody.body ?? rawBody;
       const title = body.title;
+      const description = String(body.description || "").trim();
       const fields = body.fields;
       const created_by = request.user?.id;
 
@@ -70,8 +71,8 @@ export const POST = withAuth(
 
       // 1. Insert into exercises
       const exRes = await DB.pool(
-        `INSERT INTO exercises (created_by, category)
-       VALUES ($1, $2)
+        `INSERT INTO exercises (created_by, updated_by, category)
+       VALUES ($1, $1, $2)
        RETURNING id`,
         [created_by, exerciseCategory]
       );
@@ -79,10 +80,10 @@ export const POST = withAuth(
 
       // 2. Insert into dnd_exercises
       const dndRes = await DB.pool(
-        `INSERT INTO dnd_exercises (created_by, exercise_id, title)
-       VALUES ($1, $2, $3)
+        `INSERT INTO dnd_exercises (created_by, exercise_id, title, description)
+       VALUES ($1, $2, $3, $4)
        RETURNING id`,
-        [created_by, exercise_id, title]
+        [created_by, exercise_id, title, description || null]
       );
       const dnd_id = dndRes.rows[0].id;
       // Process fields

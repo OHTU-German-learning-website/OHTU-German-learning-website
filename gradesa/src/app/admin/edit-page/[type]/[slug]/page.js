@@ -61,6 +61,8 @@ export default async function Edit({ params, searchParams }) {
       <EditorSection
         initialContent={pageContent.content}
         initialDescription={pageContent.description ?? ""}
+        initialUpdatedAt={pageContent.updated_at ?? null}
+        initialUpdatedBy={pageContent.updated_by_username ?? null}
         type={type}
         slug={decodedSlug}
         title={pageContent.title}
@@ -86,6 +88,8 @@ export default async function Edit({ params, searchParams }) {
         <EditorSection
           initialContent=""
           initialDescription=""
+          initialUpdatedAt={null}
+          initialUpdatedBy={null}
           type={type}
           slug={decodedSlug}
           title={chapter?.title || decodedSlug}

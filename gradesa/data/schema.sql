@@ -140,8 +140,11 @@ CREATE TABLE public.exercises (
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   updated_at timestamp with time zone NOT NULL DEFAULT now(),
   category text,
-  created_by bigint
+  created_by bigint,
+  updated_by bigint
 );
+
+CREATE TRIGGER update_exercises_updated_at BEFORE UPDATE ON public.exercises FOR EACH ROW EXECUTE FUNCTION updated_at();
 
 ALTER TABLE public.click_to_exercises
 ADD CONSTRAINT click_to_exercises_exercise_id_fkey
@@ -165,7 +168,8 @@ CREATE TABLE public.dnd_exercises (
   updated_at timestamp with time zone NOT NULL DEFAULT now(),
   created_by bigint NOT NULL,
   exercise_id bigint NOT NULL,
-  title text NOT NULL
+  title text NOT NULL,
+  description text
 );
 
 ALTER TABLE public.dnd_exercises
@@ -337,6 +341,10 @@ CREATE TABLE public.grammar_items (
 ALTER TABLE public.exercises_to_grammar_items
 ADD CONSTRAINT exercises_to_grammar_items_grammar_item_id_fkey
 FOREIGN KEY (grammar_item_id) REFERENCES grammar_items(id);
+
+ALTER TABLE public.exercises
+ADD CONSTRAINT exercises_updated_by_fkey
+FOREIGN KEY (updated_by) REFERENCES users(id) ON DELETE SET NULL;
 
 CREATE SEQUENCE public.feedbacks_id_seq;
 
@@ -558,10 +566,15 @@ CREATE TABLE public.glossary_entries (
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   updated_at timestamp with time zone NOT NULL DEFAULT now(),
   word text NOT NULL,
-  word_definition text NOT NULL
+  word_definition text NOT NULL,
+  updated_by bigint
 );
 
 CREATE TRIGGER update_glossary_entries_updated_at BEFORE UPDATE ON public.glossary_entries FOR EACH ROW EXECUTE FUNCTION updated_at();
+
+ALTER TABLE public.glossary_entries
+ADD CONSTRAINT glossary_entries_updated_by_fkey
+FOREIGN KEY (updated_by) REFERENCES users(id) ON DELETE SET NULL;
 
 CREATE SEQUENCE public.grammar_topics_id_seq;
 
@@ -581,12 +594,20 @@ CREATE TABLE public.html_pages (
   slug text,
   page_group text,
   grammar_topic_id integer,
-  description text
+  description text,
+  updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  updated_by bigint
 );
+
+CREATE TRIGGER update_html_pages_updated_at BEFORE UPDATE ON public.html_pages FOR EACH ROW EXECUTE FUNCTION updated_at();
 
 ALTER TABLE public.html_pages
 ADD CONSTRAINT html_pages_grammar_topic_id_fkey
 FOREIGN KEY (grammar_topic_id) REFERENCES grammar_topics(id);
+
+ALTER TABLE public.html_pages
+ADD CONSTRAINT html_pages_updated_by_fkey
+FOREIGN KEY (updated_by) REFERENCES users(id) ON DELETE SET NULL;
 
 ALTER TABLE public.jumbled_sentence_exercises
 ADD CONSTRAINT jumbled_sentence_exercises_created_by_fkey

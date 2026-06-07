@@ -8,6 +8,7 @@ import { jumbledSentenceExerciseSchema } from "@/shared/schemas/jumbled-sentence
 import { withBasePath } from "@/shared/utils/basePath";
 import useQuery from "@/shared/hooks/useQuery";
 import styles from "./jumbled-sentence.module.css";
+import AdminLastModified from "@/components/ui/admin-last-modified";
 
 function toElementPerLine(value) {
   if (typeof value !== "string") return "";
@@ -318,6 +319,12 @@ export default function CreateJumbledSentenceExercise() {
         <h2>
           {isEditMode ? "Satzmix-Übung bearbeiten" : "Satzmix-Übung erstellen"}
         </h2>
+        {isEditMode && (
+          <AdminLastModified
+            updatedAt={data?.exercise?.last_modified_at}
+            updatedBy={data?.exercise?.last_modified_by}
+          />
+        )}
         <label className={styles.fieldLabel}>
           Titel:
           <input

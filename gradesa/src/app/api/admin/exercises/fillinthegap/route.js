@@ -25,11 +25,16 @@ export const POST = withAuth(
     );
     const sourceHtml = sanitizeHtml(textHtml || "");
 
+    const userId = request.user?.id;
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const created = await DB.transaction(async (tx) => {
       const exerciseResult = await tx.query(
-        `INSERT INTO exercises (created_at, updated_at, category)
-         VALUES (NOW(), NOW(), 'fillinthegap')
-         RETURNING id`
+        `INSERT INTO exercises (created_at, updated_at, created_by, updated_by, category)
+         VALUES (NOW(), NOW(), $1, $1, 'fillinthegap')
+         RETURNING id`[userId]
       );
 
       const exerciseId = exerciseResult.rows[0].id;

@@ -9,12 +9,20 @@ export const GET = withAuth(
     const answerer_id = user?.id ?? request.headers.get("x-session-id");
     const averages = await DB.pool(
       `
-    SELECT AVG(answer)::numeric(10, 2) as part_average, pq.form_part_id
-    FROM user_question_answers uqa
-    JOIN part_questions pq ON uqa.part_question_id = pq.id
+    WITH latest_answers AS (
+      SELECT DISTINCT ON (part_question_id)
+        part_question_id,
+        answer
+      FROM user_question_answers
+      WHERE answerer_id = $1
+      ORDER BY part_question_id, updated_at DESC, id DESC
+    )
+    SELECT AVG(la.answer)::numeric(10, 2) as part_average, pq.form_part_id
+    FROM latest_answers la
+    JOIN part_questions pq ON la.part_question_id = pq.id
     JOIN form_parts fp ON pq.form_part_id = fp.id
     JOIN forms f ON fp.form_id = f.id
-    WHERE uqa.answerer_id = $1 AND f.public_id = $2
+    WHERE f.public_id = $2
     GROUP BY pq.form_part_id
     `,
       [answerer_id, public_id]

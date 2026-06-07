@@ -23,7 +23,7 @@ export const POST = withAuth(
     try {
       const result = await DB.transaction(async (client) => {
         const exerciseRes = await client.query(
-          `INSERT INTO exercises (created_at, updated_at, category, created_by) VALUES (NOW(), NOW(), $1, $2) RETURNING id`,
+          `INSERT INTO exercises (created_at, updated_at, category, created_by, updated_by) VALUES (NOW(), NOW(), $1, $2, $2) RETURNING id`,
           ["jumbled-sentence", created_by]
         );
         const exercise_id = exerciseRes.rows[0].id;

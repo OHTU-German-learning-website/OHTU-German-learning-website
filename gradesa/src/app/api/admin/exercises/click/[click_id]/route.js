@@ -52,9 +52,22 @@ export const GET = withAuth(
       const { click_id } = await params;
 
       const result = await DB.pool(
-        `SELECT id, title, category, target_words, all_words, source_html, created_at, updated_at
-         FROM click_exercises
-         WHERE id = $1`,
+        `SELECT
+           ce.id,
+           ce.title,
+           ce.category,
+           ce.target_words,
+           ce.all_words,
+           ce.source_html,
+           ce.created_at,
+           ce.updated_at,
+           e.updated_at AS last_modified_at,
+           COALESCE(NULLIF(u.username, ''), u.email) AS last_modified_by
+         FROM click_exercises ce
+         LEFT JOIN click_to_exercises cte ON cte.click_id = ce.id
+         LEFT JOIN exercises e ON e.id = cte.exercise_id
+         LEFT JOIN users u ON u.id = COALESCE(e.updated_by, e.created_by)
+         WHERE ce.id = $1`,
         [click_id]
       );
 
@@ -147,6 +160,15 @@ export const PUT = withAuth(
           sanitizedSourceHtml,
           click_id,
         ]
+      );
+
+      await DB.pool(
+        `UPDATE exercises e
+         SET updated_by = $1
+         FROM click_to_exercises cte
+         WHERE cte.exercise_id = e.id
+           AND cte.click_id = $2`,
+        [request.user?.id ?? null, click_id]
       );
 
       return NextResponse.json({ success: true });

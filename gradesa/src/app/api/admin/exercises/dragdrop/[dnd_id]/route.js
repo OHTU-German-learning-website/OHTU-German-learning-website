@@ -11,7 +11,7 @@ const parseWords = (content) => [
   ),
 ];
 
-const validateFields = ({ title, fields }) => {
+const validateFields = ({ title, description, fields }) => {
   if (!title || !Array.isArray(fields) || fields.length === 0) {
     return { error: "Titel und Felder sind erforderlich.", status: 400 };
   }
@@ -19,6 +19,13 @@ const validateFields = ({ title, fields }) => {
   if (title.trim().length < 3 || title.trim().length > 150) {
     return {
       error: "Der Titel muss zwischen 3 und 150 Zeichen lang sein.",
+      status: 422,
+    };
+  }
+
+  if (description && description.length > 1000) {
+    return {
+      error: "Die Beschreibung darf maximal 1000 Zeichen lang sein.",
       status: 422,
     };
   }
@@ -89,9 +96,16 @@ export const GET = withAuth(
       const { dnd_id } = await params;
 
       const exerciseRes = await DB.pool(
-        `SELECT id, title
-         FROM dnd_exercises
-         WHERE id = $1`,
+        `SELECT
+           de.id,
+           de.title,
+           de.description,
+           e.updated_at AS last_modified_at,
+           COALESCE(NULLIF(u.username, ''), u.email) AS last_modified_by
+         FROM dnd_exercises de
+         JOIN exercises e ON e.id = de.exercise_id
+         LEFT JOIN users u ON u.id = COALESCE(e.updated_by, e.created_by)
+         WHERE de.id = $1`,
         [dnd_id]
       );
 
@@ -126,6 +140,9 @@ export const GET = withAuth(
       return NextResponse.json({
         id: exerciseRes.rows[0].id,
         title: exerciseRes.rows[0].title,
+        description: exerciseRes.rows[0].description || "",
+        last_modified_at: exerciseRes.rows[0].last_modified_at,
+        last_modified_by: exerciseRes.rows[0].last_modified_by,
         fields,
       });
     } catch (error) {
@@ -149,9 +166,10 @@ export const PUT = withAuth(
       const body = await request.json();
       const payload = body.body ?? body;
       const title = payload.title?.trim();
+      const description = String(payload.description || "").trim();
       const fields = payload.fields;
 
-      const validationError = validateFields({ title, fields });
+      const validationError = validateFields({ title, description, fields });
       if (validationError) {
         return NextResponse.json(
           { error: validationError.error },
@@ -174,9 +192,21 @@ export const PUT = withAuth(
         await tx.query(
           `UPDATE dnd_exercises
            SET title = $1,
+               description = $2,
                updated_at = NOW()
-           WHERE id = $2`,
-          [title, dnd_id]
+           WHERE id = $3`,
+          [title, description || null, dnd_id]
+        );
+
+        await tx.query(
+          `UPDATE exercises
+           SET updated_by = $1
+           WHERE id = (
+             SELECT exercise_id
+             FROM dnd_exercises
+             WHERE id = $2
+           )`,
+          [request.user?.id ?? null, dnd_id]
         );
 
         await tx.query(

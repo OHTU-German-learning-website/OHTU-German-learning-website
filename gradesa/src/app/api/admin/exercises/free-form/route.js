@@ -25,10 +25,18 @@ export const POST = withAuth(
       );
     }
 
+    const userId = req.user?.id;
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const exerciseId = await DB.transaction(async (tx) => {
-      const exercise = await tx.query(`
-        INSERT INTO exercises (created_at, updated_at, category) VALUES (NOW(), NOW(), 'freeform') RETURNING id
-      `);
+      const exercise = await tx.query(
+        `INSERT INTO exercises (created_at, updated_at, created_by, updated_by, category)
+         VALUES (NOW(), NOW(), $1, $1, 'freeform')
+         RETURNING id`,
+        [userId]
+      );
 
       const exerciseId = exercise.rows[0].id;
       const freeFormExercise = await tx.query(

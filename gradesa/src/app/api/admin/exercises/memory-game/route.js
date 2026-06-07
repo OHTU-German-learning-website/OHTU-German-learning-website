@@ -38,8 +38,8 @@ export const POST = withAuth(
 
       const result = await DB.transaction(async (tx) => {
         const exerciseResult = await tx.query(
-          `INSERT INTO exercises (created_by, category)
-           VALUES ($1, 'memory_game')
+          `INSERT INTO exercises (created_by, updated_by, category)
+           VALUES ($1, $1, 'memory_game')
            RETURNING id`,
           [createdBy]
         );

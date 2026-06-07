@@ -28,13 +28,17 @@ export const POST = withAuth(
         );
       }
 
-      const created_by = 1;
+      const created_by = request.user?.id;
+
+      if (!created_by) {
+        return Response.json({ error: "Unauthorized" }, { status: 401 });
+      }
 
       // 1. Insert into parent 'exercises' table
       // FIX: Removed 'description' column. Only saving creator and category.
       const exResult = await DB.pool(
-        `INSERT INTO exercises (created_by, category)
-         VALUES ($1, 'multichoice')
+        `INSERT INTO exercises (created_by, updated_by, category)
+         VALUES ($1, $1, 'multichoice')
          RETURNING id`,
         [created_by]
       );

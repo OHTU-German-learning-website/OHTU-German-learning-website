@@ -7,10 +7,13 @@ import Editor from "@/components/ui/editor";
 import layout from "@/shared/styles/layout.module.css";
 import { useRouter, useSearchParams } from "next/navigation";
 import { withBasePath } from "@/shared/utils/basePath";
+import AdminLastModified from "@/components/ui/admin-last-modified";
 
 export default function EditorSection({
   initialContent,
   initialDescription,
+  initialUpdatedAt,
+  initialUpdatedBy,
   type,
   slug,
   title,
@@ -98,6 +101,10 @@ export default function EditorSection({
 
   return (
     <Column className={layout.viewContent}>
+      <AdminLastModified
+        updatedAt={initialUpdatedAt}
+        updatedBy={initialUpdatedBy}
+      />
       <Row gap="1rem">
         <Button
           onClick={() => {

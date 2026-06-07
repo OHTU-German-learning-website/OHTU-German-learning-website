@@ -12,11 +12,11 @@ export const POST = withAuth(
     const entryId = await DB.transaction(async (tx) => {
       const result = await tx.query(
         `
-        INSERT INTO glossary_entries (word, word_definition)
-        VALUES ($1, $2)
+        INSERT INTO glossary_entries (word, word_definition, updated_by)
+        VALUES ($1, $2, $3)
         RETURNING id
         `,
-        [word, word_definition]
+        [word, word_definition, req.user?.id ?? null]
       );
       return result.rows[0].id;
     });
@@ -36,9 +36,16 @@ export const GET = withAuth(
 
     if (id) {
       const result = await DB.pool(
-        `SELECT id, word, word_definition, created_at, updated_at
-         FROM glossary_entries
-         WHERE id = $1`,
+        `SELECT
+           ge.id,
+           ge.word,
+           ge.word_definition,
+           ge.created_at,
+           ge.updated_at,
+           COALESCE(NULLIF(u.username, ''), u.email) AS last_modified_by
+         FROM glossary_entries ge
+         LEFT JOIN users u ON u.id = ge.updated_by
+         WHERE ge.id = $1`,
         [id]
       );
 
@@ -53,8 +60,15 @@ export const GET = withAuth(
     }
 
     const entries = await DB.pool(
-      `SELECT id, word, word_definition, created_at, updated_at 
-       FROM glossary_entries 
+      `SELECT
+        ge.id,
+        ge.word,
+        ge.word_definition,
+        ge.created_at,
+        ge.updated_at,
+        COALESCE(NULLIF(u.username, ''), u.email) AS last_modified_by
+       FROM glossary_entries ge
+       LEFT JOIN users u ON u.id = ge.updated_by
        ORDER BY created_at DESC`
     );
 
@@ -86,10 +100,11 @@ export const PATCH = withAuth(
         `UPDATE glossary_entries
          SET word = $1,
              word_definition = $2,
-             updated_at = NOW()
-         WHERE id = $3
-         RETURNING id, word, word_definition, created_at, updated_at`,
-        [word, word_definition, id]
+             updated_at = NOW(),
+             updated_by = $3
+         WHERE id = $4
+         RETURNING id, word, word_definition, created_at, updated_at, updated_by`,
+        [word, word_definition, req.user?.id ?? null, id]
       );
 
       if (result.rowCount === 0) {

@@ -8,6 +8,7 @@ import Editor from "@/components/ui/editor";
 import { useRequest } from "@/shared/hooks/useRequest";
 import useQuery from "@/shared/hooks/useQuery";
 import { htmlToPlainText } from "@/shared/utils/normalizeEditorText";
+import AdminLastModified from "@/components/ui/admin-last-modified";
 import "./fillinthegap.css";
 
 function tokenizeText(text) {
@@ -381,6 +382,12 @@ export default function CreateFillInTheGapExercisePage() {
           ? "Lückentext-Übung bearbeiten"
           : "Lückentext-Übung erstellen"}
       </h1>
+      {isEditMode && (
+        <AdminLastModified
+          updatedAt={exerciseData?.last_modified_at}
+          updatedBy={exerciseData?.last_modified_by}
+        />
+      )}
 
       <Container className="fitg-block">
         <label htmlFor="fitg-title">Titel</label>

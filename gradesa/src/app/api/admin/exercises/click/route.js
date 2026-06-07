@@ -64,6 +64,17 @@ export const POST = withAuth(
      VALUES ($1, $2, $3, $4, $5) returning id`,
       [title, targetCategory, targetWords, allWords, sanitizedSourceHtml]
     );
+
+    await DB.pool(
+      `UPDATE exercises e
+       SET created_by = $1,
+           updated_by = $1
+       FROM click_to_exercises cte
+       WHERE cte.exercise_id = e.id
+         AND cte.click_id = $2`,
+      [request.user?.id ?? null, id.rows[0].id]
+    );
+
     return Response.json({ id: id.rows[0].id }, { status: 201 });
   },
   {

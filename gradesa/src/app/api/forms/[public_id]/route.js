@@ -15,8 +15,14 @@ export const GET = withAuth(
 WITH questions AS
          (SELECT pq.id, pq.title_en, pq.title_de, pq.form_part_id, COALESCE(uqa.answer, 0) as answer
           FROM part_questions pq
-                  LEFT JOIN user_question_answers uqa 
-                  ON pq.id = uqa.part_question_id AND uqa.answerer_id = $1
+                  LEFT JOIN LATERAL (
+                    SELECT answer
+                    FROM user_question_answers
+                    WHERE part_question_id = pq.id
+                      AND answerer_id = $1
+                    ORDER BY updated_at DESC, id DESC
+                    LIMIT 1
+                  ) uqa ON true
                   ),
      parts as
          (SELECT fp.id,

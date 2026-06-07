@@ -12,7 +12,7 @@ export const GET = withAuth(async (request, { params }) => {
     // Fetch exercise details
     const exercise = await DB.pool(
       `
-      SELECT dnd.id, dnd.title, dnd.created_at
+      SELECT dnd.id, dnd.title, dnd.description, dnd.created_at
       FROM dnd_exercises dnd
       WHERE dnd.id = $1
     `,
@@ -55,6 +55,7 @@ export const GET = withAuth(async (request, { params }) => {
     return Response.json({
       exercise: exercise.rows[0],
       title: exercise.rows[0].title,
+      description: exercise.rows[0].description || "",
       categories: categories.rows,
       words: words.rows,
     });

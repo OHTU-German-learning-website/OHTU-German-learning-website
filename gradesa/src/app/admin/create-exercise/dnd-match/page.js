@@ -7,6 +7,7 @@ import { Row } from "@/components/ui/layout/container";
 import useQuery from "@/shared/hooks/useQuery";
 import "./admin.css";
 import { withBasePath } from "@/shared/utils/basePath";
+import AdminLastModified from "@/components/ui/admin-last-modified";
 
 const EMPTY_PAIR = () => ({ leftItem: "", rightItem: "" });
 
@@ -133,6 +134,12 @@ export default function DndMatchAdminPage() {
           ? "Zuordnungs-Übung bearbeiten"
           : "Neue Zuordnungs-Übung erstellen"}
       </h1>
+      {isEditMode && (
+        <AdminLastModified
+          updatedAt={exerciseData?.last_modified_at}
+          updatedBy={exerciseData?.last_modified_by}
+        />
+      )}
 
       {error && (
         <p className="error-message" role="alert">
