@@ -115,6 +115,9 @@ function StudentSideBar() {
       <Link className={styles.sidebarLink} href="/glossary">
         Glossar
       </Link>
+      <Link className={styles.sidebarLink} href="/news">
+        Neuigkeiten
+      </Link>
       <Link className={styles.sidebarLink} href="/contact">
         Brauchen Sie Hilfe?
       </Link>
@@ -181,6 +184,16 @@ const extraLinks = [
 ];
 
 const adminSidebarLinks = [
+  {
+    title: "Neuigkeiten",
+    link: "/teacher/news",
+    id: "teacher-news-view",
+  },
+  {
+    title: "Neuigkeiten (Verwaltung)",
+    link: "/admin/news",
+    id: "news",
+  },
   {
     title: "Übungen erstellen",
     link: "/admin/create-exercise",
