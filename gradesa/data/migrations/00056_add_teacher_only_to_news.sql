@@ -1,0 +1,1 @@
+ALTER TABLE news_articles ADD COLUMN IF NOT EXISTS is_teacher_only BOOLEAN NOT NULL DEFAULT false;
