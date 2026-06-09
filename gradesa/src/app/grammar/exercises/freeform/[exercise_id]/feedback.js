@@ -1,129 +1,83 @@
 "use client";
 
 import { useState } from "react";
-import { useParams } from "next/navigation";
 import { Container, Row } from "@/components/ui/layout/container";
 import { Button } from "@/components/ui/button";
-import useQuery from "@/shared/hooks/useQuery";
 
-export default function FreeformFeedback() {
-  const { exercise_id } = useParams();
+export default function FreeformFeedback({
+  questions = [],
+  submissionsByQuestionId = {},
+}) {
   const [showAllFeedback, setShowAllFeedback] = useState(false);
-
-  const {
-    data: feedback,
-    isLoading,
-    error,
-    refetch,
-  } = useQuery(`/exercises/freeform/answers/${exercise_id}`, undefined, {
-    enabled: showAllFeedback,
-  });
 
   const toggleFeedback = () => {
     setShowAllFeedback(!showAllFeedback);
-    if (!showAllFeedback) {
-      refetch();
-    }
   };
 
   return (
-    <Container mt="xl">
-      <Container mb="md">
+    <Container mt="0">
+      <Container mb={showAllFeedback ? "md" : "0"}>
         <Button variant="outline" onClick={toggleFeedback}>
           {showAllFeedback
-            ? "Feedback ausblenden"
-            : "Richtige Antworten anzeigen"}
+            ? "Meine Antworten ausblenden"
+            : "Meine Antworten anzeigen"}
         </Button>
       </Container>
 
       {showAllFeedback && (
-        <>
-          {isLoading && (
-            <Container p="md" bg="var(--bg2)" br="md" mb="md">
-              Feedback wird geladen...
-            </Container>
+        <Container p="md" bg="var(--bg2)" br="md" mb="md">
+          <h2>Meine Antworten</h2>
+
+          {questions.length === 0 && (
+            <Container>Für diese Übung sind keine Fragen verfügbar.</Container>
           )}
 
-          {error && (
-            <Container p="md" bg="var(--tertiary1)" br="md" mb="md">
-              Fehler: {error}
-              <Button onClick={refetch} variant="secondary" size="sm" mt="sm">
-                Erneut versuchen
-              </Button>
-            </Container>
-          )}
+          {questions.map((question, index) => {
+            const submission = submissionsByQuestionId[question.id];
 
-          {!isLoading && !error && feedback && (
-            <Container p="md" bg="var(--bg2)" br="md" mb="md">
-              <h2>Feedback</h2>
-
-              {feedback.userAnswers && feedback.userAnswers.length > 0 ? (
-                <Container mt="md">
-                  <h3>Ihre Antwort</h3>
-                  {feedback.userAnswers.map((answer, index) => (
-                    <Container
-                      key={index}
-                      p="sm"
-                      mb="sm"
-                      bg={
-                        answer.is_correct ? "var(--green1)" : "var(--tertiary1)"
-                      }
-                      br="md"
-                    >
-                      <Row justify="space-between" w="100%">
-                        <strong>Antwort: {answer.answer}</strong>
-                        {answer.is_correct ? "Richtig" : "Falsch"}
-                      </Row>
-                      <div>
-                        <strong>Versucht:</strong>{" "}
-                        {new Date(answer.updated_at).toLocaleString()}
-                      </div>
-                    </Container>
-                  ))}
+            if (!submission) {
+              return (
+                <Container
+                  key={question.id}
+                  p="sm"
+                  mb="sm"
+                  bg="var(--bg1)"
+                  br="md"
+                >
+                  <div>
+                    <strong>Frage {index + 1}:</strong> {question.question}
+                  </div>
+                  <div>Noch nicht beantwortet.</div>
                 </Container>
-              ) : null}
+              );
+            }
 
-              {feedback.possibleAnswers &&
-              feedback.possibleAnswers.length > 0 ? (
-                <Container mt="md">
-                  <h3>Mögliche Antworten</h3>
-                  {feedback.possibleAnswers
-                    .filter((answer) => answer.is_correct)
-                    .map((answer, index) => (
-                      <Container
-                        key={answer.id}
-                        p="sm"
-                        mb="sm"
-                        bg={
-                          answer.is_correct
-                            ? "var(--green1)"
-                            : "var(--tertiary1)"
-                        }
-                        br="md"
-                      >
-                        <div>
-                          <strong>Antwort {index + 1}:</strong> {answer.answer}
-                        </div>
-                        <div>
-                          <strong>Feedback:</strong>{" "}
-                          {answer.feedback ||
-                            (answer.is_correct ? "Richtig" : "Falsch")}
-                        </div>
-                      </Container>
-                    ))}
-                </Container>
-              ) : null}
+            const fallbackFeedback = submission.is_correct
+              ? "Richtig"
+              : "Falsch";
 
-              {(!feedback.possibleAnswers ||
-                !feedback.possibleAnswers.length) &&
-                (!feedback.userAnswers || !feedback.userAnswers.length) && (
-                  <Container>
-                    Für diese Übung ist kein Feedback verfügbar.
-                  </Container>
-                )}
-            </Container>
-          )}
-        </>
+            return (
+              <Container
+                key={question.id}
+                p="sm"
+                mb="sm"
+                bg={
+                  submission.is_correct ? "var(--green1)" : "var(--tertiary1)"
+                }
+                br="md"
+              >
+                <Row justify="space-between" w="100%">
+                  <strong>Antwort: {submission.answer}</strong>
+                  {submission.is_correct ? "Richtig" : "Falsch"}
+                </Row>
+                <div>
+                  <strong>Feedback:</strong>{" "}
+                  {submission.feedback || fallbackFeedback}
+                </div>
+              </Container>
+            );
+          })}
+        </Container>
       )}
     </Container>
   );

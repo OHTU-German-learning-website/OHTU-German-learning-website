@@ -7,6 +7,7 @@ import useQuery from "@/shared/hooks/useQuery";
 import { Column, Container, Row } from "@/components/ui/layout/container";
 import { Button } from "@/components/ui/button";
 import { MemoryGame } from "@/components/ui/memory-game/MemoryGame";
+import AdminVisibleLastModified from "@/components/ui/admin-visible-last-modified";
 import { withBasePath } from "@/shared/utils/basePath";
 
 export default function MemoryGamePlayerPage() {
@@ -83,7 +84,10 @@ export default function MemoryGamePlayerPage() {
   return (
     <Container maxW="1000px" m="0 auto" p="md">
       <Container mb="lg">
-        <h1>{exercise.title}</h1>
+        <h2>{exercise.title}</h2>
+        <AdminVisibleLastModified
+          endpoint={`/admin/exercises/memory-game/${memory_game_id}`}
+        />
         <p>{exercise.description}</p>
       </Container>
 

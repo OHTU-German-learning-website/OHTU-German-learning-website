@@ -53,7 +53,7 @@ export default function DndMatchExercisesPage() {
     return (
       <Container maxW="800px" m="0 auto" p="md">
         <Container mb="lg">
-          <h1>Zuordnungs-Übungen</h1>
+          <h2>Zuordnungs-Übungen</h2>
         </Container>
         <Container color="var(--fg4)">
           Zurzeit sind keine Übungen verfügbar.
@@ -68,7 +68,7 @@ export default function DndMatchExercisesPage() {
   return (
     <Container maxW="800px" m="0 auto" p="md">
       <Container mb="lg">
-        <h1>Zuordnungs-Übungen</h1>
+        <h2>Zuordnungs-Übungen</h2>
       </Container>
 
       <Container

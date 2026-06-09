@@ -5,6 +5,7 @@ import DndMatchLayout from "../layout";
 import MatchArea from "@/components/ui/dnd-match/MatchArea";
 import { LinkButton } from "@/components/ui/linkbutton";
 import { Container } from "@/components/ui/layout/container";
+import AdminVisibleLastModified from "@/components/ui/admin-visible-last-modified";
 import useQuery from "@/shared/hooks/useQuery";
 
 export default function DndMatchExercisePage() {
@@ -23,7 +24,10 @@ export default function DndMatchExercisePage() {
   return (
     <DndMatchLayout>
       <Container p="md">
-        <h1>{exercise.title}</h1>
+        <h2>{exercise.title}</h2>
+        <AdminVisibleLastModified
+          endpoint={`/admin/exercises/dnd-match/${match_id}`}
+        />
         {exercise.description && (
           <p style={{ color: "var(--fg2)", marginBottom: "var(--u-lg)" }}>
             {exercise.description}

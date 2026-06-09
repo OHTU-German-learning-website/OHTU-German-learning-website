@@ -56,7 +56,7 @@ export default function MemoryGameExercisesPage() {
     return (
       <Container maxW="800px" m="0 auto" p="md">
         <Container mb="lg">
-          <h1>Memory Game</h1>
+          <h2>Memory Game</h2>
         </Container>
         <Container color="var(--fg4)">
           Zurzeit sind keine Memory Games verfügbar.
@@ -71,7 +71,7 @@ export default function MemoryGameExercisesPage() {
   return (
     <Container maxW="1000px" m="0 auto" p="md">
       <Container mb="lg">
-        <h1>Memory Game</h1>
+        <h2>Memory Game</h2>
       </Container>
 
       <Container

@@ -261,7 +261,7 @@ export const POST = withAuth(
           return NextResponse.json({
             is_correct: false,
             feedback:
-              "Your answer doesn't match any of the expected answers. Please try again.",
+              "Deine Antwort passt zu keiner erwarteten Antwort. Bitte versuche es erneut.",
             similarity: bestMatch.similarity,
           });
         }
@@ -289,18 +289,15 @@ export const POST = withAuth(
 
         // Generate feedback based on comparison
         let feedbackMessage =
-          bestMatch.feedback ||
-          (isAnswerCorrect
-            ? "Correct answer!"
-            : "Incorrect answer. Please try again.");
+          bestMatch.feedback || (isAnswerCorrect ? "Richtig" : "Falsch");
 
         if (comparisonDetails) {
           if (comparisonDetails.wordOrderErrors > 0 && isAnswerCorrect) {
             feedbackMessage =
-              "Your answer has the right words, but some are in the wrong order.";
+              "Deine Antwort hat die richtigen Wörter, aber teilweise in falscher Reihenfolge.";
           } else if (comparisonDetails.hasErrors && isAnswerCorrect) {
             feedbackMessage =
-              "Your answer is correct, but there are some minor errors.";
+              "Deine Antwort ist richtig, enthält aber kleine Fehler.";
           }
         }
 
@@ -334,7 +331,7 @@ async function recordUserAnswer(
       `INSERT INTO free_form_user_answers 
        (answer, free_form_exercise_id, free_form_question_id, is_correct, user_id) 
        VALUES ($1, $2, $3, $4, $5)
-       ON CONFLICT (user_id, free_form_exercise_id) 
+       ON CONFLICT (user_id, free_form_exercise_id, free_form_question_id) 
        DO UPDATE SET 
          answer = $1, 
          is_correct = $4, 

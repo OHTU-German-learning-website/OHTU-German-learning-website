@@ -546,8 +546,8 @@ CREATE TABLE public.free_form_user_answers (
 );
 
 ALTER TABLE public.free_form_user_answers
-ADD CONSTRAINT free_form_user_answers_free_form_exercise_id_user_id_key
-UNIQUE (free_form_exercise_id, user_id);
+ADD CONSTRAINT free_form_user_answers_user_exercise_question_key
+UNIQUE (user_id, free_form_exercise_id, free_form_question_id);
 
 ALTER TABLE public.free_form_user_answers
 ADD CONSTRAINT free_form_user_answers_free_form_exercise_id_fkey

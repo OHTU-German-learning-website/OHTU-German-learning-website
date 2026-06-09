@@ -181,6 +181,56 @@ describe("freeform answers", () => {
       String(questionId)
     );
   });
+
+  it("should store answers separately per question within same exercise", async () => {
+    const user = await TestFactory.user();
+    const { mockPost } = useTestRequest(user);
+    const { exerciseId, questionId } = await setupExercise();
+
+    const secondQuestion = await DB.pool(
+      `INSERT INTO free_form_questions (free_form_exercise_id, question, question_order)
+       VALUES ($1, $2, $3) RETURNING id`,
+      [exerciseId, "Second test question", 2]
+    );
+    const secondQuestionId = secondQuestion.rows[0].id;
+
+    await TestFactory.freeFormAnswer({
+      free_form_exercise_id: exerciseId,
+      free_form_question_id: secondQuestionId,
+      answer: "Second question correct answer",
+      is_correct: true,
+      feedback: "Good second answer",
+    });
+
+    await POST(
+      mockPost("/api/exercises/freeform/answers", {
+        freeFormExerciseId: exerciseId,
+        freeFormQuestionId: questionId,
+        answer: "This is the correct answer",
+      })
+    );
+
+    await POST(
+      mockPost("/api/exercises/freeform/answers", {
+        freeFormExerciseId: exerciseId,
+        freeFormQuestionId: secondQuestionId,
+        answer: "Second question correct answer",
+      })
+    );
+
+    const result = await DB.pool(
+      `SELECT free_form_question_id, answer
+       FROM free_form_user_answers
+       WHERE user_id = $1 AND free_form_exercise_id = $2
+       ORDER BY free_form_question_id ASC`,
+      [user.id, exerciseId]
+    );
+
+    expect(result.rows.length).toBe(2);
+    expect(result.rows.map((row) => String(row.free_form_question_id))).toEqual(
+      [String(questionId), String(secondQuestionId)].sort()
+    );
+  });
 });
 
 describe("text processing utility functions", () => {

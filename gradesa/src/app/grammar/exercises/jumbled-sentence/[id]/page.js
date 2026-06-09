@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Column, Row } from "@/components/ui/layout/container";
+import AdminVisibleLastModified from "@/components/ui/admin-visible-last-modified";
 import { withBasePath } from "@/shared/utils/basePath";
 
 function shuffle(array) {
@@ -286,6 +287,9 @@ export default function JumbledSentenceExercisePage() {
   return (
     <Column gap="lg">
       <h2>{exercise.title}</h2>
+      <AdminVisibleLastModified
+        endpoint={`/admin/exercises/jumbled-sentence/${id}`}
+      />
 
       {exercise.sentences.map((_, sentenceIdx) => (
         <Column
