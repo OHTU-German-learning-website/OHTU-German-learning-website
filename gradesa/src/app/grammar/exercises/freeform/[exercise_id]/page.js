@@ -9,6 +9,7 @@ import useQuery from "@/shared/hooks/useQuery";
 import { useRequest } from "@/shared/hooks/useRequest";
 import FreeformFeedback from "./feedback";
 import { LinkButton } from "@/components/ui/linkbutton";
+import AdminVisibleLastModified from "@/components/ui/admin-visible-last-modified";
 
 const styles = {
   errorWord: {
@@ -131,7 +132,7 @@ const AnswerComparison = ({ comparisonDetails }) => {
 export default function FreeFormExercisePage() {
   const { exercise_id } = useParams();
   const [answer, setAnswer] = useState("");
-  const [feedback, setFeedback] = useState(null);
+  const [submissionsByQuestionId, setSubmissionsByQuestionId] = useState({});
   const [error, setError] = useState(null);
   const makeRequest = useRequest();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -151,6 +152,11 @@ export default function FreeFormExercisePage() {
     currentExerciseIndex !== -1 &&
     allExercises?.[currentExerciseIndex + 1];
 
+  const currentQuestion = exercise?.questions?.[currentQuestionIndex] || null;
+  const currentSubmission = currentQuestion
+    ? submissionsByQuestionId[currentQuestion.id]
+    : null;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -162,7 +168,16 @@ export default function FreeFormExercisePage() {
       });
       const data = response.data;
       if (data) {
-        setFeedback(data);
+        setSubmissionsByQuestionId((prev) => ({
+          ...prev,
+          [exercise.questions[currentQuestionIndex].id]: {
+            answer,
+            is_correct: Boolean(data.is_correct),
+            feedback: data.feedback || "",
+            comparisonDetails: data.comparisonDetails || null,
+            submittedAt: new Date().toISOString(),
+          },
+        }));
       }
     } catch (error) {
       setError(error.message);
@@ -195,7 +210,10 @@ export default function FreeFormExercisePage() {
   return (
     <Container maxW="800px" m="0 auto" p="md">
       <Container mb="lg">
-        <h1>{exercise.title}</h1>
+        <h2>{exercise.title}</h2>
+        <AdminVisibleLastModified
+          endpoint={`/admin/exercises/free-form/${exercise_id}`}
+        />
       </Container>
 
       <Container mb="xl" p="md" bg="var(--bg2)" br="md">
@@ -203,13 +221,13 @@ export default function FreeFormExercisePage() {
           Frage {currentQuestionIndex + 1} von {exercise.questions.length}
         </Container>
         <Container>
-          <h2 style={{ fontSize: "2rem", lineHeight: "1.3", margin: 0 }}>
+          <h2 style={{ fontSize: "1rem", lineHeight: "1.3", margin: 0 }}>
             {exercise.questions[currentQuestionIndex]?.question}
           </h2>
         </Container>
       </Container>
 
-      <form onSubmit={handleSubmit}>
+      <form id="freeform-answer-form" onSubmit={handleSubmit}>
         <Column gap="lg">
           <Container>
             <label>
@@ -225,17 +243,18 @@ export default function FreeFormExercisePage() {
               />
             </label>
           </Container>
-
-          <Row justify="center">
-            <Button type="submit" variant="secondary" width="fit">
-              Antwort abschicken
-            </Button>
-          </Row>
         </Column>
       </form>
 
       <Row justify="space-between" align="center" mt="lg" mb="md">
-        <FreeformFeedback />
+        <Button
+          type="submit"
+          form="freeform-answer-form"
+          variant="secondary"
+          width="fit"
+        >
+          Antwort abschicken
+        </Button>
         <Row justify="end" gap="md">
           {currentQuestionIndex > 0 && (
             <Button
@@ -244,7 +263,6 @@ export default function FreeFormExercisePage() {
               onClick={() => {
                 setCurrentQuestionIndex((prev) => prev - 1);
                 setAnswer("");
-                setFeedback(null);
               }}
             >
               Vorherige
@@ -257,7 +275,6 @@ export default function FreeFormExercisePage() {
               onClick={() => {
                 setCurrentQuestionIndex((prev) => prev + 1);
                 setAnswer("");
-                setFeedback(null);
               }}
             >
               Nächste
@@ -266,33 +283,43 @@ export default function FreeFormExercisePage() {
         </Row>
       </Row>
 
-      {feedback && (
+      <FreeformFeedback
+        questions={exercise.questions || []}
+        submissionsByQuestionId={submissionsByQuestionId}
+      />
+
+      {currentSubmission && (
         <Row
           p="md"
           br="md"
           mb="md"
           mt="lg"
           justify="space-between"
-          bg={feedback.is_correct ? "var(--green1)" : "var(--tertiary1)"}
+          bg={
+            currentSubmission.is_correct ? "var(--green1)" : "var(--tertiary1)"
+          }
         >
           <Column>
             <span>Feedback des Lehrers:</span>
-            {feedback.feedback}
+            {currentSubmission.feedback ||
+              (currentSubmission.is_correct ? "Richtig" : "Falsch")}
           </Column>
           <Container mb="sm" fontWeight="600">
-            {feedback.is_correct ? "Richtig!" : "Falsch"}
+            {currentSubmission.is_correct ? "Richtig!" : "Falsch"}
           </Container>
         </Row>
       )}
 
-      {feedback && feedback.comparisonDetails && (
-        <AnswerComparison comparisonDetails={feedback.comparisonDetails} />
+      {currentSubmission && currentSubmission.comparisonDetails && (
+        <AnswerComparison
+          comparisonDetails={currentSubmission.comparisonDetails}
+        />
       )}
 
       <Row gap="md" mt="xl" justify="space-between">
         <LinkButton href="/grammar/exercises">Zurück zu den Übungen</LinkButton>
 
-        {feedback?.is_correct && nextExercise && (
+        {currentSubmission?.is_correct && nextExercise && (
           <LinkButton
             variant="secondary"
             href={`/grammar/exercises/freeform/${nextExercise.id}`}

@@ -6,6 +6,7 @@ import { getPageData, getPageList } from "@/backend/html-services";
 import { transformHtmlToGlossaryTags } from "@/backend/html-transform";
 import AdminButtons from "./admin-buttons";
 import { LinkButton } from "@/components/ui/linkbutton";
+import AdminVisibleLastModified from "@/components/ui/admin-visible-last-modified";
 
 export const dynamic = "force-dynamic";
 
@@ -32,6 +33,10 @@ export default async function Chapters({ params }) {
   return (
     <Column className={layout.viewContent}>
       <AdminButtons type={type} slug={slug} />
+      <AdminVisibleLastModified
+        updatedAt={pageData.updated_at}
+        updatedBy={pageData.updated_by_username}
+      />
       <h1 className="chapter-page-title">{pageData.title}</h1>
 
       <Container className="chapter-rendered-content">

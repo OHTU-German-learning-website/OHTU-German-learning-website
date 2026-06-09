@@ -1,0 +1,6 @@
+ALTER TABLE free_form_user_answers
+DROP CONSTRAINT IF EXISTS free_form_user_answers_free_form_exercise_id_user_id_key;
+
+ALTER TABLE free_form_user_answers
+ADD CONSTRAINT free_form_user_answers_user_exercise_question_key
+UNIQUE (user_id, free_form_exercise_id, free_form_question_id);

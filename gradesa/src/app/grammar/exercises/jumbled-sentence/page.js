@@ -56,7 +56,7 @@ export default function JumbledSentenceExercisesPage() {
     return (
       <Container maxW="800px" m="0 auto" p="md">
         <Container mb="lg">
-          <h1>Satzmix-Übungen</h1>
+          <h2>Satzmix-Übungen</h2>
         </Container>
         <Container color="var(--fg4)">
           Zurzeit sind keine Übungen verfügbar.
@@ -71,7 +71,7 @@ export default function JumbledSentenceExercisesPage() {
   return (
     <Container maxW="800px" m="0 auto" p="md">
       <Container mb="lg">
-        <h1>Satzmix-Übungen</h1>
+        <h2>Satzmix-Übungen</h2>
       </Container>
 
       <Container

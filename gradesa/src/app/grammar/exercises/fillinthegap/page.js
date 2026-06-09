@@ -59,7 +59,7 @@ export default function FillInTheGapExercisesPage() {
     return (
       <Container maxW="800px" m="0 auto" p="md">
         <Container mb="lg">
-          <h1>Lückentext-Übungen</h1>
+          <h2>Lückentext-Übungen</h2>
         </Container>
         <Container color="var(--fg4)">
           Zurzeit sind keine Übungen verfügbar.
@@ -74,7 +74,7 @@ export default function FillInTheGapExercisesPage() {
   return (
     <Container maxW="800px" m="0 auto" p="md">
       <Container mb="lg">
-        <h1>Lückentext-Übungen</h1>
+        <h2>Lückentext-Übungen</h2>
       </Container>
 
       <Container

@@ -8,6 +8,7 @@ import { Container, Column, Row } from "@/components/ui/layout/container";
 import parse from "html-react-parser";
 import { useRequest } from "@/shared/hooks/useRequest";
 import useQuery from "@/shared/hooks/useQuery";
+import AdminVisibleLastModified from "@/components/ui/admin-visible-last-modified";
 import "../fillinthegap.css";
 
 function tokenizeText(text) {
@@ -204,7 +205,10 @@ export default function FillInTheGapExercisePage() {
   return (
     <Container maxW="900px" m="0 auto" p="md">
       <Column gap="md">
-        <h1>{exercise.title}</h1>
+        <h2>{exercise.title}</h2>
+        <AdminVisibleLastModified
+          endpoint={`/admin/exercises/fillinthegap/${exercise_id}`}
+        />
 
         {!!exercise.source_html && (
           <Container

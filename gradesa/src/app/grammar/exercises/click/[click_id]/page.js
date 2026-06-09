@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import WordSelectionExercise from "@/components/ui/click/click.js";
 import { Button } from "@/components/ui/button";
+import AdminVisibleLastModified from "@/components/ui/admin-visible-last-modified";
 import useQuery from "@/shared/hooks/useQuery";
 import { useRequest } from "@/shared/hooks/useRequest";
 
@@ -55,6 +56,9 @@ export default function StudentExercisePage() {
 
   return (
     <div>
+      <AdminVisibleLastModified
+        endpoint={`/admin/exercises/click/${click_id}`}
+      />
       <WordSelectionExercise
         title={exercise.title}
         targetCategory={exercise.category}

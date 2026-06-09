@@ -9,6 +9,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import "../../../../globals.css";
 import useQuery from "@/shared/hooks/useQuery";
 import { LinkButton } from "@/components/ui/linkbutton";
+import AdminVisibleLastModified from "@/components/ui/admin-visible-last-modified";
 
 export default function Dragdrop({}) {
   const params = useParams();
@@ -38,7 +39,10 @@ export default function Dragdrop({}) {
       <DragdropLayout>
         <div className={styles.page}>
           <div className="exercise-container">
-            <h1>{exercise.title}</h1>
+            <h2>{exercise.title}</h2>
+            <AdminVisibleLastModified
+              endpoint={`/admin/exercises/dragdrop/${dnd_id}`}
+            />
             {!!exercise.description && <p>{exercise.description}</p>}
             <DndProvider backend={HTML5Backend}>
               <Area exerciseID={dnd_id} />

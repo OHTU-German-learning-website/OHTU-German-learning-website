@@ -6,6 +6,7 @@ import {
   getPageData,
 } from "@/backend/html-services";
 import AdminButtons from "@/app/pages/[type]/[slug]/admin-buttons";
+import AdminVisibleLastModified from "@/components/ui/admin-visible-last-modified";
 import { LinkButton } from "@/components/ui/linkbutton";
 import "../lessons.css";
 
@@ -120,6 +121,10 @@ export default async function GrammarPage({ params, searchParams }) {
     return (
       <Column>
         <AdminButtons type="grammar" slug={decodedSlug} />
+        <AdminVisibleLastModified
+          updatedAt={pageData.updated_at}
+          updatedBy={pageData.updated_by_username}
+        />
         <h1>{pageData.title}</h1>
         <RenderHTML data={pageData.content} />
 

@@ -228,16 +228,21 @@ CREATE TABLE public.free_form_user_answers (
   answer text NOT NULL,
   free_form_exercise_id bigint NOT NULL,
   is_correct boolean DEFAULT false,
-  user_id bigint NOT NULL
+  user_id bigint NOT NULL,
+  free_form_question_id bigint
 );
 
 ALTER TABLE public.free_form_user_answers
-ADD CONSTRAINT free_form_user_answers_free_form_exercise_id_user_id_key
-UNIQUE (free_form_exercise_id, user_id);
+ADD CONSTRAINT free_form_user_answers_user_exercise_question_key
+UNIQUE (user_id, free_form_exercise_id, free_form_question_id);
 
 ALTER TABLE public.free_form_user_answers
 ADD CONSTRAINT free_form_user_answers_free_form_exercise_id_fkey
 FOREIGN KEY (free_form_exercise_id) REFERENCES free_form_exercises(id) ON DELETE CASCADE;
+
+ALTER TABLE public.free_form_user_answers
+ADD CONSTRAINT free_form_user_answers_free_form_question_id_fkey
+FOREIGN KEY (free_form_question_id) REFERENCES free_form_questions(id) ON DELETE CASCADE;
 
 ALTER TABLE public.free_form_user_answers
 ADD CONSTRAINT free_form_user_answers_user_id_fkey

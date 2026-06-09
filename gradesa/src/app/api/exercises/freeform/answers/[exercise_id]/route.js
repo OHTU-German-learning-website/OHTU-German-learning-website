@@ -18,33 +18,23 @@ export const GET = withAuth(async (request, { params }) => {
       );
     }
 
-    const { rows: answerRows } = await DB.pool(
-      `SELECT 
-        id, 
-        answer, 
-        is_correct, 
-        feedback 
-       FROM free_form_answers 
-       WHERE free_form_exercise_id = $1
-       ORDER BY is_correct DESC, id ASC`,
-      [exercise_id]
-    );
-
     const userId = request.user.id;
     const { rows: userAnswerRows } = await DB.pool(
       `SELECT 
         answer, 
         is_correct, 
+        free_form_question_id,
+        ffq.question,
         created_at, 
         updated_at
        FROM free_form_user_answers 
+       LEFT JOIN free_form_questions ffq ON ffq.id = free_form_user_answers.free_form_question_id
        WHERE free_form_exercise_id = $1 AND user_id = $2
        ORDER BY updated_at DESC`,
       [exercise_id, userId]
     );
 
     return NextResponse.json({
-      possibleAnswers: answerRows,
       userAnswers: userAnswerRows,
     });
   } catch (error) {

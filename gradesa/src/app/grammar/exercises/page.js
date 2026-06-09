@@ -60,7 +60,7 @@ export default function ExercisePage({}) {
   return (
     <LessonsLayout>
       <Column>
-        <h1>Übungstypen</h1>
+        <h2>Übungstypen</h2>
 
         <Column gap="md">
           {exerciseTypes.map((type, index) => (
