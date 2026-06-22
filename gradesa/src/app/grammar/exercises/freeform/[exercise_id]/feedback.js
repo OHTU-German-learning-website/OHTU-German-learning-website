@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Container, Row } from "@/components/ui/layout/container";
+import { Container } from "@/components/ui/layout/container";
 import { Button } from "@/components/ui/button";
 
 export default function FreeformFeedback({
-  questions = [],
-  submissionsByQuestionId = {},
+  currentQuestion = null,
+  currentQuestionIndex = 0,
 }) {
   const [showAllFeedback, setShowAllFeedback] = useState(false);
 
@@ -19,64 +19,48 @@ export default function FreeformFeedback({
       <Container mb={showAllFeedback ? "md" : "0"}>
         <Button variant="outline" onClick={toggleFeedback}>
           {showAllFeedback
-            ? "Meine Antworten ausblenden"
-            : "Meine Antworten anzeigen"}
+            ? "Richtige Antworten ausblenden"
+            : "Alle richtigen Antworten anzeigen"}
         </Button>
       </Container>
 
       {showAllFeedback && (
         <Container p="md" bg="var(--bg2)" br="md" mb="md">
-          <h2>Meine Antworten</h2>
+          <h2>Richtige Antworten</h2>
 
-          {questions.length === 0 && (
+          {!currentQuestion && (
             <Container>Für diese Übung sind keine Fragen verfügbar.</Container>
           )}
 
-          {questions.map((question, index) => {
-            const submission = submissionsByQuestionId[question.id];
-
-            if (!submission) {
-              return (
-                <Container
-                  key={question.id}
-                  p="sm"
-                  mb="sm"
-                  bg="var(--bg1)"
-                  br="md"
-                >
+          {currentQuestion && (
+            <Container
+              key={currentQuestion.id}
+              p="sm"
+              mb="sm"
+              bg="var(--bg1)"
+              br="md"
+            >
+              <div>
+                <strong>Frage {currentQuestionIndex + 1}:</strong>{" "}
+                {currentQuestion.question}
+              </div>
+              <Container mt="sm">
+                {(currentQuestion.correct_answers || []).length > 0 ? (
+                  (currentQuestion.correct_answers || []).map(
+                    (answer, answerIndex) => (
+                      <div key={`${currentQuestion.id}-${answerIndex}`}>
+                        {answerIndex + 1}. {answer}
+                      </div>
+                    )
+                  )
+                ) : (
                   <div>
-                    <strong>Frage {index + 1}:</strong> {question.question}
+                    Für diese Frage sind keine richtigen Antworten hinterlegt.
                   </div>
-                  <div>Noch nicht beantwortet.</div>
-                </Container>
-              );
-            }
-
-            const fallbackFeedback = submission.is_correct
-              ? "Richtig"
-              : "Falsch";
-
-            return (
-              <Container
-                key={question.id}
-                p="sm"
-                mb="sm"
-                bg={
-                  submission.is_correct ? "var(--green1)" : "var(--tertiary1)"
-                }
-                br="md"
-              >
-                <Row justify="space-between" w="100%">
-                  <strong>Antwort: {submission.answer}</strong>
-                  {submission.is_correct ? "Richtig" : "Falsch"}
-                </Row>
-                <div>
-                  <strong>Feedback:</strong>{" "}
-                  {submission.feedback || fallbackFeedback}
-                </div>
+                )}
               </Container>
-            );
-          })}
+            </Container>
+          )}
         </Container>
       )}
     </Container>

@@ -7,7 +7,7 @@
     line-height: 1.7;
     padding: 12px 15px;
     white-space: pre-wrap;
-    background: var(--bg1);
+    background: color(var--bg1);
 }
 
 .word-punct {
@@ -25,7 +25,7 @@
 }
 
 .click-instruction {
-    background: var(--bg3);
+    background: transparent;
     color: var(--fg1);
     padding: 0.3em 1em;
     border-radius: var(--radius-sm);
@@ -53,6 +53,10 @@
 
 .click-rendered-content :where(p, li, strong, em, span, a, h1, h2, h3, h4, h5, h6):not([style*="color"]) {
     color: var(--fg1);
+}
+
+.click-rendered-content :where(p, li, strong, em, span, a, h1, h2, h3, h4, h5, h6, div):not(button) {
+    background: transparent !important;
 }
 
 .click-rendered-content p {

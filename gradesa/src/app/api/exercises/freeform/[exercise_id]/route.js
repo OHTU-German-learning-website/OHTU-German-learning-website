@@ -28,12 +28,21 @@ export const GET = withAuth(async (request, { params }) => {
     const { rows: questionRows } = await DB.pool(
       `
       SELECT
-        id,
-        question,
-        question_order
-      FROM free_form_questions
-      WHERE free_form_exercise_id = $1
-      ORDER BY question_order ASC
+        ffq.id,
+        ffq.question,
+        ffq.question_order,
+        COALESCE(
+          ARRAY_AGG(ffa.answer ORDER BY ffa.id)
+          FILTER (WHERE ffa.is_correct = TRUE),
+          '{}'
+        ) AS correct_answers
+      FROM free_form_questions ffq
+      LEFT JOIN free_form_answers ffa
+        ON ffa.free_form_exercise_id = ffq.free_form_exercise_id
+        AND ffa.free_form_question_id = ffq.id
+      WHERE ffq.free_form_exercise_id = $1
+      GROUP BY ffq.id, ffq.question, ffq.question_order
+      ORDER BY ffq.question_order ASC
     `,
       [exercise_id]
     );

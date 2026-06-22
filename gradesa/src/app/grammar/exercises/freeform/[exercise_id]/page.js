@@ -284,8 +284,8 @@ export default function FreeFormExercisePage() {
       </Row>
 
       <FreeformFeedback
-        questions={exercise.questions || []}
-        submissionsByQuestionId={submissionsByQuestionId}
+        currentQuestion={currentQuestion}
+        currentQuestionIndex={currentQuestionIndex}
       />
 
       {currentSubmission && (

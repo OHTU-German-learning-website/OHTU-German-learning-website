@@ -6,6 +6,28 @@ import parse from "html-react-parser";
 import "./click.css";
 
 const WORD_REGEX = /\p{L}+(?:['’-]\p{L}+)*/gu;
+const GROUP_DELIMITER = "::";
+
+const parseTargetEntry = (entry) => {
+  if (typeof entry !== "string" || !entry) {
+    return null;
+  }
+
+  const delimiterIndex = entry.indexOf(GROUP_DELIMITER);
+  if (delimiterIndex > 0) {
+    return {
+      raw: entry,
+      groupId: entry.slice(0, delimiterIndex),
+      slotKey: entry.slice(delimiterIndex + GROUP_DELIMITER.length),
+    };
+  }
+
+  return {
+    raw: entry,
+    groupId: null,
+    slotKey: entry,
+  };
+};
 
 // Split one raw token into parts. All word parts become clickable, punctuation/text does not.
 const splitTokenToParts = (token) => {
@@ -104,6 +126,169 @@ function buildHtmlWithWordSlots(sourceHtml) {
   return { html: root.innerHTML, slots };
 }
 
+function buildHtmlWithWordSlotsAndGroups(sourceHtml, groupedTargetsById) {
+  const { html, slots } = buildHtmlWithWordSlots(sourceHtml);
+  if (!html || typeof window === "undefined") {
+    return { html, slots };
+  }
+
+  if (!groupedTargetsById || groupedTargetsById.size === 0) {
+    return { html, slots };
+  }
+
+  const doc = new window.DOMParser().parseFromString(
+    `<div id="click-root">${html}</div>`,
+    "text/html"
+  );
+  const root = doc.getElementById("click-root");
+
+  if (!root) {
+    return { html, slots };
+  }
+
+  const slotIndexMap = new Map(
+    slots.map((slot, index) => [slot.slotKey, index])
+  );
+  const wordNodeBySlotKey = new Map();
+  root.querySelectorAll("click-word").forEach((node) => {
+    const slotKey = node.getAttribute("data-slot-key");
+    if (slotKey) {
+      wordNodeBySlotKey.set(slotKey, node);
+    }
+  });
+
+  const groups = [...groupedTargetsById.entries()]
+    .map(([groupId, keys]) => ({
+      groupId,
+      slotKeys: [...keys].sort(
+        (a, b) =>
+          (slotIndexMap.get(a) ?? Number.MAX_SAFE_INTEGER) -
+          (slotIndexMap.get(b) ?? Number.MAX_SAFE_INTEGER)
+      ),
+    }))
+    .sort(
+      (a, b) =>
+        (slotIndexMap.get(a.slotKeys[0]) ?? Number.MAX_SAFE_INTEGER) -
+        (slotIndexMap.get(b.slotKeys[0]) ?? Number.MAX_SAFE_INTEGER)
+    )
+    .reverse();
+
+  groups.forEach(({ groupId, slotKeys }) => {
+    if (slotKeys.length < 2) {
+      return;
+    }
+
+    const firstNode = wordNodeBySlotKey.get(slotKeys[0]);
+    const lastNode = wordNodeBySlotKey.get(slotKeys[slotKeys.length - 1]);
+    if (!firstNode || !lastNode) {
+      return;
+    }
+
+    if (!firstNode.parentNode || firstNode.parentNode !== lastNode.parentNode) {
+      return;
+    }
+
+    const parentNode = firstNode.parentNode;
+    const allWordNodesInRange = [];
+    let cursor = firstNode;
+    while (cursor) {
+      if (cursor.nodeType === 1 && cursor.nodeName === "CLICK-WORD") {
+        allWordNodesInRange.push(cursor);
+      }
+      if (cursor === lastNode) {
+        break;
+      }
+      cursor = cursor.nextSibling;
+    }
+
+    const rangeSlotKeys = allWordNodesInRange
+      .map((node) => node.getAttribute("data-slot-key"))
+      .filter(Boolean);
+    if (rangeSlotKeys.length !== slotKeys.length) {
+      return;
+    }
+    if (!slotKeys.every((key, idx) => key === rangeSlotKeys[idx])) {
+      return;
+    }
+
+    const groupText = slotKeys
+      .map(
+        (slotKey) => slots.find((slot) => slot.slotKey === slotKey)?.word || ""
+      )
+      .join(" ")
+      .trim();
+
+    const groupNode = doc.createElement("click-group");
+    groupNode.setAttribute("data-group-id", groupId);
+    groupNode.setAttribute("data-slot-keys", slotKeys.join(" "));
+    groupNode.setAttribute("data-group-text", groupText);
+    groupNode.textContent = groupText;
+
+    parentNode.insertBefore(groupNode, firstNode);
+
+    let removeCursor = firstNode;
+    while (removeCursor) {
+      const next = removeCursor.nextSibling;
+      removeCursor.remove();
+      if (removeCursor === lastNode) {
+        break;
+      }
+      removeCursor = next;
+    }
+  });
+
+  return { html: root.innerHTML, slots };
+}
+
+const orderSlotKeys = (slotKeys, wordSlots) => {
+  const slotIndexMap = new Map(
+    wordSlots.map((slot, index) => [slot.slotKey, index])
+  );
+  return [...slotKeys].sort(
+    (left, right) =>
+      (slotIndexMap.get(left) ?? Number.MAX_SAFE_INTEGER) -
+      (slotIndexMap.get(right) ?? Number.MAX_SAFE_INTEGER)
+  );
+};
+
+const unique = (values) => [...new Set(values.filter(Boolean))];
+
+const toGroupedTargets = (slotKeys, wordSlots) => {
+  const ordered = orderSlotKeys(unique(slotKeys), wordSlots);
+  const slotIndexMap = new Map(
+    wordSlots.map((slot, index) => [slot.slotKey, index])
+  );
+  const chunks = [];
+
+  ordered.forEach((slotKey) => {
+    const index = slotIndexMap.get(slotKey);
+    if (chunks.length === 0) {
+      chunks.push([slotKey]);
+      return;
+    }
+
+    const previousChunk = chunks[chunks.length - 1];
+    const previousIndex = slotIndexMap.get(
+      previousChunk[previousChunk.length - 1]
+    );
+
+    if (index != null && previousIndex != null && index === previousIndex + 1) {
+      previousChunk.push(slotKey);
+    } else {
+      chunks.push([slotKey]);
+    }
+  });
+
+  return chunks.flatMap((chunk, chunkIndex) => {
+    if (chunk.length <= 1) {
+      return chunk;
+    }
+
+    const groupId = `group-${Date.now()}-${chunkIndex}`;
+    return chunk.map((slotKey) => `${groupId}${GROUP_DELIMITER}${slotKey}`);
+  });
+};
+
 const WordSelectionExercise = ({
   title,
   targetCategory,
@@ -112,6 +297,9 @@ const WordSelectionExercise = ({
   sourceHtml,
   previousAnswers,
   onSelectionChange,
+  previewSelectionKeys,
+  onPreviewSelectionChange,
+  previewGroupAdjacentSelection = true,
   onSubmit,
   isPreviewMode = false,
   isSubmitted,
@@ -127,9 +315,28 @@ const WordSelectionExercise = ({
     return String(sourceHtml || "");
   }, [sourceHtml]);
 
+  const rawTargetEntries = useMemo(
+    () =>
+      Array.isArray(targetWords)
+        ? targetWords.map(parseTargetEntry).filter(Boolean)
+        : [],
+    [targetWords]
+  );
+
+  const groupedTargetsById = useMemo(() => {
+    const grouped = new Map();
+    rawTargetEntries.forEach((entry) => {
+      if (!entry.groupId) return;
+      if (!grouped.has(entry.groupId)) grouped.set(entry.groupId, []);
+      grouped.get(entry.groupId).push(entry.slotKey);
+    });
+    return grouped;
+  }, [rawTargetEntries]);
+
   const htmlSlotsData = useMemo(
-    () => buildHtmlWithWordSlots(normalizedSourceHtml),
-    [normalizedSourceHtml]
+    () =>
+      buildHtmlWithWordSlotsAndGroups(normalizedSourceHtml, groupedTargetsById),
+    [normalizedSourceHtml, groupedTargetsById]
   );
 
   const fallbackWordSlots = useMemo(() => {
@@ -165,35 +372,62 @@ const WordSelectionExercise = ({
   );
 
   const targetSlotKeys = useMemo(() => {
-    const rawTargets = Array.isArray(targetWords) ? targetWords : [];
     const slotKeySet = new Set(wordSlots.map(({ slotKey }) => slotKey));
+    const directSlotKeys = [];
+    const neededLegacyWords = {};
 
-    // New format: target words are stored as unique slot keys.
-    const allAreSlotKeys =
-      rawTargets.length > 0 &&
-      rawTargets.every((target) => slotKeySet.has(target));
-    if (allAreSlotKeys) {
-      return rawTargets;
-    }
+    rawTargetEntries.forEach((entry) => {
+      if (slotKeySet.has(entry.slotKey)) {
+        directSlotKeys.push(entry.slotKey);
+        return;
+      }
 
-    // Legacy format: map target words to the first unmatched occurrences.
-    const needed = {};
-    rawTargets.forEach((word) => {
-      needed[word] = (needed[word] || 0) + 1;
+      neededLegacyWords[entry.slotKey] =
+        (neededLegacyWords[entry.slotKey] || 0) + 1;
     });
 
-    const used = {};
-    const mappedKeys = [];
+    const consumedByWord = {};
+    directSlotKeys.forEach((slotKey) => {
+      const word = slotToWord[slotKey];
+      if (!word) return;
+      consumedByWord[word] = (consumedByWord[word] || 0) + 1;
+    });
 
+    const mappedLegacyKeys = [];
     wordSlots.forEach(({ slotKey, word }) => {
-      const remaining = (needed[word] || 0) - (used[word] || 0);
-      if (remaining > 0) {
-        mappedKeys.push(slotKey);
-        used[word] = (used[word] || 0) + 1;
+      const required = neededLegacyWords[word] || 0;
+      const alreadyConsumed = consumedByWord[word] || 0;
+
+      if (required > alreadyConsumed) {
+        mappedLegacyKeys.push(slotKey);
+        consumedByWord[word] = alreadyConsumed + 1;
       }
     });
 
-    return mappedKeys;
+    return unique([...directSlotKeys, ...mappedLegacyKeys]);
+  }, [rawTargetEntries, wordSlots, slotToWord]);
+
+  const groupedSlotKeyToGroupId = useMemo(() => {
+    const map = new Map();
+    groupedTargetsById.forEach((slotKeys, groupId) => {
+      slotKeys.forEach((slotKey) => map.set(slotKey, groupId));
+    });
+    return map;
+  }, [groupedTargetsById]);
+
+  const resolveTargetGroup = (slotKey) => {
+    const groupId = groupedSlotKeyToGroupId.get(slotKey);
+    if (!groupId) return [slotKey];
+    return groupedTargetsById.get(groupId) || [slotKey];
+  };
+
+  const usesSlotKeyTargets = useMemo(() => {
+    const rawTargets = Array.isArray(targetWords) ? targetWords : [];
+    const slotKeySet = new Set(wordSlots.map(({ slotKey }) => slotKey));
+    const allAreSlotKeys =
+      rawTargets.length > 0 &&
+      rawTargets.every((target) => slotKeySet.has(target));
+    return allAreSlotKeys;
   }, [targetWords, wordSlots]);
 
   const targetSlotKeySet = useMemo(
@@ -201,37 +435,134 @@ const WordSelectionExercise = ({
     [targetSlotKeys]
   );
 
-  const usesSlotKeyTargets = useMemo(() => {
-    const rawTargets = Array.isArray(targetWords) ? targetWords : [];
-    return (
-      rawTargets.length > 0 &&
-      rawTargets.every((target) => targetSlotKeySet.has(target))
-    );
-  }, [targetWords, targetSlotKeySet]);
+  const isControlledPreview =
+    isPreviewMode &&
+    Array.isArray(previewSelectionKeys) &&
+    typeof onPreviewSelectionChange === "function";
 
-  // Initialize selected words in admin preview mode with the target words
-  // so they display as pre-selected when editing an exercise
+  const previewSelection = isControlledPreview
+    ? previewSelectionKeys
+    : selectedSlotKeys;
+
   useEffect(() => {
-    if (isPreviewMode && targetSlotKeys.length > 0) {
-      setSelectedSlotKeys(targetSlotKeys);
+    if (!isControlledPreview && isPreviewMode && targetSlotKeys.length > 0) {
+      setSelectedSlotKeys(orderSlotKeys(targetSlotKeys, wordSlots));
     }
-  }, [targetSlotKeys, isPreviewMode]);
+  }, [targetSlotKeys, isPreviewMode, wordSlots, isControlledPreview]);
+
+  const displayedSelectedSet = useMemo(() => {
+    if (!isPreviewMode) {
+      return new Set(selectedSlotKeys);
+    }
+
+    return new Set([...targetSlotKeys, ...previewSelection]);
+  }, [isPreviewMode, selectedSlotKeys, targetSlotKeys, previewSelection]);
 
   const handleWordClick = (slotKey) => {
     if (isSubmitted && !isPreviewMode) return;
 
-    let updatedKeys;
-    if (selectedSlotKeys.includes(slotKey)) {
-      updatedKeys = selectedSlotKeys.filter((key) => key !== slotKey);
-    } else {
-      updatedKeys = [...selectedSlotKeys, slotKey];
+    if (isControlledPreview) {
+      const current = Array.isArray(previewSelectionKeys)
+        ? previewSelectionKeys
+        : [];
+      const next = current.includes(slotKey)
+        ? current.filter((key) => key !== slotKey)
+        : [...current, slotKey];
+      onPreviewSelectionChange(orderSlotKeys(next, wordSlots));
+      return;
     }
 
-    setSelectedSlotKeys(updatedKeys);
+    const scopeSlots = isPreviewMode ? [slotKey] : resolveTargetGroup(slotKey);
+
+    let updatedKeys;
+    const allSelected = scopeSlots.every((key) =>
+      selectedSlotKeys.includes(key)
+    );
+
+    if (allSelected) {
+      updatedKeys = selectedSlotKeys.filter((key) => !scopeSlots.includes(key));
+    } else {
+      updatedKeys = [
+        ...selectedSlotKeys,
+        ...scopeSlots.filter((key) => !selectedSlotKeys.includes(key)),
+      ];
+    }
+
+    const orderedKeys = orderSlotKeys(updatedKeys, wordSlots);
+    setSelectedSlotKeys(orderedKeys);
 
     if (isPreviewMode && onSelectionChange) {
-      // In preview/admin mode we persist exact selected occurrences.
-      onSelectionChange(updatedKeys);
+      let previewPayload;
+      if (previewGroupAdjacentSelection) {
+        previewPayload = toGroupedTargets(orderedKeys, wordSlots);
+      } else if (rawTargetEntries.some((entry) => entry.groupId)) {
+        const selectedSet = new Set(orderedKeys);
+        const preserved = rawTargetEntries.filter((entry) =>
+          selectedSet.has(entry.slotKey)
+        );
+        const consumed = new Set(preserved.map((entry) => entry.slotKey));
+        const additions = orderedKeys.filter(
+          (slotKey) => !consumed.has(slotKey)
+        );
+        previewPayload = [...preserved.map((entry) => entry.raw), ...additions];
+      } else {
+        previewPayload = orderedKeys;
+      }
+      onSelectionChange(previewPayload);
+    }
+  };
+
+  const handleGroupClick = (slotKeys) => {
+    if (isSubmitted && !isPreviewMode) return;
+
+    if (isControlledPreview) {
+      const current = Array.isArray(previewSelectionKeys)
+        ? previewSelectionKeys
+        : [];
+      const allSelected = slotKeys.every((slotKey) =>
+        current.includes(slotKey)
+      );
+      const next = allSelected
+        ? current.filter((slotKey) => !slotKeys.includes(slotKey))
+        : [
+            ...current,
+            ...slotKeys.filter((slotKey) => !current.includes(slotKey)),
+          ];
+      onPreviewSelectionChange(orderSlotKeys(next, wordSlots));
+      return;
+    }
+
+    const allSelected = slotKeys.every((slotKey) =>
+      selectedSlotKeys.includes(slotKey)
+    );
+    const next = allSelected
+      ? selectedSlotKeys.filter((slotKey) => !slotKeys.includes(slotKey))
+      : [
+          ...selectedSlotKeys,
+          ...slotKeys.filter((slotKey) => !selectedSlotKeys.includes(slotKey)),
+        ];
+
+    const orderedKeys = orderSlotKeys(next, wordSlots);
+    setSelectedSlotKeys(orderedKeys);
+
+    if (isPreviewMode && onSelectionChange) {
+      let previewPayload;
+      if (previewGroupAdjacentSelection) {
+        previewPayload = toGroupedTargets(orderedKeys, wordSlots);
+      } else if (rawTargetEntries.some((entry) => entry.groupId)) {
+        const selectedSet = new Set(orderedKeys);
+        const preserved = rawTargetEntries.filter((entry) =>
+          selectedSet.has(entry.slotKey)
+        );
+        const consumed = new Set(preserved.map((entry) => entry.slotKey));
+        const additions = orderedKeys.filter(
+          (slotKey) => !consumed.has(slotKey)
+        );
+        previewPayload = [...preserved.map((entry) => entry.raw), ...additions];
+      } else {
+        previewPayload = orderedKeys;
+      }
+      onSelectionChange(previewPayload);
     }
   };
 
@@ -272,9 +603,33 @@ const WordSelectionExercise = ({
       feedbackMessage = "Weiter üben! Punktzahl: " + score + "%";
     }
 
-    const selectedPayload = usesSlotKeyTargets
-      ? selectedSlotKeys
-      : selectedSlotKeys.map((key) => slotToWord[key]).filter(Boolean);
+    let selectedPayload;
+    if (rawTargetEntries.some((entry) => entry.groupId)) {
+      const selectedSet = new Set(selectedSlotKeys);
+      const selectedWordCounts = {};
+      [...selectedSet].forEach((slotKey) => {
+        const word = slotToWord[slotKey];
+        if (!word) return;
+        selectedWordCounts[word] = (selectedWordCounts[word] || 0) + 1;
+      });
+
+      selectedPayload = rawTargetEntries
+        .filter((entry) => {
+          if (targetSlotKeySet.has(entry.slotKey)) {
+            return selectedSet.has(entry.slotKey);
+          }
+
+          const remaining = selectedWordCounts[entry.slotKey] || 0;
+          if (remaining <= 0) return false;
+          selectedWordCounts[entry.slotKey] = remaining - 1;
+          return true;
+        })
+        .map((entry) => entry.raw);
+    } else {
+      selectedPayload = usesSlotKeyTargets
+        ? selectedSlotKeys
+        : selectedSlotKeys.map((key) => slotToWord[key]).filter(Boolean);
+    }
 
     onSubmit(selectedPayload, score, feedbackMessage);
   };
@@ -322,21 +677,24 @@ const WordSelectionExercise = ({
   };
 
   const getTokenStyle = (_word, slotKey) => {
-    if (selectedSlotKeys.includes(slotKey)) {
+    if (displayedSelectedSet.has(slotKey)) {
       if (isSubmitted && !isPreviewMode) {
         return targetSlotKeySet.has(slotKey)
           ? { backgroundColor: "var(--green)" }
           : { backgroundColor: "var(--red)" };
       }
+
       return { backgroundColor: "var(--click-selected-bg, var(--blue))" };
-    } else {
-      if (isSubmitted && targetSlotKeySet.has(slotKey) && !isPreviewMode) {
-        return {
-          backgroundColor: "var(--click-missed-bg, var(--yellow))",
-          border: "1px solid var(--click-missed-border, var(--yellow-border))",
-        };
-      }
     }
+
+    if (isSubmitted && targetSlotKeySet.has(slotKey) && !isPreviewMode) {
+      return {
+        backgroundColor: "var(--click-missed-bg, var(--yellow))",
+        border: "1px solid var(--click-missed-border, var(--yellow-border))",
+      };
+    }
+
+    return undefined;
   };
 
   const renderToken = (token, tokenIndex) => {
@@ -389,6 +747,32 @@ const WordSelectionExercise = ({
           <div className="rendered-html click-rendered-content">
             {parse(htmlSlotsData.html, {
               replace(domNode) {
+                if (
+                  domNode?.type === "tag" &&
+                  domNode.name === "click-group" &&
+                  domNode.attribs?.["data-group-id"]
+                ) {
+                  const groupId = domNode.attribs["data-group-id"];
+                  const groupSlotKeys = String(
+                    domNode.attribs?.["data-slot-keys"] || ""
+                  )
+                    .split(/\s+/)
+                    .filter(Boolean);
+                  const groupText = domNode.attribs?.["data-group-text"] || "";
+                  const firstSlot = groupSlotKeys[0];
+
+                  return (
+                    <Button
+                      key={groupId}
+                      onClick={() => handleGroupClick(groupSlotKeys)}
+                      variant="click"
+                      style={getTokenStyle(groupText, firstSlot)}
+                    >
+                      {groupText}
+                    </Button>
+                  );
+                }
+
                 if (
                   domNode?.type === "tag" &&
                   domNode.name === "click-word" &&
