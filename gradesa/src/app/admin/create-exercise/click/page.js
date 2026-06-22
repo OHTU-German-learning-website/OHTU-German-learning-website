@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useRequest } from "@/shared/hooks/useRequest";
 import { Container } from "@/components/ui/layout/container";
 import { Column } from "@/components/ui/layout/container";
 import { Button } from "@/components/ui/button";
@@ -22,6 +21,75 @@ function escapeHtml(value) {
     .replace(/'/g, "&#39;");
 }
 
+function parseTargetEntry(entry) {
+  if (typeof entry !== "string" || !entry) {
+    return null;
+  }
+
+  const delimiterIndex = entry.indexOf("::");
+  if (delimiterIndex > 0) {
+    return {
+      raw: entry,
+      groupId: entry.slice(0, delimiterIndex),
+      slotKey: entry.slice(delimiterIndex + 2),
+    };
+  }
+
+  return {
+    raw: entry,
+    groupId: null,
+    slotKey: entry,
+  };
+}
+
+function extractSlotIndex(slotKey) {
+  const match = String(slotKey || "").match(/^w-(\d+)$/);
+  return match ? Number(match[1]) : null;
+}
+
+function splitIntoContiguousChunks(slotKeys) {
+  const indexedKeys = slotKeys
+    .map((slotKey, position) => ({
+      slotKey,
+      index: extractSlotIndex(slotKey),
+      position,
+    }))
+    .sort((a, b) => {
+      if (a.index == null && b.index == null) {
+        return a.position - b.position;
+      }
+      if (a.index == null) return 1;
+      if (b.index == null) return -1;
+      return a.index - b.index;
+    });
+
+  if (indexedKeys.length === 0) {
+    return [];
+  }
+
+  const chunks = [];
+  let currentChunk = [indexedKeys[0].slotKey];
+
+  for (let i = 1; i < indexedKeys.length; i += 1) {
+    const prev = indexedKeys[i - 1];
+    const curr = indexedKeys[i];
+
+    if (
+      prev.index != null &&
+      curr.index != null &&
+      curr.index === prev.index + 1
+    ) {
+      currentChunk.push(curr.slotKey);
+    } else {
+      chunks.push(currentChunk);
+      currentChunk = [curr.slotKey];
+    }
+  }
+
+  chunks.push(currentChunk);
+  return chunks;
+}
+
 export default function CreateExercise() {
   const router = useRouter();
   const { click_id } = useParams();
@@ -29,13 +97,13 @@ export default function CreateExercise() {
 
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(null);
+  const [titleError, setTitleError] = useState(false);
   const [title, setTitle] = useState("");
   const [targetCategory, setTargetCategory] = useState("");
   const [allWordsHtml, setAllWordsHtml] = useState("");
   const [allWordsText, setAllWordsText] = useState("");
   const [selectedWords, setSelectedWords] = useState([]);
   const [previewMode, setPreviewMode] = useState(false);
-  const makeRequest = useRequest();
 
   const {
     data: exerciseData,
@@ -89,8 +157,46 @@ export default function CreateExercise() {
     setPreviewMode(true);
   };
 
+  const handleTreatAsElement = () => {
+    setError(null);
+
+    const entries = (Array.isArray(selectedWords) ? selectedWords : [])
+      .map(parseTargetEntry)
+      .filter(Boolean);
+
+    if (entries.length === 0) {
+      setError("Bitte zuerst Wörter auswählen.");
+      return;
+    }
+
+    const uniqueSlotKeys = [...new Set(entries.map((entry) => entry.slotKey))];
+    const chunks = splitIntoContiguousChunks(uniqueSlotKeys);
+    const hasElementChunk = chunks.some((chunk) => chunk.length > 1);
+
+    if (!hasElementChunk) {
+      setError(
+        "Nur benachbarte Wörter können als Element übernommen werden. Wählen Sie mindestens zwei benachbarte Wörter aus."
+      );
+      return;
+    }
+
+    const nextTargets = chunks.flatMap((chunk, chunkIndex) => {
+      if (chunk.length <= 1) {
+        return chunk;
+      }
+
+      const groupId = `group-${Date.now()}-${chunkIndex}`;
+      return chunk.map((slotKey) => `${groupId}::${slotKey}`);
+    });
+
+    setSelectedWords(nextTargets);
+  };
+
   const handleSaveExercise = async () => {
     try {
+      setError(null);
+      setTitleError(false);
+
       if (isEditMode) {
         const response = await fetch(
           withBasePath(`/api/admin/exercises/click/${click_id}`),
@@ -109,20 +215,38 @@ export default function CreateExercise() {
 
         const data = await response.json();
         if (!response.ok) {
+          if (response.status === 409) {
+            setTitleError(true);
+          }
           throw new Error(data?.error || "Fehler beim Speichern der Übung.");
         }
       } else {
-        const response = await makeRequest("/admin/exercises/click", {
-          title,
-          targetCategory,
-          targetWords: selectedWords,
-          allWords,
-          sourceHtml: allWordsHtml,
-        });
+        const response = await fetch(
+          withBasePath(`/api/admin/exercises/click`),
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              title,
+              targetCategory,
+              targetWords: selectedWords,
+              allWords,
+              sourceHtml: allWordsHtml,
+            }),
+          }
+        );
+
+        const data = await response.json();
+        if (!response.ok) {
+          if (response.status === 409) {
+            setTitleError(true);
+          }
+          throw new Error(data?.error || "Fehler beim Speichern der Übung.");
+        }
 
         setSubmitted(true);
         setTimeout(() => {
-          router.push(`/grammar/exercises/click/${response.data.id}`);
+          router.push(`/grammar/exercises/click/${data.id}`);
         }, 2000);
         return;
       }
@@ -190,13 +314,21 @@ export default function CreateExercise() {
             <Container className="exercise-click click-block">
               <label>Übungstitel</label>
               <input
-                className="click-input"
+                className={`click-input${titleError ? " input-error" : ""}`}
                 type="text"
                 value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={(e) => {
+                  setTitle(e.target.value);
+                  setTitleError(false);
+                }}
                 placeholder="Z. B. Verben identifizieren"
                 required
               />
+              {titleError && (
+                <span className="field-error-hint">
+                  Dieser Titel existiert bereits. Bitte wähle einen anderen.
+                </span>
+              )}
             </Container>
 
             <Container className="exercise-click click-block">
@@ -232,6 +364,10 @@ export default function CreateExercise() {
             Klicken Sie auf die Wörter, um die richtigen auszuwählen (
             {targetCategory}).
           </p>
+          <p>
+            Wenn mehrere benachbarte ausgewählte Wörter als ein Element
+            behandelt werden sollen, klicken Sie auf "Als Element übernehmen".
+          </p>
           <br />
           <br />
           <h2>Die Übung wird so aussehen:</h2>
@@ -243,10 +379,21 @@ export default function CreateExercise() {
               allWords={allWords}
               sourceHtml={allWordsHtml}
               isPreviewMode={true}
+              previewGroupAdjacentSelection={false}
               onSelectionChange={(updatedSelectedWords) =>
                 setSelectedWords(updatedSelectedWords)
               }
             />
+          </Container>
+          <Container>
+            <Button
+              size="sm"
+              variant="secondary"
+              onClick={handleTreatAsElement}
+              disabled={selectedWords.length === 0}
+            >
+              Als Element übernehmen
+            </Button>
           </Container>
           <Container>
             <Button size="sm" variant="secondary" onClick={handleEditAgain}>

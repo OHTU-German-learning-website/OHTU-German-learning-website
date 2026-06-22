@@ -72,13 +72,6 @@ export default function NewsList() {
             <Container key={article.id} className="news-card">
               <Column gap="sm">
                 <h3 className="news-title">{article.title}</h3>
-                <p className="news-date">
-                  {new Date(article.created_at).toLocaleDateString("de-DE", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </p>
                 <RenderHTML data={article.content} disableGlossary />
                 <Row justify="flex-end" gap="sm" className="news-meta">
                   <LinkButton

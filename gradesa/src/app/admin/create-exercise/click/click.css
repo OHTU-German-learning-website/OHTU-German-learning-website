@@ -30,6 +30,18 @@
     font: inherit;
 }
 
+.click-input.input-error {
+    border-color: var(--danger, #c53030);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--danger, #c53030) 35%, transparent);
+}
+
+.field-error-hint {
+    display: block;
+    margin-top: var(--u-xs);
+    font-size: 0.9rem;
+    color: var(--danger, #c53030);
+}
+
 .click-form-actions {
     display: flex;
     justify-content: flex-start;

@@ -19,13 +19,6 @@
   font-size: 1.35rem;
 }
 
-.news-date {
-  color: var(--fg2);
-  margin: 0;
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
 .news-meta {
   font-size: 0.8rem;
   color: var(--fg3);

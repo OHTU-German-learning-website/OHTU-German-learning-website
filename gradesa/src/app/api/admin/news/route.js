@@ -9,9 +9,20 @@ export async function GET(request) {
     if (id) {
       // Fetch single article by ID
       const result = await DB.pool(
-        `SELECT id, title, content, created_at, updated_at, created_by, updated_by, is_teacher_only
-         FROM news_articles 
-         WHERE id = $1`,
+        `SELECT na.id,
+                na.title,
+                na.content,
+                na.created_at,
+                na.updated_at,
+                na.created_by AS created_by_id,
+                na.updated_by AS updated_by_id,
+                COALESCE(NULLIF(cu.username, ''), cu.email) AS created_by,
+                COALESCE(NULLIF(uu.username, ''), uu.email) AS updated_by,
+                na.is_teacher_only
+         FROM news_articles na
+         LEFT JOIN users cu ON cu.id = na.created_by
+         LEFT JOIN users uu ON uu.id = na.updated_by
+         WHERE na.id = $1`,
         [id]
       );
 
@@ -27,9 +38,20 @@ export async function GET(request) {
 
     // Fetch all articles
     const articles = await DB.pool(
-      `SELECT id, title, content, created_at, updated_at, created_by, updated_by, is_teacher_only
-       FROM news_articles 
-       ORDER BY created_at DESC`
+      `SELECT na.id,
+            na.title,
+            na.content,
+            na.created_at,
+            na.updated_at,
+            na.created_by AS created_by_id,
+            na.updated_by AS updated_by_id,
+            COALESCE(NULLIF(cu.username, ''), cu.email) AS created_by,
+            COALESCE(NULLIF(uu.username, ''), uu.email) AS updated_by,
+            na.is_teacher_only
+       FROM news_articles na
+       LEFT JOIN users cu ON cu.id = na.created_by
+       LEFT JOIN users uu ON uu.id = na.updated_by
+       ORDER BY na.created_at DESC`
     );
 
     return NextResponse.json(articles.rows);

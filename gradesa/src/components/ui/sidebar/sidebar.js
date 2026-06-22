@@ -107,7 +107,7 @@ function StudentSideBar() {
         collapsible
       />
       <Link className={styles.sidebarLink} href="/pages/communications">
-        Kommunikations-situationen
+        Kommunikations situationen
       </Link>
       <Link className={styles.sidebarLink} href="/grammar/themes">
         Themen der Grammatik
