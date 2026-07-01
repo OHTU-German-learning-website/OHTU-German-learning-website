@@ -190,11 +190,6 @@ const adminSidebarLinks = [
     id: "teacher-news-view",
   },
   {
-    title: "Neuigkeiten (Verwaltung)",
-    link: "/admin/news",
-    id: "news",
-  },
-  {
     title: "Übungen erstellen",
     link: "/admin/create-exercise",
     id: "create-exercise",
@@ -208,6 +203,11 @@ const adminSidebarLinks = [
     title: "Glossareinträge",
     link: "/admin/glossary",
     id: "glossary",
+  },
+  {
+    title: "Neuigkeiten (Verwaltung)",
+    link: "/admin/news",
+    id: "news",
   },
   {
     title: "Benutzer",
