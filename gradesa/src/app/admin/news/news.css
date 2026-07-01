@@ -25,3 +25,27 @@
   margin-top: 0.5rem;
   width: 100%;
 }
+
+.teacher-only-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--u-2xs);
+  padding: var(--u-xs) var(--u-sm);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--bg3);
+  background-color: var(--bg2);
+  cursor: pointer;
+  width: fit-content;
+}
+
+.teacher-only-toggle input {
+  margin: 0;
+  width: 1rem;
+  height: 1rem;
+}
+
+.teacher-only-toggle span {
+  display: inline-block;
+  font-size: 0.95rem;
+  color: var(--fg1);
+}

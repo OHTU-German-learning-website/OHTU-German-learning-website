@@ -167,13 +167,13 @@ export default function CreateNewsArticle() {
         />
         {formErrors.content && <p className="error">{formErrors.content}</p>}
       </Column>
-      <label>
+      <label className="teacher-only-toggle">
         <input
           type="checkbox"
           checked={isTeacherOnly}
           onChange={(e) => setIsTeacherOnly(e.target.checked)}
         />
-        Nur für Lehrer sichtbar
+        <span>Nur für Lehrer sichtbar</span>
       </label>
       <Row
         justify={"space-between"}
