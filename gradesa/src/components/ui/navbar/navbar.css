@@ -2,8 +2,8 @@
   background: var(--bg1);
   padding: var(--u-md) var(--u-2xl);
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: var(--u-lg);
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -21,6 +21,13 @@
   display: flex;
   align-items: center;
   gap: var(--u-md);
+  margin-left: auto;
+}
+
+.nav-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
 }
 
 .nav-links {
@@ -76,6 +83,17 @@
 .nav-auth {
   display: flex;
   gap: var(--u-xl);
+}
+
+@media (max-width: 1100px) {
+  .navbar {
+    flex-wrap: wrap;
+  }
+
+  .nav-center {
+    order: 3;
+    flex: 1 0 100%;
+  }
 }
 
 .nav-auth button {

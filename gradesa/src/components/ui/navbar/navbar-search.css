@@ -1,0 +1,114 @@
+.navbar-search {
+    position: relative;
+    width: min(580px, 100%);
+}
+
+.navbar-search-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    clip-path: inset(50%);
+}
+
+.navbar-search-input {
+    width: 100%;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--bg3);
+    background: var(--bg2);
+    color: var(--fg1);
+    padding: 10px 14px;
+    font-size: var(--font-sm);
+}
+
+.navbar-search-input:focus {
+    outline: 2px solid var(--blue);
+    outline-offset: 1px;
+}
+
+.navbar-search-helper {
+    margin-top: 4px;
+    color: var(--fg4);
+    font-size: var(--font-xs);
+}
+
+.navbar-search-dropdown {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin-top: 6px;
+    border: 1px solid var(--bg3);
+    border-radius: var(--radius-xl);
+    background: var(--bg1);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.24);
+    z-index: 1200;
+    max-height: min(420px, 60vh);
+    overflow-y: auto;
+}
+
+.navbar-search-list {
+    list-style: none;
+    margin: 0;
+    padding: 6px;
+}
+
+.navbar-search-item {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    width: 100%;
+    border: 0;
+    background: transparent;
+    padding: 10px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    color: inherit;
+    gap: 3px;
+}
+
+.navbar-search-item:hover,
+.navbar-search-item.active {
+    background: var(--bg2);
+}
+
+.navbar-search-item-label {
+    color: var(--fg4);
+    font-size: var(--font-xs);
+}
+
+.navbar-search-item-title {
+    color: var(--fg1);
+    font-size: var(--font-md);
+    font-weight: 600;
+}
+
+.navbar-search-item-snippet {
+    color: var(--fg3);
+    font-size: var(--font-xs);
+    line-height: 1.35;
+}
+
+.navbar-search-highlight {
+    background: color-mix(in srgb, var(--blue) 70%, transparent);
+    color: inherit;
+    padding: 0 2px;
+    border-radius: 4px;
+}
+
+.navbar-search-empty {
+    color: var(--fg4);
+    font-size: var(--font-sm);
+    padding: 14px;
+}
+
+@media (max-width: 900px) {
+    .navbar-search {
+        width: 100%;
+    }
+
+    .navbar-search-helper {
+        display: none;
+    }
+}
