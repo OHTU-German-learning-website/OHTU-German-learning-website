@@ -6,6 +6,7 @@ import { useUser } from "@/context/user.context";
 import { Column } from "../layout/container";
 import { useRouter } from "next/navigation";
 import { withBasePath } from "@/shared/utils/basePath";
+import NavbarSearch from "./navbar-search";
 
 function Navbar() {
   const { auth, logout } = useUser();
@@ -27,6 +28,10 @@ function Navbar() {
             </Link>
           </div>
         </div>
+      </div>
+
+      <div className="nav-center">
+        <NavbarSearch />
       </div>
 
       <div className="nav-right">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Container } from "@/components/ui/layout/container";
 import { Button } from "@/components/ui/button";
 
@@ -9,6 +9,10 @@ export default function FreeformFeedback({
   currentQuestionIndex = 0,
 }) {
   const [showAllFeedback, setShowAllFeedback] = useState(false);
+
+  useEffect(() => {
+    setShowAllFeedback(false);
+  }, [currentQuestionIndex]);
 
   const toggleFeedback = () => {
     setShowAllFeedback(!showAllFeedback);
