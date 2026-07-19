@@ -22,7 +22,10 @@ describe("canDeleteOwnedContent", () => {
 
   it("rejects admins deleting content without an owner", () => {
     expect(
-      canDeleteOwnedContent({ id: 7, is_admin: true, is_superadmin: false }, null)
+      canDeleteOwnedContent(
+        { id: 7, is_admin: true, is_superadmin: false },
+        null
+      )
     ).toBe(false);
   });
 });

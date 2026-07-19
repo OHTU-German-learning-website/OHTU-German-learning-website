@@ -93,10 +93,7 @@ export default function AdminButtons({ type, slug, pageExists = true }) {
       return;
     }
 
-    const message = await getDeleteErrorMessage(
-      res,
-      "Fehler beim Löschen."
-    );
+    const message = await getDeleteErrorMessage(res, "Fehler beim Löschen.");
     alert(message);
   };
 

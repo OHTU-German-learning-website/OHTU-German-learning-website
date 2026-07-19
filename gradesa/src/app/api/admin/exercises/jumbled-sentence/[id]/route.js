@@ -137,7 +137,10 @@ export const DELETE = withAuth(
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
       }
       if (err.message === "NOT_FOUND") {
-        return NextResponse.json({ error: "Übung nicht gefunden." }, { status: 404 });
+        return NextResponse.json(
+          { error: "Übung nicht gefunden." },
+          { status: 404 }
+        );
       }
       return NextResponse.json({ error: err.message }, { status: 500 });
     }
