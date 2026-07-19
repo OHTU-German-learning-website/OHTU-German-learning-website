@@ -107,7 +107,18 @@ export const PUT = withAuth(
     try {
       newData = await getPageData(type, slug);
     } catch {
-      return new NextResponse("not found", { status: 404 });
+      if (type !== "grammar") {
+        return new NextResponse("not found", { status: 404 });
+      }
+
+      newData = {
+        title: "",
+        description: null,
+        content: "",
+        page_order: null,
+        slug,
+        page_group: type,
+      };
     }
     if (data.title) newData.title = data.title;
     if (data.page_order) newData.page_order = data.page_order;
