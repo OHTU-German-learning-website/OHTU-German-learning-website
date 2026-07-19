@@ -125,6 +125,32 @@ describe("PUT /api/admin/pages/[type]/[slug]", () => {
     expect(result.rows[0].content).toContain('data-size="320x180"');
     expect(result.rows[0].content).not.toContain("onerror");
   });
+
+  it("should set created_by when grammar fallback insert creates a page", async () => {
+    const admin = await TestFactory.user({ is_admin: true });
+    const { mockPut, mockParams } = useTestRequest(admin);
+
+    const response = await PUT(
+      mockPut("/api/admin/pages/grammar/neu-thema", {
+        title: "Neues Thema",
+        content: "<p>Hallo</p>",
+      }),
+      mockParams({ type: "grammar", slug: "neu-thema" })
+    );
+
+    expect(response.status).toBe(200);
+
+    const inserted = await DB.pool(
+      `SELECT created_by, updated_by
+       FROM html_pages
+       WHERE page_group = $1 AND slug = $2`,
+      ["grammar", "neu-thema"]
+    );
+
+    expect(inserted.rowCount).toBe(1);
+    expect(inserted.rows[0].created_by).toBe(admin.id);
+    expect(inserted.rows[0].updated_by).toBe(admin.id);
+  });
 });
 
 describe("DELETE /api/admin/pages/[type]/[slug]", () => {
@@ -151,6 +177,10 @@ describe("DELETE /api/admin/pages/[type]/[slug]", () => {
 
   it("should delete an existing page", async () => {
     const admin = await TestFactory.user({ is_admin: true });
+    await DB.pool(
+      `UPDATE html_pages SET created_by = $1 WHERE page_group = $2 AND slug = $3`,
+      [admin.id, "resources", "test-page"]
+    );
     const { mockDelete, mockParams } = useTestRequest(admin);
 
     const response = await DELETE(
@@ -181,5 +211,44 @@ describe("DELETE /api/admin/pages/[type]/[slug]", () => {
     expect(response.status).toBe(404);
     const json = await response.json();
     expect(json.error).toBe("Not found");
+  });
+
+  it("should reject deleting a page created by another admin", async () => {
+    const owner = await TestFactory.user({ is_admin: true });
+    const otherAdmin = await TestFactory.user({ is_admin: true });
+    await DB.pool(
+      `UPDATE html_pages SET created_by = $1 WHERE page_group = $2 AND slug = $3`,
+      [owner.id, "resources", "test-page"]
+    );
+    const { mockDelete, mockParams } = useTestRequest(otherAdmin);
+
+    const response = await DELETE(
+      mockDelete("/api/admin/pages/resources/test-page"),
+      mockParams({ type: "resources", slug: "test-page" })
+    );
+
+    expect(response.status).toBe(403);
+    const json = await response.json();
+    expect(json.error).toBe("Forbidden");
+  });
+
+  it("should allow a superadmin to delete any page", async () => {
+    const owner = await TestFactory.user({ is_admin: true });
+    const superadmin = await TestFactory.user({
+      is_admin: true,
+      is_superadmin: true,
+    });
+    await DB.pool(
+      `UPDATE html_pages SET created_by = $1 WHERE page_group = $2 AND slug = $3`,
+      [owner.id, "resources", "test-page"]
+    );
+    const { mockDelete, mockParams } = useTestRequest(superadmin);
+
+    const response = await DELETE(
+      mockDelete("/api/admin/pages/resources/test-page"),
+      mockParams({ type: "resources", slug: "test-page" })
+    );
+
+    expect(response.status).toBe(200);
   });
 });

@@ -79,9 +79,10 @@ export default function Register() {
           </label>
           <input
             className="form-input"
-            type="username"
+            type="text"
             id="username"
             name="username"
+            autoComplete="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
@@ -97,6 +98,7 @@ export default function Register() {
             type="email"
             id="email"
             name="email"
+            autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -112,6 +114,7 @@ export default function Register() {
             type="email"
             id="confirmEmail"
             name="confirmEmail"
+            autoComplete="email"
             value={confirmEmail}
             onChange={(e) => setConfirmEmail(e.target.value)}
             required
@@ -127,6 +130,7 @@ export default function Register() {
             type="password"
             id="password"
             name="password"
+            autoComplete="new-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -142,6 +146,7 @@ export default function Register() {
             type="password"
             id="confirmPassword"
             name="confirmPassword"
+            autoComplete="new-password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required

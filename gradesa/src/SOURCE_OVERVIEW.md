@@ -38,6 +38,7 @@ The `@/*` alias maps to `./src/*`, making imports consistent regardless of file 
 
 - API route composition uses `withAuth` and `withInputValidation` from `backend/middleware` to apply auth checks and Zod validation.
 - Sessions are JWT-based (HS256) stored in an HTTP-only cookie (`AUTH_COOKIE_NAME`) via helpers in `backend/auth/session.js`.
+- Session probe endpoint `GET /api/auth/session` returns HTTP `200` for both authenticated and logged-out states (`{ loggedIn: true, user }` or `{ loggedIn: false }`).
 - Database access goes through the pooled `DB` object in `backend/db.js` and transactional helper `DB.transaction`.
 - Shared validation schemas are authored in `shared/schemas/` and consumed in API routes with `withInputValidation`.
 

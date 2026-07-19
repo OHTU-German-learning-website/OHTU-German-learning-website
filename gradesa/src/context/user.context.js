@@ -65,8 +65,7 @@ export function UserProvider({ children }) {
   useEffect(() => {
     /**
      * checkUserSession - internal helper to call `/auth/session` and
-     * update the `auth` state accordingly. Allows HTTP 401 responses to
-     * be handled gracefully (treated as not logged in).
+     * update the `auth` state accordingly.
      *
      * @returns {Promise<void>} resolves when the session check finishes.
      */
@@ -74,17 +73,9 @@ export function UserProvider({ children }) {
       try {
         const response = await makeRequest("/auth/session", undefined, {
           method: "GET",
-        }).catch((e) => {
-          // Allow 401s and treat them as "not logged in"
-          const status = e?.response?.status ?? e?.status;
-
-          if (status !== 401) {
-            throw e;
-          }
-
-          return { status: 401, data: null };
         });
-        if (response.status === 200 && response.data) {
+
+        if (response.status === 200 && response.data?.loggedIn) {
           const user = response.data.user;
           setAuth((prev) => ({
             ...prev,

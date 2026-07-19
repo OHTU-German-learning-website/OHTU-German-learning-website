@@ -137,6 +137,7 @@ export default function ProfilePage() {
 
 - The `UserProvider` is configured in the root layout (`app/layout.js`), so the context is available app-wide.
 - The context fetches session data from `/api/auth/session` and calls `/api/auth/logout` to end sessions.
+- `/api/auth/session` returns `200` in both states: `{ loggedIn: true, user }` when authenticated and `{ loggedIn: false }` when no session exists.
 - Session checks run on mount; prefer hooks (`useUser`, `useIsLoggedIn`) to access the state.
 
 ## `glossaryContext`

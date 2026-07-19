@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { jumbledSentenceExerciseSchema } from "@/shared/schemas/jumbled-sentence.schemas";
 import { DB } from "@/backend/db";
+import { canDeleteOwnedContent } from "@/backend/content-permissions";
 import { withAuth } from "@/backend/middleware/withAuth";
 
 export const GET = withAuth(async (request, { params }) => {
@@ -105,6 +106,22 @@ export const DELETE = withAuth(
     const { id } = await params;
     try {
       await DB.transaction(async (client) => {
+        const { rows } = await client.query(
+          `SELECT jse.exercise_id, e.created_by
+           FROM jumbled_sentence_exercises jse
+           JOIN exercises e ON e.id = jse.exercise_id
+           WHERE jse.id = $1`,
+          [id]
+        );
+
+        if (rows.length === 0) {
+          throw new Error("NOT_FOUND");
+        }
+
+        if (!canDeleteOwnedContent(request.user, rows[0].created_by)) {
+          throw new Error("FORBIDDEN");
+        }
+
         await client.query(
           `DELETE FROM jumbled_sentence_sentences WHERE jumbled_exercise_id = $1`,
           [id]
@@ -116,6 +133,12 @@ export const DELETE = withAuth(
       });
       return NextResponse.json({ success: true });
     } catch (err) {
+      if (err.message === "FORBIDDEN") {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+      if (err.message === "NOT_FOUND") {
+        return NextResponse.json({ error: "Übung nicht gefunden." }, { status: 404 });
+      }
       return NextResponse.json({ error: err.message }, { status: 500 });
     }
   },

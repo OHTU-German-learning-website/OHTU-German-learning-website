@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { DB } from "@/backend/db";
+import { canDeleteOwnedContent } from "@/backend/content-permissions";
 import { withAuth } from "@/backend/middleware/withAuth";
 
 export const GET = withAuth(
@@ -22,8 +23,12 @@ export const GET = withAuth(
       `,
         [exercise_id]
       );
-
+      const parentExerciseId = rows[0].exercise_id;
+      const createdBy = rows[0].created_by;
       if (exerciseRows.length === 0) {
+        if (!canDeleteOwnedContent(request.user, createdBy)) {
+          return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+        }
         return NextResponse.json(
           { error: "Exercise not found" },
           { status: 404 }
@@ -215,9 +220,10 @@ export const DELETE = withAuth(
 
       const { rows } = await DB.pool(
         `
-        SELECT exercise_id
-        FROM free_form_exercises
-        WHERE id = $1
+        SELECT ffe.exercise_id, e.created_by
+        FROM free_form_exercises ffe
+        JOIN exercises e ON e.id = ffe.exercise_id
+        WHERE ffe.id = $1
       `,
         [exercise_id]
       );
@@ -229,14 +235,16 @@ export const DELETE = withAuth(
         );
       }
 
-      const parentExerciseId = rows[0].exercise_id;
+      if (!canDeleteOwnedContent(request.user, rows[0].created_by)) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
 
       await DB.pool(
         `
         DELETE FROM exercises
         WHERE id = $1
       `,
-        [parentExerciseId]
+        [rows[0].exercise_id]
       );
 
       return NextResponse.json({ success: true });

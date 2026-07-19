@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { DB } from "@/backend/db";
+import { canDeleteOwnedContent } from "@/backend/content-permissions";
 import { withAuth } from "@/backend/middleware/withAuth";
 
 const parseWords = (content) => [
@@ -261,14 +262,19 @@ export const DELETE = withAuth(
 
       await DB.transaction(async (tx) => {
         const dndRes = await tx.query(
-          `SELECT exercise_id
-           FROM dnd_exercises
-           WHERE id = $1`,
+          `SELECT dnde.exercise_id, e.created_by
+           FROM dnd_exercises dnde
+           JOIN exercises e ON e.id = dnde.exercise_id
+           WHERE dnde.id = $1`,
           [dnd_id]
         );
 
         if (dndRes.rows.length === 0) {
           throw new Error("DND_EXERCISE_NOT_FOUND");
+        }
+
+        if (!canDeleteOwnedContent(request.user, dndRes.rows[0].created_by)) {
+          throw new Error("FORBIDDEN");
         }
 
         const exerciseId = dndRes.rows[0].exercise_id;
@@ -293,6 +299,10 @@ export const DELETE = withAuth(
           { error: "Übung nicht gefunden." },
           { status: 404 }
         );
+      }
+
+      if (error.message === "FORBIDDEN") {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
       }
 
       console.error("Error deleting dragdrop exercise:", error);

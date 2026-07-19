@@ -120,7 +120,7 @@ export const POST = withAuth(
     }
 
     await DB.pool(
-      "INSERT INTO html_pages (title, description, content, slug, page_group, page_order, grammar_topic_id, updated_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
+      "INSERT INTO html_pages (title, description, content, slug, page_group, page_order, grammar_topic_id, created_by, updated_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)",
       [
         trimmedTitle,
         pageDescription,
@@ -129,6 +129,7 @@ export const POST = withAuth(
         type,
         pageOrder,
         grammarTopicId,
+        req.user?.id ?? null,
         req.user?.id ?? null,
       ]
     );

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { DB } from "@/backend/db";
+import { canDeleteOwnedContent } from "@/backend/content-permissions";
 import { withAuth } from "@/backend/middleware/withAuth";
 
 export const GET = withAuth(
@@ -155,7 +156,10 @@ export const DELETE = withAuth(
 
     try {
       const { rows } = await DB.pool(
-        `SELECT exercise_id FROM memory_game_exercises WHERE id = $1`,
+        `SELECT mge.exercise_id, e.created_by
+         FROM memory_game_exercises mge
+         JOIN exercises e ON e.id = mge.exercise_id
+         WHERE mge.id = $1`,
         [id]
       );
 
@@ -164,6 +168,10 @@ export const DELETE = withAuth(
           { error: "Übung nicht gefunden." },
           { status: 404 }
         );
+      }
+
+      if (!canDeleteOwnedContent(request.user, rows[0].created_by)) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
       }
 
       await DB.pool(`DELETE FROM exercises WHERE id = $1`, [

@@ -69,6 +69,7 @@ export default function Login() {
             type="text"
             id="identifier"
             name="identifier"
+            autoComplete="username"
             value={identifier}
             onChange={(e) => setIdentifier(e.target.value)}
             disabled={isLoading}
@@ -85,6 +86,7 @@ export default function Login() {
             type="password"
             id="password"
             name="password"
+            autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             disabled={isLoading}

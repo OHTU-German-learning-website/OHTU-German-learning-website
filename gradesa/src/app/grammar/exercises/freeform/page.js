@@ -6,6 +6,7 @@ import useQuery from "@/shared/hooks/useQuery";
 import { ExerciseLinkButton } from "@/components/ui/button/exercise-link-button";
 import { Button } from "@/components/ui/button";
 import { withBasePath } from "@/shared/utils/basePath";
+import { getDeleteErrorMessage } from "@/shared/utils/deleteErrorMessage";
 
 export default function FreeFormExercisesPage() {
   const {
@@ -29,12 +30,20 @@ export default function FreeFormExercisesPage() {
       );
 
       if (!response.ok) {
-        throw new Error("Fehler beim Löschen der Übung.");
+        const message = await getDeleteErrorMessage(
+          response,
+          "Fehler beim Löschen der Übung."
+        );
+        if (response.status === 403) {
+          alert(message);
+          return;
+        }
+        throw new Error(message);
       }
       refetch();
     } catch (error) {
       console.error("Error deleting exercise:", error);
-      alert("Fehler beim Löschen der Übung.");
+      alert(error?.message || "Fehler beim Löschen der Übung.");
     }
   };
 

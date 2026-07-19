@@ -6,9 +6,6 @@ export async function GET(request) {
   if (user) {
     return NextResponse.json({ loggedIn: true, user });
   } else {
-    return NextResponse.json(
-      { loggedIn: false, error: "Unauthorized" },
-      { status: 401 }
-    );
+    return NextResponse.json({ loggedIn: false });
   }
 }
