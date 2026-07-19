@@ -616,12 +616,17 @@ CREATE TABLE public.html_pages (
   grammar_topic_id integer,
   description text,
   updated_at timestamp with time zone NOT NULL DEFAULT now(),
-  updated_by bigint
+  updated_by bigint,
+  created_by bigint
 );
 
 CREATE INDEX html_pages_search_fts_idx ON public.html_pages USING gin (to_tsvector('simple'::regconfig, ((((COALESCE(title, ''::text) || ' '::text) || COALESCE(description, ''::text)) || ' '::text) || COALESCE(content, ''::text))));
 
 CREATE TRIGGER update_html_pages_updated_at BEFORE UPDATE ON public.html_pages FOR EACH ROW EXECUTE FUNCTION updated_at();
+
+ALTER TABLE public.html_pages
+ADD CONSTRAINT html_pages_created_by_fkey
+FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL;
 
 ALTER TABLE public.html_pages
 ADD CONSTRAINT html_pages_grammar_topic_id_fkey

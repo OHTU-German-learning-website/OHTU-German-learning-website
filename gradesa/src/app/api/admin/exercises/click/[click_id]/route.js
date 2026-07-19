@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { DB } from "@/backend/db";
+import { canDeleteOwnedContent } from "@/backend/content-permissions";
 import { withAuth } from "@/backend/middleware/withAuth";
 import DOMPurify from "dompurify";
 import { JSDOM } from "jsdom";
@@ -193,14 +194,19 @@ export const DELETE = withAuth(
 
       await DB.transaction(async (tx) => {
         const { rows } = await tx.query(
-          `SELECT exercise_id
-                     FROM click_to_exercises
-                     WHERE click_id = $1`,
+          `SELECT cte.exercise_id, e.created_by
+                     FROM click_to_exercises cte
+                     JOIN exercises e ON e.id = cte.exercise_id
+                     WHERE cte.click_id = $1`,
           [click_id]
         );
 
         if (rows.length === 0) {
           throw new Error("CLICK_EXERCISE_NOT_FOUND");
+        }
+
+        if (!canDeleteOwnedContent(request.user, rows[0].created_by)) {
+          throw new Error("FORBIDDEN");
         }
 
         const exerciseId = rows[0].exercise_id;
@@ -227,6 +233,10 @@ export const DELETE = withAuth(
           { error: "Übung nicht gefunden." },
           { status: 404 }
         );
+      }
+
+      if (error.message === "FORBIDDEN") {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
       }
 
       console.error("Error deleting click exercise:", error);

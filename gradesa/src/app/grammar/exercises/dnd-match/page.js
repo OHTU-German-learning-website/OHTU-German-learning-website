@@ -6,6 +6,7 @@ import useQuery from "@/shared/hooks/useQuery";
 import { ExerciseLinkButton } from "@/components/ui/button/exercise-link-button";
 import { Button } from "@/components/ui/button";
 import { withBasePath } from "@/shared/utils/basePath";
+import { getDeleteErrorMessage } from "@/shared/utils/deleteErrorMessage";
 
 export default function DndMatchExercisesPage() {
   const {
@@ -26,10 +27,16 @@ export default function DndMatchExercisesPage() {
           method: "DELETE",
         }
       );
-      if (!response.ok) throw new Error("Fehler beim Löschen der Übung.");
+      if (!response.ok) {
+        const message = await getDeleteErrorMessage(
+          response,
+          "Fehler beim Löschen der Übung."
+        );
+        throw new Error(message);
+      }
       refetch();
-    } catch {
-      alert("Fehler beim Löschen der Übung.");
+    } catch (deleteError) {
+      alert(deleteError?.message || "Fehler beim Löschen der Übung.");
     }
   };
 

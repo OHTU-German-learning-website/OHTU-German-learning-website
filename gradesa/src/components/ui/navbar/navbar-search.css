@@ -20,7 +20,7 @@
     background: var(--bg2);
     color: var(--fg1);
     padding: 10px 14px;
-    font-size: var(--font-sm);
+    font-size: var(--font-md);
 }
 
 .navbar-search-input:focus {
@@ -29,9 +29,9 @@
 }
 
 .navbar-search-helper {
-    margin-top: 4px;
+    margin-left: 15px;
     color: var(--fg4);
-    font-size: var(--font-xs);
+    font-size: var(--font-sm);
 }
 
 .navbar-search-dropdown {
@@ -75,7 +75,7 @@
 
 .navbar-search-item-label {
     color: var(--fg4);
-    font-size: var(--font-xs);
+    font-size: var(--font-sm);
 }
 
 .navbar-search-item-title {
@@ -86,7 +86,7 @@
 
 .navbar-search-item-snippet {
     color: var(--fg3);
-    font-size: var(--font-xs);
+    font-size: var(--font-sm);
     line-height: 1.35;
 }
 

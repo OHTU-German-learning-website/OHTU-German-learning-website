@@ -33,6 +33,7 @@ describe("GET /api/auth/session", () => {
 
     expect(checkSession).toHaveBeenCalled();
     expect(response).toBeInstanceOf(NextResponse);
-    expect(result).toEqual({ loggedIn: false, error: "Unauthorized" });
+    expect(response.status).toBe(200);
+    expect(result).toEqual({ loggedIn: false });
   });
 });

@@ -53,9 +53,14 @@ export default function EditPassword() {
 
       <form onSubmit={handleSubmit} className="space-y-4 max-w-md">
         <div>
-          <label className="block mb-1">Aktuelles Passwort</label>
+          <label className="block mb-1" htmlFor="currentPassword">
+            Aktuelles Passwort
+          </label>
           <input
+            id="currentPassword"
+            name="currentPassword"
             type="password"
+            autoComplete="current-password"
             className="w-full border rounded px-3 py-2"
             value={currentPassword}
             onChange={(e) => setCurrentPassword(e.target.value)}
@@ -63,9 +68,14 @@ export default function EditPassword() {
           />
         </div>
         <div>
-          <label className="block mb-1">Neues Passwort</label>
+          <label className="block mb-1" htmlFor="newPassword">
+            Neues Passwort
+          </label>
           <input
+            id="newPassword"
+            name="newPassword"
             type="password"
+            autoComplete="new-password"
             className="w-full border rounded px-3 py-2"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
@@ -73,9 +83,14 @@ export default function EditPassword() {
           />
         </div>
         <div>
-          <label className="block mb-1">Neues Passwort bestätigen</label>
+          <label className="block mb-1" htmlFor="confirmPassword">
+            Neues Passwort bestätigen
+          </label>
           <input
+            id="confirmPassword"
+            name="confirmPassword"
             type="password"
+            autoComplete="new-password"
             className="w-full border rounded px-3 py-2"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}

@@ -43,7 +43,7 @@ describe("POST /api/admin/pages", () => {
     expect(response.status).toBe(200);
 
     const inserted = await DB.pool(
-      `SELECT slug, title, description, page_order, grammar_topic_id
+      `SELECT slug, title, description, page_order, grammar_topic_id, created_by
        FROM html_pages
        WHERE page_group = 'resources' AND slug = 'new-resource'`
     );
@@ -53,6 +53,7 @@ describe("POST /api/admin/pages", () => {
     expect(inserted.rows[0].description).toBe("Resource summary");
     expect(inserted.rows[0].page_order).toBe(expectedNextOrder);
     expect(inserted.rows[0].grammar_topic_id).toBeNull();
+    expect(inserted.rows[0].created_by).toBe(admin.id);
   });
 
   it("creates a grammar page without topic when none is selected", async () => {
@@ -69,7 +70,7 @@ describe("POST /api/admin/pages", () => {
     expect(response.status).toBe(200);
 
     const inserted = await DB.pool(
-      `SELECT slug, page_order, grammar_topic_id
+      `SELECT slug, page_order, grammar_topic_id, created_by
        FROM html_pages
        WHERE page_group = 'grammar' AND slug = 'untopicked-grammar'`
     );
@@ -77,6 +78,7 @@ describe("POST /api/admin/pages", () => {
     expect(inserted.rowCount).toBe(1);
     expect(inserted.rows[0].page_order).toBeNull();
     expect(inserted.rows[0].grammar_topic_id).toBeNull();
+    expect(inserted.rows[0].created_by).toBe(admin.id);
   });
 
   it("creates a grammar page with existing topicId", async () => {
@@ -98,13 +100,14 @@ describe("POST /api/admin/pages", () => {
     expect(response.status).toBe(200);
 
     const inserted = await DB.pool(
-      `SELECT grammar_topic_id
+      `SELECT grammar_topic_id, created_by
        FROM html_pages
        WHERE page_group = 'grammar' AND slug = 'syntax-kapitel'`
     );
 
     expect(inserted.rowCount).toBe(1);
     expect(inserted.rows[0].grammar_topic_id).toBe(topic.rows[0].id);
+    expect(inserted.rows[0].created_by).toBe(admin.id);
   });
 
   it("creates and reuses topic by case-insensitive name", async () => {

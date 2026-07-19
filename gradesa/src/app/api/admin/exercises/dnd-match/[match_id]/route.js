@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { DB } from "@/backend/db";
+import { canDeleteOwnedContent } from "@/backend/content-permissions";
 import { withAuth } from "@/backend/middleware/withAuth";
 import { dndMatchCreateSchema } from "@/shared/schemas/dnd-match.schemas";
 
@@ -132,7 +133,10 @@ export const DELETE = withAuth(
       const { match_id } = await params;
 
       const { rows } = await DB.pool(
-        `SELECT exercise_id FROM dnd_match_exercises WHERE id = $1`,
+        `SELECT dme.exercise_id, e.created_by
+         FROM dnd_match_exercises dme
+         JOIN exercises e ON e.id = dme.exercise_id
+         WHERE dme.id = $1`,
         [match_id]
       );
 
@@ -141,6 +145,10 @@ export const DELETE = withAuth(
           { error: "Übung nicht gefunden." },
           { status: 404 }
         );
+      }
+
+      if (!canDeleteOwnedContent(request.user, rows[0].created_by)) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
       }
 
       // Deleting from exercises cascades to dnd_match_exercises → pairs → user_answers

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Row } from "@/components/ui/layout/container";
 import { useSearchParams } from "next/navigation";
 import { withBasePath } from "@/shared/utils/basePath";
+import { getDeleteErrorMessage } from "@/shared/utils/deleteErrorMessage";
 
 export default function AdminButtons({ type, slug, pageExists = true }) {
   const { auth } = useUser();
@@ -48,10 +49,8 @@ export default function AdminButtons({ type, slug, pageExists = true }) {
       return;
     }
 
-    const message = await res.text();
-    alert(
-      `Fehler beim Löschen (HTTP ${res.status}): ${message || "Unbekannter Fehler"}`
-    );
+    const message = await getDeleteErrorMessage(res, "Fehler beim Löschen.");
+    alert(message);
   };
 
   if (isSuperAdmin) {

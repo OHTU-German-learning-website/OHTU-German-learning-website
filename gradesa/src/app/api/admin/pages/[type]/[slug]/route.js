@@ -1,5 +1,6 @@
 import { getPageData, setPageData } from "@/backend/html-services";
 import { withAuth } from "@/backend/middleware/withAuth";
+import { canDeleteOwnedContent } from "@/backend/content-permissions";
 import { JSDOM } from "jsdom";
 import DOMPurify from "dompurify";
 import { NextResponse } from "next/server";
@@ -61,6 +62,21 @@ export const DELETE = withAuth(
     try {
       const { type, slug } = await params;
 
+      const pageResult = await DB.pool(
+        `SELECT created_by
+         FROM html_pages
+         WHERE slug = $1 AND page_group = $2`,
+        [slug, type]
+      );
+
+      if (pageResult.rowCount === 0) {
+        return NextResponse.json({ error: "Not found" }, { status: 404 });
+      }
+
+      if (!canDeleteOwnedContent(req.user, pageResult.rows[0].created_by)) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+
       const query = `DELETE FROM html_pages WHERE slug = $1 AND page_group = $2 RETURNING *`;
       const result = await DB.pool(query, [slug, type]);
 
@@ -91,7 +107,18 @@ export const PUT = withAuth(
     try {
       newData = await getPageData(type, slug);
     } catch {
-      return new NextResponse("not found", { status: 404 });
+      if (type !== "grammar") {
+        return new NextResponse("not found", { status: 404 });
+      }
+
+      newData = {
+        title: "",
+        description: null,
+        content: "",
+        page_order: null,
+        slug,
+        page_group: type,
+      };
     }
     if (data.title) newData.title = data.title;
     if (data.page_order) newData.page_order = data.page_order;
@@ -118,8 +145,8 @@ export const PUT = withAuth(
 
     if (!updated && type === "grammar") {
       const insertQuery = `
-    INSERT INTO html_pages (title, description, content, slug, page_group, updated_by)
-    VALUES ($1, $2, $3, $4, $5, $6)
+    INSERT INTO html_pages (title, description, content, slug, page_group, created_by, updated_by)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
     ON CONFLICT DO NOTHING
   `;
 
@@ -129,6 +156,7 @@ export const PUT = withAuth(
         newData.content ?? "",
         newData.slug,
         type,
+        req.user?.id ?? null,
         req.user?.id ?? null,
       ]);
 
@@ -168,13 +196,14 @@ export const POST = withAuth(
       });
     }
     const { title, description } = await req.json();
-    const query = `INSERT INTO html_pages (title, description, content, slug, page_group, updated_by) VALUES ($1, $2, $3, $4, $5, $6)`;
+    const query = `INSERT INTO html_pages (title, description, content, slug, page_group, created_by, updated_by) VALUES ($1, $2, $3, $4, $5, $6, $7)`;
     const result = await DB.pool(query, [
       title,
       normalizePageDescription(description),
       "",
       slug,
       type,
+      req.user?.id ?? null,
       req.user?.id ?? null,
     ]);
 
