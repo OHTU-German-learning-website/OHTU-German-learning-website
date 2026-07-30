@@ -18,6 +18,14 @@ export const GET = withAuth(async (request, { params }) => {
     [click_id]
   );
 
+  const falseWordFeedbacks = await DB.pool(
+    `SELECT slot_key, word_text, feedback
+     FROM click_false_word_feedbacks
+     WHERE click_exercise_id = $1
+     ORDER BY id ASC`,
+    [click_id]
+  );
+
   if (exercise.rows.length === 0) {
     return Response.json({ message: "Keine Übung gefunden." }, { status: 404 });
   }
@@ -33,6 +41,7 @@ export const GET = withAuth(async (request, { params }) => {
       return Response.json(
         {
           exercise: exercise.rows[0],
+          falseWordFeedbacks: falseWordFeedbacks.rows,
           userAnswers: answer.rows[0],
         },
         { status: 200 }
@@ -43,6 +52,7 @@ export const GET = withAuth(async (request, { params }) => {
     return Response.json(
       {
         exercise: exercise.rows[0],
+        falseWordFeedbacks: falseWordFeedbacks.rows,
         userAnswers: null,
       },
       { status: 200 }

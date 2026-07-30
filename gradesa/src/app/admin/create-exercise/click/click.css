@@ -47,6 +47,11 @@
     justify-content: flex-start;
 }
 
+.correct-word-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
 .error-message {
     font-size: 0.8em;
     margin-top: 1em;
@@ -78,4 +83,40 @@
     display: inline-block;
     max-width: 100%;
     word-wrap: break-word;
+}
+
+.false-word-feedback-list {
+    display: grid;
+    gap: var(--u-sm);
+    margin-top: var(--u-sm);
+}
+
+.false-word-feedback-row {
+    display: grid;
+    grid-template-columns: minmax(120px, 180px) minmax(320px, 1fr);
+    gap: var(--u-sm);
+    align-items: start;
+}
+
+.false-word-feedback-word {
+    display: inline-block;
+    padding-top: 0.45rem;
+    word-break: break-word;
+}
+
+.false-word-feedback-input {
+    width: 100%;
+    min-height: 2.8rem;
+    resize: vertical;
+    font: inherit;
+}
+
+@media (max-width: 900px) {
+    .false-word-feedback-row {
+        grid-template-columns: 1fr;
+    }
+
+    .false-word-feedback-word {
+        padding-top: 0;
+    }
 }

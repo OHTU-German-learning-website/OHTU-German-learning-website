@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Container } from "@/components/ui/layout/container";
 import { Column } from "@/components/ui/layout/container";
@@ -11,6 +11,8 @@ import Editor from "@/components/ui/editor";
 import { htmlToPlainText } from "@/shared/utils/normalizeEditorText";
 import { withBasePath } from "@/shared/utils/basePath";
 import AdminLastModified from "@/components/ui/admin-last-modified";
+
+const WORD_REGEX = /\p{L}+(?:['’-]\p{L}+)*/gu;
 
 function escapeHtml(value) {
   return String(value || "")
@@ -90,6 +92,25 @@ function splitIntoContiguousChunks(slotKeys) {
   return chunks;
 }
 
+function buildWordSlotLookup(tokens) {
+  const lookup = new Map();
+  let wordIndex = 0;
+
+  (Array.isArray(tokens) ? tokens : []).forEach((token) => {
+    if (token === "\n" || /^[^\S\n]+$/u.test(token)) {
+      return;
+    }
+
+    const matches = [...String(token).matchAll(WORD_REGEX)];
+    matches.forEach((match) => {
+      lookup.set(`w-${wordIndex}`, match[0]);
+      wordIndex += 1;
+    });
+  });
+
+  return lookup;
+}
+
 export default function CreateExercise() {
   const router = useRouter();
   const { click_id } = useParams();
@@ -103,6 +124,9 @@ export default function CreateExercise() {
   const [allWordsHtml, setAllWordsHtml] = useState("");
   const [allWordsText, setAllWordsText] = useState("");
   const [selectedWords, setSelectedWords] = useState([]);
+  const [showFalseWordSelection, setShowFalseWordSelection] = useState(false);
+  const [falseWordSelectionKeys, setFalseWordSelectionKeys] = useState([]);
+  const [falseWordFeedbackByKey, setFalseWordFeedbackByKey] = useState({});
   const [previewMode, setPreviewMode] = useState(false);
 
   const {
@@ -141,6 +165,24 @@ export default function CreateExercise() {
     setSelectedWords(
       Array.isArray(exerciseData.target_words) ? exerciseData.target_words : []
     );
+
+    const loadedFalseWordFeedbacks = Array.isArray(
+      exerciseData.false_word_feedbacks
+    )
+      ? exerciseData.false_word_feedbacks
+      : [];
+
+    setShowFalseWordSelection(loadedFalseWordFeedbacks.length > 0);
+    setFalseWordSelectionKeys(
+      loadedFalseWordFeedbacks.map((entry) => entry.slot_key).filter(Boolean)
+    );
+    setFalseWordFeedbackByKey(
+      Object.fromEntries(
+        loadedFalseWordFeedbacks
+          .filter((entry) => entry.slot_key)
+          .map((entry) => [entry.slot_key, entry.feedback || ""])
+      )
+    );
   }, [exerciseData, isEditMode]);
 
   const handleEditorContentChange = (html) => {
@@ -151,6 +193,48 @@ export default function CreateExercise() {
   // Preserve user-entered spacing and line breaks so preview and saved exercise match.
   const allWords =
     allWordsText.replace(/\r\n/g, "\n").match(/[^\S\n]+|\n|[^\s]+/g) ?? [];
+
+  const falseWordSlotLookup = useMemo(
+    () => buildWordSlotLookup(allWords),
+    [allWords]
+  );
+
+  const falseWordFeedbackEntries = useMemo(
+    () =>
+      falseWordSelectionKeys.map((slotKey) => ({
+        slotKey,
+        wordText: falseWordSlotLookup.get(slotKey) || slotKey,
+        feedback: falseWordFeedbackByKey[slotKey] || "",
+      })),
+    [falseWordSelectionKeys, falseWordFeedbackByKey, falseWordSlotLookup]
+  );
+
+  const disallowedFalseWordSlotKeys = useMemo(() => {
+    const entries = (Array.isArray(selectedWords) ? selectedWords : [])
+      .map(parseTargetEntry)
+      .filter(Boolean);
+
+    const disallowed = new Set();
+    const legacyWordTargets = new Set();
+
+    entries.forEach((entry) => {
+      if (/^w-\d+$/u.test(entry.slotKey)) {
+        disallowed.add(entry.slotKey);
+      } else if (entry.slotKey) {
+        legacyWordTargets.add(entry.slotKey);
+      }
+    });
+
+    if (legacyWordTargets.size > 0) {
+      falseWordSlotLookup.forEach((word, slotKey) => {
+        if (legacyWordTargets.has(word)) {
+          disallowed.add(slotKey);
+        }
+      });
+    }
+
+    return disallowed;
+  }, [selectedWords, falseWordSlotLookup]);
 
   const handlePreview = (e) => {
     e.preventDefault();
@@ -169,8 +253,16 @@ export default function CreateExercise() {
       return;
     }
 
-    const uniqueSlotKeys = [...new Set(entries.map((entry) => entry.slotKey))];
-    const chunks = splitIntoContiguousChunks(uniqueSlotKeys);
+    const existingGroupedEntries = entries.filter((entry) => entry.groupId);
+    const existingGroupedSlotKeys = new Set(
+      existingGroupedEntries.map((entry) => entry.slotKey)
+    );
+    const ungroupedSlotKeys = entries
+      .filter((entry) => !existingGroupedSlotKeys.has(entry.slotKey))
+      .map((entry) => entry.slotKey);
+
+    const uniqueUngroupedSlotKeys = [...new Set(ungroupedSlotKeys)];
+    const chunks = splitIntoContiguousChunks(uniqueUngroupedSlotKeys);
     const hasElementChunk = chunks.some((chunk) => chunk.length > 1);
 
     if (!hasElementChunk) {
@@ -180,22 +272,94 @@ export default function CreateExercise() {
       return;
     }
 
-    const nextTargets = chunks.flatMap((chunk, chunkIndex) => {
+    const groupedExistingRaw = existingGroupedEntries.map((entry) => entry.raw);
+    const nextTargetsFromUngrouped = chunks.flatMap((chunk, chunkIndex) => {
       if (chunk.length <= 1) {
         return chunk;
       }
 
-      const groupId = `group-${Date.now()}-${chunkIndex}`;
+      const groupId =
+        typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+          ? `group-${crypto.randomUUID()}`
+          : `group-${Date.now()}-${Math.random().toString(36).slice(2)}-${chunkIndex}`;
       return chunk.map((slotKey) => `${groupId}::${slotKey}`);
     });
 
-    setSelectedWords(nextTargets);
+    setSelectedWords([...groupedExistingRaw, ...nextTargetsFromUngrouped]);
+  };
+
+  const handleFalseWordSelectionChange = (updatedSelectedKeys) => {
+    const blockedKeys = updatedSelectedKeys.filter((slotKey) =>
+      disallowedFalseWordSlotKeys.has(slotKey)
+    );
+
+    if (blockedKeys.length > 0) {
+      const warningMessage =
+        "Du hast dieses Wort bereits als korrektes Wort ausgewählt.";
+      if (typeof window !== "undefined") {
+        window.alert(warningMessage);
+      }
+    }
+
+    const allowedKeys = updatedSelectedKeys.filter(
+      (slotKey) => !disallowedFalseWordSlotKeys.has(slotKey)
+    );
+
+    setError(null);
+    setFalseWordSelectionKeys(allowedKeys);
+  };
+
+  const handleFalseWordFeedbackChange = (slotKey, value) => {
+    setFalseWordFeedbackByKey((current) => ({
+      ...current,
+      [slotKey]: value,
+    }));
+  };
+
+  const validateFalseWordFeedbacks = () => {
+    if (falseWordSelectionKeys.length === 0) {
+      return null;
+    }
+
+    const missingFeedback = falseWordSelectionKeys.find(
+      (slotKey) => !(falseWordFeedbackByKey[slotKey] || "").trim()
+    );
+
+    if (missingFeedback) {
+      return "Bitte gib für jedes markierte falsche Wort ein Feedback ein.";
+    }
+
+    return null;
   };
 
   const handleSaveExercise = async () => {
     try {
       setError(null);
       setTitleError(false);
+
+      const validationError = validateFalseWordFeedbacks();
+      if (validationError) {
+        setError(validationError);
+        return;
+      }
+
+      const conflictingFalseWords = falseWordSelectionKeys.filter((slotKey) =>
+        disallowedFalseWordSlotKeys.has(slotKey)
+      );
+      if (conflictingFalseWords.length > 0) {
+        setError(
+          "Einige falsche Wörter sind bereits als korrekte Wörter ausgewählt. Bitte entferne diese zuerst."
+        );
+        return;
+      }
+
+      const falseWordFeedbacksPayload = falseWordFeedbackEntries.map(
+        (entry) => ({
+          slotKey: entry.slotKey,
+          wordText: entry.wordText,
+          feedback: entry.feedback,
+        })
+      );
 
       if (isEditMode) {
         const response = await fetch(
@@ -209,6 +373,7 @@ export default function CreateExercise() {
               targetWords: selectedWords,
               allWords,
               sourceHtml: allWordsHtml,
+              falseWordFeedbacks: falseWordFeedbacksPayload,
             }),
           }
         );
@@ -232,6 +397,7 @@ export default function CreateExercise() {
               targetWords: selectedWords,
               allWords,
               sourceHtml: allWordsHtml,
+              falseWordFeedbacks: falseWordFeedbacksPayload,
             }),
           }
         );
@@ -385,7 +551,7 @@ export default function CreateExercise() {
               }
             />
           </Container>
-          <Container>
+          <Container className="correct-word-actions">
             <Button
               size="sm"
               variant="secondary"
@@ -395,6 +561,66 @@ export default function CreateExercise() {
               Als Element übernehmen
             </Button>
           </Container>
+          <Container className="click-block">
+            <Button
+              size="sm"
+              variant="secondary"
+              onClick={() => setShowFalseWordSelection((current) => !current)}
+            >
+              {showFalseWordSelection
+                ? "Falsche Wörter ausblenden"
+                : "Falsche Wörter auswählen"}
+            </Button>
+          </Container>
+          {showFalseWordSelection && (
+            <Container className="click-block">
+              <WordSelectionExercise
+                title={title}
+                targetCategory={targetCategory}
+                targetWords={[]}
+                allWords={allWords}
+                sourceHtml={allWordsHtml}
+                isPreviewMode={true}
+                previewGroupAdjacentSelection={false}
+                previewAutoSelectTargets={false}
+                previewHighlightTargets={false}
+                previewSelectionKeys={falseWordSelectionKeys}
+                onPreviewSelectionChange={handleFalseWordSelectionChange}
+                instructionText="Wähle die falschen Wörter aus, für die du Feedback speichern möchtest."
+              />
+              <div className="false-word-feedback-list">
+                {falseWordFeedbackEntries.length === 0 ? (
+                  <p>
+                    Markiere ein falsches Wort, um dafür ein Feedback zu
+                    hinterlegen.
+                  </p>
+                ) : (
+                  falseWordFeedbackEntries.map((entry) => (
+                    <div
+                      key={entry.slotKey}
+                      className="false-word-feedback-row"
+                    >
+                      <strong className="false-word-feedback-word">
+                        {entry.wordText}
+                      </strong>
+                      <textarea
+                        className="false-word-feedback-input"
+                        rows={2}
+                        value={entry.feedback}
+                        onChange={(e) =>
+                          handleFalseWordFeedbackChange(
+                            entry.slotKey,
+                            e.target.value
+                          )
+                        }
+                        placeholder="Feedback für dieses falsche Wort"
+                      />
+                    </div>
+                  ))
+                )}
+              </div>
+            </Container>
+          )}
           <Container>
             <Button size="sm" variant="secondary" onClick={handleEditAgain}>
               Übung bearbeiten

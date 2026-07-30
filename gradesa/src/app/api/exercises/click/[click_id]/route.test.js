@@ -19,6 +19,13 @@ describe("click_exercises API", () => {
       all_words: ["Die", "Kinder", "laufen", "springen", "schwimmen"],
     });
 
+    await TestFactory.clickFalseWordFeedback({
+      click_exercise_id: exercise.id,
+      slot_key: "w-0",
+      word_text: "Die",
+      feedback: "Das ist hier kein Verb.",
+    });
+
     // Insert a user answer for the exercise
     await DB.pool(
       `INSERT INTO click_answers (user_id, click_exercise_id, answer, target_words)
@@ -53,6 +60,13 @@ describe("click_exercises API", () => {
       "laufen",
       "springen",
       "schwimmen",
+    ]);
+    expect(json.falseWordFeedbacks).toEqual([
+      {
+        slot_key: "w-0",
+        word_text: "Die",
+        feedback: "Das ist hier kein Verb.",
+      },
     ]);
     expect(json.userAnswers).toBeDefined();
     expect(json.userAnswers.answer).toEqual(["laufen", "springen"]);
@@ -94,6 +108,7 @@ describe("click_exercises API", () => {
       "und",
       "langsam",
     ]);
+    expect(json.falseWordFeedbacks).toEqual([]);
     expect(json.userAnswers).toBeNull(); // No user answers exist
   });
 

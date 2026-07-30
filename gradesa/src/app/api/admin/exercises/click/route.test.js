@@ -18,6 +18,13 @@ describe("create click_exercises API", () => {
         targetCategory: "Verben",
         targetWords: ["laufen", "springen", "schwimmen"],
         allWords: ["Die", "Kinder", "laufen", "springen", "schwimmen"],
+        falseWordFeedbacks: [
+          {
+            slotKey: "w-0",
+            wordText: "Die",
+            feedback: "Das ist hier kein Verb.",
+          },
+        ],
       })
     );
 
@@ -32,6 +39,20 @@ describe("create click_exercises API", () => {
       [json.id]
     );
     expect(exercise.rows.length).toBe(1);
+
+    const falseWordFeedbacks = await DB.pool(
+      `SELECT slot_key, word_text, feedback
+       FROM click_false_word_feedbacks
+       WHERE click_exercise_id = $1`,
+      [json.id]
+    );
+    expect(falseWordFeedbacks.rows).toEqual([
+      {
+        slot_key: "w-0",
+        word_text: "Die",
+        feedback: "Das ist hier kein Verb.",
+      },
+    ]);
   });
   it("should return 400 if required fields are missing", async () => {
     const admin = await TestFactory.user({ is_admin: true });

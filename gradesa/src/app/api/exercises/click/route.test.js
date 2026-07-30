@@ -2,7 +2,6 @@ import { describe, it, expect } from "vitest";
 import { GET } from "./route";
 import { useTestDatabase } from "@/backend/test/testdb";
 import { useTestRequest } from "@/backend/test/mock-request";
-import { DB } from "@/backend/db";
 import { TestFactory } from "@/backend/test/testfactory";
 
 describe("click_exercises API", () => {
@@ -28,6 +27,13 @@ describe("click_exercises API", () => {
       all_words: ["Der", "Hund", "ist", "schnell", "und", "langsam"],
     });
 
+    await TestFactory.clickFalseWordFeedback({
+      click_exercise_id: click_exercise2.id,
+      slot_key: "w-0",
+      word_text: "Der",
+      feedback: "Das ist kein Adjektiv.",
+    });
+
     const response = await GET(mockGet("/api/exercises/click"));
 
     expect(response).toBeDefined();
@@ -48,6 +54,13 @@ describe("click_exercises API", () => {
       "und",
       "langsam",
     ]);
+    expect(json[0].false_word_feedbacks).toEqual([
+      {
+        slot_key: "w-0",
+        word_text: "Der",
+        feedback: "Das ist kein Adjektiv.",
+      },
+    ]);
 
     expect(json[1].title).toBe("Verben identifizieren");
     expect(json[1].category).toBe("Verben");
@@ -59,6 +72,7 @@ describe("click_exercises API", () => {
       "springen",
       "schwimmen",
     ]);
+    expect(json[1].false_word_feedbacks).toEqual([]);
   });
 
   it("should return an empty array if no click exercises exist", async () => {

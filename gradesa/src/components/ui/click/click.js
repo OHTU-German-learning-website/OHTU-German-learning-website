@@ -295,11 +295,15 @@ const WordSelectionExercise = ({
   targetWords,
   allWords,
   sourceHtml,
+  falseWordFeedbacks = [],
   previousAnswers,
   onSelectionChange,
   previewSelectionKeys,
   onPreviewSelectionChange,
   previewGroupAdjacentSelection = true,
+  previewAutoSelectTargets = true,
+  previewHighlightTargets = true,
+  instructionText,
   onSubmit,
   isPreviewMode = false,
   isSubmitted,
@@ -435,6 +439,28 @@ const WordSelectionExercise = ({
     [targetSlotKeys]
   );
 
+  const falseWordFeedbackMap = useMemo(() => {
+    const map = new Map();
+
+    (Array.isArray(falseWordFeedbacks) ? falseWordFeedbacks : []).forEach(
+      (entry) => {
+        const slotKey = entry?.slot_key || entry?.slotKey;
+        const feedbackText = entry?.feedback;
+        if (!slotKey || !feedbackText) {
+          return;
+        }
+
+        map.set(slotKey, {
+          slotKey,
+          wordText: entry?.word_text || entry?.wordText || "",
+          feedback: feedbackText,
+        });
+      }
+    );
+
+    return map;
+  }, [falseWordFeedbacks]);
+
   const isControlledPreview =
     isPreviewMode &&
     Array.isArray(previewSelectionKeys) &&
@@ -445,18 +471,40 @@ const WordSelectionExercise = ({
     : selectedSlotKeys;
 
   useEffect(() => {
-    if (!isControlledPreview && isPreviewMode && targetSlotKeys.length > 0) {
+    if (
+      !isControlledPreview &&
+      isPreviewMode &&
+      previewAutoSelectTargets &&
+      targetSlotKeys.length > 0
+    ) {
       setSelectedSlotKeys(orderSlotKeys(targetSlotKeys, wordSlots));
     }
-  }, [targetSlotKeys, isPreviewMode, wordSlots, isControlledPreview]);
+  }, [
+    targetSlotKeys,
+    isPreviewMode,
+    wordSlots,
+    isControlledPreview,
+    previewAutoSelectTargets,
+  ]);
 
   const displayedSelectedSet = useMemo(() => {
     if (!isPreviewMode) {
       return new Set(selectedSlotKeys);
     }
 
-    return new Set([...targetSlotKeys, ...previewSelection]);
-  }, [isPreviewMode, selectedSlotKeys, targetSlotKeys, previewSelection]);
+    const selected = [...previewSelection];
+    if (previewHighlightTargets) {
+      selected.push(...targetSlotKeys);
+    }
+
+    return new Set(selected);
+  }, [
+    isPreviewMode,
+    selectedSlotKeys,
+    targetSlotKeys,
+    previewSelection,
+    previewHighlightTargets,
+  ]);
 
   const handleWordClick = (slotKey) => {
     if (isSubmitted && !isPreviewMode) return;
@@ -631,7 +679,17 @@ const WordSelectionExercise = ({
         : selectedSlotKeys.map((key) => slotToWord[key]).filter(Boolean);
     }
 
-    onSubmit(selectedPayload, score, feedbackMessage);
+    const selectedFalseWordFeedbacks = selectedSlotKeys
+      .filter((slotKey) => !targetSlotKeySet.has(slotKey))
+      .map((slotKey) => falseWordFeedbackMap.get(slotKey))
+      .filter(Boolean);
+
+    onSubmit(
+      selectedPayload,
+      score,
+      feedbackMessage,
+      selectedFalseWordFeedbacks
+    );
   };
 
   const resetExercise = () => {
@@ -740,7 +798,10 @@ const WordSelectionExercise = ({
     <Column gap="md">
       <h1>{title}</h1>
       <div className="click-instruction">
-        <i>{`Wähle alle ${targetCategory} aus dem untenstehenden Text aus.`}</i>
+        <i>
+          {instructionText ||
+            `Wähle alle ${targetCategory} aus dem untenstehenden Text aus.`}
+        </i>
       </div>
       {htmlSlotsData.slots.length > 0 ? (
         <Container className="word-container click-source-html">
