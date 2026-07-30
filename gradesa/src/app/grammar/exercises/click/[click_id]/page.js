@@ -1,11 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import WordSelectionExercise from "@/components/ui/click/click.js";
 import { Button } from "@/components/ui/button";
 import AdminVisibleLastModified from "@/components/ui/admin-visible-last-modified";
 import useQuery from "@/shared/hooks/useQuery";
 import { useRequest } from "@/shared/hooks/useRequest";
+import "./page.css";
 
 export default function StudentExercisePage() {
   const params = useParams();
@@ -21,6 +22,14 @@ export default function StudentExercisePage() {
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [feedback, setFeedback] = useState("");
+  const [falseWordFeedbacks, setFalseWordFeedbacks] = useState([]);
+
+  useEffect(() => {
+    if (!isSubmitted) {
+      setFeedback("");
+      setFalseWordFeedbacks([]);
+    }
+  }, [isSubmitted]);
 
   const exercise = data?.exercise || null;
 
@@ -34,8 +43,14 @@ export default function StudentExercisePage() {
     }
   };
 
-  const handleSubmit = async (selectedWords, score, feedbackMessage) => {
+  const handleSubmit = async (
+    selectedWords,
+    score,
+    feedbackMessage,
+    selectedFalseWordFeedbacks = []
+  ) => {
     setFeedback(feedbackMessage);
+    setFalseWordFeedbacks(selectedFalseWordFeedbacks);
     setIsSubmitted(true);
 
     // Save answers to the database
@@ -65,6 +80,7 @@ export default function StudentExercisePage() {
         targetWords={exercise.target_words}
         allWords={exercise.all_words}
         sourceHtml={exercise.source_html}
+        falseWordFeedbacks={data.falseWordFeedbacks || []}
         previousAnswers={data.userAnswers?.answer || []}
         isPreviewMode={false}
         onSubmit={handleSubmit} // Pass the submit handler as a prop
@@ -72,6 +88,29 @@ export default function StudentExercisePage() {
         setIsSubmitted={setIsSubmitted} // Function to set submission state
         feedback={feedback} // Pass feedback as a prop
       />
+
+      {falseWordFeedbacks.length > 0 && (
+        <div className="false-word-feedback-panel">
+          <h3 className="false-word-feedback-heading">
+            Feedback zu falschen Wörtern
+          </h3>
+          <div className="false-word-feedback-grid">
+            {falseWordFeedbacks.map((entry) => (
+              <div
+                key={`${entry.slotKey}-${entry.feedback}`}
+                className="false-word-feedback-item"
+              >
+                <div className="false-word-feedback-item-word">
+                  {entry.wordText || "Wort"}
+                </div>
+                <div className="false-word-feedback-item-text">
+                  {entry.feedback}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <br />
       <div>

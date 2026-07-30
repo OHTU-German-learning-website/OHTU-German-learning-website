@@ -186,6 +186,21 @@ const clickExercise = modelFactory(
   async (_base) => {}
 );
 
+const clickFalseWordFeedback = modelFactory(
+  "click_false_word_feedbacks",
+  {
+    slot_key: "w-0",
+    word_text: faker.lorem.word(),
+    feedback: faker.lorem.sentence(),
+  },
+  async (base) => {
+    if (!base.click_exercise_id) {
+      const exercise = await clickExercise();
+      base.click_exercise_id = exercise.id;
+    }
+  }
+);
+
 const fillGapExercise = modelFactory(
   "fill_gap_exercises",
   {
@@ -257,6 +272,7 @@ export const TestFactory = {
   multichoiceContent,
   multichoiceOption,
   clickExercise,
+  clickFalseWordFeedback,
   fillGapExercise,
   fillGapGap,
   fillGapAnswer,

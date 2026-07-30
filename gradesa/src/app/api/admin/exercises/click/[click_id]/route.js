@@ -72,6 +72,14 @@ export const GET = withAuth(
         [click_id]
       );
 
+      const feedbackResult = await DB.pool(
+        `SELECT slot_key, word_text, feedback
+         FROM click_false_word_feedbacks
+         WHERE click_exercise_id = $1
+         ORDER BY id ASC`,
+        [click_id]
+      );
+
       if (result.rows.length === 0) {
         return NextResponse.json(
           { error: "Übung nicht gefunden." },
@@ -79,7 +87,10 @@ export const GET = withAuth(
         );
       }
 
-      return NextResponse.json(result.rows[0]);
+      return NextResponse.json({
+        ...result.rows[0],
+        false_word_feedbacks: feedbackResult.rows,
+      });
     } catch (error) {
       console.error("Error fetching click exercise:", error);
       return NextResponse.json(
@@ -101,6 +112,15 @@ export const PUT = withAuth(
       const body = await request.json();
       const { title, targetCategory, targetWords, allWords, sourceHtml } = body;
       const sanitizedSourceHtml = sanitizeHtml(sourceHtml || "");
+      const falseWordFeedbacks = Array.isArray(body.falseWordFeedbacks)
+        ? body.falseWordFeedbacks
+        : [];
+
+      const normalizedFalseWordFeedbacks = falseWordFeedbacks.map((entry) => ({
+        slotKey: String(entry?.slotKey || entry?.slot_key || "").trim(),
+        wordText: String(entry?.wordText || entry?.word_text || "").trim(),
+        feedback: String(entry?.feedback || "").trim(),
+      }));
 
       const validationError = validatePayload({
         title,
@@ -144,33 +164,54 @@ export const PUT = withAuth(
         );
       }
 
-      await DB.pool(
-        `UPDATE click_exercises
-         SET title = $1,
-             category = $2,
-             target_words = $3,
-             all_words = $4,
-             source_html = $5,
-             updated_at = NOW()
-         WHERE id = $6`,
-        [
-          title,
-          targetCategory,
-          targetWords,
-          allWords,
-          sanitizedSourceHtml,
-          click_id,
-        ]
-      );
+      await DB.transaction(async (tx) => {
+        await tx.query(
+          `UPDATE click_exercises
+           SET title = $1,
+               category = $2,
+               target_words = $3,
+               all_words = $4,
+               source_html = $5,
+               updated_at = NOW()
+           WHERE id = $6`,
+          [
+            title,
+            targetCategory,
+            targetWords,
+            allWords,
+            sanitizedSourceHtml,
+            click_id,
+          ]
+        );
 
-      await DB.pool(
-        `UPDATE exercises e
-         SET updated_by = $1
-         FROM click_to_exercises cte
-         WHERE cte.exercise_id = e.id
-           AND cte.click_id = $2`,
-        [request.user?.id ?? null, click_id]
-      );
+        await tx.query(
+          `DELETE FROM click_false_word_feedbacks
+           WHERE click_exercise_id = $1`,
+          [click_id]
+        );
+
+        for (const entry of normalizedFalseWordFeedbacks) {
+          if (!entry.slotKey || !entry.wordText || !entry.feedback) {
+            continue;
+          }
+
+          await tx.query(
+            `INSERT INTO click_false_word_feedbacks
+             (click_exercise_id, slot_key, word_text, feedback)
+             VALUES ($1, $2, $3, $4)`,
+            [click_id, entry.slotKey, entry.wordText, entry.feedback]
+          );
+        }
+
+        await tx.query(
+          `UPDATE exercises e
+           SET updated_by = $1
+           FROM click_to_exercises cte
+           WHERE cte.exercise_id = e.id
+             AND cte.click_id = $2`,
+          [request.user?.id ?? null, click_id]
+        );
+      });
 
       return NextResponse.json({ success: true });
     } catch (error) {
