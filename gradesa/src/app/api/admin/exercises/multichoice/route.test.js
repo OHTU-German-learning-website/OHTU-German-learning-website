@@ -14,6 +14,7 @@ describe("POST /api/admin/exercises/multichoice", () => {
 
     const validInput = {
       title: "Where is Paris located?",
+      instructionText: "Wähle für jede Lücke die passende Option aus.",
       description: "Geography question",
       content: [
         {
@@ -48,6 +49,9 @@ describe("POST /api/admin/exercises/multichoice", () => {
       [exerciseId]
     );
     expect(multichoiceExerciseResult.rows.length).toBe(1);
+    expect(multichoiceExerciseResult.rows[0].instruction_text).toBe(
+      validInput.instructionText
+    );
 
     const content = await DB.pool(
       "SELECT * FROM multichoice_content WHERE multichoice_exercise_id = $1",

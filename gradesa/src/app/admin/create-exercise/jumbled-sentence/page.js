@@ -32,6 +32,7 @@ export default function CreateJumbledSentenceExercise() {
   const { exercise_id } = useParams();
   const isEditMode = Boolean(exercise_id);
   const [title, setTitle] = useState("");
+  const [instructionText, setInstructionText] = useState("");
   const [sentences, setSentences] = useState([
     {
       sentence: "",
@@ -60,6 +61,7 @@ export default function CreateJumbledSentenceExercise() {
 
     const loadedExercise = data.exercise;
     setTitle(loadedExercise.title || "");
+    setInstructionText(loadedExercise.instruction_text || "");
     setSentences(
       (loadedExercise.sentences || []).length
         ? loadedExercise.sentences.map((item) => ({
@@ -271,6 +273,7 @@ export default function CreateJumbledSentenceExercise() {
 
     const parsed = jumbledSentenceExerciseSchema.safeParse({
       title,
+      instructionText,
       sentences: normalizedSentences,
     });
     if (!parsed.success) {
@@ -289,7 +292,11 @@ export default function CreateJumbledSentenceExercise() {
       const res = await fetch(endpoint, {
         method: isEditMode ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, sentences: normalizedSentences }),
+        body: JSON.stringify({
+          title,
+          instructionText,
+          sentences: normalizedSentences,
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || "Fehler beim Speichern.");
@@ -332,6 +339,15 @@ export default function CreateJumbledSentenceExercise() {
             onChange={(e) => setTitle(e.target.value)}
             className={styles.fieldInput}
             required
+          />
+        </label>
+        <label className={styles.fieldLabel}>
+          Anweisung:
+          <input
+            value={instructionText}
+            onChange={(e) => setInstructionText(e.target.value)}
+            className={styles.fieldInput}
+            placeholder="Optional: Hinweise für die Lernenden"
           />
         </label>
         <p className={styles.exerciseDescription}>

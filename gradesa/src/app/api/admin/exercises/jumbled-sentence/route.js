@@ -18,7 +18,8 @@ export const POST = withAuth(
         { status: 400 }
       );
     }
-    const { title, sentences } = parseResult.data;
+    const { title, instructionText, sentences } = parseResult.data;
+    const normalizedInstructionText = String(instructionText || "").trim();
     const created_by = request.user.id;
     try {
       const result = await DB.transaction(async (client) => {
@@ -28,8 +29,8 @@ export const POST = withAuth(
         );
         const exercise_id = exerciseRes.rows[0].id;
         const jumbledRes = await client.query(
-          `INSERT INTO jumbled_sentence_exercises (created_at, updated_at, exercise_id, created_by, title) VALUES (NOW(), NOW(), $1, $2, $3) RETURNING id`,
-          [exercise_id, created_by, title]
+          `INSERT INTO jumbled_sentence_exercises (created_at, updated_at, exercise_id, created_by, title, instruction_text) VALUES (NOW(), NOW(), $1, $2, $3, $4) RETURNING id`,
+          [exercise_id, created_by, title, normalizedInstructionText || null]
         );
         const jumbled_id = jumbledRes.rows[0].id;
         for (const s of sentences) {
@@ -60,7 +61,7 @@ export const GET = withAuth(
   async () => {
     try {
       const res = await DB.pool(
-        `SELECT id, title FROM jumbled_sentence_exercises ORDER BY id DESC`
+        `SELECT id, title, instruction_text FROM jumbled_sentence_exercises ORDER BY id DESC`
       );
       return NextResponse.json({ exercises: res.rows });
     } catch (err) {

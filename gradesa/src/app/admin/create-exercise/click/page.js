@@ -120,7 +120,7 @@ export default function CreateExercise() {
   const [error, setError] = useState(null);
   const [titleError, setTitleError] = useState(false);
   const [title, setTitle] = useState("");
-  const [targetCategory, setTargetCategory] = useState("");
+  const [instructionText, setInstructionText] = useState("");
   const [allWordsHtml, setAllWordsHtml] = useState("");
   const [allWordsText, setAllWordsText] = useState("");
   const [selectedWords, setSelectedWords] = useState([]);
@@ -159,7 +159,7 @@ export default function CreateExercise() {
           : "";
 
     setTitle(exerciseData.title || "");
-    setTargetCategory(exerciseData.category || "");
+    setInstructionText(exerciseData.category || "");
     setAllWordsHtml(sourceHtml);
     setAllWordsText(text);
     setSelectedWords(
@@ -369,7 +369,7 @@ export default function CreateExercise() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               title,
-              targetCategory,
+              instructionText,
               targetWords: selectedWords,
               allWords,
               sourceHtml: allWordsHtml,
@@ -393,7 +393,7 @@ export default function CreateExercise() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               title,
-              targetCategory,
+              instructionText,
               targetWords: selectedWords,
               allWords,
               sourceHtml: allWordsHtml,
@@ -498,13 +498,13 @@ export default function CreateExercise() {
             </Container>
 
             <Container className="exercise-click click-block">
-              <label>Zielkategorie</label>
+              <label>Anweisung</label>
               <input
                 className="click-input"
                 type="text"
-                value={targetCategory}
-                onChange={(e) => setTargetCategory(e.target.value)}
-                placeholder="Z. B. Verben, Substantive, Adjektive, etc."
+                value={instructionText}
+                onChange={(e) => setInstructionText(e.target.value)}
+                placeholder="Z. B. Markiere nur attributive Adjektive."
                 required
               />
             </Container>
@@ -527,10 +527,6 @@ export default function CreateExercise() {
       ) : (
         <div>
           <p>
-            Klicken Sie auf die Wörter, um die richtigen auszuwählen (
-            {targetCategory}).
-          </p>
-          <p>
             Wenn mehrere benachbarte ausgewählte Wörter als ein Element
             behandelt werden sollen, klicken Sie auf "Als Element übernehmen".
           </p>
@@ -540,7 +536,8 @@ export default function CreateExercise() {
           <Container>
             <WordSelectionExercise
               title={title}
-              targetCategory={targetCategory}
+              targetCategory={instructionText}
+              instructionText={instructionText}
               targetWords={selectedWords}
               allWords={allWords}
               sourceHtml={allWordsHtml}
@@ -576,7 +573,7 @@ export default function CreateExercise() {
             <Container className="click-block">
               <WordSelectionExercise
                 title={title}
-                targetCategory={targetCategory}
+                targetCategory={instructionText}
                 targetWords={[]}
                 allWords={allWords}
                 sourceHtml={allWordsHtml}

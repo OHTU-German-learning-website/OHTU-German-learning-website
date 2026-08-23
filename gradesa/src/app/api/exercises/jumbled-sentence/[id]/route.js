@@ -7,7 +7,7 @@ export const GET = withAuth(async (request, { params }) => {
   const { id } = await params;
   try {
     const exRes = await DB.pool(
-      `SELECT id, title FROM jumbled_sentence_exercises WHERE id = $1`,
+      `SELECT id, title, instruction_text FROM jumbled_sentence_exercises WHERE id = $1`,
       [id]
     );
     if (!exRes.rows.length) {

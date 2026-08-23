@@ -77,6 +77,7 @@ export default function StudentExercisePage() {
       <WordSelectionExercise
         title={exercise.title}
         targetCategory={exercise.category}
+        instructionText={exercise.category}
         targetWords={exercise.target_words}
         allWords={exercise.all_words}
         sourceHtml={exercise.source_html}

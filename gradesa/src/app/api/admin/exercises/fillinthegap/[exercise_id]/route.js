@@ -26,6 +26,7 @@ export const GET = withAuth(
            fge.id,
            fge.exercise_id,
            fge.title,
+            fge.instruction_text,
            fge.source_text,
            fge.source_html,
            e.updated_at AS last_modified_at,
@@ -110,7 +111,8 @@ export const PUT = withAuth(
         );
       }
 
-      const { title, text, textHtml, gaps } = parsed.data;
+      const { title, instructionText, text, textHtml, gaps } = parsed.data;
+      const normalizedInstructionText = String(instructionText || "").trim();
       const normalizedText = normalizePlainText(
         text || htmlToPlainText(textHtml || "")
       );
@@ -130,9 +132,19 @@ export const PUT = withAuth(
 
         await tx.query(
           `UPDATE fill_gap_exercises
-           SET title = $1, source_text = $2, source_html = $3, updated_at = NOW()
-           WHERE id = $4`,
-          [title, normalizedText, sourceHtml, exercise_id]
+           SET title = $1,
+               instruction_text = $2,
+               source_text = $3,
+               source_html = $4,
+               updated_at = NOW()
+           WHERE id = $5`,
+          [
+            title,
+            normalizedInstructionText || null,
+            normalizedText,
+            sourceHtml,
+            exercise_id,
+          ]
         );
 
         await tx.query(

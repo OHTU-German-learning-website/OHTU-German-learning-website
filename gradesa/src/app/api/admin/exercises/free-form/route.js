@@ -7,7 +7,8 @@ import { NextResponse } from "next/server";
 export const POST = withAuth(
   withInputValidation(freeFormExerciseSchema, async (req) => {
     const body = await req.json();
-    const { title, questions } = body;
+    const { title, instructionText, questions } = body;
+    const normalizedInstructionText = String(instructionText || "").trim();
 
     const hasValidAnswerBalance = questions.every(
       (q) =>
@@ -41,11 +42,11 @@ export const POST = withAuth(
       const exerciseId = exercise.rows[0].id;
       const freeFormExercise = await tx.query(
         `
-        INSERT INTO free_form_exercises (exercise_id, title)
-        VALUES ($1, $2)
+        INSERT INTO free_form_exercises (exercise_id, title, instruction_text)
+        VALUES ($1, $2, $3)
         RETURNING id
       `,
-        [exerciseId, title]
+        [exerciseId, title, normalizedInstructionText || null]
       );
 
       const freeFormExerciseId = freeFormExercise.rows[0].id;

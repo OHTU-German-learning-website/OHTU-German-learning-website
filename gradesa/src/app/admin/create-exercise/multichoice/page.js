@@ -13,6 +13,7 @@ export default function CreateMultichoicePage() {
   const isEditMode = Boolean(exercise_id);
 
   const [title, setTitle] = useState("");
+  const [instructionText, setInstructionText] = useState("");
 
   const [sections, setSections] = useState([
     { id: "1", type: "text", value: "Ich" },
@@ -48,6 +49,9 @@ export default function CreateMultichoicePage() {
     }
 
     setTitle(exerciseData.title || "");
+    setInstructionText(
+      exerciseData.instruction_text || exerciseData.exercise_description || ""
+    );
 
     const mappedSections = (exerciseData.content || []).map((item) => {
       if (item.content_type === "multichoice") {
@@ -183,6 +187,7 @@ export default function CreateMultichoicePage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title,
+          instructionText,
           // --- FIX 2: REMOVED description from here ---
           content: contentToSave,
         }),
@@ -247,6 +252,15 @@ export default function CreateMultichoicePage() {
             Dieser Titel existiert bereits. Bitte wähle einen anderen.
           </span>
         )}
+      </div>
+      <div className="form-group">
+        <label>Anweisung</label>
+        <input
+          className="form-input"
+          value={instructionText}
+          onChange={(e) => setInstructionText(e.target.value)}
+          placeholder="Optional: Hinweise für die Lernenden"
+        />
       </div>
       <hr className="divider" />
 

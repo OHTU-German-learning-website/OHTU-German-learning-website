@@ -205,10 +205,11 @@ export default function FillInTheGapExercisePage() {
   return (
     <Container maxW="900px" m="0 auto" p="md">
       <Column gap="md">
-        <h2>{exercise.title}</h2>
         <AdminVisibleLastModified
           endpoint={`/admin/exercises/fillinthegap/${exercise_id}`}
         />
+        <h2>{exercise.title}</h2>
+        {exercise.instruction_text && <p>{exercise.instruction_text}</p>}
 
         {!!exercise.source_html && (
           <Container

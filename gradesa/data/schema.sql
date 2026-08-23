@@ -421,7 +421,8 @@ CREATE TABLE public.fill_gap_exercises (
   exercise_id bigint UNIQUE NOT NULL,
   title text NOT NULL,
   source_text text NOT NULL,
-  source_html text NOT NULL DEFAULT ''::text
+  source_html text NOT NULL DEFAULT ''::text,
+  instruction_text text
 );
 
 CREATE INDEX fill_gap_exercises_search_fts_idx ON public.fill_gap_exercises USING gin (to_tsvector('simple'::regconfig, ((((COALESCE(title, ''::text) || ' '::text) || COALESCE(source_text, ''::text)) || ' '::text) || COALESCE(source_html, ''::text))));
@@ -476,7 +477,8 @@ CREATE TABLE public.jumbled_sentence_exercises (
   updated_at timestamp with time zone NOT NULL DEFAULT now(),
   exercise_id bigint UNIQUE NOT NULL,
   created_by bigint NOT NULL,
-  title text NOT NULL
+  title text NOT NULL,
+  instruction_text text
 );
 
 CREATE INDEX jumbled_sentence_exercises_search_fts_idx ON public.jumbled_sentence_exercises USING gin (to_tsvector('simple'::regconfig, COALESCE(title, ''::text)));
@@ -540,7 +542,8 @@ CREATE TABLE public.free_form_exercises (
   updated_at timestamp with time zone NOT NULL DEFAULT now(),
   exercise_id bigint NOT NULL,
   question text,
-  title text NOT NULL
+  title text NOT NULL,
+  instruction_text text
 );
 
 CREATE INDEX free_form_exercises_search_fts_idx ON public.free_form_exercises USING gin (to_tsvector('simple'::regconfig, COALESCE(title, ''::text)));
@@ -752,7 +755,8 @@ CREATE TABLE public.multichoice_exercises (
   title text NOT NULL,
   exercise_description text,
   created_at timestamp with time zone NOT NULL DEFAULT now(),
-  updated_at timestamp with time zone NOT NULL DEFAULT now()
+  updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  instruction_text text
 );
 
 CREATE INDEX multichoice_exercises_search_fts_idx ON public.multichoice_exercises USING gin (to_tsvector('simple'::regconfig, ((COALESCE(title, ''::text) || ' '::text) || COALESCE(exercise_description, ''::text))));

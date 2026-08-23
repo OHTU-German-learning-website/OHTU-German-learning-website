@@ -9,11 +9,13 @@ import "../multichoice/multichoice.css";
 
 const defaultFormErrors = {
   title: "",
+  instructionText: "",
   questions: [],
 };
 
 export default function CreateFreeFormExercise() {
   const [title, setTitle] = useState("");
+  const [instructionText, setInstructionText] = useState("");
   const [questions, setQuestions] = useState([
     {
       question: "",
@@ -118,7 +120,7 @@ export default function CreateFreeFormExercise() {
 
       const res = await makeRequest("/admin/exercises/free-form", {
         method: "POST",
-        body: { title, questions },
+        body: { title, instructionText, questions },
       });
 
       if (res.status === 200) {
@@ -155,6 +157,7 @@ export default function CreateFreeFormExercise() {
   const handleSuccessOk = () => {
     setShowSuccessDialog(false);
     setTitle("");
+    setInstructionText("");
     setQuestions([
       {
         question: "",
@@ -203,6 +206,18 @@ export default function CreateFreeFormExercise() {
         />
         {formErrors.title && (
           <span className="field-error-hint">{formErrors.title}</span>
+        )}
+      </div>
+      <div className="form-group">
+        <label>Anweisung</label>
+        <input
+          className={`form-input${formErrors.instructionText ? " input-error" : ""}`}
+          value={instructionText}
+          onChange={(e) => setInstructionText(e.target.value)}
+          placeholder="Optional: Hinweise für die Lernenden"
+        />
+        {formErrors.instructionText && (
+          <span className="field-error-hint">{formErrors.instructionText}</span>
         )}
       </div>
       {questions.map((q, questionIndex) => (

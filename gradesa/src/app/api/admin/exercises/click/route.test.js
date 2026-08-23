@@ -111,7 +111,7 @@ describe("create click_exercises API", () => {
       "Der Titel muss zwischen 3 und 50 Zeichen lang sein."
     );
   });
-  it("should return 422 if targetCategory is too short", async () => {
+  it("should return 422 if instruction text is too short", async () => {
     const admin = await TestFactory.user({ is_admin: true });
     const { mockPost } = useTestRequest(admin);
 
@@ -128,17 +128,17 @@ describe("create click_exercises API", () => {
     expect(response.status).toBe(422);
     const json = await response.json();
     expect(json.error).toBe(
-      "Die Kategorie muss zwischen 3 und 30 Zeichen lang sein."
+      "Die Anweisung muss zwischen 5 und 200 Zeichen lang sein."
     );
   });
-  it("should return 422 if targetCategory is too long", async () => {
+  it("should return 422 if instruction text is too long", async () => {
     const admin = await TestFactory.user({ is_admin: true });
     const { mockPost } = useTestRequest(admin);
 
     const response = await POST(
       mockPost("api/exercises/create/click", {
         title: "Verben identifizieren",
-        targetCategory: "a".repeat(31),
+        targetCategory: "a".repeat(201),
         targetWords: ["laufen", "springen", "schwimmen"],
         allWords: ["Die", "Kinder", "laufen", "springen", "schwimmen"],
       })
@@ -148,7 +148,7 @@ describe("create click_exercises API", () => {
     expect(response.status).toBe(422);
     const json = await response.json();
     expect(json.error).toBe(
-      "Die Kategorie muss zwischen 3 und 30 Zeichen lang sein."
+      "Die Anweisung muss zwischen 5 und 200 Zeichen lang sein."
     );
   });
   it("should return 422 if targetWords is empty", async () => {

@@ -117,6 +117,7 @@ export const jumbledSentenceSchema = z
 
 export const jumbledSentenceExerciseSchema = z.object({
   title: trimmed(z.string().min(3, { message: "Titel ist erforderlich." })),
+  instructionText: trimmed(z.string().max(500)).optional(),
   sentences: z
     .array(jumbledSentenceSchema)
     .min(1, { message: "Mindestens ein Satz ist erforderlich." }),

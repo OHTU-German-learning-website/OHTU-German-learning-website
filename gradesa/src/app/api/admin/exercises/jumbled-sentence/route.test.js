@@ -14,6 +14,7 @@ describe("admin jumbled sentence exercises API", () => {
 
     const payload = {
       title: "Satzreihenfolge A1",
+      instructionText: "Ordnen Sie die Elemente zu einem korrekten Satz.",
       sentences: [
         {
           sentence: "Ich\nlerne jeden Tag\nDeutsch",
@@ -36,11 +37,14 @@ describe("admin jumbled sentence exercises API", () => {
     expect(json.id).toBeDefined();
 
     const createdExercise = await DB.pool(
-      "SELECT id, exercise_id, title, created_by FROM jumbled_sentence_exercises WHERE id = $1",
+      "SELECT id, exercise_id, title, instruction_text, created_by FROM jumbled_sentence_exercises WHERE id = $1",
       [json.id]
     );
     expect(createdExercise.rows.length).toBe(1);
     expect(createdExercise.rows[0].title).toBe(payload.title);
+    expect(createdExercise.rows[0].instruction_text).toBe(
+      payload.instructionText
+    );
     expect(createdExercise.rows[0].created_by).toBe(admin.id);
 
     const linkedExercise = await DB.pool(
@@ -105,14 +109,16 @@ describe("admin jumbled sentence exercises API", () => {
     );
 
     await DB.pool(
-      "INSERT INTO jumbled_sentence_exercises (created_at, updated_at, exercise_id, created_by, title) VALUES (NOW(), NOW(), $1, $2, $3), (NOW(), NOW(), $4, $5, $6)",
+      "INSERT INTO jumbled_sentence_exercises (created_at, updated_at, exercise_id, created_by, title, instruction_text) VALUES (NOW(), NOW(), $1, $2, $3, $4), (NOW(), NOW(), $5, $6, $7, $8)",
       [
         baseExerciseA.rows[0].id,
         admin.id,
         "Titel Eins",
+        "Anweisung Eins",
         baseExerciseB.rows[0].id,
         admin.id,
         "Titel Zwei",
+        "Anweisung Zwei",
       ]
     );
 
@@ -129,5 +135,9 @@ describe("admin jumbled sentence exercises API", () => {
     const titles = json.exercises.map((item) => item.title);
     expect(titles).toContain("Titel Eins");
     expect(titles).toContain("Titel Zwei");
+
+    const instructions = json.exercises.map((item) => item.instruction_text);
+    expect(instructions).toContain("Anweisung Eins");
+    expect(instructions).toContain("Anweisung Zwei");
   });
 });

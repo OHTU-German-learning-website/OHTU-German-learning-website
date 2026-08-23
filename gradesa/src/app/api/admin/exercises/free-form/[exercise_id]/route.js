@@ -13,6 +13,7 @@ export const GET = withAuth(
         SELECT 
           ffe.id,
           ffe.title,
+          ffe.instruction_text,
           ffe.exercise_id,
           e.updated_at AS last_modified_at,
           COALESCE(NULLIF(u.username, ''), u.email) AS last_modified_by
@@ -23,12 +24,8 @@ export const GET = withAuth(
       `,
         [exercise_id]
       );
-      const parentExerciseId = rows[0].exercise_id;
-      const createdBy = rows[0].created_by;
+
       if (exerciseRows.length === 0) {
-        if (!canDeleteOwnedContent(request.user, createdBy)) {
-          return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-        }
         return NextResponse.json(
           { error: "Exercise not found" },
           { status: 404 }
@@ -99,7 +96,8 @@ export const PUT = withAuth(
     try {
       const { exercise_id } = await params;
       const body = await request.json();
-      const { title, questions } = body;
+      const { title, instructionText, questions } = body;
+      const normalizedInstructionText = String(instructionText || "").trim();
 
       const hasValidAnswerBalance = questions.every(
         (q) =>
@@ -131,10 +129,10 @@ export const PUT = withAuth(
         await tx.query(
           `
           UPDATE free_form_exercises
-          SET title = $1, updated_at = NOW()
-          WHERE id = $2
+          SET title = $1, instruction_text = $2, updated_at = NOW()
+          WHERE id = $3
         `,
-          [title, exercise_id]
+          [title, normalizedInstructionText || null, exercise_id]
         );
 
         await tx.query(

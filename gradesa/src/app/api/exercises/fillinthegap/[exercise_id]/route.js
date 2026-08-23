@@ -7,7 +7,7 @@ export const GET = withAuth(async (request, { params }) => {
     const { exercise_id } = await params;
 
     const { rows: exerciseRows } = await DB.pool(
-      `SELECT id, title, source_text, source_html
+      `SELECT id, title, instruction_text, source_text, source_html
        FROM fill_gap_exercises
        WHERE id = $1`,
       [exercise_id]

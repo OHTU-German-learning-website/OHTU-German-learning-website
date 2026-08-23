@@ -121,6 +121,7 @@ export default function CreateFillInTheGapExercisePage() {
   const isEditMode = Boolean(exercise_id);
 
   const [title, setTitle] = useState("");
+  const [instructionText, setInstructionText] = useState("");
   const [textHtml, setTextHtml] = useState("");
   const [text, setText] = useState("");
   const [selectedIndices, setSelectedIndices] = useState([]);
@@ -174,6 +175,7 @@ export default function CreateFillInTheGapExercisePage() {
     }
 
     setTitle(exerciseData.title || "");
+    setInstructionText(exerciseData.instruction_text || "");
     const sourceText = exerciseData.source_text || "";
     setText(sourceText);
     setTextHtml(
@@ -333,6 +335,7 @@ export default function CreateFillInTheGapExercisePage() {
     try {
       const payload = {
         title,
+        instructionText,
         text,
         textHtml,
         gaps,
@@ -397,6 +400,17 @@ export default function CreateFillInTheGapExercisePage() {
           value={title}
           onChange={(event) => setTitle(event.target.value)}
           placeholder="Z.B. Präpositionen im Kontext"
+        />
+      </Container>
+
+      <Container className="fitg-block">
+        <label htmlFor="fitg-instruction">Anweisung</label>
+        <input
+          id="fitg-instruction"
+          className="fitg-input"
+          value={instructionText}
+          onChange={(event) => setInstructionText(event.target.value)}
+          placeholder="Optional: Hinweise für die Lernenden"
         />
       </Container>
 

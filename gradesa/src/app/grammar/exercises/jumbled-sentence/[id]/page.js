@@ -286,10 +286,11 @@ export default function JumbledSentenceExercisePage() {
 
   return (
     <Column gap="lg">
-      <h2>{exercise.title}</h2>
       <AdminVisibleLastModified
         endpoint={`/admin/exercises/jumbled-sentence/${id}`}
       />
+      <h2>{exercise.title}</h2>
+      {exercise.instruction_text && <p>{exercise.instruction_text}</p>}
 
       {exercise.sentences.map((_, sentenceIdx) => (
         <Column

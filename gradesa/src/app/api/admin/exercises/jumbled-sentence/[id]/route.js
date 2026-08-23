@@ -11,6 +11,7 @@ export const GET = withAuth(async (request, { params }) => {
       `SELECT
          jse.id,
          jse.title,
+        jse.instruction_text,
          e.updated_at AS last_modified_at,
          COALESCE(NULLIF(u.username, ''), u.email) AS last_modified_by
        FROM jumbled_sentence_exercises jse
@@ -57,12 +58,13 @@ export const PUT = withAuth(
         { status: 400 }
       );
     }
-    const { title, sentences } = parseResult.data;
+    const { title, instructionText, sentences } = parseResult.data;
+    const normalizedInstructionText = String(instructionText || "").trim();
     try {
       await DB.transaction(async (client) => {
         await client.query(
-          `UPDATE jumbled_sentence_exercises SET title = $1, updated_at = NOW() WHERE id = $2`,
-          [title, id]
+          `UPDATE jumbled_sentence_exercises SET title = $1, instruction_text = $2, updated_at = NOW() WHERE id = $3`,
+          [title, normalizedInstructionText || null, id]
         );
         await client.query(
           `UPDATE exercises

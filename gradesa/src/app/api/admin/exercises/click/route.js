@@ -53,17 +53,21 @@ export const POST = withAuth(
     const json = await request.json();
     const {
       title,
+      instructionText,
       targetCategory,
       targetWords,
       allWords,
       sourceHtml,
       falseWordFeedbacks,
     } = json;
+    const exerciseInstruction = String(
+      instructionText ?? targetCategory ?? ""
+    ).trim();
     const sanitizedSourceHtml = sanitizeHtml(sourceHtml || "");
     const normalizedFalseWordFeedbacks =
       normalizeFalseWordFeedbacks(falseWordFeedbacks);
 
-    if (!title || !targetCategory || !targetWords || !allWords) {
+    if (!title || !exerciseInstruction || !targetWords || !allWords) {
       return Response.json(
         { error: "Alle Felder sind erforderlich." },
         { status: 400 }
@@ -75,9 +79,11 @@ export const POST = withAuth(
         { status: 422 }
       );
     }
-    if (targetCategory.length < 3 || targetCategory.length > 30) {
+    if (exerciseInstruction.length < 5 || exerciseInstruction.length > 200) {
       return Response.json(
-        { error: "Die Kategorie muss zwischen 3 und 30 Zeichen lang sein." },
+        {
+          error: "Die Anweisung muss zwischen 5 und 200 Zeichen lang sein.",
+        },
         { status: 422 }
       );
     }
@@ -122,7 +128,7 @@ export const POST = withAuth(
       const insertResult = await tx.query(
         `INSERT INTO click_exercises (title, category, target_words, all_words, source_html)
          VALUES ($1, $2, $3, $4, $5) returning id`,
-        [title, targetCategory, targetWords, allWords, sanitizedSourceHtml]
+        [title, exerciseInstruction, targetWords, allWords, sanitizedSourceHtml]
       );
 
       const clickExerciseId = insertResult.rows[0].id;
