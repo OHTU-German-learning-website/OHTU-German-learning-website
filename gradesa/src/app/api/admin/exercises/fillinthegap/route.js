@@ -19,7 +19,8 @@ function sanitizeHtml(html) {
 export const POST = withAuth(
   withInputValidation(fillGapCreateSchema, async (request) => {
     const body = await request.json();
-    const { title, text, textHtml, gaps } = body;
+    const { title, instructionText, text, textHtml, gaps } = body;
+    const normalizedInstructionText = String(instructionText || "").trim();
     const normalizedText = normalizePlainText(
       text || htmlToPlainText(textHtml || "")
     );
@@ -41,10 +42,16 @@ export const POST = withAuth(
       const exerciseId = exerciseResult.rows[0].id;
 
       const fillGapExerciseResult = await tx.query(
-        `INSERT INTO fill_gap_exercises (exercise_id, title, source_text, source_html)
-         VALUES ($1, $2, $3, $4)
+        `INSERT INTO fill_gap_exercises (exercise_id, title, instruction_text, source_text, source_html)
+         VALUES ($1, $2, $3, $4, $5)
          RETURNING id`,
-        [exerciseId, title, normalizedText, sourceHtml]
+        [
+          exerciseId,
+          title,
+          normalizedInstructionText || null,
+          normalizedText,
+          sourceHtml,
+        ]
       );
 
       const fillGapExerciseId = fillGapExerciseResult.rows[0].id;

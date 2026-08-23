@@ -47,6 +47,11 @@ export const fillGapCreateSchema = z.object({
       .min(3, { message: "Title must be at least 3 characters" })
       .max(120, { message: "Title must be at most 120 characters" })
   ),
+  instructionText: trimmed(
+    z
+      .string()
+      .max(500, { message: "Instruction must be at most 500 characters" })
+  ).optional(),
   text: normalized(z.string().min(1, { message: "Exercise text is required" })),
   textHtml: z.string().optional(),
   gaps: z

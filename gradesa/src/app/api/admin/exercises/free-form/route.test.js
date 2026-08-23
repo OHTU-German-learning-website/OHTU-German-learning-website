@@ -14,6 +14,7 @@ describe("POST /api/auth/admin/exercises/free-form", () => {
 
     const validInput = {
       title: "European Capitals",
+      instructionText: "Beantworte jede Frage in einem vollständigen Satz.",
       questions: [
         {
           question: "What is the capital of France?",
@@ -54,6 +55,9 @@ describe("POST /api/auth/admin/exercises/free-form", () => {
     );
     expect(freeFormExerciseResult.rows.length).toBe(1);
     expect(freeFormExerciseResult.rows[0].title).toBe(validInput.title);
+    expect(freeFormExerciseResult.rows[0].instruction_text).toBe(
+      validInput.instructionText
+    );
 
     const questionRows = await DB.pool(
       "SELECT * FROM free_form_questions WHERE free_form_exercise_id = $1 ORDER BY question_order ASC",

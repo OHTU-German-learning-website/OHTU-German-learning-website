@@ -642,7 +642,7 @@ const WordSelectionExercise = ({
     let feedbackMessage = "";
     if (score === 100) {
       feedbackMessage =
-        "Perfekt! Du hast alle " + targetCategory + " korrekt identifiziert!";
+        "Perfekt! Du hast alle richtigen Wörter korrekt identifiziert!";
     } else if (score >= 90) {
       feedbackMessage = "Fast Perfekt! Punktzahl: " + score + "%";
     } else if (score >= 50) {

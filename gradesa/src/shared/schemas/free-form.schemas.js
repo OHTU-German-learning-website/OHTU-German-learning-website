@@ -18,6 +18,10 @@ export const questionSchema = z.object({
 
 export const freeFormExerciseSchema = z.object({
   title: z.string().min(1, { message: "Ein Titel ist erforderlich." }),
+  instructionText: z
+    .string()
+    .max(500, { message: "Die Anweisung ist zu lang." })
+    .optional(),
   questions: z
     .array(questionSchema)
     .min(1, { message: "Mindestens eine Frage ist erforderlich." }),

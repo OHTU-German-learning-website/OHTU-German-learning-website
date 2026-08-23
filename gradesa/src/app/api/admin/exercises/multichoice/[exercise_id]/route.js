@@ -151,7 +151,8 @@ export const PUT = withAuth(
     try {
       const { exercise_id } = await params;
       const body = await request.json();
-      const { title, content } = body;
+      const { title, instructionText, content } = body;
+      const normalizedInstructionText = String(instructionText || "").trim();
 
       if (!title) {
         return NextResponse.json(
@@ -188,9 +189,11 @@ export const PUT = withAuth(
 
         await tx.query(
           `UPDATE multichoice_exercises
-           SET title = $1, updated_at = NOW()
-           WHERE id = $2`,
-          [title, exercise_id]
+           SET title = $1,
+               instruction_text = $2,
+               updated_at = NOW()
+           WHERE id = $3`,
+          [title, normalizedInstructionText || null, exercise_id]
         );
 
         await tx.query(

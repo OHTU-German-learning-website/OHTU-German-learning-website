@@ -11,8 +11,8 @@ function sanitizeHtml(html) {
   return purify.sanitize(String(html || ""), { ADD_ATTR: ["target"] });
 }
 
-function validatePayload({ title, targetCategory, targetWords, allWords }) {
-  if (!title || !targetCategory || !targetWords || !allWords) {
+function validatePayload({ title, instructionText, targetWords, allWords }) {
+  if (!title || !instructionText || !targetWords || !allWords) {
     return { error: "Alle Felder sind erforderlich.", status: 400 };
   }
 
@@ -23,9 +23,9 @@ function validatePayload({ title, targetCategory, targetWords, allWords }) {
     };
   }
 
-  if (targetCategory.length < 3 || targetCategory.length > 30) {
+  if (instructionText.length < 5 || instructionText.length > 200) {
     return {
-      error: "Die Kategorie muss zwischen 3 und 30 Zeichen lang sein.",
+      error: "Die Anweisung muss zwischen 5 und 200 Zeichen lang sein.",
       status: 422,
     };
   }
@@ -110,7 +110,17 @@ export const PUT = withAuth(
     try {
       const { click_id } = await params;
       const body = await request.json();
-      const { title, targetCategory, targetWords, allWords, sourceHtml } = body;
+      const {
+        title,
+        instructionText,
+        targetCategory,
+        targetWords,
+        allWords,
+        sourceHtml,
+      } = body;
+      const exerciseInstruction = String(
+        instructionText ?? targetCategory ?? ""
+      ).trim();
       const sanitizedSourceHtml = sanitizeHtml(sourceHtml || "");
       const falseWordFeedbacks = Array.isArray(body.falseWordFeedbacks)
         ? body.falseWordFeedbacks
@@ -124,7 +134,7 @@ export const PUT = withAuth(
 
       const validationError = validatePayload({
         title,
-        targetCategory,
+        instructionText: exerciseInstruction,
         targetWords,
         allWords,
       });
@@ -176,7 +186,7 @@ export const PUT = withAuth(
            WHERE id = $6`,
           [
             title,
-            targetCategory,
+            exerciseInstruction,
             targetWords,
             allWords,
             sanitizedSourceHtml,

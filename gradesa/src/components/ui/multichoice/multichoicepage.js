@@ -158,13 +158,15 @@ export default function MultichoicePage({ exerciseId }) {
 
   // Check if all answers are correct
   const allCorrect = isSubmitted && checkedAnswers.every(Boolean);
+  const instructionText =
+    shuffledExerciseData.instruction_text ||
+    shuffledExerciseData.exercise_description ||
+    "";
 
   return (
     <div className="exercise-container">
       <h2 className="task-title">{shuffledExerciseData.title}</h2>
-      <p className="task-description">
-        {shuffledExerciseData.exercise_description}
-      </p>
+      {instructionText && <p className="task-description">{instructionText}</p>}
 
       <RenderText
         exerciseData={shuffledExerciseData.content}

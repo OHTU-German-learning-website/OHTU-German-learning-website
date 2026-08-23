@@ -210,10 +210,11 @@ export default function FreeFormExercisePage() {
   return (
     <Container maxW="800px" m="0 auto" p="md">
       <Container mb="lg">
-        <h2>{exercise.title}</h2>
         <AdminVisibleLastModified
           endpoint={`/admin/exercises/free-form/${exercise_id}`}
         />
+        <h2>{exercise.title}</h2>
+        {exercise.instruction_text && <p>{exercise.instruction_text}</p>}
       </Container>
 
       <Container mb="xl" p="md" bg="var(--bg2)" br="md">

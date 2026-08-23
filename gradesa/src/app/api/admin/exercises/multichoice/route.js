@@ -6,7 +6,8 @@ export const POST = withAuth(
     try {
       const json = await request.json();
       // We extract description but ignore it for the DB save
-      const { title, content } = json;
+      const { title, instructionText, content } = json;
+      const normalizedInstructionText = String(instructionText || "").trim();
 
       // Validation
       if (!title || !Array.isArray(content) || content.length === 0) {
@@ -47,10 +48,10 @@ export const POST = withAuth(
       // 2. Insert into multichoice_exercises
       // FIX: Removed 'description' here too. Only saving exercise_id and title.
       const mcRes = await DB.pool(
-        `INSERT INTO multichoice_exercises (exercise_id, title)
-         VALUES ($1, $2)
+        `INSERT INTO multichoice_exercises (exercise_id, title, instruction_text)
+         VALUES ($1, $2, $3)
          RETURNING id`,
-        [exercise_id, title]
+        [exercise_id, title, normalizedInstructionText || null]
       );
       const multichoice_id = mcRes.rows[0].id;
 

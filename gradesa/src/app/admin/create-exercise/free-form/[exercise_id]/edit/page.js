@@ -14,6 +14,7 @@ export default function EditFreeFormExercisePage() {
   const { exercise_id } = useParams();
 
   const [title, setTitle] = useState("");
+  const [instructionText, setInstructionText] = useState("");
   const [questions, setQuestions] = useState([]);
   const [generalError, setGeneralError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -27,6 +28,7 @@ export default function EditFreeFormExercisePage() {
       if (data.title) {
         setTitle(data.title);
       }
+      setInstructionText(data.instruction_text || "");
       if (data.questions) {
         console.log("Fetched questions:", data.questions);
         console.log("Loaded full data for edit:", data);
@@ -138,7 +140,7 @@ export default function EditFreeFormExercisePage() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ title, questions }),
+          body: JSON.stringify({ title, instructionText, questions }),
         }
       );
 
@@ -191,6 +193,16 @@ export default function EditFreeFormExercisePage() {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Titel der Übung"
+        />
+      </div>
+
+      <div className="form-group">
+        <label>Anweisung</label>
+        <input
+          className="form-input"
+          value={instructionText}
+          onChange={(e) => setInstructionText(e.target.value)}
+          placeholder="Optional: Hinweise für die Lernenden"
         />
       </div>
 

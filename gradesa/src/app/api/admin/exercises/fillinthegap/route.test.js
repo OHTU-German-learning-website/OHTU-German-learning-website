@@ -14,6 +14,7 @@ describe("POST /api/admin/exercises/fillinthegap", () => {
 
     const payload = {
       title: "Artikel im Kontext",
+      instructionText: "Setze in jede Lücke das passende Wort ein.",
       text: "Ich gehe in die Schule und fahre mit dem Bus.",
       gaps: [
         {
@@ -45,6 +46,7 @@ describe("POST /api/admin/exercises/fillinthegap", () => {
     );
     expect(exerciseRows.rows.length).toBe(1);
     expect(exerciseRows.rows[0].title).toBe(payload.title);
+    expect(exerciseRows.rows[0].instruction_text).toBe(payload.instructionText);
 
     const gapRows = await DB.pool(
       "SELECT * FROM fill_gap_gaps WHERE fill_gap_exercise_id = $1",
