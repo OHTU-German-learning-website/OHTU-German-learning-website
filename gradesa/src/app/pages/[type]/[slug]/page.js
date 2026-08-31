@@ -45,13 +45,21 @@ export default async function Chapters({ params }) {
 
       <Row pb="xl" className="chapter-nav-row" justify="space-between">
         <Container className="chapter-nav-left">
-          {previousLink && <LinkButton href={previousLink}>Zurück</LinkButton>}
+          {previousLink && (
+            <LinkButton href={previousLink} hardNavigation>
+              Zurück
+            </LinkButton>
+          )}
         </Container>
         <Container className="chapter-nav-right">
           {showLearningFormLink && (
             <LinkButton href="/learning">Go to form</LinkButton>
           )}
-          {nextLink && <LinkButton href={nextLink}>Weiter</LinkButton>}
+          {nextLink && (
+            <LinkButton href={nextLink} hardNavigation>
+              Weiter
+            </LinkButton>
+          )}
         </Container>
       </Row>
     </Column>
