@@ -27,7 +27,7 @@ export function withAuth(callback, options = {}) {
     if (!user && requireAuth) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    if (requireAdmin && !user?.is_admin) {
+    if (requireAdmin && !(user?.is_admin || user?.is_superadmin)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 

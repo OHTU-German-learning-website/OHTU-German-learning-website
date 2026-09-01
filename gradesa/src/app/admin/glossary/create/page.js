@@ -165,6 +165,7 @@ export default function CreateGlossaryEntry() {
         )}
       </Column>
       <Row
+        className="form-actions"
         justify={"space-between"}
         align="center"
         wrap="wrap"

@@ -3,6 +3,7 @@ import { jumbledSentenceExerciseSchema } from "@/shared/schemas/jumbled-sentence
 import { DB } from "@/backend/db";
 import { canDeleteOwnedContent } from "@/backend/content-permissions";
 import { withAuth } from "@/backend/middleware/withAuth";
+import { saveBackup } from "@/backend/backups";
 
 export const GET = withAuth(async (request, { params }) => {
   const { id } = await params;
@@ -95,6 +96,37 @@ export const PUT = withAuth(
           );
         }
       });
+      // Save snapshot after update
+      try {
+        const exRes = await DB.pool(
+          `SELECT id, title, instruction_text FROM jumbled_sentence_exercises WHERE id = $1`,
+          [id]
+        );
+        const sRes = await DB.pool(
+          `SELECT sentence, alternates, correct_feedback, alternate_feedbacks, incorrect_feedbacks, incorrect_alternates FROM jumbled_sentence_sentences WHERE jumbled_exercise_id = $1 ORDER BY id ASC`,
+          [id]
+        );
+        const sentences = sRes.rows.map((row) => ({
+          sentence: row.sentence,
+          alternates: row.alternates || [],
+          correctSentenceFeedback: row.correct_feedback || "",
+          alternateFeedbacks: row.alternate_feedbacks || [],
+          incorrectFeedbacks: row.incorrect_feedbacks || [],
+          incorrectAlternates: row.incorrect_alternates || [],
+        }));
+        await saveBackup(
+          "jumbled_sentence_exercises",
+          id,
+          { ...(exRes.rows[0] || {}), sentences },
+          request.user?.id ?? null
+        );
+      } catch (err) {
+        console.error(
+          "Failed to save jumbled-sentence backup after update:",
+          err
+        );
+      }
+
       return NextResponse.json({ success: true });
     } catch (err) {
       return NextResponse.json({ error: err.message }, { status: 500 });
@@ -122,6 +154,37 @@ export const DELETE = withAuth(
 
         if (!canDeleteOwnedContent(request.user, rows[0].created_by)) {
           throw new Error("FORBIDDEN");
+        }
+
+        // Snapshot before deletion
+        try {
+          const exRes = await client.query(
+            `SELECT id, title, instruction_text FROM jumbled_sentence_exercises WHERE id = $1`,
+            [id]
+          );
+          const sRes = await client.query(
+            `SELECT sentence, alternates, correct_feedback, alternate_feedbacks, incorrect_feedbacks, incorrect_alternates FROM jumbled_sentence_sentences WHERE jumbled_exercise_id = $1 ORDER BY id ASC`,
+            [id]
+          );
+          const sentences = sRes.rows.map((row) => ({
+            sentence: row.sentence,
+            alternates: row.alternates || [],
+            correctSentenceFeedback: row.correct_feedback || "",
+            alternateFeedbacks: row.alternate_feedbacks || [],
+            incorrectFeedbacks: row.incorrect_feedbacks || [],
+            incorrectAlternates: row.incorrect_alternates || [],
+          }));
+          await saveBackup(
+            "jumbled_sentence_exercises",
+            id,
+            { ...(exRes.rows[0] || {}), sentences },
+            request.user?.id ?? null
+          );
+        } catch (err) {
+          console.error(
+            "Failed to save jumbled-sentence backup before delete:",
+            err
+          );
         }
 
         await client.query(

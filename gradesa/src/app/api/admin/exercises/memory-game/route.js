@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { DB } from "@/backend/db";
 import { withAuth } from "@/backend/middleware/withAuth";
+import { saveBackup } from "@/backend/backups";
 
 export const POST = withAuth(
   async (request) => {
@@ -68,6 +69,17 @@ export const POST = withAuth(
 
         return memoryGameId;
       });
+
+      try {
+        await saveBackup(
+          "memory_game_exercises",
+          result,
+          { id: result, title, description, pairs },
+          createdBy ?? null
+        );
+      } catch (err) {
+        console.error("Failed to save memory-game backup:", err);
+      }
 
       return NextResponse.json({ id: result }, { status: 201 });
     } catch (error) {

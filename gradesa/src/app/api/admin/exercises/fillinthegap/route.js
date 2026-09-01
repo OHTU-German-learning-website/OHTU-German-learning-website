@@ -1,5 +1,6 @@
 import { DB } from "@/backend/db";
 import { withAuth } from "@/backend/middleware/withAuth";
+import { saveBackup } from "@/backend/backups";
 import { withInputValidation } from "@/backend/middleware/withInputValidation";
 import { fillGapCreateSchema } from "@/shared/schemas/fillinthegap.schemas";
 import {
@@ -84,6 +85,24 @@ export const POST = withAuth(
         exerciseId,
       };
     });
+
+    try {
+      await saveBackup(
+        "fill_gap_exercises",
+        created.id,
+        {
+          id: created.id,
+          exercise_id: created.exerciseId,
+          title,
+          instruction_text: normalizedInstructionText || null,
+          source_text: normalizedText,
+          gaps,
+        },
+        request.user?.id ?? null
+      );
+    } catch (err) {
+      console.error("Failed to save fillinthegap backup:", err);
+    }
 
     return NextResponse.json(
       {

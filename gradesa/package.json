@@ -1,10 +1,12 @@
 {
   "name": "gradesa",
+  "type": "module",
   "version": "0.1.0",
   "private": true,
   "packageManager": "npm@10.2.4",
   "scripts": {
     "dev": "next dev --turbopack",
+    "test:backups": "node --experimental-specifier-resolution=node scripts/test_backups.mjs",
     "build": "next build",
     "start": "sh ./data/migrate.sh --skip-schema-gen && next start",
     "start:standalone": "sh ./data/migrate.sh --skip-schema-gen && node .next/standalone/server.js",

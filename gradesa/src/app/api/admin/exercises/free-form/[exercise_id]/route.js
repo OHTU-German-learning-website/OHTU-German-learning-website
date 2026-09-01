@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { DB } from "@/backend/db";
 import { canDeleteOwnedContent } from "@/backend/content-permissions";
 import { withAuth } from "@/backend/middleware/withAuth";
+import { saveBackup } from "@/backend/backups";
 
 export const GET = withAuth(
   async (request, { params }) => {
@@ -196,6 +197,39 @@ export const PUT = withAuth(
         }
       });
 
+      // After update, fetch the current state and save a backup
+      try {
+        const { rows: exerciseRows } = await DB.pool(
+          `SELECT id, title, instruction_text FROM free_form_exercises WHERE id = $1`,
+          [exercise_id]
+        );
+        const { rows: questionRows } = await DB.pool(
+          `SELECT id, question, question_order FROM free_form_questions WHERE free_form_exercise_id = $1 ORDER BY question_order ASC`,
+          [exercise_id]
+        );
+        const questionIds = questionRows.map((q) => q.id);
+        let answerRows = [];
+        if (questionIds.length > 0) {
+          const res = await DB.pool(
+            `SELECT id, free_form_question_id, answer, is_correct, feedback FROM free_form_answers WHERE free_form_question_id = ANY($1::bigint[]) ORDER BY id ASC`,
+            [questionIds]
+          );
+          answerRows = res.rows;
+        }
+        const questions = questionRows.map((q) => ({
+          ...q,
+          answers: answerRows.filter((a) => a.free_form_question_id === q.id),
+        }));
+        await saveBackup(
+          "free_form_exercises",
+          exercise_id,
+          { ...(exerciseRows[0] || {}), questions },
+          request.user?.id ?? null
+        );
+      } catch (err) {
+        console.error("Failed to save freeform backup after update:", err);
+      }
+
       return NextResponse.json({ success: true });
     } catch (error) {
       console.error("Error updating free form exercise:", error);
@@ -235,6 +269,40 @@ export const DELETE = withAuth(
 
       if (!canDeleteOwnedContent(request.user, rows[0].created_by)) {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+
+      // Snapshot before deletion
+      try {
+        const { rows: exerciseRows } = await DB.pool(
+          `SELECT id, title, instruction_text FROM free_form_exercises WHERE id = $1`,
+          [exercise_id]
+        );
+        const { rows: questionRows } = await DB.pool(
+          `SELECT id, question, question_order FROM free_form_questions WHERE free_form_exercise_id = $1 ORDER BY question_order ASC`,
+          [exercise_id]
+        );
+        const questionIds = questionRows.map((q) => q.id);
+        let answerRows = [];
+        if (questionIds.length > 0) {
+          const res = await DB.pool(
+            `SELECT id, free_form_question_id, answer, is_correct, feedback FROM free_form_answers WHERE free_form_question_id = ANY($1::bigint[]) ORDER BY id ASC`,
+            [questionIds]
+          );
+          answerRows = res.rows;
+        }
+        const questions = questionRows.map((q) => ({
+          ...q,
+          answers: answerRows.filter((a) => a.free_form_question_id === q.id),
+        }));
+
+        await saveBackup(
+          "free_form_exercises",
+          exercise_id,
+          { ...(exerciseRows[0] || {}), questions },
+          request.user?.id ?? null
+        );
+      } catch (err) {
+        console.error("Failed to save freeform backup before delete:", err);
       }
 
       await DB.pool(

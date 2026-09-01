@@ -1,5 +1,6 @@
 import { DB } from "@/backend/db";
 import { withAuth } from "@/backend/middleware/withAuth";
+import { saveBackup } from "@/backend/backups";
 import DOMPurify from "dompurify";
 import { JSDOM } from "jsdom";
 
@@ -154,6 +155,25 @@ export const POST = withAuth(
 
       return clickExerciseId;
     });
+
+    try {
+      await saveBackup(
+        "click_exercises",
+        id,
+        {
+          id,
+          title,
+          category: targetCategory ?? null,
+          target_words: targetWords,
+          all_words: allWords,
+          source_html: sanitizedSourceHtml,
+          false_word_feedbacks: normalizedFalseWordFeedbacks,
+        },
+        request.user?.id ?? null
+      );
+    } catch (err) {
+      console.error("Failed to save click exercise backup:", err);
+    }
 
     return Response.json({ id }, { status: 201 });
   },

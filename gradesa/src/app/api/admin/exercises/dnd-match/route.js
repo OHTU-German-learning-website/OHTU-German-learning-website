@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { DB } from "@/backend/db";
 import { withAuth } from "@/backend/middleware/withAuth";
+import { saveBackup } from "@/backend/backups";
 import { dndMatchCreateSchema } from "@/shared/schemas/dnd-match.schemas";
 
 export const POST = withAuth(
@@ -50,6 +51,23 @@ export const POST = withAuth(
 
         return { id: matchId, exerciseId };
       });
+
+      try {
+        await saveBackup(
+          "dnd_match_exercises",
+          result.id,
+          {
+            id: result.id,
+            exercise_id: result.exerciseId,
+            title,
+            description,
+            pairs,
+          },
+          createdBy ?? null
+        );
+      } catch (err) {
+        console.error("Failed to save dnd-match backup:", err);
+      }
 
       return NextResponse.json(
         { id: result.id, exercise_id: result.exerciseId },

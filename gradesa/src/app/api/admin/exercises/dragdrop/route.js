@@ -1,5 +1,6 @@
 import { DB } from "@/backend/db";
 import { withAuth } from "@/backend/middleware/withAuth";
+import { saveBackup } from "@/backend/backups";
 
 const findOrCreateCategory = async (category, color) => {
   const existingCategory = await DB.pool(
@@ -113,6 +114,17 @@ export const POST = withAuth(
             [word_id, category_id, dnd_id]
           );
         }
+      }
+
+      try {
+        await saveBackup(
+          "dnd_exercises",
+          dnd_id,
+          { id: dnd_id, exercise_id, title, description, fields },
+          created_by || null
+        );
+      } catch (err) {
+        console.error("Failed to save dragdrop backup:", err);
       }
 
       return Response.json({

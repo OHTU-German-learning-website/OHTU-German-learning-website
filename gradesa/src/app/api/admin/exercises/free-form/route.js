@@ -1,4 +1,5 @@
 import { withAuth } from "@/backend/middleware/withAuth";
+import { saveBackup } from "@/backend/backups";
 import { withInputValidation } from "@/backend/middleware/withInputValidation";
 import { DB } from "@/backend/db";
 import { freeFormExerciseSchema } from "@/shared/schemas/free-form.schemas";
@@ -84,6 +85,22 @@ export const POST = withAuth(
 
       return exerciseId;
     });
+    try {
+      await saveBackup(
+        "free_form_exercises",
+        exerciseId,
+        {
+          id: exerciseId,
+          title,
+          instruction_text: normalizedInstructionText || null,
+          questions,
+        },
+        req.user?.id ?? null
+      );
+    } catch (err) {
+      console.error("Failed to save freeform backup:", err);
+    }
+
     return NextResponse.json({ success: true, exercise_id: exerciseId });
   }),
   {
