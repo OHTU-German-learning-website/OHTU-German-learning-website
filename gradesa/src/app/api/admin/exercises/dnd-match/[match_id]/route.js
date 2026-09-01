@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { DB } from "@/backend/db";
 import { canDeleteOwnedContent } from "@/backend/content-permissions";
 import { withAuth } from "@/backend/middleware/withAuth";
+import { saveBackup } from "@/backend/backups";
 import { dndMatchCreateSchema } from "@/shared/schemas/dnd-match.schemas";
 
 export const GET = withAuth(
@@ -109,6 +110,27 @@ export const PUT = withAuth(
         }
       });
 
+      // Save snapshot after update
+      try {
+        const { rows: exerciseRows } = await DB.pool(
+          `SELECT id, title, description FROM dnd_match_exercises WHERE id = $1`,
+          [match_id]
+        );
+        const { rows: pairs } = await DB.pool(
+          `SELECT id, left_item, right_item, pair_order FROM dnd_match_pairs WHERE dnd_match_exercise_id = $1 ORDER BY pair_order ASC`,
+          [match_id]
+        );
+
+        await saveBackup(
+          "dnd_match_exercises",
+          match_id,
+          { ...(exerciseRows[0] || {}), pairs },
+          request.user?.id ?? null
+        );
+      } catch (err) {
+        console.error("Failed to save dnd-match backup after update:", err);
+      }
+
       return NextResponse.json({ success: true });
     } catch (error) {
       if (error.message === "NOT_FOUND") {
@@ -149,6 +171,27 @@ export const DELETE = withAuth(
 
       if (!canDeleteOwnedContent(request.user, rows[0].created_by)) {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+
+      // Snapshot before deletion
+      try {
+        const { rows: exerciseRows } = await DB.pool(
+          `SELECT id, title, description FROM dnd_match_exercises WHERE id = $1`,
+          [match_id]
+        );
+        const { rows: pairs } = await DB.pool(
+          `SELECT id, left_item, right_item, pair_order FROM dnd_match_pairs WHERE dnd_match_exercise_id = $1 ORDER BY pair_order ASC`,
+          [match_id]
+        );
+
+        await saveBackup(
+          "dnd_match_exercises",
+          match_id,
+          { ...(exerciseRows[0] || {}), pairs },
+          request.user?.id ?? null
+        );
+      } catch (err) {
+        console.error("Failed to save dnd-match backup before delete:", err);
       }
 
       // Deleting from exercises cascades to dnd_match_exercises → pairs → user_answers

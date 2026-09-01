@@ -210,6 +210,12 @@ const adminSidebarLinks = [
     id: "news",
   },
   {
+    title: "Backups",
+    link: "/admin/backups",
+    id: "backups",
+    superadminOnly: true,
+  },
+  {
     title: "Benutzer",
     link: "/admin/users",
     id: "users",
@@ -232,7 +238,7 @@ const adminSidebarLinks = [
 function AdminSideBar({ showUsers }) {
   const links = showUsers
     ? adminSidebarLinks
-    : adminSidebarLinks.filter((l) => l.id !== "users");
+    : adminSidebarLinks.filter((l) => l.id !== "users" && !l.superadminOnly);
 
   const title = showUsers ? "Admin" : "Lehrer";
 

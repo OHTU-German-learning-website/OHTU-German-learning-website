@@ -1,0 +1,38 @@
+.preview-modal {
+  position: fixed;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  /* Use app color variables so the modal follows light/dark mode */
+  background: var(--bg2, #fff);
+  color: var(--fg1, #111);
+  border: 1px solid var(--bg3, #ddd);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  padding: 16px;
+  z-index: 1000;
+  max-width: 90%;
+  width: 820px;
+  border-radius: 6px;
+}
+
+.preview-modal h3 {
+  margin: 0 0 8px 0;
+  color: var(--fg2, #333);
+}
+
+.preview-modal pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 12px;
+  background: var(--bg3, #f8f8f8);
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid var(--bg4, #eee);
+}
+
+.preview-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.32);
+  z-index: 999;
+}

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { DB } from "@/backend/db";
 import { canDeleteOwnedContent } from "@/backend/content-permissions";
 import { withAuth } from "@/backend/middleware/withAuth";
+import { saveBackup } from "@/backend/backups";
 import { fillGapCreateSchema } from "@/shared/schemas/fillinthegap.schemas";
 import {
   htmlToPlainText,
@@ -190,6 +191,40 @@ export const PUT = withAuth(
         }
       });
 
+      // After update: save a backup of the current state
+      try {
+        const exerciseRes = await DB.pool(
+          `SELECT id, title, instruction_text, source_text, source_html FROM fill_gap_exercises WHERE id = $1`,
+          [exercise_id]
+        );
+        const gapRes = await DB.pool(
+          `SELECT id, token_index, token_text, gap_order FROM fill_gap_gaps WHERE fill_gap_exercise_id = $1 ORDER BY gap_order ASC`,
+          [exercise_id]
+        );
+        const gapIds = gapRes.rows.map((g) => g.id);
+        let answerRows = [];
+        if (gapIds.length > 0) {
+          const ans = await DB.pool(
+            `SELECT id, fill_gap_gap_id, answer, is_correct, feedback FROM fill_gap_answers WHERE fill_gap_gap_id = ANY($1::bigint[]) ORDER BY id ASC`,
+            [gapIds]
+          );
+          answerRows = ans.rows;
+        }
+        const gaps = gapRes.rows.map((gap) => ({
+          ...gap,
+          answers: answerRows.filter((a) => a.fill_gap_gap_id === gap.id),
+        }));
+
+        await saveBackup(
+          "fill_gap_exercises",
+          exercise_id,
+          { ...(exerciseRes.rows[0] || {}), gaps },
+          request.user?.id ?? null
+        );
+      } catch (err) {
+        console.error("Failed to save fillinthegap backup after update:", err);
+      }
+
       return NextResponse.json({ success: true });
     } catch (error) {
       if (error.message === "Exercise not found") {
@@ -234,6 +269,40 @@ export const DELETE = withAuth(
 
       if (!canDeleteOwnedContent(request.user, rows[0].created_by)) {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+
+      // Snapshot before deletion
+      try {
+        const exerciseRes = await DB.pool(
+          `SELECT id, title, instruction_text, source_text, source_html FROM fill_gap_exercises WHERE id = $1`,
+          [exercise_id]
+        );
+        const gapRes = await DB.pool(
+          `SELECT id, token_index, token_text, gap_order FROM fill_gap_gaps WHERE fill_gap_exercise_id = $1 ORDER BY gap_order ASC`,
+          [exercise_id]
+        );
+        const gapIds = gapRes.rows.map((g) => g.id);
+        let answerRows = [];
+        if (gapIds.length > 0) {
+          const ans = await DB.pool(
+            `SELECT id, fill_gap_gap_id, answer, is_correct, feedback FROM fill_gap_answers WHERE fill_gap_gap_id = ANY($1::bigint[]) ORDER BY id ASC`,
+            [gapIds]
+          );
+          answerRows = ans.rows;
+        }
+        const gaps = gapRes.rows.map((gap) => ({
+          ...gap,
+          answers: answerRows.filter((a) => a.fill_gap_gap_id === gap.id),
+        }));
+
+        await saveBackup(
+          "fill_gap_exercises",
+          exercise_id,
+          { ...(exerciseRes.rows[0] || {}), gaps },
+          request.user?.id ?? null
+        );
+      } catch (err) {
+        console.error("Failed to save fillinthegap backup before delete:", err);
       }
 
       await DB.pool(`DELETE FROM exercises WHERE id = $1`, [

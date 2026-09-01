@@ -1,4 +1,5 @@
 import { DB } from "@/backend/db";
+import { saveBackup } from "@/backend/backups";
 import { withAuth } from "@/backend/middleware/withAuth";
 
 export const POST = withAuth(
@@ -48,7 +49,7 @@ export const POST = withAuth(
       // 2. Insert into multichoice_exercises
       // FIX: Removed 'description' here too. Only saving exercise_id and title.
       const mcRes = await DB.pool(
-        `INSERT INTO multichoice_exercises (exercise_id, title, instruction_text)
+        `INSERT INTO multichoice_exercises (exercise_id, title, exercise_description)
          VALUES ($1, $2, $3)
          RETURNING id`,
         [exercise_id, title, normalizedInstructionText || null]
@@ -121,6 +122,24 @@ export const POST = withAuth(
         }
 
         order++;
+      }
+
+      // Save a backup snapshot of the created multichoice exercise
+      try {
+        await saveBackup(
+          "multichoice_exercises",
+          multichoice_id,
+          {
+            id: multichoice_id,
+            exercise_id,
+            title,
+            instruction_text: normalizedInstructionText || null,
+            content,
+          },
+          created_by || null
+        );
+      } catch (err) {
+        console.error("Failed to save multichoice backup:", err);
       }
 
       // Return the ID as the slug fallback
