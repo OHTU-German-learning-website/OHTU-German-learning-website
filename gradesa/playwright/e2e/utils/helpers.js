@@ -14,9 +14,4 @@ const getTextContent = async (page, selector) => {
   return await page.locator(selector).textContent();
 };
 
-module.exports = {
-  wait,
-  takeScreenshot,
-  elementExists,
-  getTextContent,
-};
+export { wait, takeScreenshot, elementExists, getTextContent };
