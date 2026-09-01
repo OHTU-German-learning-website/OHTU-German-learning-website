@@ -1,4 +1,4 @@
-const { test, expect } = require("@playwright/test");
+import { test, expect } from "@playwright/test";
 
 async function gotoDndMatchList(page) {
   await page.goto("grammar/exercises/dnd-match", {

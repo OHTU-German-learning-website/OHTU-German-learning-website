@@ -1,4 +1,4 @@
-const { test, expect } = require("@playwright/test");
+import { test, expect } from "@playwright/test";
 
 test.describe("Global header search", () => {
   test("should search and navigate to a page result", async ({ page }) => {

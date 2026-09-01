@@ -1,4 +1,4 @@
-const { test, expect } = require("@playwright/test");
+import { test, expect } from "@playwright/test";
 
 test.describe("Authentication", () => {
   test("should navigate to login page", async ({ page }) => {

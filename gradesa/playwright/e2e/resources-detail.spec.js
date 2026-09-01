@@ -1,4 +1,4 @@
-const { test, expect } = require("@playwright/test");
+import { test, expect } from "@playwright/test";
 
 test.describe("Resources Detail Pages", () => {
   test("should display chapter content", async ({ page }) => {

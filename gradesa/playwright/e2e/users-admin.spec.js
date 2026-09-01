@@ -1,4 +1,4 @@
-const { test, expect } = require("@playwright/test");
+import { test, expect } from "@playwright/test";
 
 test.describe("User Management", () => {
   test("users page route responds", async ({ page }) => {
