@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Editor from "@/components/ui/editor";
 import { withBasePath } from "@/shared/utils/basePath";
 import AdminLastModified from "@/components/ui/admin-last-modified";
+import "../news.css";
 
 const defaultFormErrors = {
   title: "",
@@ -176,6 +177,7 @@ export default function CreateNewsArticle() {
         <span>Nur für Lehrer sichtbar</span>
       </label>
       <Row
+        className="form-actions"
         justify={"space-between"}
         align="center"
         wrap="wrap"

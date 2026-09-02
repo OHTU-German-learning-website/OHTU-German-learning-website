@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { DB } from "@/backend/db";
 import { canDeleteOwnedContent } from "@/backend/content-permissions";
 import { withAuth } from "@/backend/middleware/withAuth";
+import { saveBackup } from "@/backend/backups";
 
 const parseWords = (content) => [
   ...new Set(
@@ -233,6 +234,32 @@ export const PUT = withAuth(
         }
       });
 
+      // Save snapshot after update
+      try {
+        const exerciseRes = await DB.pool(
+          `SELECT id, title, description FROM dnd_exercises WHERE id = $1`,
+          [dnd_id]
+        );
+        const fieldsRes = await DB.pool(
+          `SELECT dc.id AS category_id, dc.category, dc.color, ARRAY_AGG(DISTINCT dw.word ORDER BY dw.word) AS words FROM word_category_mappings wcm JOIN dnd_categories dc ON dc.id = wcm.category_id JOIN draggable_words dw ON dw.id = wcm.word_id WHERE wcm.exercise_id = $1 GROUP BY dc.id, dc.category, dc.color ORDER BY dc.id`,
+          [dnd_id]
+        );
+        const fields = fieldsRes.rows.map((row) => ({
+          category: row.category,
+          color: row.color,
+          content: (row.words || []).join(", "),
+        }));
+
+        await saveBackup(
+          "dnd_exercises",
+          dnd_id,
+          { ...(exerciseRes.rows[0] || {}), fields },
+          request.user?.id ?? null
+        );
+      } catch (err) {
+        console.error("Failed to save dragdrop backup after update:", err);
+      }
+
       return NextResponse.json({ success: true });
     } catch (error) {
       if (error.message === "DND_EXERCISE_NOT_FOUND") {
@@ -278,6 +305,32 @@ export const DELETE = withAuth(
         }
 
         const exerciseId = dndRes.rows[0].exercise_id;
+
+        // Snapshot before deletion
+        try {
+          const exerciseRes = await tx.query(
+            `SELECT id, title, description FROM dnd_exercises WHERE id = $1`,
+            [dnd_id]
+          );
+          const fieldsRes = await tx.query(
+            `SELECT dc.id AS category_id, dc.category, dc.color, ARRAY_AGG(DISTINCT dw.word ORDER BY dw.word) AS words FROM word_category_mappings wcm JOIN dnd_categories dc ON dc.id = wcm.category_id JOIN draggable_words dw ON dw.id = wcm.word_id WHERE wcm.exercise_id = $1 GROUP BY dc.id, dc.category, dc.color ORDER BY dc.id`,
+            [dnd_id]
+          );
+          const fields = fieldsRes.rows.map((row) => ({
+            category: row.category,
+            color: row.color,
+            content: (row.words || []).join(", "),
+          }));
+
+          await saveBackup(
+            "dnd_exercises",
+            dnd_id,
+            { ...(exerciseRes.rows[0] || {}), fields },
+            request.user?.id ?? null
+          );
+        } catch (err) {
+          console.error("Failed to save dragdrop backup before delete:", err);
+        }
 
         await tx.query(
           `DELETE FROM dnd_exercises

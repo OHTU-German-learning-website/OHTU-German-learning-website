@@ -1,4 +1,5 @@
 import { DB } from "@/backend/db";
+import { saveBackup } from "@/backend/backups";
 import { NextResponse } from "next/server";
 
 export async function GET(request) {
@@ -82,6 +83,18 @@ export async function POST(request) {
       [title, content, is_teacher_only || false]
     );
 
+    // Save a backup snapshot
+    try {
+      await saveBackup(
+        "news_articles",
+        result.rows[0].id,
+        result.rows[0],
+        null
+      );
+    } catch (err) {
+      console.error("Backup save error:", err);
+    }
+
     return NextResponse.json(result.rows[0], { status: 201 });
   } catch (error) {
     console.error("Error creating news article:", error);
@@ -116,6 +129,13 @@ export async function PUT(request) {
         { error: "News article not found" },
         { status: 404 }
       );
+    }
+
+    // Save a backup snapshot of the updated row (non-blocking)
+    try {
+      saveBackup("news_articles", id, result.rows[0], null);
+    } catch (err) {
+      console.error("Backup save error:", err);
     }
 
     return NextResponse.json(result.rows[0]);

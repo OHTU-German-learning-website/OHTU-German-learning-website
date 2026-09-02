@@ -101,7 +101,9 @@ export default function DndMatchAdminPage() {
           }
         );
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error || "Fehler beim Speichern.");
+        if (!res.ok) {
+          throw new Error(data.error || "Fehler beim Speichern.");
+        }
         router.push("/grammar/exercises/dnd-match");
       } else {
         const res = await fetch(
@@ -113,7 +115,9 @@ export default function DndMatchAdminPage() {
           }
         );
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error || "Fehler beim Erstellen.");
+        if (!res.ok) {
+          throw new Error(data.error || "Fehler beim Erstellen.");
+        }
         router.push(`/grammar/exercises/dnd-match/${data.id}`);
       }
     } catch (err) {

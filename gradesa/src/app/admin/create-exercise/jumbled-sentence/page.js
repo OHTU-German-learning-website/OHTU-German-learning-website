@@ -299,7 +299,9 @@ export default function CreateJumbledSentenceExercise() {
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || "Fehler beim Speichern.");
+      if (!res.ok) {
+        throw new Error(data?.error || "Fehler beim Speichern.");
+      }
       router.push(
         isEditMode
           ? "/grammar/exercises/jumbled-sentence"

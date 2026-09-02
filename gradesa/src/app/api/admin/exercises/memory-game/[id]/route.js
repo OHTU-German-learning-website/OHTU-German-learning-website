@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { DB } from "@/backend/db";
 import { canDeleteOwnedContent } from "@/backend/content-permissions";
 import { withAuth } from "@/backend/middleware/withAuth";
+import { saveBackup } from "@/backend/backups";
 
 export const GET = withAuth(
   async (request, { params }) => {
@@ -125,6 +126,26 @@ export const PUT = withAuth(
         }
       });
 
+      // Save snapshot after update
+      try {
+        const exerciseRes = await DB.pool(
+          `SELECT id, title, description FROM memory_game_exercises WHERE id = $1`,
+          [id]
+        );
+        const pairsRes = await DB.pool(
+          `SELECT id, left_item, right_item, pair_order FROM memory_game_pairs WHERE memory_game_exercise_id = $1 ORDER BY pair_order ASC`,
+          [id]
+        );
+        await saveBackup(
+          "memory_game_exercises",
+          id,
+          { ...(exerciseRes.rows[0] || {}), pairs: pairsRes.rows },
+          request.user?.id ?? null
+        );
+      } catch (err) {
+        console.error("Failed to save memory-game backup after update:", err);
+      }
+
       return NextResponse.json({ success: true });
     } catch (error) {
       if (error.message === "NOT_FOUND") {
@@ -172,6 +193,26 @@ export const DELETE = withAuth(
 
       if (!canDeleteOwnedContent(request.user, rows[0].created_by)) {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+
+      // Snapshot before deletion
+      try {
+        const exerciseRes = await DB.pool(
+          `SELECT id, title, description FROM memory_game_exercises WHERE id = $1`,
+          [id]
+        );
+        const pairsRes = await DB.pool(
+          `SELECT id, left_item, right_item, pair_order FROM memory_game_pairs WHERE memory_game_exercise_id = $1 ORDER BY pair_order ASC`,
+          [id]
+        );
+        await saveBackup(
+          "memory_game_exercises",
+          id,
+          { ...(exerciseRes.rows[0] || {}), pairs: pairsRes.rows },
+          request.user?.id ?? null
+        );
+      } catch (err) {
+        console.error("Failed to save memory-game backup before delete:", err);
       }
 
       await DB.pool(`DELETE FROM exercises WHERE id = $1`, [

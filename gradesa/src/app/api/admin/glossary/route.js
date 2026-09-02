@@ -1,6 +1,7 @@
 import { withAuth } from "@/backend/middleware/withAuth";
 import { withInputValidation } from "@/backend/middleware/withInputValidation";
 import { DB } from "@/backend/db";
+import { saveBackup } from "@/backend/backups";
 import { NextResponse } from "next/server";
 import { glossaryEntrySchema } from "@/shared/schemas/glossary.schemas";
 
@@ -20,6 +21,18 @@ export const POST = withAuth(
       );
       return result.rows[0].id;
     });
+
+    // Save a backup snapshot of the created entry
+    try {
+      await saveBackup(
+        "glossary_entries",
+        entryId,
+        { id: entryId, word, word_definition },
+        req.user?.id ?? null
+      );
+    } catch (err) {
+      console.error("Backup save error:", err);
+    }
 
     return NextResponse.json({ success: true, entry_id: entryId });
   }),
@@ -54,6 +67,18 @@ export const GET = withAuth(
           { error: "Glossary entry not found" },
           { status: 404 }
         );
+      }
+
+      // Save a backup snapshot of the updated entry
+      try {
+        await saveBackup(
+          "glossary_entries",
+          id,
+          result.rows[0],
+          req.user?.id ?? null
+        );
+      } catch (err) {
+        console.error("Backup save error:", err);
       }
 
       return NextResponse.json(result.rows[0]);

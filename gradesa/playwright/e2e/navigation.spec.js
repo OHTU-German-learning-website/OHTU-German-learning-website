@@ -1,4 +1,4 @@
-const { test, expect } = require("@playwright/test");
+import { test, expect } from "@playwright/test";
 
 test.describe("Navigation", () => {
   test("should navigate to grammar communication page", async ({ page }) => {

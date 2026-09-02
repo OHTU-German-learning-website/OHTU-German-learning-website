@@ -49,7 +49,7 @@ describe("POST /api/admin/exercises/multichoice", () => {
       [exerciseId]
     );
     expect(multichoiceExerciseResult.rows.length).toBe(1);
-    expect(multichoiceExerciseResult.rows[0].instruction_text).toBe(
+    expect(multichoiceExerciseResult.rows[0].exercise_description).toBe(
       validInput.instructionText
     );
 

@@ -1,5 +1,5 @@
-const { test } = require("@playwright/test");
-const { elementExists } = require("./utils/helpers");
+import { test } from "@playwright/test";
+import { elementExists } from "./utils/helpers.js";
 
 test.describe("Page Structure Analysis", () => {
   test("analyze homepage structure", async ({ page }) => {

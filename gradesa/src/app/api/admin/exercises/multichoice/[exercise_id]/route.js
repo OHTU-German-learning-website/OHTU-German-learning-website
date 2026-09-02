@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { DB } from "@/backend/db";
 import { canDeleteOwnedContent } from "@/backend/content-permissions";
 import { withAuth } from "@/backend/middleware/withAuth";
+import { saveBackup } from "@/backend/backups";
 
 const validateContent = (content) => {
   if (!Array.isArray(content) || content.length === 0) {
@@ -190,7 +191,7 @@ export const PUT = withAuth(
         await tx.query(
           `UPDATE multichoice_exercises
            SET title = $1,
-               instruction_text = $2,
+               exercise_description = $2,
                updated_at = NOW()
            WHERE id = $3`,
           [title, normalizedInstructionText || null, exercise_id]
@@ -214,6 +215,56 @@ export const PUT = withAuth(
 
         await saveContent(tx, exercise_id, content);
       });
+
+      // After successful update, fetch the current state and save a backup
+      try {
+        const exerciseRes = await DB.pool(
+          `SELECT id, title, exercise_description AS instruction_text FROM multichoice_exercises WHERE id = $1`,
+          [exercise_id]
+        );
+        const contentRes = await DB.pool(
+          `SELECT * FROM multichoice_content WHERE multichoice_exercise_id = $1 ORDER BY content_order`,
+          [exercise_id]
+        );
+        const content = contentRes.rows;
+
+        // Attach options
+        let options = [];
+        if (content.length > 0) {
+          const contentIds = content.map((c) => c.id);
+          const optionsRes = await DB.pool(
+            "SELECT * FROM multichoice_options WHERE multichoice_content_id = ANY($1::bigint[])",
+            [contentIds]
+          );
+          options = optionsRes.rows;
+        }
+
+        const contentWithOptions = content.map((item) => {
+          if (item.content_type === "multichoice") {
+            return {
+              ...item,
+              options: options
+                .filter((option) => option.multichoice_content_id === item.id)
+                .map((option) => option.option_value),
+            };
+          }
+          return item;
+        });
+
+        const payload = {
+          ...(exerciseRes.rows[0] || {}),
+          content: contentWithOptions,
+        };
+
+        await saveBackup(
+          "multichoice_exercises",
+          exercise_id,
+          payload,
+          request.user?.id ?? null
+        );
+      } catch (err) {
+        console.error("Failed to save multichoice backup after update:", err);
+      }
 
       return NextResponse.json({ success: true });
     } catch (error) {
@@ -266,6 +317,54 @@ export const DELETE = withAuth(
 
       if (!canDeleteOwnedContent(request.user, rows[0].created_by)) {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+
+      // Snapshot the exercise before deletion
+      try {
+        const exerciseRes = await DB.pool(
+          `SELECT id, title, exercise_description AS instruction_text FROM multichoice_exercises WHERE id = $1`,
+          [exercise_id]
+        );
+        const contentRes = await DB.pool(
+          `SELECT * FROM multichoice_content WHERE multichoice_exercise_id = $1 ORDER BY content_order`,
+          [exercise_id]
+        );
+
+        let options = [];
+        if (contentRes.rows.length > 0) {
+          const contentIds = contentRes.rows.map((c) => c.id);
+          const optionsRes = await DB.pool(
+            "SELECT * FROM multichoice_options WHERE multichoice_content_id = ANY($1::bigint[])",
+            [contentIds]
+          );
+          options = optionsRes.rows;
+        }
+
+        const contentWithOptions = contentRes.rows.map((item) => {
+          if (item.content_type === "multichoice") {
+            return {
+              ...item,
+              options: options
+                .filter((option) => option.multichoice_content_id === item.id)
+                .map((option) => option.option_value),
+            };
+          }
+          return item;
+        });
+
+        const payload = {
+          ...(exerciseRes.rows[0] || {}),
+          content: contentWithOptions,
+        };
+
+        await saveBackup(
+          "multichoice_exercises",
+          exercise_id,
+          payload,
+          request.user?.id ?? null
+        );
+      } catch (err) {
+        console.error("Failed to save multichoice backup before delete:", err);
       }
 
       await DB.pool("DELETE FROM exercises WHERE id = $1", [

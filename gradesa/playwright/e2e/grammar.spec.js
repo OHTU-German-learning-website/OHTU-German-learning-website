@@ -1,4 +1,4 @@
-const { test, expect } = require("@playwright/test");
+import { test, expect } from "@playwright/test";
 
 async function gotoWithRetry(page, url, options, retries = 1) {
   for (let attempt = 0; attempt <= retries; attempt += 1) {

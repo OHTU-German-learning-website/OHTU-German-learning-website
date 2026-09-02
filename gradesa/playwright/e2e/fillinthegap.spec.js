@@ -1,4 +1,4 @@
-const { test, expect } = require("@playwright/test");
+import { test, expect } from "@playwright/test";
 
 async function gotoFillInTheGapList(page) {
   await page.goto("grammar/exercises/fillinthegap", {

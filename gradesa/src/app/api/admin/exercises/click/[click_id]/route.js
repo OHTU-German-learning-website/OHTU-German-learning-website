@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { DB } from "@/backend/db";
 import { canDeleteOwnedContent } from "@/backend/content-permissions";
 import { withAuth } from "@/backend/middleware/withAuth";
+import { saveBackup } from "@/backend/backups";
 import DOMPurify from "dompurify";
 import { JSDOM } from "jsdom";
 
@@ -261,6 +262,45 @@ export const DELETE = withAuth(
         }
 
         const exerciseId = rows[0].exercise_id;
+
+        // Snapshot the exercise before deletion
+        try {
+          const payloadRes = await tx.query(
+            `SELECT ce.id, ce.title, ce.category, ce.target_words, ce.all_words, ce.source_html
+             FROM click_exercises ce
+             WHERE ce.id = $1`,
+            [click_id]
+          );
+          const feedbackRes = await tx.query(
+            `SELECT slot_key, word_text, feedback FROM click_false_word_feedbacks WHERE click_exercise_id = $1 ORDER BY id ASC`,
+            [click_id]
+          );
+
+          const payload = payloadRes.rows[0]
+            ? {
+                ...payloadRes.rows[0],
+                false_word_feedbacks: feedbackRes.rows,
+              }
+            : null;
+
+          if (payload) {
+            try {
+              await saveBackup(
+                "click_exercises",
+                click_id,
+                payload,
+                request.user?.id ?? null
+              );
+            } catch (err) {
+              console.error(
+                "Failed to save backup before deleting click exercise:",
+                err
+              );
+            }
+          }
+        } catch (err) {
+          console.error("Failed to read click exercise for backup:", err);
+        }
 
         await tx.query(
           `DELETE FROM click_to_exercises

@@ -1,4 +1,4 @@
-const { test, expect } = require("@playwright/test");
+import { test, expect } from "@playwright/test";
 
 test.describe("Form Interactions", () => {
   test("should navigate to register page", async ({ page }) => {

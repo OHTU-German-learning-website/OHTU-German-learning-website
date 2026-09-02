@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { jumbledSentenceExerciseSchema } from "@/shared/schemas/jumbled-sentence.schemas";
 import { DB } from "@/backend/db";
 import { withAuth } from "@/backend/middleware/withAuth";
+import { saveBackup } from "@/backend/backups";
 
 export const POST = withAuth(
   async (request) => {
@@ -49,6 +50,22 @@ export const POST = withAuth(
         }
         return { id: jumbled_id };
       });
+      try {
+        await saveBackup(
+          "jumbled_sentence_exercises",
+          result.id,
+          {
+            id: result.id,
+            title,
+            instruction_text: normalizedInstructionText || null,
+            sentences,
+          },
+          created_by ?? null
+        );
+      } catch (err) {
+        console.error("Failed to save jumbled-sentence backup:", err);
+      }
+
       return NextResponse.json({ success: true, id: result.id });
     } catch (err) {
       return NextResponse.json({ error: err.message }, { status: 500 });

@@ -1,5 +1,5 @@
-const { test, expect } = require("@playwright/test");
-const { elementExists } = require("./utils/helpers");
+import { test, expect } from "@playwright/test";
+import { elementExists } from "./utils/helpers.js";
 
 test.describe("Advanced Interactions", () => {
   test("should display grammar content", async ({ page }) => {
