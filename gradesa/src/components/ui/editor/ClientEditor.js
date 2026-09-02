@@ -134,6 +134,40 @@ function setHtmlContent(quill, html) {
   quill.clipboard.dangerouslyPasteHTML(0, content, "api");
 }
 
+const MAX_IMAGE_DIMENSION = 1600;
+const IMAGE_COMPRESSION_QUALITY = 0.75;
+
+// Downscales/re-encodes images client-side so pasted base64 stays well under proxy body-size limits.
+function compressImageFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(reader.error);
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error("Could not read image"));
+      img.onload = () => {
+        const scale = Math.min(
+          1,
+          MAX_IMAGE_DIMENSION / Math.max(img.width, img.height)
+        );
+        const width = Math.round(img.width * scale);
+        const height = Math.round(img.height * scale);
+
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext("2d").drawImage(img, 0, 0, width, height);
+
+        const outputType =
+          file.type === "image/png" ? "image/png" : "image/jpeg";
+        resolve(canvas.toDataURL(outputType, IMAGE_COMPRESSION_QUALITY));
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 function isNodeEffectivelyEmptyText(node) {
   if (!(node instanceof HTMLElement)) {
     return false;
@@ -492,8 +526,34 @@ const ClientEditor = (props) => {
           [{ script: "sub" }, { script: "super" }],
           [{ indent: "-1" }, { indent: "+1" }],
         ];
+        const imageHandler = () => {
+          const input = document.createElement("input");
+          input.setAttribute("type", "file");
+          input.setAttribute("accept", "image/*");
+          input.onchange = async () => {
+            const file = input.files?.[0];
+            if (!file) {
+              return;
+            }
+            try {
+              const dataUrl = await compressImageFile(file);
+              const range = quill.getSelection(true);
+              quill.insertEmbed(range.index, "image", dataUrl, "user");
+              quill.setSelection(range.index + 1, 0, "silent");
+            } catch (error) {
+              console.warn("Image compression failed", error);
+            }
+          };
+          input.click();
+        };
+
         const modules = {
-          toolbar: toolbarOptions,
+          toolbar: {
+            container: toolbarOptions,
+            handlers: {
+              image: imageHandler,
+            },
+          },
           table: false,
           "table-better": {
             language: "en_US",
