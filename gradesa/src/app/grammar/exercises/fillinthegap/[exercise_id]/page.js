@@ -40,6 +40,80 @@ function tokenizeRaw(raw) {
   };
 }
 
+// Same block set as normalizeEditorText's BLOCK_BREAK_TAGS (minus "br", handled separately below).
+const BLOCK_ANCESTOR_TAGS = new Set([
+  "p",
+  "div",
+  "li",
+  "ul",
+  "ol",
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "h5",
+  "h6",
+  "tr",
+  "table",
+]);
+
+function getBlockAncestor(node, root) {
+  let el = node.parentNode;
+  while (el && el !== root) {
+    if (
+      el.nodeType === 1 &&
+      BLOCK_ANCESTOR_TAGS.has(el.tagName.toLowerCase())
+    ) {
+      return el;
+    }
+    el = el.parentNode;
+  }
+  return root;
+}
+
+// Groups text nodes into runs of contiguous prose: only block tags/<br> start a new
+// run, so a word split across inline tags (e.g. <strong>) still tokenizes as one word.
+function groupTextNodesIntoRuns(doc, root, NodeFilter) {
+  const walker = doc.createTreeWalker(
+    root,
+    NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT,
+    {
+      acceptNode(node) {
+        if (node.nodeType === 3) return NodeFilter.FILTER_ACCEPT;
+        if (node.nodeType === 1 && node.tagName === "BR")
+          return NodeFilter.FILTER_ACCEPT;
+        return NodeFilter.FILTER_SKIP;
+      },
+    }
+  );
+
+  const runs = [];
+  let currentRun = [];
+  let currentBlock = null;
+  let node;
+
+  while ((node = walker.nextNode())) {
+    if (node.nodeType === 1) {
+      if (currentRun.length) runs.push(currentRun);
+      currentRun = [];
+      currentBlock = null;
+      continue;
+    }
+
+    const block = getBlockAncestor(node, root);
+    if (currentRun.length && block === currentBlock) {
+      currentRun.push(node);
+    } else {
+      if (currentRun.length) runs.push(currentRun);
+      currentRun = [node];
+      currentBlock = block;
+    }
+  }
+  if (currentRun.length) runs.push(currentRun);
+
+  return runs;
+}
+
 function buildHtmlWithGapPlaceholders(sourceHtml, gapsByTokenIndex) {
   if (!sourceHtml || typeof window === "undefined") {
     return "";
@@ -55,44 +129,61 @@ function buildHtmlWithGapPlaceholders(sourceHtml, gapsByTokenIndex) {
     return sourceHtml;
   }
 
-  const walker = doc.createTreeWalker(root, window.NodeFilter.SHOW_TEXT);
-  const textNodes = [];
-  let current;
-
-  while ((current = walker.nextNode())) {
-    textNodes.push(current);
-  }
-
+  const runs = groupTextNodesIntoRuns(doc, root, window.NodeFilter);
   let tokenIndex = 0;
 
-  for (const textNode of textNodes) {
-    const rawText = textNode.nodeValue || "";
-    const chunks = rawText.match(/\s+|[^\s]+/g) || [];
-    const fragment = doc.createDocumentFragment();
+  for (const nodes of runs) {
+    // Concatenate the run's text so a word split across inline tags is one token.
+    const boundaries = [];
+    let offset = 0;
+    for (const node of nodes) {
+      const length = (node.nodeValue || "").length;
+      boundaries.push({ node, start: offset, end: offset + length });
+      offset += length;
+    }
+    const runText = nodes.map((node) => node.nodeValue || "").join("");
+    const chunks = runText.match(/\s+|[^\s]+/g) || [];
 
+    const fragments = new Map(
+      nodes.map((node) => [node, doc.createDocumentFragment()])
+    );
+    const appendAt = (absOffset, contentNode) => {
+      const boundary =
+        boundaries.find((b) => absOffset >= b.start && absOffset < b.end) ||
+        boundaries[boundaries.length - 1];
+      fragments.get(boundary.node).appendChild(contentNode);
+    };
+
+    let cursor = 0;
     for (const chunk of chunks) {
+      const chunkStart = cursor;
+      cursor += chunk.length;
+
       if (/^\s+$/.test(chunk)) {
-        fragment.appendChild(doc.createTextNode(chunk));
+        appendAt(chunkStart, doc.createTextNode(chunk));
         continue;
       }
 
       const tokenParts = tokenizeRaw(chunk);
       const gap = gapsByTokenIndex.get(tokenIndex);
+      let partOffset = chunkStart;
 
       if (gap && tokenParts.word) {
         if (tokenParts.prefix) {
-          fragment.appendChild(doc.createTextNode(tokenParts.prefix));
+          appendAt(partOffset, doc.createTextNode(tokenParts.prefix));
+          partOffset += tokenParts.prefix.length;
         }
 
         const gapNode = doc.createElement("fitg-gap");
         gapNode.setAttribute("data-gap-id", String(gap.id));
-        fragment.appendChild(gapNode);
+        appendAt(partOffset, gapNode);
+        partOffset += tokenParts.word.length;
 
         if (tokenParts.suffix) {
-          fragment.appendChild(doc.createTextNode(tokenParts.suffix));
+          appendAt(partOffset, doc.createTextNode(tokenParts.suffix));
         }
       } else {
-        fragment.appendChild(doc.createTextNode(chunk));
+        appendAt(chunkStart, doc.createTextNode(chunk));
       }
 
       if (tokenParts.word) {
@@ -100,7 +191,9 @@ function buildHtmlWithGapPlaceholders(sourceHtml, gapsByTokenIndex) {
       }
     }
 
-    textNode.parentNode?.replaceChild(fragment, textNode);
+    for (const node of nodes) {
+      node.parentNode?.replaceChild(fragments.get(node), node);
+    }
   }
 
   return root.innerHTML;
