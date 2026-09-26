@@ -82,7 +82,9 @@ const Area = ({ exerciseID }) => {
     const allBoxesPlaced = totalDroppedItems === allWords.length;
 
     const allItemsCorrect = updatedDustbins.every((dustbin) =>
-      dustbin.droppedItems.every((item) => item.type === dustbin.accepts[0])
+      dustbin.droppedItems.every((item) =>
+        item.types.includes(dustbin.accepts[0])
+      )
     );
 
     return allBoxesPlaced && allItemsCorrect;
@@ -90,7 +92,7 @@ const Area = ({ exerciseID }) => {
 
   const handleDrop = useCallback(
     (index, item) => {
-      const { name, type } = item;
+      const { name, types } = item;
 
       if (droppedBoxNames.includes(name)) return;
 
@@ -98,7 +100,7 @@ const Area = ({ exerciseID }) => {
         if (binIndex === index) {
           return {
             ...bin,
-            droppedItems: [...bin.droppedItems, { name, type }],
+            droppedItems: [...bin.droppedItems, { name, types }],
           };
         }
         return bin;
@@ -150,7 +152,7 @@ const Area = ({ exerciseID }) => {
   if (isLoading) return <div>Lädt...</div>;
   if (error) return <div>Fehler: {error}</div>;
 
-  const allAcceptedTypes = [...new Set(allWords.map((word) => word.type))];
+  const allAcceptedTypes = [...new Set(allWords.flatMap((word) => word.types))];
 
   return (
     <div>
@@ -162,10 +164,10 @@ const Area = ({ exerciseID }) => {
           gap: "var(--u-md)",
         }}
       >
-        {visibleWords.map(({ name, type }, index) => (
+        {visibleWords.map(({ name, types }, index) => (
           <WordBox
             name={name}
-            type={type}
+            types={types}
             isDropped={isDropped(name)}
             key={`${name}-${index}`}
           />

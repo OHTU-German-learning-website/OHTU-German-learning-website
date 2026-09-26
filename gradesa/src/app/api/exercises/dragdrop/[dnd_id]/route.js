@@ -37,17 +37,18 @@ export const GET = withAuth(async (request, { params }) => {
       [dnd_id]
     );
 
-    // Fetch words with their correct categories
+    // Fetch words with all of their correct categories (a word can belong to more than one group)
     const words = await DB.pool(
       `
       SELECT 
         dw.id,
         dw.word as name,
-        dc.category as type
+        ARRAY_AGG(DISTINCT dc.category) as types
       FROM draggable_words dw
       JOIN word_category_mappings wcm ON dw.id = wcm.word_id
       JOIN dnd_categories dc ON wcm.category_id = dc.id
       WHERE wcm.exercise_id = $1
+      GROUP BY dw.id, dw.word
     `,
       [dnd_id]
     );
