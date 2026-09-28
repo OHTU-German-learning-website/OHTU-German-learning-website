@@ -4,6 +4,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useRequest } from "../shared/hooks/useRequest";
 import useLocalStorage from "@/shared/utils/useLocalStorage";
+import { canAccessAdminView } from "@/backend/content-permissions";
 
 export const STUDENT_OPTION = { label: "Student", value: "user" };
 export const TEACHER_OPTION = { label: "Lehrer", value: "admin" };
@@ -176,20 +177,17 @@ export function useIsAdmin() {
   useEffect(() => {
     if (!auth.isAuthResolved) return;
 
-    if (!auth.user?.id) return;
+    if (!auth.isLoggedIn || !auth.user?.id) return;
 
-    const isAllowedAdminView =
-      actAs.value === "admin" || actAs.value === "superadmin";
-
-    if (!auth.user?.is_admin || !auth.isLoggedIn || !isAllowedAdminView) {
-      console.debug("Not authorized to view admin page", auth);
+    if (!canAccessAdminView(auth.user, actAs.value)) {
+      console.debug("Not authorized to view admin page", auth, actAs);
       router.replace("/");
     }
-  }, [auth, router, pathname]);
+  }, [auth, actAs, router, pathname]);
 
   if (!auth.isAuthResolved) return undefined;
 
-  return auth.isLoggedIn && !!auth.user?.is_admin;
+  return auth.isLoggedIn && canAccessAdminView(auth.user, actAs.value);
 }
 
 /**
@@ -244,11 +242,9 @@ export function useIsSuperAdmin() {
 // eslint-disable-next-line react-hooks/rules-of-hooks
 export function checkIsAdmin() {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { auth } = useUser();
+  const { auth, actAs } = useUser();
 
-  if (!auth.user?.id) return false;
-  if (!auth.isLoggedIn) return false;
-  if (!auth.user?.is_admin) return false;
+  if (!auth.isLoggedIn || !auth.user?.id) return false;
 
-  return true;
+  return canAccessAdminView(auth.user, actAs?.value);
 }
