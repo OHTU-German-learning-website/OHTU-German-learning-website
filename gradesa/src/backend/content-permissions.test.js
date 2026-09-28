@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { canDeleteOwnedContent } from "./content-permissions";
+import {
+  canAccessAdminView,
+  canDeleteOwnedContent,
+} from "./content-permissions";
 
 describe("canDeleteOwnedContent", () => {
   it("allows superadmins to delete any content", () => {
@@ -27,5 +30,30 @@ describe("canDeleteOwnedContent", () => {
         null
       )
     ).toBe(false);
+  });
+});
+
+describe("canAccessAdminView", () => {
+  it("allows superadmins in any selected view", () => {
+    const user = { id: 1, is_admin: true, is_superadmin: true };
+
+    expect(canAccessAdminView(user, "user")).toBe(true);
+    expect(canAccessAdminView(user, "admin")).toBe(true);
+    expect(canAccessAdminView(user, "superadmin")).toBe(true);
+  });
+
+  it("requires an admin role for non-superadmin users", () => {
+    const user = { id: 2, is_admin: true, is_superadmin: false };
+
+    expect(canAccessAdminView(user, "user")).toBe(false);
+    expect(canAccessAdminView(user, "admin")).toBe(true);
+    expect(canAccessAdminView(user, "superadmin")).toBe(true);
+  });
+
+  it("blocks non-admin users even when they are on an admin view", () => {
+    const user = { id: 3, is_admin: false, is_superadmin: false };
+
+    expect(canAccessAdminView(user, "admin")).toBe(false);
+    expect(canAccessAdminView(user, "superadmin")).toBe(false);
   });
 });
