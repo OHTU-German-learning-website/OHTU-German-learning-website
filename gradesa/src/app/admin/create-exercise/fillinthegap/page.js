@@ -333,12 +333,16 @@ export default function CreateFillInTheGapExercisePage() {
     setError("");
 
     try {
+      // Re-derive token_index from the current tokenization on every save so legacy
+      // exercises self-heal instead of persisting stale indices from older tokenizers.
+      const healedGaps = remapGapsToTokens(gaps, tokens);
+
       const payload = {
         title,
         instructionText,
         text,
         textHtml,
-        gaps,
+        gaps: healedGaps,
       };
 
       if (isEditMode) {
