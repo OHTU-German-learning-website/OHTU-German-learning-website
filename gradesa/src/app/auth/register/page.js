@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRequest } from "@/shared/hooks/useRequest";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -11,11 +11,30 @@ export default function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [confirmEmail, setConfirmEmail] = useState("");
   const [username, setUsername] = useState("");
+  const [captcha, setCaptcha] = useState(null);
+  const [captchaAnswer, setCaptchaAnswer] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
 
   const makeRequest = useRequest();
+
+  const refreshCaptcha = useCallback(async () => {
+    try {
+      const response = await makeRequest("/auth/register", undefined, {
+        method: "GET",
+      });
+      setCaptcha(response.data);
+      setCaptchaAnswer("");
+    } catch {
+      setCaptcha(null);
+      setError("CAPTCHA-Aufgabe konnte nicht geladen werden. Bitte neu laden.");
+    }
+  }, [makeRequest]);
+
+  useEffect(() => {
+    refreshCaptcha();
+  }, [refreshCaptcha]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -39,6 +58,8 @@ export default function Register() {
         email,
         password,
         username,
+        captchaToken: captcha?.token,
+        captchaAnswer,
       });
       setSubmitted(true);
       setTimeout(() => {
@@ -48,6 +69,7 @@ export default function Register() {
     } catch (error) {
       setError(error.message);
       setSubmitted(false);
+      refreshCaptcha();
     }
   };
 
@@ -153,13 +175,29 @@ export default function Register() {
           />
         </div>
 
-        <Button
-          className="form-button"
-          onClick={handleSubmit}
-          type="submit"
-          size="md"
-          width={"full"}
-        >
+        <div className="form-group">
+          <label className="form-label" htmlFor="captchaAnswer">
+            {captcha?.question || "Rechenaufgabe wird geladen …"}
+          </label>
+          <input
+            className="form-input"
+            type="text"
+            id="captchaAnswer"
+            name="captchaAnswer"
+            inputMode="numeric"
+            autoComplete="off"
+            value={captchaAnswer}
+            onChange={(e) => setCaptchaAnswer(e.target.value)}
+            required
+            disabled={!captcha}
+            aria-label="Antwort auf die CAPTCHA-Rechenaufgabe"
+          />
+          <button type="button" onClick={refreshCaptcha}>
+            Neue Aufgabe
+          </button>
+        </div>
+
+        <Button className="form-button" type="submit" size="md" width={"full"}>
           Registrieren
         </Button>
       </form>
