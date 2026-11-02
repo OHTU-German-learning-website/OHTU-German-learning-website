@@ -4,10 +4,7 @@ import { canDeleteOwnedContent } from "@/backend/content-permissions";
 import { withAuth } from "@/backend/middleware/withAuth";
 import { saveBackup } from "@/backend/backups";
 import { fillGapCreateSchema } from "@/shared/schemas/fillinthegap.schemas";
-import {
-  htmlToPlainText,
-  normalizePlainText,
-} from "@/shared/utils/normalizeEditorText";
+import { alignGapsToSource } from "@/shared/utils/gapTokens";
 import DOMPurify from "dompurify";
 import { JSDOM } from "jsdom";
 
@@ -114,10 +111,12 @@ export const PUT = withAuth(
 
       const { title, instructionText, text, textHtml, gaps } = parsed.data;
       const normalizedInstructionText = String(instructionText || "").trim();
-      const normalizedText = normalizePlainText(
-        text || htmlToPlainText(textHtml || "")
-      );
       const sourceHtml = sanitizeHtml(textHtml || "");
+      const aligned = alignGapsToSource({ text, sourceHtml, gaps });
+      if (aligned.error) {
+        return NextResponse.json({ error: aligned.error }, { status: 422 });
+      }
+      const normalizedText = aligned.sourceText;
 
       await DB.transaction(async (tx) => {
         const { rows } = await tx.query(
@@ -165,9 +164,7 @@ export const PUT = withAuth(
           [exercise_id]
         );
 
-        const sortedGaps = [...gaps].sort(
-          (a, b) => a.tokenIndex - b.tokenIndex
-        );
+        const sortedGaps = [...aligned.gaps];
 
         for (let i = 0; i < sortedGaps.length; i++) {
           const gap = sortedGaps[i];

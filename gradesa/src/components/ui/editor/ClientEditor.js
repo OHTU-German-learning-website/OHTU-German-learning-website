@@ -232,7 +232,8 @@ const ClientEditor = (props) => {
   const updateEditorContentRef = useRef(props.updateEditorContent);
   const quillRef = useRef(null);
   const lastUserHtmlRef = useRef("");
-
+  const defaultContentRef = useRef(props.defaultContent);
+  defaultContentRef.current = props.defaultContent;
   useEffect(() => {
     updateEditorContentRef.current = props.updateEditorContent;
   }, [props.updateEditorContent]);
@@ -555,7 +556,7 @@ const ClientEditor = (props) => {
           if (normalizedHtml !== quill.root.innerHTML) {
             setHtmlContent(quill, normalizedHtml);
           }
-          if (normalizedHtml !== props.defaultContent) {
+          if (normalizedHtml !== defaultContentRef.current) {
             lastUserHtmlRef.current = normalizedHtml;
             updateEditorContentRef.current?.(normalizedHtml);
           }
@@ -563,8 +564,9 @@ const ClientEditor = (props) => {
 
         quillRef.current = quill;
         setupTablePropertiesRepositioning();
-        if (props.defaultContent) {
-          setHtmlContent(quill, props.defaultContent);
+        // Quill loads asynchronously, so content may have arrived after the first render.
+        if (defaultContentRef.current) {
+          setHtmlContent(quill, defaultContentRef.current);
           applyTableAutoContrast(quill);
           syncNormalizedContent();
         }

@@ -9,38 +9,15 @@ import parse from "html-react-parser";
 import { useRequest } from "@/shared/hooks/useRequest";
 import useQuery from "@/shared/hooks/useQuery";
 import AdminVisibleLastModified from "@/components/ui/admin-visible-last-modified";
+import { htmlToPlainText } from "@/shared/utils/normalizeEditorText";
+import {
+  createWordRegex,
+  remapGapsToWords,
+  tokenizeWords,
+} from "@/shared/utils/gapTokens";
 import "../fillinthegap.css";
 
-function tokenizeText(text) {
-  return text
-    .split(/\s+/)
-    .map((token) => token.trim())
-    .filter((token) => token.length > 0)
-    .map((raw) => {
-      const match = raw.match(
-        /^([^\p{L}\p{N}]*)((?:[\p{L}\p{N}][\p{L}\p{N}'-]*)?)([^\p{L}\p{N}]*)$/u
-      );
-      return {
-        raw,
-        prefix: match?.[1] || "",
-        word: match?.[2] || "",
-        suffix: match?.[3] || "",
-      };
-    });
-}
-
-function tokenizeRaw(raw) {
-  const match = raw.match(
-    /^([^\p{L}\p{N}]*)((?:[\p{L}\p{N}][\p{L}\p{N}'-]*)?)([^\p{L}\p{N}]*)$/u
-  );
-  return {
-    prefix: match?.[1] || "",
-    word: match?.[2] || "",
-    suffix: match?.[3] || "",
-  };
-}
-
-// Same block set as normalizeEditorText's BLOCK_BREAK_TAGS (minus "br", handled separately below).
+// Block set mirrors normalizeEditorText's BLOCK_BREAK_TAGS (minus "br", handled below).
 const BLOCK_ANCESTOR_TAGS = new Set([
   "p",
   "div",
@@ -54,6 +31,8 @@ const BLOCK_ANCESTOR_TAGS = new Set([
   "h5",
   "h6",
   "tr",
+  "td",
+  "th",
   "table",
 ]);
 
@@ -130,10 +109,10 @@ function buildHtmlWithGapPlaceholders(sourceHtml, gapsByTokenIndex) {
   }
 
   const runs = groupTextNodesIntoRuns(doc, root, window.NodeFilter);
-  let tokenIndex = 0;
+  let wordIndex = 0;
 
   for (const nodes of runs) {
-    // Concatenate the run's text so a word split across inline tags is one token.
+    // Concatenate the run's text so a word split across inline tags is one word.
     const boundaries = [];
     let offset = 0;
     for (const node of nodes) {
@@ -142,54 +121,43 @@ function buildHtmlWithGapPlaceholders(sourceHtml, gapsByTokenIndex) {
       offset += length;
     }
     const runText = nodes.map((node) => node.nodeValue || "").join("");
-    const chunks = runText.match(/\s+|[^\s]+/g) || [];
 
     const fragments = new Map(
       nodes.map((node) => [node, doc.createDocumentFragment()])
     );
-    const appendAt = (absOffset, contentNode) => {
+    const appendText = (from, to) => {
+      for (const b of boundaries) {
+        const start = Math.max(from, b.start);
+        const end = Math.min(to, b.end);
+        if (start < end) {
+          fragments
+            .get(b.node)
+            .appendChild(doc.createTextNode(runText.slice(start, end)));
+        }
+      }
+    };
+    const appendGap = (position, gapNode) => {
       const boundary =
-        boundaries.find((b) => absOffset >= b.start && absOffset < b.end) ||
+        boundaries.find((b) => position >= b.start && position < b.end) ||
         boundaries[boundaries.length - 1];
-      fragments.get(boundary.node).appendChild(contentNode);
+      fragments.get(boundary.node).appendChild(gapNode);
     };
 
     let cursor = 0;
-    for (const chunk of chunks) {
-      const chunkStart = cursor;
-      cursor += chunk.length;
-
-      if (/^\s+$/.test(chunk)) {
-        appendAt(chunkStart, doc.createTextNode(chunk));
+    for (const match of runText.matchAll(createWordRegex())) {
+      const gap = gapsByTokenIndex.get(wordIndex);
+      wordIndex += 1;
+      if (!gap) {
         continue;
       }
 
-      const tokenParts = tokenizeRaw(chunk);
-      const gap = gapsByTokenIndex.get(tokenIndex);
-      let partOffset = chunkStart;
-
-      if (gap && tokenParts.word) {
-        if (tokenParts.prefix) {
-          appendAt(partOffset, doc.createTextNode(tokenParts.prefix));
-          partOffset += tokenParts.prefix.length;
-        }
-
-        const gapNode = doc.createElement("fitg-gap");
-        gapNode.setAttribute("data-gap-id", String(gap.id));
-        appendAt(partOffset, gapNode);
-        partOffset += tokenParts.word.length;
-
-        if (tokenParts.suffix) {
-          appendAt(partOffset, doc.createTextNode(tokenParts.suffix));
-        }
-      } else {
-        appendAt(chunkStart, doc.createTextNode(chunk));
-      }
-
-      if (tokenParts.word) {
-        tokenIndex += 1;
-      }
+      appendText(cursor, match.index);
+      const gapNode = doc.createElement("fitg-gap");
+      gapNode.setAttribute("data-gap-id", String(gap.id));
+      appendGap(match.index, gapNode);
+      cursor = match.index + match[0].length;
     }
+    appendText(cursor, runText.length);
 
     for (const node of nodes) {
       node.parentNode?.replaceChild(fragments.get(node), node);
@@ -213,18 +181,46 @@ export default function FillInTheGapExercisePage() {
     error,
   } = useQuery(`/exercises/fillinthegap/${exercise_id}`);
 
-  const tokens = useMemo(
-    () => tokenizeText(exercise?.source_text || ""),
-    [exercise?.source_text]
+  const plainText = useMemo(
+    () =>
+      exercise?.source_html
+        ? htmlToPlainText(exercise.source_html)
+        : exercise?.source_text || "",
+    [exercise?.source_html, exercise?.source_text]
   );
 
+  // Gaps saved by older versions may point at a shifted word; re-anchor them by word.
   const gapsByTokenIndex = useMemo(() => {
     const map = new Map();
-    for (const gap of exercise?.gaps || []) {
-      map.set(Number(gap.token_index), gap);
+    const { gaps } = remapGapsToWords(
+      (exercise?.gaps || []).map((gap) => ({
+        ...gap,
+        tokenIndex: Number(gap.token_index),
+        tokenText: gap.token_text,
+      })),
+      tokenizeWords(plainText)
+    );
+    for (const gap of gaps) {
+      map.set(gap.tokenIndex, gap);
     }
     return map;
-  }, [exercise?.gaps]);
+  }, [exercise?.gaps, plainText]);
+
+  const textSegments = useMemo(() => {
+    const segments = [];
+    let cursor = 0;
+    tokenizeWords(plainText).forEach((word, index) => {
+      if (word.start > cursor) {
+        segments.push({ text: plainText.slice(cursor, word.start) });
+      }
+      segments.push({ text: word.word, gap: gapsByTokenIndex.get(index) });
+      cursor = word.end;
+    });
+    if (cursor < plainText.length) {
+      segments.push({ text: plainText.slice(cursor) });
+    }
+    return segments;
+  }, [plainText, gapsByTokenIndex]);
 
   const htmlWithPlaceholders = useMemo(() => {
     const html = buildHtmlWithGapPlaceholders(
@@ -340,39 +336,30 @@ export default function FillInTheGapExercisePage() {
 
         {!exercise.source_html && (
           <Container p="md" bg="var(--bg2)" br="md">
-            <div className="fitg-student-flow">
-              {tokens.map((token, index) => {
-                const gap = gapsByTokenIndex.get(index);
-
-                if (!gap) {
-                  return (
-                    <span
-                      key={`${index}-${token.raw}`}
-                      className="fitg-student-token"
-                    >
-                      {token.raw}
-                    </span>
-                  );
-                }
-
-                return (
-                  <span
-                    key={`${index}-${token.raw}`}
-                    className="fitg-student-token"
-                  >
-                    {token.prefix}
-                    <input
-                      className="fitg-student-input"
-                      value={answers[String(gap.id)] || ""}
-                      onChange={(event) =>
-                        handleAnswerChange(String(gap.id), event.target.value)
-                      }
-                      placeholder="..."
-                    />
-                    {token.suffix}
+            <div
+              className="fitg-student-flow"
+              style={{ whiteSpace: "pre-wrap" }}
+            >
+              {textSegments.map((segment, index) =>
+                segment.gap ? (
+                  <input
+                    key={index}
+                    className="fitg-student-input"
+                    value={answers[String(segment.gap.id)] || ""}
+                    onChange={(event) =>
+                      handleAnswerChange(
+                        String(segment.gap.id),
+                        event.target.value
+                      )
+                    }
+                    placeholder="..."
+                  />
+                ) : (
+                  <span key={index} className="fitg-student-token">
+                    {segment.text}
                   </span>
-                );
-              })}
+                )
+              )}
             </div>
           </Container>
         )}

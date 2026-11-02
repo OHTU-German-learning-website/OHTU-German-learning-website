@@ -3,10 +3,7 @@ import { withAuth } from "@/backend/middleware/withAuth";
 import { saveBackup } from "@/backend/backups";
 import { withInputValidation } from "@/backend/middleware/withInputValidation";
 import { fillGapCreateSchema } from "@/shared/schemas/fillinthegap.schemas";
-import {
-  htmlToPlainText,
-  normalizePlainText,
-} from "@/shared/utils/normalizeEditorText";
+import { alignGapsToSource } from "@/shared/utils/gapTokens";
 import { NextResponse } from "next/server";
 import DOMPurify from "dompurify";
 import { JSDOM } from "jsdom";
@@ -22,10 +19,13 @@ export const POST = withAuth(
     const body = await request.json();
     const { title, instructionText, text, textHtml, gaps } = body;
     const normalizedInstructionText = String(instructionText || "").trim();
-    const normalizedText = normalizePlainText(
-      text || htmlToPlainText(textHtml || "")
-    );
     const sourceHtml = sanitizeHtml(textHtml || "");
+    const aligned = alignGapsToSource({ text, sourceHtml, gaps });
+    if (aligned.error) {
+      return NextResponse.json({ error: aligned.error }, { status: 422 });
+    }
+    const normalizedText = aligned.sourceText;
+    const alignedGaps = aligned.gaps;
 
     const userId = request.user?.id;
     if (!userId) {
@@ -57,7 +57,7 @@ export const POST = withAuth(
 
       const fillGapExerciseId = fillGapExerciseResult.rows[0].id;
 
-      const sortedGaps = [...gaps].sort((a, b) => a.tokenIndex - b.tokenIndex);
+      const sortedGaps = [...alignedGaps];
 
       for (let i = 0; i < sortedGaps.length; i++) {
         const gap = sortedGaps[i];
@@ -96,7 +96,7 @@ export const POST = withAuth(
           title,
           instruction_text: normalizedInstructionText || null,
           source_text: normalizedText,
-          gaps,
+          gaps: alignedGaps,
         },
         request.user?.id ?? null
       );

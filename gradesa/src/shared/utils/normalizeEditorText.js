@@ -12,6 +12,8 @@ const BLOCK_BREAK_TAGS = new Set([
   "h5",
   "h6",
   "tr",
+  "td",
+  "th",
   "table",
 ]);
 

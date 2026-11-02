@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Column, Container, Row } from "@/components/ui/layout/container";
@@ -8,26 +8,9 @@ import Editor from "@/components/ui/editor";
 import { useRequest } from "@/shared/hooks/useRequest";
 import useQuery from "@/shared/hooks/useQuery";
 import { htmlToPlainText } from "@/shared/utils/normalizeEditorText";
+import { remapGapsToWords, tokenizeWords } from "@/shared/utils/gapTokens";
 import AdminLastModified from "@/components/ui/admin-last-modified";
 import "./fillinthegap.css";
-
-function tokenizeText(text) {
-  return text
-    .split(/\s+/)
-    .map((token) => token.trim())
-    .filter((token) => token.length > 0)
-    .map((raw) => {
-      const match = raw.match(
-        /^([^\p{L}\p{N}]*)((?:[\p{L}\p{N}][\p{L}\p{N}'-]*)?)([^\p{L}\p{N}]*)$/u
-      );
-      const word = match?.[2] || "";
-
-      return {
-        raw,
-        word,
-      };
-    });
-}
 
 function createDefaultAnswers() {
   return [
@@ -36,73 +19,8 @@ function createDefaultAnswers() {
   ];
 }
 
-function normalizeTokenKey(value) {
-  return String(value || "")
-    .trim()
-    .toLowerCase();
-}
-
-function takeClosestIndex(indices, targetIndex) {
-  if (!indices.length) {
-    return undefined;
-  }
-
-  let bestArrayIndex = 0;
-  let bestDistance = Math.abs(indices[0] - targetIndex);
-
-  for (let i = 1; i < indices.length; i++) {
-    const distance = Math.abs(indices[i] - targetIndex);
-    if (distance < bestDistance) {
-      bestDistance = distance;
-      bestArrayIndex = i;
-    }
-  }
-
-  const [chosen] = indices.splice(bestArrayIndex, 1);
-  return chosen;
-}
-
 function remapGapsToTokens(existingGaps, nextTokens) {
-  const indicesByWord = new Map();
-
-  nextTokens.forEach((token, index) => {
-    const key = normalizeTokenKey(token.word || token.raw);
-    if (!key) {
-      return;
-    }
-
-    if (!indicesByWord.has(key)) {
-      indicesByWord.set(key, []);
-    }
-    indicesByWord.get(key).push(index);
-  });
-
-  const remapped = [];
-  const orderedGaps = [...existingGaps].sort(
-    (a, b) => a.tokenIndex - b.tokenIndex
-  );
-
-  orderedGaps.forEach((gap) => {
-    const key = normalizeTokenKey(gap.tokenText);
-    const indices = indicesByWord.get(key) || [];
-    if (!indices.length) {
-      return;
-    }
-
-    const nextIndex = takeClosestIndex(indices, gap.tokenIndex);
-    if (nextIndex === undefined) {
-      return;
-    }
-
-    remapped.push({
-      ...gap,
-      tokenIndex: nextIndex,
-      tokenText:
-        nextTokens[nextIndex]?.word || nextTokens[nextIndex]?.raw || key,
-    });
-  });
-
-  return remapped.sort((a, b) => a.tokenIndex - b.tokenIndex);
+  return remapGapsToWords(existingGaps, nextTokens).gaps;
 }
 
 function escapeHtml(value) {
@@ -124,7 +42,6 @@ export default function CreateFillInTheGapExercisePage() {
   const [instructionText, setInstructionText] = useState("");
   const [textHtml, setTextHtml] = useState("");
   const [text, setText] = useState("");
-  const [selectedIndices, setSelectedIndices] = useState([]);
   const [step, setStep] = useState("select");
   const [gaps, setGaps] = useState([]);
   const [saving, setSaving] = useState(false);
@@ -138,50 +55,33 @@ export default function CreateFillInTheGapExercisePage() {
     enabled: isEditMode,
   });
 
-  const tokens = useMemo(() => tokenizeText(text), [text]);
-
-  const syncGapsWithSelection = (nextSelectedIndices) => {
-    const normalized = [...new Set(nextSelectedIndices)].sort((a, b) => a - b);
-
-    setSelectedIndices(normalized);
-    setGaps((current) =>
-      normalized.map((tokenIndex) => {
-        const existingGap = current.find(
-          (gap) => gap.tokenIndex === tokenIndex
-        );
-
-        if (existingGap) {
-          return {
-            ...existingGap,
-            tokenText:
-              tokens[tokenIndex]?.word ||
-              tokens[tokenIndex]?.raw ||
-              existingGap.tokenText,
-          };
-        }
-
-        return {
-          tokenIndex,
-          tokenText: tokens[tokenIndex]?.word || tokens[tokenIndex]?.raw || "",
-          answers: createDefaultAnswers(),
-        };
-      })
-    );
-  };
+  const tokens = useMemo(() => tokenizeWords(text), [text]);
+  const selectedIndices = useMemo(
+    () => gaps.map((gap) => gap.tokenIndex),
+    [gaps]
+  );
+  const gapsRef = useRef(gaps);
+  const textRef = useRef(text);
+  const hasLoadedExerciseRef = useRef(false);
+  gapsRef.current = gaps;
 
   useEffect(() => {
-    if (!isEditMode || !exerciseData) {
+    // Load once: a background refetch must not overwrite what the admin is editing.
+    if (!isEditMode || !exerciseData || hasLoadedExerciseRef.current) {
       return;
     }
+    hasLoadedExerciseRef.current = true;
 
     setTitle(exerciseData.title || "");
     setInstructionText(exerciseData.instruction_text || "");
     const sourceText = exerciseData.source_text || "";
-    setText(sourceText);
-    setTextHtml(
+    const html =
       exerciseData.source_html ||
-        (sourceText ? `<p>${escapeHtml(sourceText)}</p>` : "")
-    );
+      (sourceText ? `<p>${escapeHtml(sourceText)}</p>` : "");
+    const plainText = htmlToPlainText(html);
+    textRef.current = plainText;
+    setText(plainText);
+    setTextHtml(html);
 
     const mappedGaps = (exerciseData.gaps || []).map((gap) => ({
       tokenIndex: Number(gap.token_index),
@@ -193,37 +93,51 @@ export default function CreateFillInTheGapExercisePage() {
       })),
     }));
 
-    setSelectedIndices(mappedGaps.map((gap) => gap.tokenIndex));
-    setGaps(mappedGaps);
+    // Exercises saved with older indexing are re-anchored to their words here.
+    const healedGaps = remapGapsToTokens(mappedGaps, tokenizeWords(plainText));
+    gapsRef.current = healedGaps;
+    setGaps(healedGaps);
     setStep("configure");
   }, [exerciseData, isEditMode]);
 
   const handleEditorContentChange = (html) => {
     const normalizedText = htmlToPlainText(html);
 
-    if (normalizedText === text) {
+    if (normalizedText === textRef.current) {
       setTextHtml(html);
       return;
     }
 
-    const nextTokens = tokenizeText(normalizedText);
-    const remappedGaps = remapGapsToTokens(gaps, nextTokens);
+    const remappedGaps = remapGapsToTokens(
+      gapsRef.current,
+      tokenizeWords(normalizedText)
+    );
 
+    textRef.current = normalizedText;
+    gapsRef.current = remappedGaps;
     setTextHtml(html);
     setText(normalizedText);
     setGaps(remappedGaps);
-    setSelectedIndices(remappedGaps.map((gap) => gap.tokenIndex));
     if (step === "configure" && remappedGaps.length === 0) {
       setStep("select");
     }
   };
 
   const toggleGapIndex = (index) => {
-    const nextSelected = selectedIndices.includes(index)
-      ? selectedIndices.filter((item) => item !== index)
-      : [...selectedIndices, index];
+    setGaps((current) => {
+      if (current.some((gap) => gap.tokenIndex === index)) {
+        return current.filter((gap) => gap.tokenIndex !== index);
+      }
 
-    syncGapsWithSelection(nextSelected);
+      return [
+        ...current,
+        {
+          tokenIndex: index,
+          tokenText: tokens[index]?.word || "",
+          answers: createDefaultAnswers(),
+        },
+      ].sort((a, b) => a.tokenIndex - b.tokenIndex);
+    });
   };
 
   const moveToGapConfiguration = () => {
@@ -241,7 +155,6 @@ export default function CreateFillInTheGapExercisePage() {
       return;
     }
 
-    syncGapsWithSelection(selectedIndices);
     setStep("configure");
   };
 
@@ -290,10 +203,9 @@ export default function CreateFillInTheGapExercisePage() {
   };
 
   const removeGap = (tokenIndex) => {
-    const nextSelected = selectedIndices.filter(
-      (index) => index !== tokenIndex
+    setGaps((current) =>
+      current.filter((gap) => gap.tokenIndex !== tokenIndex)
     );
-    syncGapsWithSelection(nextSelected);
   };
 
   const validateConfiguration = () => {
@@ -443,7 +355,7 @@ export default function CreateFillInTheGapExercisePage() {
               const selected = selectedIndices.includes(index);
               return (
                 <button
-                  key={`${index}-${token.raw}`}
+                  key={`${index}-${token.word}`}
                   type="button"
                   className={`fitg-token ${selected ? "selected" : ""}`}
                   onClick={() => toggleGapIndex(index)}
