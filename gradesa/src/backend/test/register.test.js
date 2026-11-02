@@ -1,43 +1,42 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { useTestDatabase } from "./testdb";
-import { GET, POST } from "../../app/api/auth/register/route";
+import { POST } from "../../app/api/auth/register/route";
 import { TestFactory } from "./testfactory";
 import { useTestRequest } from "@/backend/test/mock-request";
+import { createHmac } from "node:crypto";
+import { getConfig } from "@/backend/config";
+import { DB } from "@/backend/db";
 
 async function mockRegisterRequest(data) {
-  const { mockGet, mockPost } = useTestRequest();
-  const captchaResponse = await GET(mockGet("@/api/auth/register"));
-  const { question, token } = await captchaResponse.json();
-  const operands = question.match(/(\d+) \+ (\d+)/);
-
-  return mockPost("@/api/auth/register", {
-    ...data,
-    captchaToken: token,
-    captchaAnswer: String(Number(operands[1]) + Number(operands[2])),
-  });
+  const { mockPost } = useTestRequest();
+  return mockPost("@/api/auth/register", { website: "", ...data });
 }
 
 describe("POST /register", () => {
   useTestDatabase();
 
-  it("should reject a registration without a valid captcha", async () => {
+  it("should silently ignore submissions that fill the honeypot", async () => {
     const { mockPost } = useTestRequest();
     const request = mockPost("@/api/auth/register", {
       email: "captcha-test@email.com",
       password: "goodpassword123",
       username: "captchauser",
-      captchaToken: "invalid-token",
-      captchaAnswer: "10",
+      website: "https://spam.example",
     });
 
     const response = await POST(request);
     const result = await response.json();
+    const createdUsers = await DB.pool(
+      "SELECT id FROM users WHERE email = $1",
+      ["captcha-test@email.com"]
+    );
 
-    expect(response.status).toBe(422);
-    expect(result.error).toBe("Bitte lösen Sie die CAPTCHA-Aufgabe korrekt.");
+    expect(response.status).toBe(200);
+    expect(result.message).toBe("Account created.");
+    expect(createdUsers.rows).toHaveLength(0);
   });
 
-  it("should cool down an IP after repeated invalid captcha answers", async () => {
+  it("should count repeated honeypot submissions without affecting the response", async () => {
     const { mockPost } = useTestRequest();
 
     for (let attempt = 0; attempt < 20; attempt += 1) {
@@ -45,29 +44,24 @@ describe("POST /register", () => {
         email: "captcha-test@email.com",
         password: "goodpassword123",
         username: "captchauser",
-        captchaToken: "invalid-token",
-        captchaAnswer: "10",
+        website: "https://spam.example",
       });
       request.headers.set("x-forwarded-for", "203.0.113.10");
 
       const response = await POST(request);
-      expect(response.status).toBe(attempt === 19 ? 429 : 422);
+      expect(response.status).toBe(200);
     }
 
-    const blockedRequest = mockPost("@/api/auth/register", {
-      email: "another-user@email.com",
-      password: "goodpassword123",
-      username: "anotheruser",
-      captchaToken: "invalid-token",
-      captchaAnswer: "10",
-    });
-    blockedRequest.headers.set("x-forwarded-for", "203.0.113.10");
-
-    const blockedResponse = await POST(blockedRequest);
-    expect(blockedResponse.status).toBe(429);
-    expect(Number(blockedResponse.headers.get("Retry-After"))).toBeGreaterThan(
-      0
+    const ipHash = createHmac("sha256", getConfig().sessionSecret)
+      .update("203.0.113.10")
+      .digest("hex");
+    const attempts = await DB.pool(
+      "SELECT failed_attempts, blocked_until FROM registration_honeypot_attempts WHERE ip_hash = $1",
+      [ipHash]
     );
+
+    expect(attempts.rows[0].failed_attempts).toBe(20);
+    expect(attempts.rows[0].blocked_until).not.toBeNull();
   });
 
   it("should return 409 if account already exists", async () => {

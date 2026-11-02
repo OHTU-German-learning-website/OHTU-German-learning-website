@@ -838,7 +838,7 @@ CREATE TABLE public.pgmigrate_migrations (
   applied_at timestamp with time zone NOT NULL
 );
 
-CREATE TABLE public.registration_captcha_attempts (
+CREATE TABLE public.registration_honeypot_attempts (
   ip_hash character(64) PRIMARY KEY NOT NULL,
   window_started_at timestamp with time zone NOT NULL DEFAULT now(),
   failed_attempts integer NOT NULL DEFAULT 0,

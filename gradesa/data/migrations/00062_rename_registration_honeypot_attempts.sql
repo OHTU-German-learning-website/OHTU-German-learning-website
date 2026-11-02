@@ -1,0 +1,2 @@
+ALTER TABLE public.registration_captcha_attempts
+RENAME TO registration_honeypot_attempts;
