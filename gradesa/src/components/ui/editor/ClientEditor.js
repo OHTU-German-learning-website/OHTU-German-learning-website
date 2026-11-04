@@ -2,6 +2,11 @@ import React, { useEffect, useRef } from "react";
 import "quill/dist/quill.snow.css";
 import "quill-table-better/dist/quill-table-better.css";
 import "quill-resize-module/dist/resize.css";
+import "./editor.css";
+import {
+  createSectionBookmarkId,
+  getSectionAnchors,
+} from "@/shared/utils/sectionAnchors";
 
 function parseCssColorToRgb(value) {
   const color = String(value || "")
@@ -463,6 +468,64 @@ const ClientEditor = (props) => {
     const load = async () => {
       const Quill = (await import("quill")).default;
       const TableBetter = (await import("quill-table-better")).default;
+      const QuillLink = Quill.import("formats/link");
+      const QuillEmbed = Quill.import("blots/embed");
+      class SectionLink extends QuillLink {
+        static sanitize(url) {
+          if (
+            typeof url === "string" &&
+            url.startsWith("#") &&
+            url.length > 1
+          ) {
+            return url;
+          }
+          return super.sanitize(url);
+        }
+
+        static create(value) {
+          const node = super.create(value);
+          if (typeof value === "string" && value.startsWith("#")) {
+            node.removeAttribute("target");
+            node.removeAttribute("rel");
+          }
+          return node;
+        }
+
+        format(name, value) {
+          super.format(name, value);
+          if (
+            name === "link" &&
+            typeof value === "string" &&
+            value.startsWith("#")
+          ) {
+            this.domNode.removeAttribute("target");
+            this.domNode.removeAttribute("rel");
+          }
+        }
+      }
+      class SectionBookmark extends QuillEmbed {
+        static blotName = "section-bookmark";
+        static tagName = "span";
+        static className = "ql-section-bookmark";
+
+        static create(value) {
+          const node = super.create();
+          node.id = value.id;
+          node.dataset.sectionBookmark = value.label;
+          node.textContent = "\u200b";
+          node.title = `Bookmark: ${value.label}`;
+          node.setAttribute("aria-label", `Bookmark: ${value.label}`);
+          node.setAttribute("contenteditable", "false");
+          return node;
+        }
+
+        static value(node) {
+          return {
+            id: node.id,
+            label: node.dataset.sectionBookmark,
+          };
+        }
+      }
       let QuillResize = null;
 
       try {
@@ -479,6 +542,8 @@ const ClientEditor = (props) => {
         },
         true
       );
+      Quill.register("formats/link", SectionLink, true);
+      Quill.register(SectionBookmark, true);
       if (QuillResize) {
         Quill.register("modules/resize", QuillResize, true);
       }
@@ -536,6 +601,240 @@ const ClientEditor = (props) => {
             bindings: TableBetter.keyboardBindings,
           },
         });
+        const toolbar = quill.getModule("toolbar").container;
+        const sectionLinkToolbar = document.createElement("span");
+        sectionLinkToolbar.className = "section-link-toolbar";
+        const sectionLinkButton = document.createElement("button");
+        sectionLinkButton.type = "button";
+        sectionLinkButton.className = "section-link-button";
+        sectionLinkButton.setAttribute(
+          "aria-label",
+          "Insert link to a section"
+        );
+        sectionLinkButton.textContent = "Link";
+        const sectionLinkDialog = document.createElement("div");
+        sectionLinkDialog.className = "section-link-dialog";
+        sectionLinkDialog.hidden = true;
+        sectionLinkDialog.setAttribute("role", "dialog");
+        sectionLinkDialog.setAttribute("aria-label", "Insert link");
+        const sectionLinkTitle = document.createElement("strong");
+        sectionLinkTitle.textContent = "Insert link";
+        const displayTextLabel = document.createElement("label");
+        displayTextLabel.textContent = "Text to display";
+        const displayTextInput = document.createElement("input");
+        displayTextInput.type = "text";
+        displayTextInput.className = "section-link-display-text";
+        displayTextLabel.appendChild(displayTextInput);
+        const sectionLinkLabel = document.createElement("label");
+        sectionLinkLabel.textContent = "Place in this document";
+        const sectionLinkSelect = document.createElement("select");
+        sectionLinkSelect.className = "section-link-picker";
+        sectionLinkLabel.appendChild(sectionLinkSelect);
+        const sectionLinkStatus = document.createElement("span");
+        sectionLinkStatus.className = "section-link-status";
+        sectionLinkStatus.setAttribute("role", "status");
+        sectionLinkStatus.setAttribute("aria-live", "polite");
+        const sectionLinkActions = document.createElement("div");
+        sectionLinkActions.className = "section-link-actions";
+        const cancelSectionLinkButton = document.createElement("button");
+        cancelSectionLinkButton.type = "button";
+        cancelSectionLinkButton.textContent = "Cancel";
+        const insertSectionLinkButton = document.createElement("button");
+        insertSectionLinkButton.type = "button";
+        insertSectionLinkButton.className = "section-link-insert";
+        insertSectionLinkButton.textContent = "Insert";
+        sectionLinkActions.append(
+          cancelSectionLinkButton,
+          insertSectionLinkButton
+        );
+        sectionLinkDialog.append(
+          sectionLinkTitle,
+          displayTextLabel,
+          sectionLinkLabel,
+          sectionLinkStatus,
+          sectionLinkActions
+        );
+        sectionLinkToolbar.append(sectionLinkButton, sectionLinkDialog);
+        const bookmarkButton = document.createElement("button");
+        bookmarkButton.type = "button";
+        bookmarkButton.className =
+          "section-link-button section-link-bookmark-button";
+        bookmarkButton.textContent = "\u00a0Bookmark";
+        bookmarkButton.setAttribute(
+          "aria-label",
+          "Add a link target at the cursor"
+        );
+        const bookmarkDialog = document.createElement("div");
+        bookmarkDialog.className = "section-link-dialog";
+        bookmarkDialog.hidden = true;
+        bookmarkDialog.setAttribute("role", "dialog");
+        bookmarkDialog.setAttribute("aria-label", "Add bookmark");
+        const bookmarkTitle = document.createElement("strong");
+        bookmarkTitle.textContent = "Add bookmark";
+        const bookmarkLabel = document.createElement("label");
+        bookmarkLabel.textContent = "Bookmark name";
+        const bookmarkInput = document.createElement("input");
+        bookmarkInput.type = "text";
+        bookmarkInput.className = "section-link-bookmark-name";
+        bookmarkLabel.appendChild(bookmarkInput);
+        const bookmarkStatus = document.createElement("span");
+        bookmarkStatus.className = "section-link-status";
+        bookmarkStatus.setAttribute("role", "status");
+        bookmarkStatus.setAttribute("aria-live", "polite");
+        const bookmarkActions = document.createElement("div");
+        bookmarkActions.className = "section-link-actions";
+        const cancelBookmarkButton = document.createElement("button");
+        cancelBookmarkButton.type = "button";
+        cancelBookmarkButton.textContent = "Cancel";
+        const addBookmarkButton = document.createElement("button");
+        addBookmarkButton.type = "button";
+        addBookmarkButton.className = "section-link-insert";
+        addBookmarkButton.textContent = "Add";
+        bookmarkActions.append(cancelBookmarkButton, addBookmarkButton);
+        bookmarkDialog.append(
+          bookmarkTitle,
+          bookmarkLabel,
+          bookmarkStatus,
+          bookmarkActions
+        );
+        sectionLinkToolbar.append(bookmarkButton, bookmarkDialog);
+        toolbar.appendChild(sectionLinkToolbar);
+
+        const updateSectionLinkOptions = () => {
+          const headingElements = Array.from(
+            quill.root.querySelectorAll("h1, h2, h3")
+          );
+          const sectionAnchors = getSectionAnchors(
+            headingElements.map((heading) => ({
+              text: heading.textContent,
+              id: heading.id,
+              level: Number(heading.tagName.slice(1)),
+            })),
+            Array.from(
+              quill.root.querySelectorAll("[id]"),
+              (element) => element.id
+            )
+          );
+          sectionLinkSelect.replaceChildren(
+            new Option("Link to section...", "")
+          );
+          sectionAnchors.forEach((section) => {
+            const option = new Option(
+              `${"#".repeat(section.level)} ${section.text.trim()}`,
+              section.id
+            );
+            sectionLinkSelect.appendChild(option);
+          });
+          const bookmarks = Array.from(
+            quill.root.querySelectorAll("[data-section-bookmark]")
+          );
+          bookmarks.forEach((bookmark) => {
+            sectionLinkSelect.appendChild(
+              new Option(
+                `Bookmark: ${bookmark.dataset.sectionBookmark}`,
+                bookmark.id
+              )
+            );
+          });
+          insertSectionLinkButton.disabled =
+            sectionAnchors.length + bookmarks.length === 0;
+        };
+        let savedSelection = null;
+        let savedBookmarkSelection = null;
+        sectionLinkButton.addEventListener("mousedown", (event) => {
+          event.preventDefault();
+          savedSelection = quill.getSelection();
+          sectionLinkStatus.textContent = "";
+          sectionLinkSelect.value = "";
+          const selectedText = savedSelection
+            ? quill.getText(savedSelection.index, savedSelection.length)
+            : "";
+          displayTextInput.value = selectedText;
+          sectionLinkDialog.hidden = false;
+          displayTextInput.focus();
+        });
+        cancelSectionLinkButton.addEventListener("click", () => {
+          sectionLinkDialog.hidden = true;
+          savedSelection = null;
+          quill.focus();
+        });
+        bookmarkButton.addEventListener("mousedown", (event) => {
+          event.preventDefault();
+          savedBookmarkSelection = quill.getSelection();
+          bookmarkInput.value = "";
+          bookmarkStatus.textContent = "";
+          bookmarkDialog.hidden = false;
+          bookmarkInput.focus();
+        });
+        cancelBookmarkButton.addEventListener("click", () => {
+          bookmarkDialog.hidden = true;
+          savedBookmarkSelection = null;
+          quill.focus();
+        });
+        addBookmarkButton.addEventListener("click", () => {
+          const label = bookmarkInput.value.trim();
+          if (!label) {
+            bookmarkStatus.textContent = "Enter a name for the bookmark.";
+            return;
+          }
+
+          const selection = savedBookmarkSelection || quill.getSelection(true);
+          if (!selection) {
+            bookmarkStatus.textContent =
+              "Choose a position in the editor for the bookmark.";
+            return;
+          }
+
+          const id = createSectionBookmarkId(
+            label,
+            Array.from(quill.root.querySelectorAll("[id]"), (element) => {
+              return element.id;
+            })
+          );
+          quill.insertEmbed(
+            selection.index,
+            "section-bookmark",
+            { id, label },
+            "user"
+          );
+          quill.setSelection(selection.index + 1, 0, "silent");
+          savedBookmarkSelection = null;
+          bookmarkDialog.hidden = true;
+          quill.focus();
+          bookmarkStatus.textContent = "";
+        });
+        insertSectionLinkButton.addEventListener("click", () => {
+          const sectionId = sectionLinkSelect.value;
+          const displayText = displayTextInput.value.trim();
+          if (!displayText || !sectionId) {
+            sectionLinkStatus.textContent =
+              "Enter link text and choose a section.";
+            return;
+          }
+
+          const selection = savedSelection || quill.getSelection(true);
+          if (!selection) {
+            sectionLinkStatus.textContent =
+              "Choose a position in the editor for the link.";
+            return;
+          }
+
+          if (selection.length > 0) {
+            quill.deleteText(selection.index, selection.length, "user");
+          }
+          quill.insertText(
+            selection.index,
+            displayText,
+            { link: `#${sectionId}` },
+            "user"
+          );
+          quill.setSelection(selection.index + displayText.length, 0, "silent");
+          savedSelection = null;
+          sectionLinkDialog.hidden = true;
+          quill.focus();
+          sectionLinkStatus.textContent = "";
+        });
+        updateSectionLinkOptions();
         quill.root.setAttribute("spellcheck", false);
         quill.root.style.fontSize = "1.125rem";
         quill.root.style.lineHeight = "1.7";
@@ -545,6 +844,7 @@ const ClientEditor = (props) => {
           }
 
           applyTableAutoContrast(quill);
+          updateSectionLinkOptions();
 
           const html = normalizeEditorHtml(quill.root.innerHTML);
           lastUserHtmlRef.current = html;
@@ -568,6 +868,7 @@ const ClientEditor = (props) => {
         if (defaultContentRef.current) {
           setHtmlContent(quill, defaultContentRef.current);
           applyTableAutoContrast(quill);
+          updateSectionLinkOptions();
           syncNormalizedContent();
         }
       }

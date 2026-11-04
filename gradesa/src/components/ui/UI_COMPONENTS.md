@@ -32,7 +32,7 @@ For layout primitives (Container/Row/Column) see `layout/LAYOUT_COMPONENTS.md`.
 
 - **editor**
 
-  - `ClientEditor` — Quill-based WYSIWYG editor wrapper used by admin pages to edit rich HTML content.
+  - `ClientEditor` — Quill-based WYSIWYG editor wrapper used by admin pages to edit rich HTML content, including links to page headings and bookmarks placed anywhere in the text.
 
 - **fillinthegap**
 
