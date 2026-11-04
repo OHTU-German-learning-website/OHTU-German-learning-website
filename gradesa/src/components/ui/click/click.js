@@ -3,9 +3,12 @@ import { Button } from "../button";
 import { Container } from "../layout/container";
 import { Column } from "@/components/ui/layout/container";
 import parse from "html-react-parser";
+import {
+  createWordRegex,
+  normalizeTokenVersion,
+} from "@/shared/utils/clickTokens";
 import "./click.css";
 
-const WORD_REGEX = /\p{L}+(?:['’-]\p{L}+)*/gu;
 const GROUP_DELIMITER = "::";
 
 const parseTargetEntry = (entry) => {
@@ -30,8 +33,8 @@ const parseTargetEntry = (entry) => {
 };
 
 // Split one raw token into parts. All word parts become clickable, punctuation/text does not.
-const splitTokenToParts = (token) => {
-  const matches = [...token.matchAll(WORD_REGEX)];
+const splitTokenToParts = (token, tokenVersion) => {
+  const matches = [...token.matchAll(createWordRegex(tokenVersion))];
   if (matches.length === 0) {
     return [{ type: "text", value: token }];
   }
@@ -61,7 +64,7 @@ const splitTokenToParts = (token) => {
 
 const isWhitespaceToken = (token) => /^[^\S\n]+$/u.test(token);
 
-function buildHtmlWithWordSlots(sourceHtml) {
+function buildHtmlWithWordSlots(sourceHtml, tokenVersion) {
   if (!sourceHtml || typeof window === "undefined") {
     return { html: "", slots: [] };
   }
@@ -98,7 +101,7 @@ function buildHtmlWithWordSlots(sourceHtml) {
         continue;
       }
 
-      const parts = splitTokenToParts(chunk);
+      const parts = splitTokenToParts(chunk, tokenVersion);
       for (const part of parts) {
         if (part.type === "word") {
           const slotKey = `w-${wordIndex}`;
@@ -126,8 +129,12 @@ function buildHtmlWithWordSlots(sourceHtml) {
   return { html: root.innerHTML, slots };
 }
 
-function buildHtmlWithWordSlotsAndGroups(sourceHtml, groupedTargetsById) {
-  const { html, slots } = buildHtmlWithWordSlots(sourceHtml);
+function buildHtmlWithWordSlotsAndGroups(
+  sourceHtml,
+  groupedTargetsById,
+  tokenVersion
+) {
+  const { html, slots } = buildHtmlWithWordSlots(sourceHtml, tokenVersion);
   if (!html || typeof window === "undefined") {
     return { html, slots };
   }
@@ -309,7 +316,9 @@ const WordSelectionExercise = ({
   isSubmitted,
   setIsSubmitted,
   feedback,
+  tokenVersion: tokenVersionProp,
 }) => {
+  const tokenVersion = normalizeTokenVersion(tokenVersionProp);
   // Track selected word segments so each occurrence is independent,
   // even when one token contains multiple words.
   const [selectedSlotKeys, setSelectedSlotKeys] = useState([]);
@@ -339,8 +348,12 @@ const WordSelectionExercise = ({
 
   const htmlSlotsData = useMemo(
     () =>
-      buildHtmlWithWordSlotsAndGroups(normalizedSourceHtml, groupedTargetsById),
-    [normalizedSourceHtml, groupedTargetsById]
+      buildHtmlWithWordSlotsAndGroups(
+        normalizedSourceHtml,
+        groupedTargetsById,
+        tokenVersion
+      ),
+    [normalizedSourceHtml, groupedTargetsById, tokenVersion]
   );
 
   const fallbackWordSlots = useMemo(() => {
@@ -349,7 +362,7 @@ const WordSelectionExercise = ({
     allWords?.forEach((token, tokenIndex) => {
       if (token === "\n" || isWhitespaceToken(token)) return;
 
-      const parts = splitTokenToParts(token);
+      const parts = splitTokenToParts(token, tokenVersion);
       parts.forEach((part, partIndex) => {
         if (part.type !== "word") return;
 
@@ -361,7 +374,7 @@ const WordSelectionExercise = ({
     });
 
     return slots;
-  }, [allWords]);
+  }, [allWords, tokenVersion]);
 
   const wordSlots = useMemo(
     () =>
@@ -768,7 +781,7 @@ const WordSelectionExercise = ({
       );
     }
 
-    const parts = splitTokenToParts(token);
+    const parts = splitTokenToParts(token, tokenVersion);
 
     return parts.map((part, partIndex) => {
       const slotKey = `${tokenIndex}-${partIndex}`;

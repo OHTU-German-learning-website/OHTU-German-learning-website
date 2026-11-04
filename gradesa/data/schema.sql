@@ -102,7 +102,8 @@ CREATE TABLE public.click_exercises (
   category text NOT NULL,
   target_words text[] NOT NULL,
   all_words text[] NOT NULL,
-  source_html text
+  source_html text,
+  token_version smallint NOT NULL DEFAULT 1
 );
 
 CREATE INDEX click_exercises_search_fts_idx ON public.click_exercises USING gin (to_tsvector('simple'::regconfig, ((COALESCE(title, ''::text) || ' '::text) || COALESCE(category, ''::text))));

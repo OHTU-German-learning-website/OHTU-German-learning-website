@@ -11,8 +11,17 @@ import Editor from "@/components/ui/editor";
 import { htmlToPlainText } from "@/shared/utils/normalizeEditorText";
 import { withBasePath } from "@/shared/utils/basePath";
 import AdminLastModified from "@/components/ui/admin-last-modified";
+import {
+  CLICK_TOKEN_VERSION_LATEST,
+  buildSlotKeyMap,
+  createWordRegex,
+  getTextNodeValues,
+  normalizeTokenVersion,
+  remapTargetEntries,
+} from "@/shared/utils/clickTokens";
 
-const WORD_REGEX = /\p{L}+(?:['’-]\p{L}+)*/gu;
+// The editor always works with the latest tokenizer; old exercises are remapped on load.
+const TOKEN_VERSION = CLICK_TOKEN_VERSION_LATEST;
 
 function escapeHtml(value) {
   return String(value || "")
@@ -101,7 +110,7 @@ function buildWordSlotLookup(tokens) {
       return;
     }
 
-    const matches = [...String(token).matchAll(WORD_REGEX)];
+    const matches = [...String(token).matchAll(createWordRegex(TOKEN_VERSION))];
     matches.forEach((match) => {
       lookup.set(`w-${wordIndex}`, match[0]);
       wordIndex += 1;
@@ -158,19 +167,40 @@ export default function CreateExercise() {
           ? `<p>${escapeHtml(text)}</p>`
           : "";
 
+    // Old exercises were numbered without digits; move their keys to the current numbering.
+    const storedTokenVersion = normalizeTokenVersion(
+      exerciseData.token_version
+    );
+    const keyMap =
+      storedTokenVersion === TOKEN_VERSION
+        ? null
+        : buildSlotKeyMap(
+            getTextNodeValues(sourceHtml),
+            storedTokenVersion,
+            TOKEN_VERSION
+          );
+    const remap = (keys) => (keyMap ? remapTargetEntries(keys, keyMap) : keys);
+
     setTitle(exerciseData.title || "");
     setInstructionText(exerciseData.category || "");
     setAllWordsHtml(sourceHtml);
     setAllWordsText(text);
     setSelectedWords(
-      Array.isArray(exerciseData.target_words) ? exerciseData.target_words : []
+      remap(
+        Array.isArray(exerciseData.target_words)
+          ? exerciseData.target_words
+          : []
+      )
     );
 
-    const loadedFalseWordFeedbacks = Array.isArray(
-      exerciseData.false_word_feedbacks
-    )
-      ? exerciseData.false_word_feedbacks
-      : [];
+    const loadedFalseWordFeedbacks = (
+      Array.isArray(exerciseData.false_word_feedbacks)
+        ? exerciseData.false_word_feedbacks
+        : []
+    ).map((entry) => ({
+      ...entry,
+      slot_key: entry.slot_key ? (remap([entry.slot_key])[0] ?? "") : "",
+    }));
 
     setShowFalseWordSelection(loadedFalseWordFeedbacks.length > 0);
     setFalseWordSelectionKeys(
@@ -373,6 +403,7 @@ export default function CreateExercise() {
               targetWords: selectedWords,
               allWords,
               sourceHtml: allWordsHtml,
+              tokenVersion: TOKEN_VERSION,
               falseWordFeedbacks: falseWordFeedbacksPayload,
             }),
           }
@@ -541,6 +572,7 @@ export default function CreateExercise() {
               targetWords={selectedWords}
               allWords={allWords}
               sourceHtml={allWordsHtml}
+              tokenVersion={TOKEN_VERSION}
               isPreviewMode={true}
               previewGroupAdjacentSelection={false}
               onSelectionChange={(updatedSelectedWords) =>
@@ -577,6 +609,7 @@ export default function CreateExercise() {
                 targetWords={[]}
                 allWords={allWords}
                 sourceHtml={allWordsHtml}
+                tokenVersion={TOKEN_VERSION}
                 isPreviewMode={true}
                 previewGroupAdjacentSelection={false}
                 previewAutoSelectTargets={false}

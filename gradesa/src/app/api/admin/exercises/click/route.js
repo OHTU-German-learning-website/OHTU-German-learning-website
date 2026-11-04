@@ -3,6 +3,7 @@ import { withAuth } from "@/backend/middleware/withAuth";
 import { saveBackup } from "@/backend/backups";
 import DOMPurify from "dompurify";
 import { JSDOM } from "jsdom";
+import { CLICK_TOKEN_VERSION_LATEST } from "@/shared/utils/clickTokens";
 
 function sanitizeHtml(html) {
   const window = new JSDOM("").window;
@@ -127,9 +128,16 @@ export const POST = withAuth(
     }
     const id = await DB.transaction(async (tx) => {
       const insertResult = await tx.query(
-        `INSERT INTO click_exercises (title, category, target_words, all_words, source_html)
-         VALUES ($1, $2, $3, $4, $5) returning id`,
-        [title, exerciseInstruction, targetWords, allWords, sanitizedSourceHtml]
+        `INSERT INTO click_exercises (title, category, target_words, all_words, source_html, token_version)
+         VALUES ($1, $2, $3, $4, $5, $6) returning id`,
+        [
+          title,
+          exerciseInstruction,
+          targetWords,
+          allWords,
+          sanitizedSourceHtml,
+          CLICK_TOKEN_VERSION_LATEST,
+        ]
       );
 
       const clickExerciseId = insertResult.rows[0].id;
