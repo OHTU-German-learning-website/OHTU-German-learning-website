@@ -58,6 +58,39 @@ describe("RenderHTML Component", () => {
     expect(screen.getByText("Hello World")).toBeTruthy();
   });
 
+  it("adds stable section ids to headings and preserves explicit ids", () => {
+    const html =
+      '<h2>Grüße aus Deutschland</h2><h3 id="custom-section">Details</h3><h2>Grüße aus Deutschland</h2>';
+    const { container } = render(<RenderHTML data={html} />);
+    const headings = container.querySelectorAll("h2, h3");
+
+    expect(headings[0].id).toBe("section-gruesse-aus-deutschland");
+    expect(headings[1].id).toBe("custom-section");
+    expect(headings[2].id).toBe("section-gruesse-aus-deutschland-2");
+  });
+
+  it("preserves fragment links to rendered section ids", () => {
+    const html =
+      '<h2>Introduction</h2><p><a href="#section-introduction">Read more</a></p>';
+    const { container } = render(<RenderHTML data={html} />);
+    const link = container.querySelector("a");
+
+    expect(link.getAttribute("href")).toBe("#section-introduction");
+    expect(container.querySelector(link.getAttribute("href"))).toBeTruthy();
+  });
+
+  it("renders bookmark targets so fragment links can jump to any text position", () => {
+    const html =
+      '<p><a href="#bookmark-example">More details</a></p><p><span id="bookmark-example" data-section-bookmark="Example"></span>Target text</p>';
+    const { container } = render(<RenderHTML data={html} />);
+    const link = container.querySelector("a");
+    const target = container.querySelector(link.getAttribute("href"));
+
+    expect(target).toBeTruthy();
+    expect(target.dataset.sectionBookmark).toBe("Example");
+    expect(target.parentElement.textContent).toContain("Target text");
+  });
+
   it("should render transformed glossary paragraph tags", () => {
     const html = "<glossaryparagraph>Test paragraph</glossaryparagraph>";
     render(<RenderHTML data={html} />);

@@ -6,6 +6,12 @@ import {
   GlossaryListItem,
 } from "@/components/ui/glossary/GlossaryText";
 import { BASE_PATH, withBasePath } from "@/shared/utils/basePath";
+import { getSectionAnchors } from "@/shared/utils/sectionAnchors";
+
+const getNodeText = (node) => {
+  if (node.type === "text") return node.data;
+  return node.children?.map(getNodeText).join("") || "";
+};
 
 /**
  * Normalize HTML attributes for use in React elements.
@@ -83,11 +89,44 @@ export default function RenderHTML({ data, disableGlossary = false }) {
 
   // Handlers for specific custom tags. Each handler receives normalized
   // attributes and the already-converted children (as React nodes).
+  const sectionHeadings = [];
+  parse(cleanedData, {
+    replace: (domNode) => {
+      if (domNode.type === "tag" && ["h1", "h2", "h3"].includes(domNode.name)) {
+        sectionHeadings.push({
+          text: getNodeText(domNode),
+          id: domNode.attribs?.id,
+        });
+      }
+    },
+  });
+  const reservedIds = Array.from(
+    cleanedData.matchAll(/\bid=["']([^"']+)["']/gi),
+    (match) => match[1]
+  );
+  const sectionAnchors = getSectionAnchors(sectionHeadings, reservedIds);
+  let sectionHeadingIndex = 0;
+
   const handlers = {
     p: renderParagraph,
     li: renderListItem,
     glossaryparagraph: renderParagraph,
     glossarylistitem: renderListItem,
+    h1: (attributes, children) => (
+      <h1 {...attributes} id={sectionAnchors[sectionHeadingIndex++]?.id}>
+        {children}
+      </h1>
+    ),
+    h2: (attributes, children) => (
+      <h2 {...attributes} id={sectionAnchors[sectionHeadingIndex++]?.id}>
+        {children}
+      </h2>
+    ),
+    h3: (attributes, children) => (
+      <h3 {...attributes} id={sectionAnchors[sectionHeadingIndex++]?.id}>
+        {children}
+      </h3>
+    ),
     column: (attributes, children) => {
       const safeAttribs = { ...attributes };
       safeAttribs.className = [safeAttribs.className, "glossary-column"]
