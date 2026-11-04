@@ -51,7 +51,8 @@ CREATE TABLE public.click_exercises (
   category text NOT NULL,
   target_words text[] NOT NULL,
   all_words text[] NOT NULL,
-  source_html text
+  source_html text,
+  token_version smallint NOT NULL DEFAULT 1
 );
 
 CREATE TABLE public.click_false_word_feedbacks (

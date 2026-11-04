@@ -5,6 +5,7 @@ import { withAuth } from "@/backend/middleware/withAuth";
 import { saveBackup } from "@/backend/backups";
 import DOMPurify from "dompurify";
 import { JSDOM } from "jsdom";
+import { normalizeTokenVersion } from "@/shared/utils/clickTokens";
 
 function sanitizeHtml(html) {
   const window = new JSDOM("").window;
@@ -61,6 +62,7 @@ export const GET = withAuth(
            ce.target_words,
            ce.all_words,
            ce.source_html,
+           ce.token_version,
            ce.created_at,
            ce.updated_at,
            e.updated_at AS last_modified_at,
@@ -123,6 +125,8 @@ export const PUT = withAuth(
         instructionText ?? targetCategory ?? ""
       ).trim();
       const sanitizedSourceHtml = sanitizeHtml(sourceHtml || "");
+      // Exercises are only ever upgraded to a newer tokenizer, never downgraded.
+      const requestedTokenVersion = normalizeTokenVersion(body.tokenVersion);
       const falseWordFeedbacks = Array.isArray(body.falseWordFeedbacks)
         ? body.falseWordFeedbacks
         : [];
@@ -183,6 +187,7 @@ export const PUT = withAuth(
                target_words = $3,
                all_words = $4,
                source_html = $5,
+               token_version = GREATEST(token_version, $7),
                updated_at = NOW()
            WHERE id = $6`,
           [
@@ -192,6 +197,7 @@ export const PUT = withAuth(
             allWords,
             sanitizedSourceHtml,
             click_id,
+            requestedTokenVersion,
           ]
         );
 

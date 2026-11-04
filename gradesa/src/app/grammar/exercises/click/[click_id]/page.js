@@ -81,6 +81,7 @@ export default function StudentExercisePage() {
         targetWords={exercise.target_words}
         allWords={exercise.all_words}
         sourceHtml={exercise.source_html}
+        tokenVersion={exercise.token_version}
         falseWordFeedbacks={data.falseWordFeedbacks || []}
         previousAnswers={data.userAnswers?.answer || []}
         isPreviewMode={false}
