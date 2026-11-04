@@ -1,0 +1,153 @@
+.section-link-toolbar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0 0.2rem;
+}
+
+.section-link-button {
+  min-height: 1.8rem;
+  padding: 0 0.45rem;
+  border: 0;
+  border-radius: 0.25rem;
+  background: transparent;
+  color: #444;
+  cursor: pointer;
+  font: inherit;
+}
+
+.section-link-bookmark-button {
+  margin-left: 0.5rem;
+  padding-left: 0.5rem;
+  border-left: 1px solid currentColor;
+}
+
+.section-link-button:hover,
+.section-link-button:focus-visible {
+  background: #e8e8e8;
+}
+
+.ql-editor .ql-section-bookmark::before {
+  color: #1668c7;
+  content: "⚑";
+  font-size: 0.8em;
+}
+
+.section-link-dialog {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  display: grid;
+  width: min(22rem, calc(100vw - 2rem));
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid #c8c8c8;
+  border-radius: 0.35rem;
+  background: #fff;
+  box-shadow: 0 0.3rem 1rem rgb(0 0 0 / 18%);
+  color: #222;
+  font:
+    0.9rem/1.4 Arial,
+    sans-serif;
+}
+
+.section-link-dialog[hidden] {
+  display: none;
+}
+
+.section-link-dialog label {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.section-link-dialog input,
+.section-link-picker {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 2rem;
+  padding: 0.25rem 0.45rem;
+  border: 1px solid #aaa;
+  border-radius: 0.2rem;
+  background: #fff;
+  color: #222;
+  font: inherit;
+}
+
+.section-link-picker {
+  max-width: none;
+}
+
+.section-link-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.section-link-dialog .section-link-actions > button {
+  position: static;
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-height: 2rem;
+  min-width: 4.5rem;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid #888;
+  border-radius: 0.2rem;
+  background: #fff;
+  color: #222;
+  cursor: pointer;
+  font: inherit;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.section-link-dialog .section-link-actions > .section-link-insert {
+  border-color: #1668c7;
+  background: #1668c7;
+  color: #fff;
+}
+
+.section-link-dialog .section-link-actions > button:hover,
+.section-link-dialog .section-link-actions > button:focus-visible {
+  border-color: #0e4f9b;
+  background: #0e4f9b;
+  color: #fff;
+}
+
+.section-link-dialog .section-link-actions > button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.section-link-dialog .section-link-actions > button:first-child:hover,
+.section-link-dialog .section-link-actions > button:first-child:focus-visible {
+  border-color: #666;
+  background: #eee;
+  color: #222;
+}
+
+.section-link-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+.section-link-status:not(:empty) {
+  position: static;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip: auto;
+  color: #a4262c;
+  white-space: normal;
+  clip-path: none;
+}
