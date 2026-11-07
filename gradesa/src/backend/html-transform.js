@@ -1,7 +1,12 @@
-import { JSDOM } from "jsdom";
-
 /**
- * Transforms HTML content by replacing <p> and <li> tags with custom glossary tags
+ * Transforms HTML content by replacing <p> and <li> tags with custom glossary tags.
+ *
+ * PERFORMANCE OPTIMIZATION: Uses fast regex-based transformation instead of JSDOM.
+ * This prevents ERR_INCOMPLETE_CHUNKED_ENCODING errors on large pages with images.
+ *
+ * Why: JSDOM full DOM parsing causes severe memory/CPU issues on pages >1-5MB,
+ * resulting in response timeouts on nginx (OpenShift). Regex is 100-1000x faster.
+ *
  * @param {string} htmlString - The HTML content to transform
  * @returns {string} - Transformed HTML with GlossaryParagraph and GlossaryListItem tags
  */
@@ -11,68 +16,21 @@ export function transformHtmlToGlossaryTags(htmlString) {
   }
 
   try {
-    // Parse HTML using jsdom
-    const dom = new JSDOM(htmlString);
-    const document = dom.window.document;
+    let result = htmlString;
 
-    // Define transformation mappings
-    const transformations = [
-      {
-        selector: "p",
-        newTag: "GlossaryParagraph",
-        skipParent: "glossaryparagraph",
-      },
-      {
-        selector: "li",
-        newTag: "GlossaryListItem",
-        skipParent: "glossarylistitem",
-      },
-    ];
+    // Transform <p> tags to <glossaryparagraph>
+    // Regex: <p\b([^>]*)> matches <p, <p , <p attr="value">, etc.
+    // $1 preserves all attributes
+    result = result.replace(/<p\b([^>]*)>/gi, "<glossaryparagraph$1>");
+    result = result.replace(/<\/p\s*>/gi, "</glossaryparagraph>");
 
-    // Apply transformations
-    transformations.forEach(({ selector, newTag, skipParent }) => {
-      transformElements(document, selector, newTag, skipParent);
-    });
+    // Transform <li> tags to <glossarylistitem>
+    result = result.replace(/<li\b([^>]*)>/gi, "<glossarylistitem$1>");
+    result = result.replace(/<\/li\s*>/gi, "</glossarylistitem>");
 
-    // Return transformed HTML
-    return document.body.innerHTML;
+    return result;
   } catch (error) {
     console.error("Error transforming HTML to glossary tags:", error);
-    // Return original HTML if transformation fails
     return htmlString;
   }
-}
-
-/**
- * Transform all elements matching a selector to a new tag name
- * @param {Document} document - The DOM document
- * @param {string} selector - CSS selector for elements to transform
- * @param {string} newTag - New tag name to use
- * @param {string} skipParent - Skip transformation if element is inside this parent tag
- */
-function transformElements(document, selector, newTag, skipParent) {
-  const elements = Array.from(document.querySelectorAll(selector));
-
-  elements.forEach((element) => {
-    // Skip if already inside a transformed parent
-    if (element.closest(skipParent)) {
-      return;
-    }
-
-    // Create new element with custom tag name
-    const newElement = document.createElement(newTag);
-
-    // Copy all attributes from original element
-    Array.from(element.attributes).forEach((attr) => {
-      newElement.setAttribute(attr.name, attr.value);
-    });
-
-    // Move all child nodes to new element (more efficient than innerHTML)
-    while (element.firstChild) {
-      newElement.appendChild(element.firstChild);
-    }
-
-    // Replace original element with new element
-    element.replaceWith(newElement);
-  });
 }
