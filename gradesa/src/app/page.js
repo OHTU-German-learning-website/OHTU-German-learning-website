@@ -1,19 +1,35 @@
 "use client";
 
+import Image from "next/image";
 import { LinkButton } from "@/components/ui/linkbutton";
+import { withBasePath } from "@/shared/utils/basePath";
 import styles from "./page.module.css";
 
 export default function Home() {
   return (
     <>
       <div className="container">
-        <section className="hero">
-          <h1>Gradesa 2.0</h1>
-          <p>
-            Grammatik Deutsch selbständig und autonom <br /> Lerne und übe die
-            deutsche Grammatik mit kommunikativen Situationen!
-          </p>
-        </section>
+        <div className={styles.heroBlock}>
+          <picture className={styles.heroLogo}>
+            <source
+              media="(prefers-color-scheme: dark)"
+              srcSet={withBasePath("/gradesa_logo_dark.svg")}
+            />
+            <Image
+              src={withBasePath("/gradesa_logo_light.svg")}
+              width={280}
+              height={127}
+              alt="Gradesa"
+              priority
+            />
+          </picture>
+          <section className="hero">
+            <p>
+              Grammatik Deutsch selbständig und autonom <br /> Lerne und übe die
+              deutsche Grammatik mit kommunikativen Situationen!
+            </p>
+          </section>
+        </div>
 
         <div className="features">
           <div className="feature-card">

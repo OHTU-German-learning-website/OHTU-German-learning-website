@@ -8,9 +8,9 @@
   "theme_color": "#ffffff",
   "icons": [
     {
-      "src": "/gradesa/favicon.ico",
-      "sizes": "256x256",
-      "type": "image/x-icon"
+      "src": "/gradesa/gradesa_favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
     }
   ],
   "lang": "de",

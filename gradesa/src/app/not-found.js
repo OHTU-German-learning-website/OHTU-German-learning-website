@@ -6,8 +6,8 @@ export default function Custom404() {
     <div>
       <h2>
         <Image
-          src={withBasePath("/favicon.ico")}
-          alt="der Elefant"
+          src={withBasePath("/gradesa_favicon.svg")}
+          alt="Gradesa"
           width={64}
           height={64}
         />

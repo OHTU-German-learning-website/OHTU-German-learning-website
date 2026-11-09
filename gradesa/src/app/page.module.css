@@ -19,6 +19,23 @@
   overflow: hidden;
 }
 
+.heroBlock {
+  width: 100%;
+  margin: 0 0 1rem;
+}
+
+.heroLogo {
+  display: block;
+  width: min(380px, calc(100% - 24px));
+  margin: 0 auto 72px;
+}
+
+.heroLogo img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;

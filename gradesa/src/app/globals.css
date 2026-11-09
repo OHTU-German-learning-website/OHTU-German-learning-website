@@ -17,17 +17,18 @@
 
   /* Colors for light mode */
   /* background colors (page, cards, etc.) */
-  --bg1: hsl(213, 20%, 94%);
-  --bg2: hsl(213, 20%, 96%);
-  --bg3: hsl(213, 20%, 98%);
+  --bg1: hsl(86, 6%, 78%);
+  --bg2: hsl(60, 4%, 88%);
+  --bg3: hsl(0, 0%, 96%);
   --bg4: hsl(213, 20%, 99%);
+  --hero-panel-bg: hsl(211, 47%, 73%);
 
   --linear-gradient: linear-gradient(120deg,
       var(--primary1) 12%,
       var(--primary3) 47%,
       var(--primary4) 75%);
 
-  --site-bg: var(--bg1);
+  --site-bg: var(--bg2);
 
   /* foreground colors (text, icons, etc.) */
   --fg1: hsl(240, 40%, 5%);
@@ -131,10 +132,11 @@
 @media (prefers-color-scheme: dark) {
   :root {
     /* Inverted background colors for dark mode */
-    --bg1: hsl(207, 42%, 9%);
-    --bg2: hsl(208, 30%, 11%);
-    --bg3: hsl(216, 49%, 20%);
+    --bg1: hsl(242, 90%, 8%);
+    --bg2: hsl(242, 92%, 10%);
+    --bg3: hsl(219, 57%, 20%);
     --bg4: hsl(212, 84%, 17%);
+    --hero-panel-bg: hsl(225, 57%, 49%);
 
     --linear-gradient: linear-gradient(120deg,
         var(--primary3) 12%,
@@ -242,12 +244,12 @@ h1 {
 
 .hero {
   text-align: center;
-  padding: var(--u-2xl) var(--u-3xl);
+  padding: var(--u-2xl) clamp(16px, 4vw, var(--u-3xl));
   /* background: linear-gradient(120deg, #a0aec0 12%, #90cdf4 47%, #5297ff 75%); */
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  margin-bottom: 3rem;
-  background: var(--linear-gradient);
+  margin: 0;
+  background: var(--hero-panel-bg);
   display: flex;
   flex-direction: column;
   gap: var(--u-lg);
@@ -262,6 +264,7 @@ h1 {
 
 .hero p {
   font-size: 1.25rem;
+  font-weight: 600;
   color: var(--fg1);
   max-width: 600px;
   margin: 0 auto;
@@ -276,7 +279,7 @@ h1 {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
-  padding: 2rem 0;
+  padding: 1rem 0 2rem;
 }
 
 .feature-card {

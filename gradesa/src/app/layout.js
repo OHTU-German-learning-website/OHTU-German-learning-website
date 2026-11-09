@@ -21,9 +21,8 @@ export const metadata = {
   title: "Gradesa",
   description: "Gradesa — deutsch lernen",
   icons: {
-    icon: withBasePath("/favicon.ico"),
-    shortcut: withBasePath("/favicon.ico"),
-    apple: withBasePath("/favicon.ico"),
+    icon: withBasePath("/gradesa_favicon.svg"),
+    shortcut: withBasePath("/gradesa_favicon.svg"),
   },
 };
 
