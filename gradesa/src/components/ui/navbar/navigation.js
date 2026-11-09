@@ -18,13 +18,20 @@ function Navbar() {
         <div className="brand-container">
           <div className="logo">
             <Link href="/">
-              <Image
-                src={withBasePath("/logo_placeholder2.png")}
-                width={50}
-                height={50}
-                alt="Logo placeholder"
-                priority={true}
-              />
+              <picture>
+                <source
+                  media="(prefers-color-scheme: dark)"
+                  srcSet={withBasePath("/gradesa_logo_dark.svg")}
+                />
+                <Image
+                  src={withBasePath("/gradesa_logo_light.svg")}
+                  width={110}
+                  height={50}
+                  alt="Gradesa"
+                  className="navbar-logo"
+                  priority={true}
+                />
+              </picture>
             </Link>
           </div>
         </div>
