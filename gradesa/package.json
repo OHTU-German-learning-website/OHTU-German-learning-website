@@ -63,5 +63,9 @@
     "prettier": "^3.2.4",
     "ts-node": "^10.9.2",
     "vitest": "^3.0.4"
+  },
+  "allowScripts": {
+    "esbuild@0.25.11": true,
+    "sharp@0.34.4": true
   }
 }

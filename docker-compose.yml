@@ -35,7 +35,7 @@ services:
       retries: 20
 
   node-dev-env:
-    image: docker.io/library/node:20-trixie
+    image: docker.io/library/node:26-trixie
     container_name: node-dev-env
     environment:
       DB_HOST: gradesa-db
