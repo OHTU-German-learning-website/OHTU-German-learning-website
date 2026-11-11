@@ -64,10 +64,47 @@ jobs:
         working-directory: ./gradesa
         run: |
           npm run test
+
+  e2e:
+    needs: lint-format-test
+    runs-on: ubuntu-latest
+    env:
+      DB_HOST: pgtestdb
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_NAME: postgres
+      SESSION_SECRET: secret
+    services:
+      pgtestdb:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    container:
+      image: mcr.microsoft.com/playwright:v1.65.0-noble
+      options: --ipc=host --init
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install client dependencies
+        run: npm install
+        working-directory: ./gradesa
+      - name: Download pgmigrate
+        run: |
+          wget --quiet https://github.com/peterldowns/pgmigrate/releases/download/v0.0.6%2Bcommit.4f90829/pgmigrate-linux-amd64 -O pgmigrate
+          chmod +x pgmigrate
+          mkdir -p "$HOME/bin"
+          mv pgmigrate "$HOME/bin/"
+          echo "$HOME/bin/" >> $GITHUB_PATH
+      - name: Run migrations
+        run: ./gradesa/data/migrate.sh --skip-schema-gen
       - name: Run e2e tests
         working-directory: ./gradesa
         env:
           HOME: /root # required in order to make Playwright Firefox tests work with GitHub actions
-        run: |
-          npx playwright install --with-deps
-          npm run test:e2e
+        run: npm run test:e2e
