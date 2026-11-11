@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:26-alpine
 
 # Disable Husky during install
 ENV HUSKY=0

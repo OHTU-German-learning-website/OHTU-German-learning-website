@@ -47,7 +47,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@playwright/test": "^1.52.0",
+    "@playwright/test": "^1.65.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.2.0",
     "@vitejs/plugin-react": "^4.3.4",
@@ -63,5 +63,9 @@
     "prettier": "^3.2.4",
     "ts-node": "^10.9.2",
     "vitest": "^3.0.4"
+  },
+  "allowScripts": {
+    "esbuild@0.25.11": true,
+    "sharp@0.34.4": true
   }
 }
