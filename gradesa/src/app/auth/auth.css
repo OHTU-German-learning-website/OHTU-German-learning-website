@@ -25,6 +25,16 @@
   color: var(--fg1);
 }
 
+.registration-teacher-hint {
+  margin: 0;
+  padding: var(--u-md);
+  border-left: 3px solid var(--primary4);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg2);
+  color: var(--fg2);
+  font-size: 0.9rem;
+}
+
 .form-group label {
   margin-top: var(--u-lg);
   margin-bottom: 0;

@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Editor from "@/components/ui/editor";
 import { withBasePath } from "@/shared/utils/basePath";
 import AdminLastModified from "@/components/ui/admin-last-modified";
+import { useUser } from "@/context/user.context";
 import "../news.css";
 
 const defaultFormErrors = {
@@ -18,6 +19,7 @@ export default function CreateNewsArticle() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [isTeacherOnly, setIsTeacherOnly] = useState(false);
+  const [isPinned, setIsPinned] = useState(false);
   const [generalError, setGeneralError] = useState("");
   const [formErrors, setFormErrors] = useState(defaultFormErrors);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -25,6 +27,8 @@ export default function CreateNewsArticle() {
   const [lastModifiedAt, setLastModifiedAt] = useState(null);
   const [lastModifiedBy, setLastModifiedBy] = useState(null);
   const makeRequest = useRequest();
+  const { auth } = useUser();
+  const canPinNews = auth.user?.is_superadmin === true;
   const router = useRouter();
   const searchParams = useSearchParams();
   const articleId = searchParams.get("id");
@@ -49,6 +53,7 @@ export default function CreateNewsArticle() {
         setTitle(article.title);
         setContent(article.content);
         setIsTeacherOnly(article.is_teacher_only || false);
+        setIsPinned(article.is_pinned || false);
         setLastModifiedAt(article.updated_at || null);
         setLastModifiedBy(article.updated_by || null);
       } catch (error) {
@@ -96,9 +101,15 @@ export default function CreateNewsArticle() {
       const method = isEditing ? "PUT" : "POST";
       const url = "/admin/news";
 
-      const requestData = isEditing
-        ? { id: articleId, title, content, is_teacher_only: isTeacherOnly }
-        : { title, content, is_teacher_only: isTeacherOnly };
+      const requestData = {
+        ...(isEditing ? { id: articleId } : {}),
+        title,
+        content,
+        is_teacher_only: isTeacherOnly,
+      };
+      if (canPinNews) {
+        requestData.is_pinned = isPinned;
+      }
 
       const res = await makeRequest(url, requestData, { method });
 
@@ -157,25 +168,39 @@ export default function CreateNewsArticle() {
       </label>
       <Column gap="sm">
         <label htmlFor="content">Inhalt</label>
-        <Editor
-          defaultContent={content}
-          updateEditorContent={(newContent) => {
-            setContent(newContent);
-            if (formErrors.content) {
-              setFormErrors((prev) => ({ ...prev, content: "" }));
-            }
-          }}
-        />
+        <div className="news-content-editor">
+          <Editor
+            defaultContent={content}
+            updateEditorContent={(newContent) => {
+              setContent(newContent);
+              if (formErrors.content) {
+                setFormErrors((prev) => ({ ...prev, content: "" }));
+              }
+            }}
+          />
+        </div>
         {formErrors.content && <p className="error">{formErrors.content}</p>}
       </Column>
-      <label className="teacher-only-toggle">
-        <input
-          type="checkbox"
-          checked={isTeacherOnly}
-          onChange={(e) => setIsTeacherOnly(e.target.checked)}
-        />
-        <span>Nur für Lehrer sichtbar</span>
-      </label>
+      <div className="news-options">
+        <label className="news-option-toggle">
+          <input
+            type="checkbox"
+            checked={isTeacherOnly}
+            onChange={(e) => setIsTeacherOnly(e.target.checked)}
+          />
+          <span>Nur für Lehrer sichtbar</span>
+        </label>
+        {canPinNews && (
+          <label className="news-option-toggle">
+            <input
+              type="checkbox"
+              checked={isPinned}
+              onChange={(e) => setIsPinned(e.target.checked)}
+            />
+            <span>Pin (wird auf der Neuigkeiten-Seite oben angezeigt)</span>
+          </label>
+        )}
+      </div>
       <Row
         className="form-actions"
         justify={"space-between"}

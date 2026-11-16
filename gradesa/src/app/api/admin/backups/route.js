@@ -47,14 +47,22 @@ async function handler(request) {
 
       // Basic restore for known entity types: news_articles, glossary_entries
       if (payload.__entity_type === "news_articles") {
+        if (
+          payload.is_pinned !== undefined &&
+          request.user?.is_superadmin !== true
+        ) {
+          return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+        }
+
         // if entity id exists and row exists, update; else insert
         if (payload.id) {
           const res = await DB.pool(
-            `UPDATE news_articles SET title=$1, content=$2, is_teacher_only=$3, updated_at=now() WHERE id=$4 RETURNING id`,
+            `UPDATE news_articles SET title=$1, content=$2, is_teacher_only=$3, is_pinned=COALESCE($4, is_pinned), updated_at=now() WHERE id=$5 RETURNING id`,
             [
               payload.title,
               payload.content,
               payload.is_teacher_only || false,
+              payload.is_pinned ?? null,
               payload.id,
             ]
           );
@@ -62,8 +70,13 @@ async function handler(request) {
             return NextResponse.json({ restored: res.rows[0].id });
         }
         const ins = await DB.pool(
-          `INSERT INTO news_articles (title, content, is_teacher_only) VALUES ($1,$2,$3) RETURNING id`,
-          [payload.title, payload.content, payload.is_teacher_only || false]
+          `INSERT INTO news_articles (title, content, is_teacher_only, is_pinned) VALUES ($1,$2,$3,$4) RETURNING id`,
+          [
+            payload.title,
+            payload.content,
+            payload.is_teacher_only || false,
+            payload.is_pinned || false,
+          ]
         );
         return NextResponse.json({ restored: ins.rows[0].id });
       }

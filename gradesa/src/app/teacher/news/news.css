@@ -5,7 +5,9 @@
   border: 1px solid var(--bg3);
   border-left: 4px solid var(--fg2);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.2s, border-left-color 0.2s;
+  transition:
+    box-shadow 0.2s,
+    border-left-color 0.2s;
 }
 
 .news-card:hover {
@@ -22,9 +24,18 @@
 }
 
 .news-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
   color: var(--fg1);
   margin: 0;
   font-size: 1.35rem;
+}
+
+.news-pin-icon {
+  flex: 0 0 auto;
+  font-size: 0.85em;
+  line-height: 1;
 }
 
 .news-date {

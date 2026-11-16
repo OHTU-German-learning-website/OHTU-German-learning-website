@@ -27,6 +27,7 @@ Naming and workflow
 
 - File pattern: `<5-digit-number>_<descriptive_name>.sql` (e.g. `00002_add_users_table.sql`). Numbers must be sequential and zero-padded.
 - Never edit a migration that has already been applied in any environment—create a new migration to make changes.
+- The `00066_add_news_pinning.sql` migration adds the news pin status column. Run `npm run db:migrate` from the project root after pulling this change; the development server does not apply migrations automatically.
 
 Adding a migration (summary):
 
