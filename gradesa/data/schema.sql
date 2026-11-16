@@ -806,7 +806,8 @@ CREATE TABLE public.news_articles (
   content text NOT NULL,
   created_by bigint,
   updated_by bigint,
-  is_teacher_only boolean NOT NULL DEFAULT false
+  is_teacher_only boolean NOT NULL DEFAULT false,
+  is_pinned boolean NOT NULL DEFAULT false
 );
 
 CREATE TRIGGER update_news_articles_updated_at BEFORE UPDATE ON public.news_articles FOR EACH ROW EXECUTE FUNCTION updated_at();

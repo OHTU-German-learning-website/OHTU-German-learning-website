@@ -2,6 +2,7 @@
 import { Container, Column, Row } from "@/components/ui/layout/container";
 import useQuery from "@/shared/hooks/useQuery";
 import RenderHTML from "@/components/ui/render-html/render-html";
+import { sortNewsArticles } from "@/shared/utils/news";
 import "./news.css";
 
 export default function TeacherNewsPage() {
@@ -15,9 +16,7 @@ export default function TeacherNewsPage() {
     return <p className="error">Fehler beim Laden der Neuigkeiten</p>;
   }
 
-  const sortedArticles = [...(articles || [])].sort(
-    (a, b) => new Date(b.created_at) - new Date(a.created_at)
-  );
+  const sortedArticles = sortNewsArticles(articles || []);
 
   const teacherOnlyArticles = sortedArticles.filter((a) => a.is_teacher_only);
   const generalArticles = sortedArticles.filter((a) => !a.is_teacher_only);
@@ -43,7 +42,19 @@ export default function TeacherNewsPage() {
                   className="news-card news-card--teacher"
                 >
                   <Column gap="sm">
-                    <h4 className="news-title">{article.title}</h4>
+                    <h4 className="news-title">
+                      {article.title}
+                      {article.is_pinned && (
+                        <span
+                          className="news-pin-icon"
+                          role="img"
+                          aria-label="Angepinnt"
+                          title="Angepinnt"
+                        >
+                          📌
+                        </span>
+                      )}
+                    </h4>
                     <p className="news-date">
                       {new Date(article.created_at).toLocaleDateString(
                         "de-DE",
@@ -71,7 +82,19 @@ export default function TeacherNewsPage() {
               {generalArticles.map((article) => (
                 <Container key={article.id} className="news-card">
                   <Column gap="sm">
-                    <h4 className="news-title">{article.title}</h4>
+                    <h4 className="news-title">
+                      {article.title}
+                      {article.is_pinned && (
+                        <span
+                          className="news-pin-icon"
+                          role="img"
+                          aria-label="Angepinnt"
+                          title="Angepinnt"
+                        >
+                          📌
+                        </span>
+                      )}
+                    </h4>
                     <p className="news-date">
                       {new Date(article.created_at).toLocaleDateString(
                         "de-DE",

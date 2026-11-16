@@ -7,6 +7,7 @@ import "./news.css";
 import { LinkButton } from "@/components/ui/linkbutton";
 import { Button } from "@/components/ui/button";
 import RenderHTML from "@/components/ui/render-html/render-html";
+import { sortNewsArticles } from "@/shared/utils/news";
 
 export default function NewsList() {
   const { data: articles, error, isLoading, refetch } = useQuery("/admin/news");
@@ -48,9 +49,7 @@ export default function NewsList() {
     }
   };
 
-  const sortedArticles = [...(articles || [])].sort(
-    (a, b) => new Date(b.created_at) - new Date(a.created_at)
-  );
+  const sortedArticles = sortNewsArticles(articles || []);
 
   return (
     <Column gap="md" width="100%">
@@ -71,7 +70,19 @@ export default function NewsList() {
           {sortedArticles.map((article) => (
             <Container key={article.id} className="news-card">
               <Column gap="sm">
-                <h3 className="news-title">{article.title}</h3>
+                <h3 className="news-title">
+                  {article.title}
+                  {article.is_pinned && (
+                    <span
+                      className="news-pin-icon"
+                      role="img"
+                      aria-label="Angepinnt"
+                      title="Angepinnt"
+                    >
+                      📌
+                    </span>
+                  )}
+                </h3>
                 <RenderHTML data={article.content} disableGlossary />
                 <Row justify="flex-end" gap="sm" className="news-meta">
                   <LinkButton

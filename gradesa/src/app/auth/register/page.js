@@ -72,6 +72,10 @@ export default function Register() {
   return (
     <>
       <h1 className="auth-title">Registrieren</h1>
+      <p className="registration-teacher-hint">
+        Hinweis für Deutschlehrkräfte: Weitere Informationen finden Sie in der
+        angepinnten Nachricht auf der Neuigkeiten-Seite.
+      </p>
       {!!error && errorMessage()}
       {submitted && successMessage()}
       <form onSubmit={handleSubmit}>

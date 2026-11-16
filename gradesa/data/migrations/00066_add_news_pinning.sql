@@ -1,0 +1,2 @@
+ALTER TABLE news_articles
+ADD COLUMN IF NOT EXISTS is_pinned BOOLEAN NOT NULL DEFAULT false;

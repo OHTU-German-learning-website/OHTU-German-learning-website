@@ -1,8 +1,9 @@
 import { DB } from "@/backend/db";
 import { saveBackup } from "@/backend/backups";
+import { withAuth } from "@/backend/middleware/withAuth";
 import { NextResponse } from "next/server";
 
-export async function GET(request) {
+async function getNews(request) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
@@ -19,7 +20,8 @@ export async function GET(request) {
                 na.updated_by AS updated_by_id,
                 COALESCE(NULLIF(cu.username, ''), cu.email) AS created_by,
                 COALESCE(NULLIF(uu.username, ''), uu.email) AS updated_by,
-                na.is_teacher_only
+                na.is_teacher_only,
+                na.is_pinned
          FROM news_articles na
          LEFT JOIN users cu ON cu.id = na.created_by
          LEFT JOIN users uu ON uu.id = na.updated_by
@@ -48,11 +50,12 @@ export async function GET(request) {
             na.updated_by AS updated_by_id,
             COALESCE(NULLIF(cu.username, ''), cu.email) AS created_by,
             COALESCE(NULLIF(uu.username, ''), uu.email) AS updated_by,
-            na.is_teacher_only
+            na.is_teacher_only,
+            na.is_pinned
        FROM news_articles na
        LEFT JOIN users cu ON cu.id = na.created_by
        LEFT JOIN users uu ON uu.id = na.updated_by
-       ORDER BY na.created_at DESC`
+       ORDER BY na.is_pinned DESC, na.created_at DESC`
     );
 
     return NextResponse.json(articles.rows);
@@ -65,9 +68,13 @@ export async function GET(request) {
   }
 }
 
-export async function POST(request) {
+async function createNews(request) {
   try {
-    const { title, content, is_teacher_only } = await request.json();
+    const { title, content, is_teacher_only, is_pinned } = await request.json();
+
+    if (is_pinned !== undefined && request.user?.is_superadmin !== true) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    }
 
     if (!title || !content) {
       return NextResponse.json(
@@ -76,11 +83,21 @@ export async function POST(request) {
       );
     }
 
+    if (
+      (is_teacher_only !== undefined && typeof is_teacher_only !== "boolean") ||
+      (is_pinned !== undefined && typeof is_pinned !== "boolean")
+    ) {
+      return NextResponse.json(
+        { error: "News visibility options must be boolean" },
+        { status: 400 }
+      );
+    }
+
     const result = await DB.pool(
-      `INSERT INTO news_articles (title, content, is_teacher_only) 
-       VALUES ($1, $2, $3) 
-       RETURNING id, title, content, created_at, updated_at, is_teacher_only`,
-      [title, content, is_teacher_only || false]
+      `INSERT INTO news_articles (title, content, is_teacher_only, is_pinned)
+       VALUES ($1, $2, $3, $4)
+       RETURNING id, title, content, created_at, updated_at, is_teacher_only, is_pinned`,
+      [title, content, is_teacher_only ?? false, is_pinned ?? false]
     );
 
     // Save a backup snapshot
@@ -105,9 +122,14 @@ export async function POST(request) {
   }
 }
 
-export async function PUT(request) {
+async function updateNews(request) {
   try {
-    const { id, title, content, is_teacher_only } = await request.json();
+    const { id, title, content, is_teacher_only, is_pinned } =
+      await request.json();
+
+    if (is_pinned !== undefined && request.user?.is_superadmin !== true) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    }
 
     if (!id || !title || !content) {
       return NextResponse.json(
@@ -116,12 +138,26 @@ export async function PUT(request) {
       );
     }
 
+    if (
+      (is_teacher_only !== undefined && typeof is_teacher_only !== "boolean") ||
+      (is_pinned !== undefined && typeof is_pinned !== "boolean")
+    ) {
+      return NextResponse.json(
+        { error: "News visibility options must be boolean" },
+        { status: 400 }
+      );
+    }
+
     const result = await DB.pool(
       `UPDATE news_articles 
-       SET title = $1, content = $2, is_teacher_only = $4, updated_at = now()
+       SET title = $1,
+           content = $2,
+           is_teacher_only = COALESCE($4, is_teacher_only),
+           is_pinned = COALESCE($5, is_pinned),
+           updated_at = now()
        WHERE id = $3
-       RETURNING id, title, content, created_at, updated_at, is_teacher_only`,
-      [title, content, id, is_teacher_only || false]
+       RETURNING id, title, content, created_at, updated_at, is_teacher_only, is_pinned`,
+      [title, content, id, is_teacher_only ?? null, is_pinned ?? null]
     );
 
     if (result.rows.length === 0) {
@@ -148,7 +184,7 @@ export async function PUT(request) {
   }
 }
 
-export async function DELETE(request) {
+async function deleteNews(request) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
@@ -177,3 +213,10 @@ export async function DELETE(request) {
     );
   }
 }
+
+const adminOnly = { requireAuth: true, requireAdmin: true };
+
+export const GET = withAuth(getNews, adminOnly);
+export const POST = withAuth(createNews, adminOnly);
+export const PUT = withAuth(updateNews, adminOnly);
+export const DELETE = withAuth(deleteNews, adminOnly);
