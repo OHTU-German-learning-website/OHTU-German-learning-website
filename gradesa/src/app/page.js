@@ -36,7 +36,7 @@ export default function Home() {
             <h3>Lerntechniken</h3>
             <p>Wie lernst du online am besten?</p>
             <p>Finde den passenden Übungstyp für dich!</p>
-            <div className="feature-card">
+            <div className="feature-actions">
               <LinkButton href="/pages/resources/1" size="md">
                 Effektiv online lernen
               </LinkButton>
@@ -49,15 +49,12 @@ export default function Home() {
           <div className="feature-card">
             <h3>Grammatik</h3>
             <p>Selbständig Grammatik lernen mit kommunikativen Situationen!</p>
-            <div className="feature-card">
+            <div className="feature-actions">
               <LinkButton href="/pages/communications" size="md">
                 Kommunikationssituationen
               </LinkButton>
               <LinkButton href="/grammar/themes" size="md">
                 Themen der Grammatik
-              </LinkButton>
-              <LinkButton href="/grammar/exercises" size="md">
-                Alle Übungen anzeigen
               </LinkButton>
             </div>
           </div>
@@ -76,7 +73,7 @@ export default function Home() {
               </p>
               <br></br>
               <p className={styles.creditsItem}>
-                Die Entwicklung wurde gefördert durch die{" "}
+                Gefördert durch die{" "}
                 <a
                   href="https://foundationhollo.fi/"
                   target="_blank"

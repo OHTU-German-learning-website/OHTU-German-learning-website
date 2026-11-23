@@ -307,6 +307,13 @@ h1 {
   line-height: 1.6;
 }
 
+.feature-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-lg);
+  margin-top: auto;
+}
+
 ul.exercise-list {
   list-style-type: circle;
 }
